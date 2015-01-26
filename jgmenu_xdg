@@ -1,0 +1,11 @@
+#!/bin/bash
+
+dir="/usr/share/applications/"
+
+cd ${dir}
+
+for i in $(ls); do
+	a=$(cat ${i} | grep -i '^Name=' | awk -F= '{ print $2 }')
+	b=$(cat ${i} | grep -i '^Exec=' | awk -F= '{ print $2 }')
+	echo -e "${a},${b}"
+done

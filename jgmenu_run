@@ -1,0 +1,22 @@
+#!/bin/bash
+
+menufile="/.config/jgmenu/root.txt"
+
+
+if [[ -e ${HOME}${menufile} ]]; then
+
+cat ${HOME}${menufile} | jgmenu
+
+else
+
+echo -e "\
+terminal,xterm\n\
+file manager,pcmanfm\n\
+web browser,chromium\n\
+vlc,vlc\n\
+settings,foobar" | jgmenu
+
+fi
+
+
+

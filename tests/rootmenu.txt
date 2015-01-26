@@ -1,0 +1,9 @@
+#
+# This is an example menu
+#
+
+browser,firefox
+file manager,pcmanfm
+terminal,xterm
+sound,pavucontrol
+background image,nitrogen ~/bg/
