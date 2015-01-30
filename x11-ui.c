@@ -63,7 +63,11 @@ void init_cairo(void)
         Visual *vis;
         vis = DefaultVisual(ui->dpy, 0);
 
-        ui->cs = cairo_xlib_surface_create(ui->dpy, ui->canvas, vis, menu.menu_w, menu.menu_h);
+	/* Would be tidier to calc height to largest submenu rather than 
+	 * allocating memory for (menu.end * menu.item_h) */
+        ui->cs = cairo_xlib_surface_create(ui->dpy, ui->canvas, vis, menu.menu_w,
+					   menu.end * menu.item_h);	
+
         ui->c = cairo_create (ui->cs);
 
 	ui->pangolayout = pango_cairo_create_layout(ui->c);
@@ -162,7 +166,11 @@ void ui_create_window(void)
 	XMapRaised(ui->dpy, ui->win);
 	if(ui->canvas)
 		XFreePixmap(ui->dpy, ui->canvas);
-	ui->canvas = XCreatePixmap(ui->dpy, DefaultRootWindow(ui->dpy), menu.menu_w, menu.menu_h,
+
+	/* Would be tidier to calc height to largest submenu rather than 
+	 * allocating memory for (menu.end * menu.item_h) */
+	ui->canvas = XCreatePixmap(ui->dpy, DefaultRootWindow(ui->dpy), menu.menu_w,
+				   menu.end * menu.item_h,
 	                           DefaultDepth(ui->dpy, screen));
 	/* END OF COPY */
 

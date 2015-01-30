@@ -399,7 +399,8 @@ void read_stdin(void)
 	 * rather than menu.end or menu.tail. */ 
 	menu.head[i].t[0] = NULL;
 
-	/* Not currently using menu.end in code. */
+	/* menu.end holds the number of items in the dynamic array */
+	/* Not currently using menu.end in code except to define the cairo buf */
 	menu.end = i;
 
 	/* Create doubly-linked list */
