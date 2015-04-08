@@ -201,7 +201,7 @@ void ui_draw_line(int x0, int y0, int x1, int y1,
 		       float r, float g, float b, float a)
 {
 	cairo_set_source_rgba (ui->c, r, g, b, a);
-	cairo_set_line_width(ui->c, 0.5);
+	cairo_set_line_width(ui->c, 1.5);
 	cairo_move_to(ui->c, x0, y0);
 	cairo_line_to(ui->c, x1, y1);
 	cairo_stroke(ui->c);
