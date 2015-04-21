@@ -1,20 +1,22 @@
 #!/bin/bash
 
-menufile="/.config/jgmenu/root.txt"
+# $MENU_IF in jgmenu_runrc can specify a jgmenu file.
 
+jgmenu_runrc=~/.config/jgmenu/jgmenu_runrc
 
-if [[ -e ${HOME}${menufile} ]]; then
+[[ -e ${jgmenu_runrc} ]] && . ${jgmenu_runrc}
 
-cat ${HOME}${menufile} | jgmenu
+if [[ -n ${MENU_IF} ]]; then
+
+cat ${MENU_IF} | jgmenu
 
 else
 
 echo -e "\
 terminal,xterm\n\
 file manager,pcmanfm\n\
-web browser,chromium\n\
-vlc,vlc\n\
-settings,foobar" | jgmenu
+web browser,firefox\n\
+poweroff,poweroff" | jgmenu
 
 fi
 
