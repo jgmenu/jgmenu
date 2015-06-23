@@ -10,7 +10,7 @@ jgmenu is written with the following aims:
   - Have few dependencies (perferably just Xlib, cairo and Xinerama)
   - Be free from toolkits such as GTK and Qt.
   - Read the menu items from stdin in a similar way to dmenu and dzen2, but
-    with seperate fields for the name and command 
+    with seperate fields for the name and command
     (a bit like dzen2 -m with ^ca parameter).
     E.g. echo -e "terminal,xterm\nfile manager,pcmanfm" | jgmenu
 
@@ -23,7 +23,7 @@ Installation
 Usage
 ~~~~~
 The program reads the menu items from stdin.  Menu items are seperated by a
-new-line character ('\n').  Empty lines and lines beginning with '#' are 
+new-line character ('\n').  Empty lines and lines beginning with '#' are
 ignored.
 
 The menu item "description" and "command" are seperated by a comma.
@@ -56,6 +56,6 @@ Example 3:
 	echo -e "file manager\npcmanfm"
 	) | jgmenu
 	EOF
-	
+
 	chmod +x menu.sh
 	./menu.sh

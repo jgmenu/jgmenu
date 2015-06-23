@@ -3,7 +3,7 @@ CC = gcc
 
 CFLAGS   = -g -pedantic -Wall -Os
 CFLAGS  += -DVERSION='"$(VER)"'
-CFLAGS  += -DXINERAMA 
+CFLAGS  += -DXINERAMA
 CFLAGS  += `pkg-config cairo pango pangocairo --cflags`
 
 LIBS  = `pkg-config x11 xinerama cairo pango pangocairo --libs`
@@ -14,7 +14,7 @@ OBJS =  x11-ui.o config.o util.o
 
 all: clean jgmenu
 
-jgmenu: $(OBJS) 
+jgmenu: $(OBJS)
 	@echo $(CC) $@
 	@$(CC) $(LDFLAGS) $(CFLAGS) $(INCS) -o jgmenu $(OBJS) jgmenu.c
 

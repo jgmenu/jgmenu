@@ -25,7 +25,7 @@ static int DEBUG = 0;
 void draw_menu(void)
 {
 	struct Item *p;
-	int x,y,w,h; 
+	int x,y,w,h;
 	int offset;
 
 	x = 0;
@@ -116,7 +116,7 @@ void checkout_submenu(char *tag)
 		item = menu.first->next;
 
 		while(!menu.last && item && item->t[0]) {
-			if(!item->next || !strncmp(item->next->t[1],tagtok,strlen(tagtok))) 
+			if(!item->next || !strncmp(item->next->t[1],tagtok,strlen(tagtok)))
 				menu.last = item;
 			else
 				item++;
@@ -134,10 +134,10 @@ void checkout_submenu(char *tag)
 char *parse_caret_action(char *s, char *token)
 {
 	/* Returns bar from ^foo(bar)
- 	 * s="^foo(bar)"
- 	 * token="^foo("
- 	 */
-	
+	 * s="^foo(bar)"
+	 * token="^foo("
+	 */
+
 	char *p, *q;
 	p = NULL;
 	q = NULL;
@@ -179,7 +179,7 @@ void action_cmd(char *cmd)
 			die("Item began with ^ but was not checkout()");
 		}
 	}
-	else {	
+	else {
 		spawn(cmd);
 		exit(0);
 	}
@@ -267,7 +267,7 @@ void mouse_event(XEvent *e)
 			y += menu.item_h;
 		for(item = menu.first; item && item->t[0] && item->prev != menu.last ; item++) {
 			if(ev->y >= y && ev->y <= (y + menu.item_h)) {
-				if(config.spawn) { 
+				if(config.spawn) {
 					action_cmd(item->t[1]);
 					break;
 				}
@@ -291,10 +291,10 @@ void tabulate(char *s)
 		n -= 6;		/* because strlen("(null)") = 6 */
 
 	if(n < 0)
-		n = 0;	
+		n = 0;
 
 	for(i=0; i<n; i++)
-		printf(" ");	
+		printf(" ");
 }
 
 void debug_dlist()
@@ -340,7 +340,7 @@ void parse_csv(struct Item *p)
 	p->t[2] = NULL;
 
 	for(j=0;j<MAX_FIELDS-1;j++)
-		if(p->t[j]) 
+		if(p->t[j])
 			p->t[j+1] = next_field(p->t[j]);
 
 	while((q = strrchr(p->t[0], ',')))
@@ -395,8 +395,8 @@ void read_stdin(void)
 	if(!menu.head)
 		die("No stdin.");
 
-	/* Using "menu.head[i].t[0] = NULL" as a dynamic array end-marker 
-	 * rather than menu.end or menu.tail. */ 
+	/* Using "menu.head[i].t[0] = NULL" as a dynamic array end-marker
+	 * rather than menu.end or menu.tail. */
 	menu.head[i].t[0] = NULL;
 
 	/* menu.end holds the number of items in the dynamic array */
@@ -439,9 +439,9 @@ void run(void)
 		}
 
 		/* Move highlighting with mouse */
-		/* Current mouse position is (ev.xbutton.x, ev.xbutton.y) */ 
+		/* Current mouse position is (ev.xbutton.x, ev.xbutton.y) */
 		y = menu.win_y0;
-		
+
 		if ((oldy != 0) && (ev.xbutton.y != oldy) && (ev.xbutton.x < menu.menu_w)) {
 			if(menu.title)
 				y += menu.item_h;
@@ -458,7 +458,7 @@ void run(void)
 		}
 
 		oldy = ev.xbutton.y;
- 
+
 	}
 }
 
@@ -485,9 +485,9 @@ int main(int argc, char *argv[])
 		}
 
 		/* re-direct command to stdout rather than spawning */
-		else if(!strcmp(argv[i], "-r"))   
+		else if(!strcmp(argv[i], "-r"))
 			config.spawn = 0;
-		else if(!strcmp(argv[i], "--debug"))   
+		else if(!strcmp(argv[i], "--debug"))
 			DEBUG = 1;
 		else if(i+1 == argc)
 			usage();
@@ -502,7 +502,7 @@ int main(int argc, char *argv[])
 		checkout_submenu(NULL);
 
 	menu.sel = menu.first;
-	
+
 	if(DEBUG)
 		debug_dlist();
 

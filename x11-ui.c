@@ -2,7 +2,7 @@
  *
  * x11-ui.c provides a simple X11 interface.
  * It uses cairo for shapes and pango for text.
- * 
+ *
  * It has been inspired by:
  *  - dmenu 4.5 (http://tools.suckless.org/dmenu/)
  *  - tint2 (https://code.google.com/p/tint2/source/browse/)
@@ -35,7 +35,7 @@ void grabkeyboard(void)
 
 	for(i = 0; i < 1000; i++) {
 		if(XGrabKeyboard(ui->dpy, DefaultRootWindow(ui->dpy), True,
-		                 GrabModeAsync, GrabModeAsync, 
+		                 GrabModeAsync, GrabModeAsync,
 				 CurrentTime) == GrabSuccess)
 			return;
 		usleep(1000);
@@ -51,7 +51,7 @@ void grabpointer(void)
 {
 	XGrabPointer(ui->dpy, DefaultRootWindow(ui->dpy),
 		     True,	/* False gives (x,y) wrt root window. */
- 	             ButtonPressMask | ButtonReleaseMask | 
+	             ButtonPressMask | ButtonReleaseMask |
 		     PointerMotionMask | FocusChangeMask |
 		     EnterWindowMask | LeaveWindowMask,
 	             GrabModeAsync, GrabModeAsync, None, None, CurrentTime);
@@ -63,10 +63,10 @@ void init_cairo(void)
         Visual *vis;
         vis = DefaultVisual(ui->dpy, 0);
 
-	/* Would be tidier to calc height to largest submenu rather than 
+	/* Would be tidier to calc height to largest submenu rather than
 	 * allocating memory for (menu.end * menu.item_h) */
         ui->cs = cairo_xlib_surface_create(ui->dpy, ui->canvas, vis, menu.menu_w,
-					   menu.end * menu.item_h);	
+					   menu.end * menu.item_h);
 
         ui->c = cairo_create (ui->cs);
 
@@ -140,7 +140,7 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
 	{
 		*x0 = 0;
 		*y0 = 0;
-		*width = DisplayWidth(ui->dpy, screen); 
+		*width = DisplayWidth(ui->dpy, screen);
 		*height = DisplayHeight(ui->dpy, screen);
 	}
 }
@@ -167,7 +167,7 @@ void ui_create_window(void)
 	if(ui->canvas)
 		XFreePixmap(ui->dpy, ui->canvas);
 
-	/* Would be tidier to calc height to largest submenu rather than 
+	/* Would be tidier to calc height to largest submenu rather than
 	 * allocating memory for (menu.end * menu.item_h) */
 	ui->canvas = XCreatePixmap(ui->dpy, DefaultRootWindow(ui->dpy), menu.menu_w,
 				   menu.end * menu.item_h,
@@ -179,7 +179,7 @@ void ui_create_window(void)
 	/* XDefineCursor required to prevent blindly inheriting cursor from parent
 	 * (e.g. hour-glass pointer set by tint2)
 	 * Check this URL for cursor styles:
-	 * http://tronche.com/gui/x/xlib/appendix/b/	
+	 * http://tronche.com/gui/x/xlib/appendix/b/
 	 */
 	XDefineCursor(ui->dpy, ui->win, XCreateFontCursor(ui->dpy, 68));
 }
@@ -259,9 +259,9 @@ void ui_cleanup(void)
 	if(ui->canvas)
 		XFreePixmap(ui->dpy, ui->canvas);
 	if(ui->gc)
-        	XFreeGC(ui->dpy, ui->gc);
+		XFreeGC(ui->dpy, ui->gc);
 	if(ui->dpy)
-        	XCloseDisplay(ui->dpy);
+		XCloseDisplay(ui->dpy);
 	if(ui)
 		free(ui);
 

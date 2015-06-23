@@ -4,15 +4,15 @@
 #define MAX_FIELDS 3		/* nr fields to parse for each stdin line */
 
 struct Item {
- 	char *t[MAX_FIELDS];	/* pointers name, cmd */
+	char *t[MAX_FIELDS];	/* pointers name, cmd */
 	char *tag;		/* used to tag the start of a submenu */
 	struct Item *prev;
-	struct Item *next;			
+	struct Item *next;
 };
 
 
 struct Config {
-	int spawn;		
+	int spawn;
 };
 struct Config config;
 
@@ -43,11 +43,11 @@ struct Menu {
 	int end;		/* number of items in dynamic array		*/
 
 	struct Item *sel;	/* pointer to the currently selected item	*/
-	struct Item *first;	/* pointer to the first item in submenu		*/ 
-	struct Item *last;	/* pointer to the first item in submenu		*/ 
+	struct Item *first;	/* pointer to the first item in submenu		*/
+	struct Item *last;	/* pointer to the first item in submenu		*/
 	int nr_items;		/* number of items in menu/submenu		*/
 
-	char *title;	
+	char *title;
 
 /*
  *	margin_x		between screen and menu

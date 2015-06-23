@@ -14,7 +14,7 @@ void die(const char *err, ...)
 }
 
 
-/* 
+/*
  * spawn() is copied from dzen2 (https://github.com/robm/dzen)
  *
  * (C)opyright MMVI-MMVII Anselm R. Garbe <garbeam at gmail dot com>
@@ -30,7 +30,7 @@ void spawn(const char *arg)
 	if(!arg)
 		return;
 	/* The double-fork construct avoids zombie processes and keeps the code
- 	 * clean from stupid signal handlers. */
+	 * clean from stupid signal handlers. */
 	if(fork() == 0) {
 		if(fork() == 0) {
 			setsid();
