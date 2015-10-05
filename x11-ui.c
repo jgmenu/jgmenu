@@ -14,12 +14,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <X11/Xlib.h>
+
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
 #endif
+
+#include <unistd.h>		/* for usleep */
+
 #include "x11-ui.h"
-#include "config.h"
 #include "util.h"
+
+
 
 /* INTERSECT is required by Xinerama.  MAX and MIN are defined in glib */
 #define INTERSECT(x,y,w,h,r)  (MAX(0, MIN((x)+(w),(r).x_org+(r).width)  - \
@@ -58,20 +63,17 @@ void grabpointer(void)
 }
 
 
-void init_cairo(void)
+
+void ui_init_cairo(int canvas_width, int canvas_height, const char *font)
 {
         Visual *vis;
         vis = DefaultVisual(ui->dpy, 0);
 
-	/* Would be tidier to calc height to largest submenu rather than
-	 * allocating memory for (menu.end * menu.item_h) */
-        ui->cs = cairo_xlib_surface_create(ui->dpy, ui->canvas, vis, menu.menu_w,
-					   menu.end * menu.item_h);
-
+        ui->cs = cairo_xlib_surface_create(ui->dpy, ui->canvas, vis, canvas_width, canvas_height);
         ui->c = cairo_create (ui->cs);
 
 	ui->pangolayout = pango_cairo_create_layout(ui->c);
-	ui->pangofont = pango_font_description_from_string(menu.font);
+	ui->pangofont = pango_font_description_from_string(font);
 }
 
 void ui_init()
@@ -146,7 +148,7 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
 }
 
 
-void ui_create_window(void)
+void ui_create_window(int x, int y, int w, int h, int max_canvas_height)
 {
 	/* The following is heavily based dmenu's draw.c */
 	int screen = DefaultScreen(ui->dpy);
@@ -156,7 +158,7 @@ void ui_create_window(void)
 
 	swa.override_redirect = True;
 	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask | ButtonPressMask;
-	ui->win = XCreateWindow(ui->dpy, root, menu.win_x0, menu.win_y0, menu.menu_w, menu.menu_h, 0,
+	ui->win = XCreateWindow(ui->dpy, root, x, y, w, h, 0,
 	                    DefaultDepth(ui->dpy, screen), CopyFromParent,
 	                    DefaultVisual(ui->dpy, screen),
 	                    CWOverrideRedirect | CWBackPixel | CWEventMask, &swa);
@@ -167,14 +169,9 @@ void ui_create_window(void)
 	if(ui->canvas)
 		XFreePixmap(ui->dpy, ui->canvas);
 
-	/* Would be tidier to calc height to largest submenu rather than
-	 * allocating memory for (menu.end * menu.item_h) */
-	ui->canvas = XCreatePixmap(ui->dpy, DefaultRootWindow(ui->dpy), menu.menu_w,
-				   menu.end * menu.item_h,
+	ui->canvas = XCreatePixmap(ui->dpy, DefaultRootWindow(ui->dpy), w, max_canvas_height,
 	                           DefaultDepth(ui->dpy, screen));
 	/* END OF COPY */
-
-	init_cairo();
 
 	/* XDefineCursor required to prevent blindly inheriting cursor from parent
 	 * (e.g. hour-glass pointer set by tint2)

@@ -12,24 +12,24 @@ LDFLAGS  = $(LIBS)
 
 OBJS =  x11-ui.o config.o util.o
 
-all: clean jgmenu
+all: jgmenu x11-ui.o config.o util.o
 
-jgmenu: $(OBJS)
+jgmenu: jgmenu.c $(OBJS)
 	@echo $(CC) $@
-	@$(CC) $(LDFLAGS) $(CFLAGS) $(INCS) -o jgmenu $(OBJS) jgmenu.c
+	@$(CC) $(LDFLAGS) $(CFLAGS) -o jgmenu $(OBJS) jgmenu.c
 
 
 x11-ui.o: x11-ui.c x11-ui.h config.h
 	@echo $(CC) $@
-	@$(CC) $(CFLAGS) $(LIBS) $(INCS) -c x11-ui.c
+	@$(CC) $(CFLAGS) $(LIBS) -c x11-ui.c
 
 config.o: config.c config.h
 	@echo $(CC) $@
-	@$(CC) $(CFLAGS) $(LIBS) $(INCS) -c config.c
+	@$(CC) $(CFLAGS) $(LIBS) -c config.c
 
 util.o: util.c util.h
 	@echo $(CC) $@
-	@$(CC) $(CFLAGS) $(LIBS) $(INCS) -c util.c
+	@$(CC) $(CFLAGS) $(LIBS) -c util.c
 
 install: jgmenu
 	@echo installing...

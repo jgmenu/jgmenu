@@ -7,32 +7,14 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 void die(const char *err, ...);
 void spawn(const char *arg);
-
-static inline void *xmalloc(size_t size)
-{
-	void *ret = malloc(size);
-	if (!ret)
-		die("Out of memory, malloc failed");
-	return ret;
-}
-
-static inline void *xrealloc(void *ptr, size_t size)
-{
-	void *ret = realloc(ptr, size);
-	if (!ret)
-		die("Out of memory, realloc failed");
-	return ret;
-}
-
-static inline void *xcalloc(size_t nmemb, size_t size)
-{
-	void *ret = calloc(nmemb, size);
-	if (!ret)
-		die("Out of memory, calloc failed");
-	return ret;
-}
+void *xmalloc(size_t size);
+void *xrealloc(void *ptr, size_t size);
+void *xcalloc(size_t nb, size_t size);
+char *strstrip(char *s);
+int parse_config_line(char *line, char **option, char **value);
 
 #endif /* UTIL_H */

@@ -5,7 +5,7 @@
 
 #include "config.h"
 
-void config_populate() {
+void config_set_defaults() {
 
 	config.spawn = 1;
 

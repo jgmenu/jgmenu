@@ -1,7 +1,6 @@
 #ifndef X11_UI_H
 #define X11_UI_H
 
-#include <unistd.h>		/* for usleep */
 #include <cairo.h>
 #include <cairo-xlib.h>
 #include <pango/pangocairo.h>
@@ -20,9 +19,10 @@ struct UI {
 
 struct UI *ui;
 
+void ui_init_cairo(int canvas_width, int canvas_height, const char *font);
 void ui_init();
-void ui_get_screen_res();
-void ui_create_window(void);
+void ui_get_screen_res(int *x0, int *y0, int *width, int *height);
+void ui_create_window(int x, int y, int w, int h, int max_canvas_height);
 void ui_draw_rectangle(int x, int y, int w, int h, int fill,
 		       float r, float g, float b, float a);
 void ui_draw_line(int x0, int y0, int x1, int y1,

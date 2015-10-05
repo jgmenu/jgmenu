@@ -30,12 +30,13 @@ struct Menu {
 	int menu_w;
 	int item_h;
 
-	char *normbgcol;
+	char *normbgcol;	/* These should be under config really... */
 	char *normfgcol;
 	char *selbgcol;
 	char *selfgcol;
 
 	char *font;
+
 	int font_height;	/* logical font height calculated by pango */
 
 	struct Item *head;	/* pointer to the first menu item		*/
@@ -62,6 +63,6 @@ struct Menu {
 
 struct Menu menu;
 
-void config_populate();
+void config_set_defaults();
 
 #endif /* CONFIG_H */
