@@ -20,14 +20,15 @@ struct UI {
 struct UI *ui;
 
 void ui_init_cairo(int canvas_width, int canvas_height, const char *font);
-void ui_init();
+void ui_init(void);
 void ui_get_screen_res(int *x0, int *y0, int *width, int *height);
-void ui_create_window(int x, int y, int w, int h, int max_canvas_height);
+void ui_init_canvas(int max_width, int max_height);
+void ui_create_window(int x, int y, int w, int h);
 void ui_draw_rectangle(int x, int y, int w, int h, int fill,
 		       float r, float g, float b, float a);
 void ui_draw_line(int x0, int y0, int x1, int y1,
 		       float r, float g, float b, float a);
-void ui_insert_text();
+void ui_insert_text(char *s, int x, int y, int h);
 int ui_get_text_height(char *fontdesc);
 void ui_map_window(unsigned int w, unsigned int h);
 void ui_cleanup(void);

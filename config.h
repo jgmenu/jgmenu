@@ -12,9 +12,11 @@ struct Item {
 
 
 struct Config {
-	int spawn;
+	int spawn;		/* 1:execute commands  0:print to stdout */
+	int debug_mode;		/* print debug messages */
 };
-struct Config config;
+
+extern struct Config config;
 
 
 struct Menu {
@@ -30,7 +32,7 @@ struct Menu {
 	int menu_w;
 	int item_h;
 
-	char *normbgcol;	/* These should be under config really... */
+	char *normbgcol;	/* These should be under config really...  */
 	char *normfgcol;
 	char *selbgcol;
 	char *selfgcol;
@@ -39,14 +41,14 @@ struct Menu {
 
 	int font_height;	/* logical font height calculated by pango */
 
-	struct Item *head;	/* pointer to the first menu item		*/
-	struct Item *tail;	/* end of dynamic array				*/
-	int end;		/* number of items in dynamic array		*/
+	struct Item *head;	/* pointer to the first menu item	   */
+	struct Item *tail;	/* end of dynamic array			   */
+	int end;		/* number of items in dynamic array	   */
 
-	struct Item *sel;	/* pointer to the currently selected item	*/
-	struct Item *first;	/* pointer to the first item in submenu		*/
-	struct Item *last;	/* pointer to the first item in submenu		*/
-	int nr_items;		/* number of items in menu/submenu		*/
+	struct Item *sel;	/* pointer to the currently selected item  */
+	struct Item *first;	/* pointer to the first item in submenu	   */
+	struct Item *last;	/* pointer to the first item in submenu	   */
+	int nr_items;		/* number of items in menu/submenu	   */
 
 	char *title;
 
@@ -63,6 +65,6 @@ struct Menu {
 
 struct Menu menu;
 
-void config_set_defaults();
+void config_set_defaults(void);
 
 #endif /* CONFIG_H */

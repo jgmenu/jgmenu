@@ -1,4 +1,5 @@
-/* jgmenu.c
+/*
+ * jgmenu.c
  *
  * Copyright (C) Johan Malm 2014
  *
@@ -12,36 +13,26 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
-//#include <cairo.h>
-//#include <cairo-xlib.h>
-//#include <pango/pangocairo.h>
 #include "x11-ui.h"
 #include "config.h"
 #include "util.h"
-
-
-struct Area {
-	int x0, y0, x1, y1;
-};
-
-static int DEBUG = 0;
-
+#include "geometry.h"
 
 void draw_menu(void)
 {
 	struct Item *p;
-	int x,y,w,h;
+	int x, y, w, h;
 	int offset;
 
 	x = 0;
 	y = 0;
 	h = menu.item_h;
-	w = menu.menu_w;
+	w = geo_get_menu_width();
 
 	offset = (menu.item_h - menu.font_height) / 2;
 
 	/* Set background */
-	ui_draw_rectangle(0, 0, menu.menu_w, menu.menu_h, 1,
+	ui_draw_rectangle(0, 0, geo_get_menu_width(), geo_get_menu_height(), 1,
 			  255, 255, 255, 1.0);
 
 	/* Draw title */
@@ -52,32 +43,27 @@ void draw_menu(void)
 	}
 
 	/* Draw menu items */
-	for(p = menu.first; p && p->t[0] && p->prev != menu.last; p++) {
-		if(p == menu.sel) {
+	for (p = menu.first; p && p->t[0] && p->prev != menu.last; p++) {
+		if (p == menu.sel)
 			ui_draw_rectangle(x, y, w, h, 1, 1.0, 0.7, 0.15, 0.8);
-		}
 
 		ui_insert_text(p->t[0], x, y + offset, h);
 
 		if (strncmp(p->t[1], "^checkout(", 10) == 0 &&
 		    strncmp(p->t[0], "..", 2) != 0) {
-			ui_draw_line(x+w-8, y+menu.item_h/2-2, x+w-2, y+menu.item_h/2, 0,0,0,1.0);
-			ui_draw_line(x+w-8, y+menu.item_h/2+2, x+w-2, y+menu.item_h/2, 0,0,0,1.0);
+			ui_draw_line(x + w - 8, y + menu.item_h / 2 - 2, x + w - 2, y + menu.item_h / 2, 0, 0, 0, 1.0);
+			ui_draw_line(x + w - 8, y + menu.item_h / 2 + 2, x + w - 2, y + menu.item_h / 2, 0, 0, 0, 1.0);
 		}
 
 		y += h;
 	}
 
-/*
-	ui_draw_rectangle(1, 1, menu.menu_w - 2, menu.menu_h - 2, 0,
-			  1.0, 0.0, 0.0, 0.7);
-*/
-
-	ui_map_window(menu.menu_w, menu.menu_h);
+	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
 }
 
 /* Sets *menu.first and *menu.last pointing to the beginnning and end of
- * the submenu */
+ * the submenu
+ */
 void checkout_submenu(char *tag)
 {
 	struct Item *item;
@@ -88,10 +74,9 @@ void checkout_submenu(char *tag)
 
 	if (!tag) {
 		menu.first = menu.head;
-	}
-	else {
+	} else {
 		for (item = menu.head; item && item->t[0]; item++) {
-			if (item->tag && !strncmp(item->tag,tag,strlen(tag))) {
+			if (item->tag && !strncmp(item->tag, tag, strlen(tag))) {
 				menu.title = item->t[0];
 				if (item->next)
 					menu.first = item + 1;
@@ -111,12 +96,11 @@ void checkout_submenu(char *tag)
 
 	if (!menu.first->next) {
 		menu.last = menu.first;
-	}
-	else {
+	} else {
 		item = menu.first->next;
 
 		while (!menu.last && item && item->t[0]) {
-			if (!item->next || !strncmp(item->next->t[1],tagtok,strlen(tagtok)))
+			if (!item->next || !strncmp(item->next->t[1], tagtok, strlen(tagtok)))
 				menu.last = item;
 			else
 				item++;
@@ -139,6 +123,7 @@ char *parse_caret_action(char *s, char *token)
 	 */
 
 	char *p, *q;
+
 	p = NULL;
 	q = NULL;
 
@@ -146,7 +131,8 @@ char *parse_caret_action(char *s, char *token)
 		if (strncmp(s, token, strlen(token)) == 0) {
 			p = strdup(s);
 			p += strlen(token);
-			if ((q = strchr(p, ')')))
+			q = strchr(p, ')');
+			if (q)
 				*q = '\0';
 		}
 
@@ -155,8 +141,7 @@ char *parse_caret_action(char *s, char *token)
 
 void action_cmd(char *cmd)
 {
-	char *p;
-	p = NULL;
+	char *p = NULL;
 
 	if (!cmd)
 		return;
@@ -166,20 +151,19 @@ void action_cmd(char *cmd)
 			checkout_submenu(p);
 			menu.sel = menu.first;
 
-			menu.menu_h = menu.nr_items * menu.item_h;
+			geo_set_menu_height(menu.nr_items * menu.item_h);
 			if (menu.title)
-				menu.menu_h += menu.item_h;
-			menu.win_y0 = menu.screen_y0 + menu.screen_h - menu.menu_h - 32;
-			XMoveResizeWindow(ui->dpy, ui->win, menu.win_x0, menu.win_y0,
-						        menu.menu_w, menu.menu_h);
+				geo_set_menu_height(geo_get_menu_height() + menu.item_h);
+
+			/* menu height has changed - need to redraw window */
+			XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
+					  geo_get_menu_width(), geo_get_menu_height());
 
 			draw_menu();
-		}
-		else {
+		} else {
 			die("Item began with ^ but was not checkout()");
 		}
-	}
-	else {
+	} else {
 		spawn(cmd);
 		exit(0);
 	}
@@ -191,17 +175,17 @@ void key_event(XKeyEvent *ev)
 	KeySym ksym = NoSymbol;
 	Status status;
 
-	XmbLookupString(ui->xic, ev, buf, sizeof buf, &ksym, &status);
+	XmbLookupString(ui->xic, ev, buf, sizeof(buf), &ksym, &status);
 	if (status == XBufferOverflow)
 		return;
-	switch(ksym) {
+	switch (ksym) {
 	default:
 		break;
 	case XK_End:
 		menu.sel = menu.last;
 		break;
 	case XK_Escape:
-	        exit(0);
+		exit(0);
 	case XK_Home:
 		menu.sel = menu.first;
 		break;
@@ -270,8 +254,7 @@ void mouse_event(XEvent *e)
 				if (config.spawn) {
 					action_cmd(item->t[1]);
 					break;
-				}
-				else {
+				} else {
 					puts(item->t[1]);
 				}
 			}
@@ -297,7 +280,7 @@ void tabulate(char *s)
 		printf(" ");
 }
 
-void debug_dlist()
+void debug_dlist(void)
 {
 	struct Item *item;
 
@@ -306,13 +289,13 @@ void debug_dlist()
 	printf("---------------------------------------------------------------\n");
 
 	for (item = menu.head; item && item->t[0]; item++) {
-		printf("%s",item->t[0]);
+		printf("%s", item->t[0]);
 		tabulate(item->t[0]);
-		printf("%s",item->t[1]);
+		printf("%s", item->t[1]);
 		tabulate(item->t[1]);
-		printf("%s",item->t[2]);
+		printf("%s", item->t[2]);
 		tabulate(item->t[2]);
-		printf("%s",item->tag);
+		printf("%s", item->tag);
 		tabulate(item->tag);
 		printf("\n");
 	}
@@ -327,6 +310,7 @@ void debug_dlist()
 char *next_field(char *str)
 {
 	char *tmp;
+
 	tmp = strchr(str, ',');
 	if (tmp)
 		tmp++;
@@ -337,6 +321,7 @@ void parse_csv(struct Item *p)
 {
 	char *q;
 	int j;
+
 	p->t[1] = NULL;
 	p->t[2] = NULL;
 
@@ -344,7 +329,7 @@ void parse_csv(struct Item *p)
 		if (p->t[j])
 			p->t[j+1] = next_field(p->t[j]);
 
-	while((q = strrchr(p->t[0], ',')))
+	while ((q = strrchr(p->t[0], ',')))
 		*q = '\0';
 }
 
@@ -370,14 +355,14 @@ void read_stdin(void)
 
 	menu.head = NULL;
 
-	/* This for-loop is loosely based on dmenu-4.5 */
-	for (i = 0; fgets(buf, sizeof buf, stdin); i++) {
-		if (size <= (i+1) * sizeof *menu.head) {
+	for (i = 0; fgets(buf, sizeof(buf), stdin); i++) {
+		if (size <= (i+1) * sizeof(*menu.head)) {
 			size += BUFSIZ;
 			menu.head = xrealloc(menu.head, size);
 		}
 
-		if ((p = strchr(buf, '\n')))
+		p = strchr(buf, '\n');
+		if (p)
 			*p = '\0';
 
 		if ((buf[0] == '#') ||
@@ -387,7 +372,8 @@ void read_stdin(void)
 			continue;
 		}
 
-		if (!(menu.head[i].t[0] = strdup(buf)))
+		menu.head[i].t[0] = strdup(buf);
+		if (!menu.head[i].t[0])
 			die("cannot strdup");
 
 		parse_csv(&menu.head[i]);
@@ -396,8 +382,10 @@ void read_stdin(void)
 	if (!menu.head)
 		die("No stdin.");
 
-	/* Using "menu.head[i].t[0] = NULL" as a dynamic array end-marker
-	 * rather than menu.end or menu.tail. */
+	/*
+	 * Using "menu.head[i].t[0] = NULL" as a dynamic array end-marker
+	 * rather than menu.end or menu.tail.
+	 */
 	menu.head[i].t[0] = NULL;
 
 	/* menu.end holds the number of items in the dynamic array */
@@ -405,7 +393,7 @@ void read_stdin(void)
 	menu.end = i;
 
 	/* Create doubly-linked list */
-	menu.tail=NULL;
+	menu.tail = NULL;
 	for (item = menu.head; item && item->t[0]; item++)
 		dlist_append(item, &menu.head, &menu.tail);
 
@@ -421,7 +409,7 @@ void run(void)
 	int y, oldy = 0;
 
 	while (!XNextEvent(ui->dpy, &ev)) {
-		switch(ev.type) {
+		switch (ev.type) {
 		case ButtonPress:
 			mouse_event(&ev);
 			break;
@@ -430,11 +418,11 @@ void run(void)
 			draw_menu();
 			break;
 		case Expose:
-			if(ev.xexpose.count == 0)
-				ui_map_window(menu.menu_w, menu.menu_h);
+			if (ev.xexpose.count == 0)
+				ui_map_window(geo_get_menu_width(), geo_get_menu_height());
 			break;
 		case VisibilityNotify:
-			if(ev.xvisibility.state != VisibilityUnobscured)
+			if (ev.xvisibility.state != VisibilityUnobscured)
 				XRaiseWindow(ui->dpy, ui->win);
 			break;
 		}
@@ -443,7 +431,7 @@ void run(void)
 		/* Current mouse position is (ev.xbutton.x, ev.xbutton.y) */
 		y = menu.win_y0;
 
-		if ((oldy != 0) && (ev.xbutton.y != oldy) && (ev.xbutton.x < menu.menu_w)) {
+		if ((oldy != 0) && (ev.xbutton.y != oldy) && (ev.xbutton.x < geo_get_menu_width())) {
 			if (menu.title)
 				y += menu.item_h;
 			for (item = menu.first; item && item->t[0] && item->prev != menu.last; item++) {
@@ -489,7 +477,7 @@ int main(int argc, char *argv[])
 		else if (!strcmp(argv[i], "-r"))
 			config.spawn = 0;
 		else if (!strcmp(argv[i], "--debug"))
-			DEBUG = 1;
+			config.debug_mode = 1;
 		else if (i+1 == argc)
 			usage();
 		else
@@ -504,30 +492,33 @@ int main(int argc, char *argv[])
 
 	menu.sel = menu.first;
 
-	if (DEBUG)
+	if (config.debug_mode)
 		debug_dlist();
 
 	ui_init();
 
+	geo_init();
+	geo_set_menu_margin_x(2);
+	geo_set_menu_margin_y(32);
+	geo_set_menu_width(200);
+
+
 	/* calculate menu geometry */
 	menu.font_height =  ui_get_text_height(menu.font);
 	menu.item_h = (menu.item_h > menu.font_height) ? menu.item_h : (menu.font_height);
-	menu.menu_h = menu.nr_items * menu.item_h;
+	geo_set_menu_height(menu.nr_items * menu.item_h);
 	if (menu.title)
-		menu.menu_h += menu.item_h;
-	menu.menu_w = 200;
+		geo_set_menu_height(geo_get_menu_height() + menu.item_h);
 
-	ui_get_screen_res(&menu.screen_x0, &menu.screen_y0, &menu.screen_w, &menu.screen_h);
-
-	menu.win_y0 = menu.screen_y0 + menu.screen_h - menu.menu_h - 32;
-	menu.win_x0 = 2;
-
-	/* 
+	/*
 	 * FIXME Would be tidier to calc height to largest submenu rather than
 	 * allocating memory for (menu.end * menu.item_h)
 	 */
-	ui_create_window(menu.win_x0, menu.win_y0, menu.menu_w, menu.menu_h, menu.end * menu.item_h);
-	ui_init_cairo(menu.menu_w, menu.end * menu.item_h, menu.font);
+
+	ui_create_window(geo_get_menu_x0(), geo_get_menu_y0(),
+			 geo_get_menu_width(), geo_get_menu_height());
+	ui_init_canvas(geo_get_menu_width(), menu.end * menu.item_h);
+	ui_init_cairo(geo_get_menu_width(), menu.end * menu.item_h, menu.font);
 
 	draw_menu();
 

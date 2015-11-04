@@ -10,16 +10,16 @@ LIBS  = `pkg-config x11 xinerama cairo pango pangocairo --libs`
 
 LDFLAGS  = $(LIBS)
 
-OBJS =  x11-ui.o config.o util.o
+OBJS =  x11-ui.o config.o util.o geometry.o
 
-all: jgmenu x11-ui.o config.o util.o
+all: jgmenu x11-ui.o config.o util.o geometry.o
 
 jgmenu: jgmenu.c $(OBJS)
 	@echo $(CC) $@
 	@$(CC) $(LDFLAGS) $(CFLAGS) -o jgmenu $(OBJS) jgmenu.c
 
 
-x11-ui.o: x11-ui.c x11-ui.h config.h
+x11-ui.o: x11-ui.c x11-ui.h
 	@echo $(CC) $@
 	@$(CC) $(CFLAGS) $(LIBS) -c x11-ui.c
 
@@ -31,6 +31,10 @@ util.o: util.c util.h
 	@echo $(CC) $@
 	@$(CC) $(CFLAGS) $(LIBS) -c util.c
 
+geometry.o: geometry.c geometry.h
+	@echo $(CC) $@
+	@$(CC) $(CFLAGS) $(LIBS) -c geometry.c
+
 install: jgmenu
 	@echo installing...
 	@sudo cp -pv ./jgmenu /usr/bin/
@@ -38,6 +42,7 @@ install: jgmenu
 
 clean:
 	@echo cleaning...
+	@rm -f jgmenu
 	@rm -f *.o
 
 test: all

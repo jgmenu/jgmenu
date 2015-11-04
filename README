@@ -1,5 +1,5 @@
 Introduction
-~~~~~~~~~~~~
+------------
 jgmenu is written with the following aims:
   - Be a stand-alone, simple and contemporary-looking menu
   - Be hackable with a clean, small code base
@@ -15,13 +15,13 @@ jgmenu is written with the following aims:
     E.g. echo -e "terminal,xterm\nfile manager,pcmanfm" | jgmenu
 
 Installation
-~~~~~~~~~~~~
+------------
 	make
 	make install
 	jgmenu_run
 
 Usage
-~~~~~
+-----
 The program reads the menu items from stdin.  Menu items are seperated by a
 new-line character ('\n').  Empty lines and lines beginning with '#' are
 ignored.
@@ -32,7 +32,7 @@ Submenus can be defined and checked out using ^tag() and ^checkout()
 markup in the "command" field.
 
 Examples
-~~~~~~~~
+--------
 Example 1:
 	echo -e "terminal,xterm\nfilemanager,pcmanfm" | jgmenu
 

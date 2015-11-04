@@ -14,6 +14,7 @@ void spawn(const char *arg);
 void *xmalloc(size_t size);
 void *xrealloc(void *ptr, size_t size);
 void *xcalloc(size_t nb, size_t size);
+char *expand_tilde(char *s);
 char *strstrip(char *s);
 int parse_config_line(char *line, char **option, char **value);
 

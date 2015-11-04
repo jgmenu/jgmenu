@@ -5,9 +5,18 @@
 
 #include "config.h"
 
-void config_set_defaults() {
+struct Config config;
 
-	config.spawn = 1;
+/*
+ * Sets default values for config variables.
+ * This will be followed by:
+ *  - reading a config file if it exists.
+ *  - parsing the command line.
+ */
+void config_set_defaults(void)
+{
+	config.spawn		= 1;
+	config.debug_mode	= 0;
 
 	menu.win_y0    = 0;
 	menu.item_h    = 30;			/* code will set to font height if greater */

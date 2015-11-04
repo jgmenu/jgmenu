@@ -27,10 +27,10 @@
 
 
 /* INTERSECT is required by Xinerama.  MAX and MIN are defined in glib */
-#define INTERSECT(x,y,w,h,r)  (MAX(0, MIN((x)+(w),(r).x_org+(r).width)  - \
-			       MAX((x),(r).x_org)) * \
-                               MAX(0, MIN((y)+(h),(r).y_org+(r).height) - \
-			       MAX((y),(r).y_org)))
+#define INTERSECT(x, y, w, h, r)  (MAX(0, MIN((x)+(w), (r).x_org+(r).width)  - \
+				   MAX((x), (r).x_org)) * \
+				   MAX(0, MIN((y)+(h), (r).y_org+(r).height) - \
+				   MAX((y), (r).y_org)))
 
 
 void grabkeyboard(void)
@@ -38,10 +38,10 @@ void grabkeyboard(void)
 	/* The "waiting" trick has been copied from dmenu-4.5 */
 	int i;
 
-	for(i = 0; i < 1000; i++) {
-		if(XGrabKeyboard(ui->dpy, DefaultRootWindow(ui->dpy), True,
-		                 GrabModeAsync, GrabModeAsync,
-				 CurrentTime) == GrabSuccess)
+	for (i = 0; i < 1000; i++) {
+		if (XGrabKeyboard(ui->dpy, DefaultRootWindow(ui->dpy), True,
+				  GrabModeAsync, GrabModeAsync,
+				  CurrentTime) == GrabSuccess)
 			return;
 		usleep(1000);
 	}
@@ -56,31 +56,33 @@ void grabpointer(void)
 {
 	XGrabPointer(ui->dpy, DefaultRootWindow(ui->dpy),
 		     True,	/* False gives (x,y) wrt root window. */
-	             ButtonPressMask | ButtonReleaseMask |
+		     ButtonPressMask | ButtonReleaseMask |
 		     PointerMotionMask | FocusChangeMask |
 		     EnterWindowMask | LeaveWindowMask,
-	             GrabModeAsync, GrabModeAsync, None, None, CurrentTime);
+		     GrabModeAsync, GrabModeAsync, None, None, CurrentTime);
 }
 
 
 
 void ui_init_cairo(int canvas_width, int canvas_height, const char *font)
 {
-        Visual *vis;
-        vis = DefaultVisual(ui->dpy, 0);
+	Visual *vis;
 
-        ui->cs = cairo_xlib_surface_create(ui->dpy, ui->canvas, vis, canvas_width, canvas_height);
-        ui->c = cairo_create (ui->cs);
+	vis = DefaultVisual(ui->dpy, 0);
+
+	ui->cs = cairo_xlib_surface_create(ui->dpy, ui->canvas, vis, canvas_width, canvas_height);
+	ui->c = cairo_create(ui->cs);
 
 	ui->pangolayout = pango_cairo_create_layout(ui->c);
 	ui->pangofont = pango_font_description_from_string(font);
 }
 
-void ui_init()
+void ui_init(void)
 {
-	ui = xcalloc(1, sizeof *ui);
+	ui = xcalloc(1, sizeof(*ui));
 
-	if(!(ui->dpy = XOpenDisplay(NULL)))
+	ui->dpy = XOpenDisplay(NULL);
+	if (!ui->dpy)
 		die("cannot open display");
 
 	ui->gc = XCreateGC(ui->dpy, DefaultRootWindow(ui->dpy), 0, NULL);
@@ -99,34 +101,42 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
 	Window root = RootWindow(ui->dpy, screen);
 	int n;
 	XineramaScreenInfo *info;
-	if((info = XineramaQueryScreens(ui->dpy, &n))) {
+
+	info = XineramaQueryScreens(ui->dpy, &n);
+	if (info) {
 		int a, j, di, i = 0, area = 0;
 		unsigned int du;
 		Window w, pw, dw, *dws;
 		XWindowAttributes wa;
 
 		XGetInputFocus(ui->dpy, &w, &di);
-		if(w != root && w != PointerRoot && w != None) {
+		if (w != root && w != PointerRoot && w != None) {
 			/* find top-level window containing current input focus */
 			do {
-				if(XQueryTree(ui->dpy, (pw = w), &dw, &w, &dws, &du) && dws)
+				pw = w;
+				if (XQueryTree(ui->dpy, pw, &dw, &w, &dws, &du) && dws)
 					XFree(dws);
-			} while(w != root && w != pw);
+			} while (w != root && w != pw);
 			/* find xinerama screen with which the window intersects most */
-			if(XGetWindowAttributes(ui->dpy, pw, &wa))
-				for(j = 0; j < n; j++)
-					if((a = INTERSECT(wa.x, wa.y, wa.width, wa.height, info[j])) > area) {
+			if (XGetWindowAttributes(ui->dpy, pw, &wa))
+				for (j = 0; j < n; j++) {
+					a = INTERSECT(wa.x, wa.y, wa.width, wa.height, info[j]);
+					if (a > area) {
 						area = a;
 						i = j;
 					}
+				}
 		}
 
-		/* no focused window is on screen, so use pointer location instead */
-/*		if(!area && XQueryPointer(ui->dpy, root, &dw, &dw, x, y, &di, &di, &du))
-			for(i = 0; i < n; i++)
-				if(INTERSECT(*x, *y, 1, 1, info[i]))
-					break;
-*/
+		/*
+		 * No focused window is on screen, so use pointer location instead
+		 */
+/*
+ *		if(!area && XQueryPointer(ui->dpy, root, &dw, &dw, x, y, &di, &di, &du))
+ *			for(i = 0; i < n; i++)
+ *				if(INTERSECT(*x, *y, 1, 1, info[i]))
+ *					break;
+ */
 
 /* SET MENU DIMENSIONS */
 
@@ -136,8 +146,7 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
 		*height = info[i].height;
 
 		XFree(info);
-	}
-	else
+	} else
 #endif
 	{
 		*x0 = 0;
@@ -148,10 +157,25 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
 }
 
 
-void ui_create_window(int x, int y, int w, int h, int max_canvas_height)
+
+/*
+ * max_height is that associated with the longest submenu
+ */
+void ui_init_canvas(int max_width, int max_height)
+{
+	int screen = DefaultScreen(ui->dpy);
+
+	if (ui->canvas)
+		XFreePixmap(ui->dpy, ui->canvas);
+	ui->canvas = XCreatePixmap(ui->dpy, DefaultRootWindow(ui->dpy), max_width,
+				   max_height, DefaultDepth(ui->dpy, screen));
+}
+
+void ui_create_window(int x, int y, int w, int h)
 {
 	/* The following is heavily based dmenu's draw.c */
 	int screen = DefaultScreen(ui->dpy);
+
 	Window root = RootWindow(ui->dpy, screen);
 	XSetWindowAttributes swa;
 	XIM xim;
@@ -159,18 +183,13 @@ void ui_create_window(int x, int y, int w, int h, int max_canvas_height)
 	swa.override_redirect = True;
 	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask | ButtonPressMask;
 	ui->win = XCreateWindow(ui->dpy, root, x, y, w, h, 0,
-	                    DefaultDepth(ui->dpy, screen), CopyFromParent,
-	                    DefaultVisual(ui->dpy, screen),
-	                    CWOverrideRedirect | CWBackPixel | CWEventMask, &swa);
+				DefaultDepth(ui->dpy, screen), CopyFromParent,
+				DefaultVisual(ui->dpy, screen),
+				CWOverrideRedirect | CWBackPixel | CWEventMask, &swa);
 	xim = XOpenIM(ui->dpy, NULL, NULL, NULL);
 	ui->xic = XCreateIC(xim, XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
-	                XNClientWindow, ui->win, XNFocusWindow, ui->win, NULL);
+			    XNClientWindow, ui->win, XNFocusWindow, ui->win, NULL);
 	XMapRaised(ui->dpy, ui->win);
-	if(ui->canvas)
-		XFreePixmap(ui->dpy, ui->canvas);
-
-	ui->canvas = XCreatePixmap(ui->dpy, DefaultRootWindow(ui->dpy), w, max_canvas_height,
-	                           DefaultDepth(ui->dpy, screen));
 	/* END OF COPY */
 
 	/* XDefineCursor required to prevent blindly inheriting cursor from parent
@@ -185,10 +204,10 @@ void ui_create_window(int x, int y, int w, int h, int max_canvas_height)
 void ui_draw_rectangle(int x, int y, int w, int h, int fill,
 		       float r, float g, float b, float a)
 {
-	cairo_set_source_rgba (ui->c, r, g, b, a);
+	cairo_set_source_rgba(ui->c, r, g, b, a);
 	cairo_set_line_width(ui->c, 0.5);
 	cairo_rectangle(ui->c, x, y, w, h);
-	if(fill)
+	if (fill)
 		cairo_fill(ui->c);
 	else
 		cairo_stroke(ui->c);
@@ -197,7 +216,7 @@ void ui_draw_rectangle(int x, int y, int w, int h, int fill,
 void ui_draw_line(int x0, int y0, int x1, int y1,
 		       float r, float g, float b, float a)
 {
-	cairo_set_source_rgba (ui->c, r, g, b, a);
+	cairo_set_source_rgba(ui->c, r, g, b, a);
 	cairo_set_line_width(ui->c, 1.5);
 	cairo_move_to(ui->c, x0, y0);
 	cairo_line_to(ui->c, x1, y1);
@@ -224,8 +243,8 @@ int ui_get_text_height(char *fontdesc)
 	PangoRectangle ink;
 	PangoRectangle logical;
 
-	cs = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 120, 120);
-	c = cairo_create (cs);
+	cs = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 120, 120);
+	c = cairo_create(cs);
 	layout = pango_cairo_create_layout(c);
 	font = pango_font_description_from_string(fontdesc);
 	pango_layout_set_text(layout, "foo", -1);
@@ -234,7 +253,7 @@ int ui_get_text_height(char *fontdesc)
 	pango_cairo_update_layout(c, layout);
 
 	line = pango_layout_get_line_readonly(layout, 0);
-	pango_layout_line_get_extents (line, &ink, &logical);
+	pango_layout_line_get_extents(line, &ink, &logical);
 	/* TODO: FREE CAIRO MEMORY */
 	pango_font_description_free(font);
 	g_object_unref(layout);
@@ -253,13 +272,13 @@ void ui_cleanup(void)
 	XUngrabKeyboard(ui->dpy, CurrentTime);
 	XUngrabPointer(ui->dpy, CurrentTime);
 
-	if(ui->canvas)
+	if (ui->canvas)
 		XFreePixmap(ui->dpy, ui->canvas);
-	if(ui->gc)
+	if (ui->gc)
 		XFreeGC(ui->dpy, ui->gc);
-	if(ui->dpy)
+	if (ui->dpy)
 		XCloseDisplay(ui->dpy);
-	if(ui)
+	if (ui)
 		free(ui);
 
 	/* TODO: Free cairo stuff */
