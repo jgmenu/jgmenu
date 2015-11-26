@@ -31,6 +31,14 @@
  * The menu_margin_* is the distance between the X11 window and the edge
  * of the screen
  *
+ * Usage:
+ * ------
+ *   - Init X11 (XOpenDisplay, etc)
+ *   - Call geo_init()
+ *   - All the geo_get_* can now be used (default values set up geo_init)
+ *   - Set variables using the geo_set_* functions.
+ *     These all call geo_update() which updates all "geometry" variables.
+ *
  */
 
 #ifndef GEOMETRY_H
@@ -43,10 +51,16 @@ void geo_set_menu_width(int w);
 void geo_set_menu_height(int h);
 void geo_set_menu_margin_x(int x);
 void geo_set_menu_margin_y(int y);
+void geo_set_item_height(int h);
+void geo_set_font(char *font);
+void geo_set_nr_items(int nr);
+void geo_set_show_title(char *s);
 
 int geo_get_menu_x0(void);
 int geo_get_menu_y0(void);
 int geo_get_menu_height(void);
 int geo_get_menu_width(void);
+int geo_get_item_height(void);
+int geo_get_font_height(void);
 
 #endif  /* GEOMETRY_H */

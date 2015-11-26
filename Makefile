@@ -1,4 +1,4 @@
-VER=0.1
+VER = $(shell git describe 2>/dev/null)
 CC = gcc
 
 CFLAGS   = -g -pedantic -Wall -Os
@@ -23,9 +23,9 @@ x11-ui.o: x11-ui.c x11-ui.h
 	@echo $(CC) $@
 	@$(CC) $(CFLAGS) $(LIBS) -c x11-ui.c
 
-config.o: config.c config.h
+config.o: config.c config.h util.c
 	@echo $(CC) $@
-	@$(CC) $(CFLAGS) $(LIBS) -c config.c
+	@$(CC) $(CFLAGS) $(LIBS) -c config.c util.c
 
 util.o: util.c util.h
 	@echo $(CC) $@
@@ -45,5 +45,5 @@ clean:
 	@rm -f jgmenu
 	@rm -f *.o
 
-test: all
+test:
 	$(MAKE) -C tests/ all

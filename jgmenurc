@@ -1,0 +1,7 @@
+# This is just a sample file
+
+item_height	= 30
+font		= Ubuntu condensed 14px
+menu_margin_x	= 5
+menu_margin_y	= 50
+menu_width	= 500

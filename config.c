@@ -3,30 +3,63 @@
 #include<stdarg.h>
 #include<string.h>
 
+#include "util.h"
 #include "config.h"
 
 struct Config config;
 
-/*
- * Sets default values for config variables.
- * This will be followed by:
- *  - reading a config file if it exists.
- *  - parsing the command line.
- */
 void config_set_defaults(void)
 {
 	config.spawn		= 1;
 	config.debug_mode	= 0;
+	config.item_height	= 30;
+	config.font		= strdup("Ubuntu condensed 18px");
+	config.menu_margin_x	= 2;
+	config.menu_margin_y	= 32;
+	config.menu_width	= 200;
 
-	menu.win_y0    = 0;
-	menu.item_h    = 30;			/* code will set to font height if greater */
-/*	menu.font      = strdup("Sans 18px");	*/
-	menu.font      = strdup("Ubuntu condensed 18px");
-	menu.title     = NULL;
+	/* not yet incorporated */
+	config.normbgcol	= strdup("#bbbbbb");
+	config.normfgcol	= strdup("#222222");
+	config.selbgcol		= strdup("#3388cc");
+	config.selfgcol		= strdup("#eeeeee");
+}
 
-	menu.normbgcol = strdup("#bbbbbb");
-	menu.normfgcol = strdup("#222222");
-	menu.selbgcol  = strdup("#3388cc");
-	menu.selfgcol  = strdup("#eeeeee");
+void process_line(char *line)
+{
+	char *option, *value;
 
+	if (!parse_config_line(line, &option, &value))
+		return;
+
+	if (!strncmp(option, "item_height", 11))
+		config.item_height = atoi(value);
+	else if (!strncmp(option, "font", 4))
+		config.font = strdup(value);
+	else if (!strncmp(option, "menu_margin_x", 13))
+		config.menu_margin_x = atoi(value);
+	else if (!strncmp(option, "menu_margin_y", 13))
+		config.menu_margin_y = atoi(value);
+	else if (!strncmp(option, "menu_width", 10))
+		config.menu_width = atoi(value);
+}
+
+
+void read_file(FILE *fp)
+{
+	char line[1024];
+
+	while (fgets(line, sizeof(line), fp))
+		process_line(line);
+}
+
+void config_parse_file(char *filename)
+{
+	FILE *fp;
+
+	fp = fopen(filename, "r");
+	if (!fp)
+		die("could not open file %s", filename);
+	read_file(fp);
+	fclose(fp);
 }

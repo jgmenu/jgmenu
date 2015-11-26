@@ -6,34 +6,65 @@
  * jgmenu is a stand-alone menu which reads the menu items from stdin
  */
 
-#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
+
 #include "x11-ui.h"
 #include "config.h"
 #include "util.h"
 #include "geometry.h"
 
+#define MAX_FIELDS 3		/* nr fields to parse for each stdin line */
+
+struct Item {
+	char *t[MAX_FIELDS];	/* pointers name, cmd			  */
+	char *tag;		/* used to tag the start of a submenu	  */
+	struct Item *next, *prev;
+};
+
+struct Menu {
+	struct Item *head;	/* pointer to the first menu item	   */
+	struct Item *tail;	/* end of dynamic array			   */
+	int end;		/* number of items in dynamic array	   */
+	struct Item *sel;	/* pointer to the currently selected item  */
+	struct Item *first;	/* pointer to the first item in submenu	   */
+	struct Item *last;	/* pointer to the first item in submenu	   */
+	int nr_items;		/* number of items in menu/submenu	   */
+	char *title;
+};
+
+struct Menu menu;
+
+void usage(void)
+{
+	printf("Usage: jgmenu [OPTIONS]\n"
+	       "    --version             show version\n"
+	       "    -r                    redirect command to stdout rather than executing\n"
+	       "    --debug               debug mode\n"
+	       "    --config-file=<file>  read config file\n");
+	exit(0);
+}
+
+
 void draw_menu(void)
 {
 	struct Item *p;
-	int x, y, w, h;
-	int offset;
+	int x, y, w, h, offset;
 
 	x = 0;
 	y = 0;
-	h = menu.item_h;
+	h = geo_get_item_height();
 	w = geo_get_menu_width();
 
-	offset = (menu.item_h - menu.font_height) / 2;
+	offset = (h - geo_get_font_height()) / 2;
 
 	/* Set background */
-	ui_draw_rectangle(0, 0, geo_get_menu_width(), geo_get_menu_height(), 1,
-			  255, 255, 255, 1.0);
+	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), 1,
+			  0.8, 0.8, 0.8, 1.0);
 
 	/* Draw title */
 	if (menu.title) {
@@ -51,8 +82,8 @@ void draw_menu(void)
 
 		if (strncmp(p->t[1], "^checkout(", 10) == 0 &&
 		    strncmp(p->t[0], "..", 2) != 0) {
-			ui_draw_line(x + w - 8, y + menu.item_h / 2 - 2, x + w - 2, y + menu.item_h / 2, 0, 0, 0, 1.0);
-			ui_draw_line(x + w - 8, y + menu.item_h / 2 + 2, x + w - 2, y + menu.item_h / 2, 0, 0, 0, 1.0);
+			ui_draw_line(x + w - 8, y + h / 2 - 2, x + w - 2, y + h / 2, 0, 0, 0, 1.0);
+			ui_draw_line(x + w - 8, y + h / 2 + 2, x + w - 2, y + h / 2, 0, 0, 0, 1.0);
 		}
 
 		y += h;
@@ -61,7 +92,8 @@ void draw_menu(void)
 	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
 }
 
-/* Sets *menu.first and *menu.last pointing to the beginnning and end of
+/* 
+ * Sets *menu.first and *menu.last pointing to the beginnning and end of
  * the submenu
  */
 void checkout_submenu(char *tag)
@@ -87,7 +119,7 @@ void checkout_submenu(char *tag)
 		}
 
 		if (!menu.title)
-			die("menu.title POINTER NOT SET.  Tag not found.");
+			die("menu.title pointer not set.  Tag not found.");
 		if (!menu.first)
 			die("menu.first not set. Menu has no content");
 	}
@@ -150,10 +182,8 @@ void action_cmd(char *cmd)
 		if (p) {
 			checkout_submenu(p);
 			menu.sel = menu.first;
-
-			geo_set_menu_height(menu.nr_items * menu.item_h);
-			if (menu.title)
-				geo_set_menu_height(geo_get_menu_height() + menu.item_h);
+			geo_set_show_title(menu.title);
+			geo_set_nr_items(menu.nr_items);
 
 			/* menu height has changed - need to redraw window */
 			XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
@@ -161,7 +191,7 @@ void action_cmd(char *cmd)
 
 			draw_menu();
 		} else {
-			die("Item began with ^ but was not checkout()");
+			die("item began with ^ but was not checkout()");
 		}
 	} else {
 		spawn(cmd);
@@ -248,9 +278,9 @@ void mouse_event(XEvent *e)
 	if (ev->button == Button1) {
 		y = 0;
 		if (menu.title)
-			y += menu.item_h;
+			y += geo_get_item_height();
 		for (item = menu.first; item && item->t[0] && item->prev != menu.last ; item++) {
-			if (ev->y >= y && ev->y <= (y + menu.item_h)) {
+			if (ev->y >= y && ev->y <= (y + geo_get_item_height())) {
 				if (config.spawn) {
 					action_cmd(item->t[1]);
 					break;
@@ -258,7 +288,7 @@ void mouse_event(XEvent *e)
 					puts(item->t[1]);
 				}
 			}
-			y += menu.item_h;
+			y += geo_get_item_height();
 		}
 	}
 }
@@ -429,20 +459,20 @@ void run(void)
 
 		/* Move highlighting with mouse */
 		/* Current mouse position is (ev.xbutton.x, ev.xbutton.y) */
-		y = menu.win_y0;
+		y = geo_get_menu_y0();
 
 		if ((oldy != 0) && (ev.xbutton.y != oldy) && (ev.xbutton.x < geo_get_menu_width())) {
 			if (menu.title)
-				y += menu.item_h;
+				y += geo_get_item_height();
 			for (item = menu.first; item && item->t[0] && item->prev != menu.last; item++) {
-				if (ev.xbutton.y > y && ev.xbutton.y <= (y + menu.item_h)) {
+				if (ev.xbutton.y > y && ev.xbutton.y <= (y + geo_get_item_height())) {
 					if (menu.sel != item) {
 						menu.sel = item;
 						draw_menu();
 						break;
 					}
 				}
-				y += menu.item_h;
+				y += geo_get_item_height();
 			}
 		}
 
@@ -451,37 +481,32 @@ void run(void)
 	}
 }
 
-void usage(void)
-{
-	fputs("usage: jgmenu [OPTIONS]\n"
-	      "       -r        redirect command to stdout rather than executing\n"
-	      "       -v        version\n"
-	      "       --debug   debug\n", stderr);
-	exit(0);
-}
-
 int main(int argc, char *argv[])
 {
 	int i;
+	char *config_file = NULL;
 
 	config_set_defaults();
+	menu.title = NULL;
 
-	/* parse command line arguments */
 	for (i = 1; i < argc; i++)
-		if (!strcmp(argv[i], "-v")) {
-			printf("jgmenu-%s\n", VERSION);
-			exit(0);
-		}
+		if (!strncmp(argv[i], "--config-file=", 14))
+			config_file = strdup(argv[i] + 14);
+	if (config_file) {
+		if (config_file[0] == '~')
+			config_file = expand_tilde(config_file);
+		config_parse_file(config_file);
+	}
 
-		/* re-direct command to stdout rather than spawning */
-		else if (!strcmp(argv[i], "-r"))
+	for (i = 1; i < argc; i++)
+		if (!strncmp(argv[i], "--version", 9)) {
+			printf("%s\n", VERSION);
+			exit(0);
+		} else if (!strcmp(argv[i], "-r")) {
 			config.spawn = 0;
-		else if (!strcmp(argv[i], "--debug"))
+		} else if (!strncmp(argv[i], "--debug", 7)) {
 			config.debug_mode = 1;
-		else if (i+1 == argc)
-			usage();
-		else
-			usage();
+		}
 
 	read_stdin();
 
@@ -489,7 +514,6 @@ int main(int argc, char *argv[])
 		checkout_submenu(menu.head->tag);
 	else
 		checkout_submenu(NULL);
-
 	menu.sel = menu.first;
 
 	if (config.debug_mode)
@@ -498,27 +522,25 @@ int main(int argc, char *argv[])
 	ui_init();
 
 	geo_init();
-	geo_set_menu_margin_x(2);
-	geo_set_menu_margin_y(32);
-	geo_set_menu_width(200);
-
+	geo_set_menu_margin_x(config.menu_margin_x);
+	geo_set_menu_margin_y(config.menu_margin_y);
+	geo_set_menu_width(config.menu_width);
+	geo_set_font(config.font);
+	geo_set_item_height(config.item_height);
 
 	/* calculate menu geometry */
-	menu.font_height =  ui_get_text_height(menu.font);
-	menu.item_h = (menu.item_h > menu.font_height) ? menu.item_h : (menu.font_height);
-	geo_set_menu_height(menu.nr_items * menu.item_h);
-	if (menu.title)
-		geo_set_menu_height(geo_get_menu_height() + menu.item_h);
+	geo_set_show_title(menu.title);
+	geo_set_nr_items(menu.nr_items);
 
 	/*
 	 * FIXME Would be tidier to calc height to largest submenu rather than
-	 * allocating memory for (menu.end * menu.item_h)
+	 * allocating memory for (menu.end * geo_get_item_height())
 	 */
 
 	ui_create_window(geo_get_menu_x0(), geo_get_menu_y0(),
 			 geo_get_menu_width(), geo_get_menu_height());
-	ui_init_canvas(geo_get_menu_width(), menu.end * menu.item_h);
-	ui_init_cairo(geo_get_menu_width(), menu.end * menu.item_h, menu.font);
+	ui_init_canvas(geo_get_menu_width(), menu.end * geo_get_item_height());
+	ui_init_cairo(geo_get_menu_width(), menu.end * geo_get_item_height(), config.font);
 
 	draw_menu();
 
