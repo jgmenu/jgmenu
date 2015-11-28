@@ -17,6 +17,7 @@
 #include "config.h"
 #include "util.h"
 #include "geometry.h"
+#include "prog-finder.h"
 
 #define MAX_FIELDS 3		/* nr fields to parse for each stdin line */
 
@@ -64,7 +65,7 @@ void draw_menu(void)
 
 	/* Set background */
 	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), 1,
-			  0.8, 0.8, 0.8, 1.0);
+			  0.9, 0.9, 0.9, 1.0);
 
 	/* Draw title */
 	if (menu.title) {
@@ -80,10 +81,16 @@ void draw_menu(void)
 
 		ui_insert_text(p->t[0], x, y + offset, h);
 
-		if (strncmp(p->t[1], "^checkout(", 10) == 0 &&
-		    strncmp(p->t[0], "..", 2) != 0) {
+		if (!strncmp(p->t[1], "^checkout(", 10) &&
+		    strncmp(p->t[0], "..", 2)) {
 			ui_draw_line(x + w - 8, y + h / 2 - 2, x + w - 2, y + h / 2, 0, 0, 0, 1.0);
 			ui_draw_line(x + w - 8, y + h / 2 + 2, x + w - 2, y + h / 2, 0, 0, 0, 1.0);
+		}
+
+		if (strncmp(p->t[1], "^checkout(", 10) &&
+		    strncmp(p->t[0], "..", 2)) {
+			if (!is_prog(p->t[1]))
+				ui_draw_line(x + 2, y + h / 2, x + w - 2, y + h / 2, 1.0, 0, 0, 1.0);
 		}
 
 		y += h;
@@ -430,6 +437,7 @@ void read_stdin(void)
 	/* Populate tag field */
 	for (item = menu.head; item && item->t[0]; item++)
 		item->tag = parse_caret_action(item->t[1], "^tag(");
+
 }
 
 void run(void)

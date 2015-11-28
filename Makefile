@@ -1,7 +1,8 @@
 VER = $(shell git describe 2>/dev/null)
 CC = gcc
 
-CFLAGS   = -g -pedantic -Wall -Os
+CFLAGS   = -g -Wall -Os
+#CFLAGS  += -pedantic 
 CFLAGS  += -DVERSION='"$(VER)"'
 CFLAGS  += -DXINERAMA
 CFLAGS  += `pkg-config cairo pango pangocairo --cflags`
@@ -10,9 +11,9 @@ LIBS  = `pkg-config x11 xinerama cairo pango pangocairo --libs`
 
 LDFLAGS  = $(LIBS)
 
-OBJS =  x11-ui.o config.o util.o geometry.o
+OBJS =  x11-ui.o config.o util.o geometry.o prog-finder.o
 
-all: jgmenu x11-ui.o config.o util.o geometry.o
+all: jgmenu $(OBJS)
 
 jgmenu: jgmenu.c $(OBJS)
 	@echo $(CC) $@
@@ -34,6 +35,10 @@ util.o: util.c util.h
 geometry.o: geometry.c geometry.h
 	@echo $(CC) $@
 	@$(CC) $(CFLAGS) $(LIBS) -c geometry.c
+
+prog-finder.o: prog-finder.c prog-finder.h list.h
+	@echo $(CC) $@
+	@$(CC) $(CFLAGS) $(LIBS) -c prog-finder.c
 
 install: jgmenu
 	@echo installing...
