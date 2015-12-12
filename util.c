@@ -70,7 +70,7 @@ char *expand_tilde(char *s)
 {
 	char *tmp;
 
-	tmp = (char *)malloc(strlen(s) + strlen(getenv("HOME")) + 1);
+	tmp = xmalloc(strlen(s) + strlen(getenv("HOME")) + 1);
 	strcpy(tmp, getenv("HOME"));
 	strcat(tmp, s + 1);
 
@@ -126,3 +126,30 @@ int parse_config_line(char *line, char **option, char **value)
 	return 1;
 }
 
+int hex_to_dec(char c)
+{
+	if (c >= '0' && c <= '9')
+		return c - '0';
+	if (c >= 'a' && c <= 'f')
+		return c - 'a' + 10;
+	if (c >= 'A' && c <= 'F')
+		return c - 'A' + 10;
+	return 0;
+}
+
+int parse_hexstr(char *hex, double *rgba)
+{
+	if (hex == NULL || hex[0] != '#' || strlen(hex) < 7)
+		return 0;
+
+	rgba[0] = (hex_to_dec(hex[1]) * 16 + hex_to_dec(hex[2])) / 255.0;
+	rgba[1] = (hex_to_dec(hex[3]) * 16 + hex_to_dec(hex[4])) / 255.0;
+	rgba[2] = (hex_to_dec(hex[5]) * 16 + hex_to_dec(hex[6])) / 255.0;
+
+	if (strlen(hex) > 7)
+		rgba[3] = atoi(hex + 7) / 100.0;
+	else
+		rgba[3] = 1.0;
+
+	return 1;
+}

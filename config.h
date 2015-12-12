@@ -10,10 +10,11 @@ struct Config {
 	int menu_margin_y;
 	int menu_width;
 
-	char *normbgcol;
-	char *normfgcol;
-	char *selbgcol;
-	char *selfgcol;
+	double color_norm_bg[4];
+	double color_norm_fg[4];
+	double color_sel_bg[4];
+	double color_sel_fg[4];
+	double color_broke_fg[4];
 };
 
 extern struct Config config;

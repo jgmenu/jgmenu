@@ -64,34 +64,35 @@ void draw_menu(void)
 	offset = (h - geo_get_font_height()) / 2;
 
 	/* Set background */
-	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), 1,
-			  0.9, 0.9, 0.9, 1.0);
+	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), 1, config.color_norm_bg);
 
 	/* Draw title */
 	if (menu.title) {
-		ui_draw_rectangle(x, y, w, h, 1, 0.8, 0.6, 0.1, 1.0);
-		ui_insert_text(menu.title, x, y + offset, h);
+		ui_draw_rectangle(x, y, w, h, 1, config.color_sel_bg);
+		ui_insert_text(menu.title, x, y + offset, h, config.color_sel_fg);
 		y += h;
 	}
 
 	/* Draw menu items */
 	for (p = menu.first; p && p->t[0] && p->prev != menu.last; p++) {
 		if (p == menu.sel)
-			ui_draw_rectangle(x, y, w, h, 1, 1.0, 0.7, 0.15, 0.8);
+			ui_draw_rectangle(x, y, w, h, 1, config.color_sel_bg);
 
-		ui_insert_text(p->t[0], x, y + offset, h);
-
+		/* Draw submenu arrow */
 		if (!strncmp(p->t[1], "^checkout(", 10) &&
 		    strncmp(p->t[0], "..", 2)) {
-			ui_draw_line(x + w - 8, y + h / 2 - 2, x + w - 2, y + h / 2, 0, 0, 0, 1.0);
-			ui_draw_line(x + w - 8, y + h / 2 + 2, x + w - 2, y + h / 2, 0, 0, 0, 1.0);
+			ui_draw_line(x + w - 8, y + h / 2 - 2, x + w - 2, y + h / 2, config.color_norm_fg);
+			ui_draw_line(x + w - 8, y + h / 2 + 2, x + w - 2, y + h / 2, config.color_norm_fg);
 		}
 
 		if (strncmp(p->t[1], "^checkout(", 10) &&
-		    strncmp(p->t[0], "..", 2)) {
-			if (!is_prog(p->t[1]))
-				ui_draw_line(x + 2, y + h / 2, x + w - 2, y + h / 2, 1.0, 0, 0, 1.0);
-		}
+		    strncmp(p->t[0], "..", 2) &&
+		    !is_prog(p->t[1]))
+			ui_insert_text(p->t[0], x, y + offset, h, config.color_broke_fg);
+		else if (p == menu.sel)
+			ui_insert_text(p->t[0], x, y + offset, h, config.color_sel_fg);
+		else
+			ui_insert_text(p->t[0], x, y + offset, h, config.color_norm_fg);
 
 		y += h;
 	}

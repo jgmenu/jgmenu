@@ -18,11 +18,11 @@ void config_set_defaults(void)
 	config.menu_margin_y	= 32;
 	config.menu_width	= 200;
 
-	/* not yet incorporated */
-	config.normbgcol	= strdup("#bbbbbb");
-	config.normfgcol	= strdup("#222222");
-	config.selbgcol		= strdup("#3388cc");
-	config.selfgcol		= strdup("#eeeeee");
+	parse_hexstr("#bbbbbb 100", config.color_norm_bg);
+	parse_hexstr("#000000 100", config.color_norm_fg);
+	parse_hexstr("#ffbb11 80", config.color_sel_bg);
+	parse_hexstr("#000000 100", config.color_sel_fg);
+	parse_hexstr("#ff0000 100", config.color_broke_fg);
 }
 
 void process_line(char *line)
@@ -42,6 +42,17 @@ void process_line(char *line)
 		config.menu_margin_y = atoi(value);
 	else if (!strncmp(option, "menu_width", 10))
 		config.menu_width = atoi(value);
+
+	else if (!strncmp(option, "color_norm_bg", 13))
+		parse_hexstr(value, config.color_norm_bg);
+	else if (!strncmp(option, "color_norm_fg", 13))
+		parse_hexstr(value, config.color_norm_fg);
+	else if (!strncmp(option, "color_sel_bg", 12))
+		parse_hexstr(value, config.color_sel_bg);
+	else if (!strncmp(option, "color_sel_fg", 12))
+		parse_hexstr(value, config.color_sel_fg);
+	else if (!strncmp(option, "color_broke_fg", 14))
+		parse_hexstr(value, config.color_broke_fg);
 }
 
 

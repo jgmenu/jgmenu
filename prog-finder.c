@@ -12,7 +12,7 @@ struct Path_segment {
 	struct list_head list;
 };
 
-struct list_head *head;
+struct list_head head;
 
 void parse_path(void)
 {
@@ -21,14 +21,13 @@ void parse_path(void)
 
 	path = strdup(getenv("PATH"));
 
-	head = (struct list_head *)malloc(sizeof(struct list_head));
-	INIT_LIST_HEAD(head);
+	INIT_LIST_HEAD(&head);
 
 	p = path;
 	for (;;) {
 		tmp = malloc(sizeof(struct Path_segment));
 		tmp->path = p;
-		list_add_tail(&(tmp->list), head);
+		list_add_tail(&(tmp->list), &head);
 		p = strchr(p, ':');
 		if (!p)
 			break;
@@ -64,7 +63,7 @@ int is_prog(char *filename)
 	else
 		cmd_length = strlen(filename);
 
-	list_for_each_entry(tmp, head, list) {
+	list_for_each_entry(tmp, &head, list) {
 		strcpy(prog, tmp->path);
 		pos = strlen(tmp->path);
 		prog[pos++] = '/';

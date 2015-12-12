@@ -201,10 +201,9 @@ void ui_create_window(int x, int y, int w, int h)
 }
 
 
-void ui_draw_rectangle(int x, int y, int w, int h, int fill,
-		       float r, float g, float b, float a)
+void ui_draw_rectangle(int x, int y, int w, int h, int fill, double *rgba)
 {
-	cairo_set_source_rgba(ui->c, r, g, b, a);
+	cairo_set_source_rgba(ui->c, rgba[0], rgba[1], rgba[2], rgba[3]);
 	cairo_set_line_width(ui->c, 0.5);
 	cairo_rectangle(ui->c, x, y, w, h);
 	if (fill)
@@ -213,21 +212,20 @@ void ui_draw_rectangle(int x, int y, int w, int h, int fill,
 		cairo_stroke(ui->c);
 }
 
-void ui_draw_line(int x0, int y0, int x1, int y1,
-		       float r, float g, float b, float a)
+void ui_draw_line(int x0, int y0, int x1, int y1, double *rgba)
 {
-	cairo_set_source_rgba(ui->c, r, g, b, a);
+	cairo_set_source_rgba(ui->c, rgba[0], rgba[1], rgba[2], rgba[3]);
 	cairo_set_line_width(ui->c, 1.5);
 	cairo_move_to(ui->c, x0, y0);
 	cairo_line_to(ui->c, x1, y1);
 	cairo_stroke(ui->c);
 }
 
-void ui_insert_text(char *s, int x, int y, int h)
+void ui_insert_text(char *s, int x, int y, int h, double *rgba)
 {
 	pango_layout_set_text(ui->pangolayout, s, -1);
 	pango_layout_set_font_description(ui->pangolayout, ui->pangofont);
-	cairo_set_source_rgba(ui->c, 0, 0, 0, 1.0);
+	cairo_set_source_rgba(ui->c, rgba[0], rgba[1], rgba[2], rgba[3]);
 	pango_cairo_update_layout(ui->c, ui->pangolayout);
 	cairo_move_to(ui->c, x + 4, y);
 	pango_cairo_show_layout(ui->c, ui->pangolayout);
