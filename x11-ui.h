@@ -1,16 +1,23 @@
 #ifndef X11_UI_H
 #define X11_UI_H
 
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#include <X11/Xutil.h>
 #include <cairo.h>
 #include <cairo-xlib.h>
 #include <pango/pangocairo.h>
 
 struct UI {
 	Display *dpy;
+	int screen;
 	GC gc;
 	Window win;
+	Window root;
+	XSetWindowAttributes swa;
 	XIC xic;
 	Pixmap canvas;
+	XVisualInfo vinfo;
 	cairo_surface_t *cs;
 	cairo_t *c;
 	PangoLayout *pangolayout;
@@ -19,6 +26,7 @@ struct UI {
 
 struct UI *ui;
 
+void ui_clear_canvas(int x, int y, int w, int h);
 void ui_init_cairo(int canvas_width, int canvas_height, const char *font);
 void ui_init(void);
 void ui_get_screen_res(int *x0, int *y0, int *width, int *height);

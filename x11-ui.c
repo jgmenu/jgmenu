@@ -5,7 +5,7 @@
  *
  * It has been inspired by:
  *  - dmenu 4.5 (http://tools.suckless.org/dmenu/)
- *  - tint2 (https://code.google.com/p/tint2/source/browse/)
+ *  - tint2 (https://gitlab.com/o9000/tint2)
  *  - dzen2 (https://github.com/robm/dzen)
  */
 
@@ -14,6 +14,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#include <X11/Xutil.h>
+#include <X11/extensions/Xrender.h>
 
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
@@ -24,14 +27,25 @@
 #include "x11-ui.h"
 #include "util.h"
 
-
-
 /* INTERSECT is required by Xinerama.  MAX and MIN are defined in glib */
 #define INTERSECT(x, y, w, h, r)  (MAX(0, MIN((x)+(w), (r).x_org+(r).width)  - \
 				   MAX((x), (r).x_org)) * \
 				   MAX(0, MIN((y)+(h), (r).y_org+(r).height) - \
 				   MAX((y), (r).y_org)))
 
+
+void ui_clear_canvas(int x, int y, int w, int h)
+{
+	Picture background_picture;
+	XRenderColor c;
+
+	background_picture = XRenderCreatePicture(ui->dpy, ui->canvas,
+						  XRenderFindVisualFormat(ui->dpy, ui->vinfo.visual),
+						  0, 0);
+	c.red = c.green = c.blue = c.alpha = 0;
+	XRenderFillRectangle(ui->dpy, PictOpSrc, background_picture, &c, x, y, w, h);
+	XRenderFreePicture(ui->dpy, background_picture);
+}
 
 void grabkeyboard(void)
 {
@@ -49,13 +63,14 @@ void grabkeyboard(void)
 }
 
 
-/* grabpointer() is needed in order to detect when pointer is clicked
+/*
+ * grabpointer() is needed in order to detect when pointer is clicked
  * outside menu
  */
 void grabpointer(void)
 {
 	XGrabPointer(ui->dpy, DefaultRootWindow(ui->dpy),
-		     True,	/* False gives (x,y) wrt root window. */
+		     False,	/* False gives (x,y) wrt root window. */
 		     ButtonPressMask | ButtonReleaseMask |
 		     PointerMotionMask | FocusChangeMask |
 		     EnterWindowMask | LeaveWindowMask,
@@ -66,11 +81,7 @@ void grabpointer(void)
 
 void ui_init_cairo(int canvas_width, int canvas_height, const char *font)
 {
-	Visual *vis;
-
-	vis = DefaultVisual(ui->dpy, 0);
-
-	ui->cs = cairo_xlib_surface_create(ui->dpy, ui->canvas, vis, canvas_width, canvas_height);
+	ui->cs = cairo_xlib_surface_create(ui->dpy, ui->canvas, ui->vinfo.visual, canvas_width, canvas_height);
 	ui->c = cairo_create(ui->cs);
 
 	ui->pangolayout = pango_cairo_create_layout(ui->c);
@@ -79,26 +90,43 @@ void ui_init_cairo(int canvas_width, int canvas_height, const char *font)
 
 void ui_init(void)
 {
+	/*
+	 * In order to enable the creation of a transparent window,
+	 * the depth needs to be set to 32.
+	 * The following window attributes are also needed:
+	 *   - background_pixel = 0;
+	 *   - border_pixel = 0;
+	 *   - colormap
+	 */
 	ui = xcalloc(1, sizeof(*ui));
 
 	ui->dpy = XOpenDisplay(NULL);
 	if (!ui->dpy)
 		die("cannot open display");
 
-	ui->gc = XCreateGC(ui->dpy, DefaultRootWindow(ui->dpy), 0, NULL);
+	XMatchVisualInfo(ui->dpy, DefaultScreen(ui->dpy), 32, TrueColor, &(ui->vinfo));
+
+	ui->swa.override_redirect = True;
+	ui->swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask | ButtonPressMask;
+	ui->swa.colormap = XCreateColormap(ui->dpy, DefaultRootWindow(ui->dpy), ui->vinfo.visual, AllocNone);
+	ui->swa.background_pixel = 0;
+	ui->swa.border_pixel = 0;
+	ui->swa.event_mask = StructureNotifyMask;
+
+	ui->screen = DefaultScreen(ui->dpy);
+	ui->root = RootWindow(ui->dpy, ui->screen);
 
 	grabkeyboard();
 	grabpointer();
 }
 
-/* The Xinerama code below was copied from dmenu's xft patch
+/*
+ * The Xinerama code below was copied from dmenu's xft patch
  * (http://tools.suckless.org/dmenu/patches/xft)
  */
 void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
 {
-	int screen = DefaultScreen(ui->dpy);
 #ifdef XINERAMA
-	Window root = RootWindow(ui->dpy, screen);
 	int n;
 	XineramaScreenInfo *info;
 
@@ -110,13 +138,13 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
 		XWindowAttributes wa;
 
 		XGetInputFocus(ui->dpy, &w, &di);
-		if (w != root && w != PointerRoot && w != None) {
+		if (w != ui->root && w != PointerRoot && w != None) {
 			/* find top-level window containing current input focus */
 			do {
 				pw = w;
 				if (XQueryTree(ui->dpy, pw, &dw, &w, &dws, &du) && dws)
 					XFree(dws);
-			} while (w != root && w != pw);
+			} while (w != ui->root && w != pw);
 			/* find xinerama screen with which the window intersects most */
 			if (XGetWindowAttributes(ui->dpy, pw, &wa))
 				for (j = 0; j < n; j++) {
@@ -151,8 +179,8 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
 	{
 		*x0 = 0;
 		*y0 = 0;
-		*width = DisplayWidth(ui->dpy, screen);
-		*height = DisplayHeight(ui->dpy, screen);
+		*width = DisplayWidth(ui->dpy, ui->screen);
+		*height = DisplayHeight(ui->dpy, ui->screen);
 	}
 }
 
@@ -163,34 +191,26 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
  */
 void ui_init_canvas(int max_width, int max_height)
 {
-	int screen = DefaultScreen(ui->dpy);
-
 	if (ui->canvas)
 		XFreePixmap(ui->dpy, ui->canvas);
-	ui->canvas = XCreatePixmap(ui->dpy, DefaultRootWindow(ui->dpy), max_width,
-				   max_height, DefaultDepth(ui->dpy, screen));
+	ui->canvas = XCreatePixmap(ui->dpy, ui->root, max_width, max_height, 32);
 }
 
 void ui_create_window(int x, int y, int w, int h)
 {
-	/* The following is heavily based dmenu's draw.c */
-	int screen = DefaultScreen(ui->dpy);
-
-	Window root = RootWindow(ui->dpy, screen);
-	XSetWindowAttributes swa;
 	XIM xim;
 
-	swa.override_redirect = True;
-	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask | ButtonPressMask;
-	ui->win = XCreateWindow(ui->dpy, root, x, y, w, h, 0,
-				DefaultDepth(ui->dpy, screen), CopyFromParent,
-				DefaultVisual(ui->dpy, screen),
-				CWOverrideRedirect | CWBackPixel | CWEventMask, &swa);
+	ui->win = XCreateWindow(ui->dpy, ui->root, x, y, w, h, 1,
+				ui->vinfo.depth, CopyFromParent,
+				ui->vinfo.visual,
+				CWOverrideRedirect | CWColormap | CWBackPixel | CWEventMask | CWBorderPixel, &ui->swa);
+
 	xim = XOpenIM(ui->dpy, NULL, NULL, NULL);
 	ui->xic = XCreateIC(xim, XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
 			    XNClientWindow, ui->win, XNFocusWindow, ui->win, NULL);
 	XMapRaised(ui->dpy, ui->win);
-	/* END OF COPY */
+
+	ui->gc = XCreateGC(ui->dpy, ui->win, 0, NULL);
 
 	/* XDefineCursor required to prevent blindly inheriting cursor from parent
 	 * (e.g. hour-glass pointer set by tint2)
@@ -252,7 +272,7 @@ int ui_get_text_height(char *fontdesc)
 
 	line = pango_layout_get_line_readonly(layout, 0);
 	pango_layout_line_get_extents(line, &ink, &logical);
-	/* TODO: FREE CAIRO MEMORY */
+	cairo_surface_destroy(cs);
 	pango_font_description_free(font);
 	g_object_unref(layout);
 

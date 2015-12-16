@@ -18,8 +18,8 @@ void config_set_defaults(void)
 	config.menu_margin_y	= 32;
 	config.menu_width	= 200;
 
-	parse_hexstr("#bbbbbb 100", config.color_norm_bg);
-	parse_hexstr("#000000 100", config.color_norm_fg);
+	parse_hexstr("#000000 40", config.color_norm_bg);
+	parse_hexstr("#eeeeee 100", config.color_norm_fg);
 	parse_hexstr("#ffbb11 80", config.color_sel_bg);
 	parse_hexstr("#000000 100", config.color_sel_fg);
 	parse_hexstr("#ff0000 100", config.color_broke_fg);

@@ -64,7 +64,9 @@ void draw_menu(void)
 	offset = (h - geo_get_font_height()) / 2;
 
 	/* Set background */
+	ui_clear_canvas(0, 0, w, geo_get_menu_height());
 	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), 1, config.color_norm_bg);
+	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), 0, config.color_sel_bg);
 
 	/* Draw title */
 	if (menu.title) {
@@ -100,7 +102,7 @@ void draw_menu(void)
 	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
 }
 
-/* 
+/*
  * Sets *menu.first and *menu.last pointing to the beginnning and end of
  * the submenu
  */
@@ -256,9 +258,17 @@ void mouse_event(XEvent *e)
 	struct Item *item;
 	XButtonPressedEvent *ev = &e->xbutton;
 	int y;
+	int mousex, mousey;
+
+	mousex = ev->x - geo_get_menu_x0();
+	mousey = ev->y - geo_get_menu_y0();
 
 	/* Die if mouse clicked outside window */
-	if (ev->window != ui->win && ev->button != Button4 && ev->button != Button5) {
+	if ((ev->x < geo_get_menu_x0() ||
+	     ev->x > geo_get_menu_x0() + geo_get_menu_width() ||
+	     ev->y < geo_get_menu_y0() ||
+	     ev->y > geo_get_menu_y0() + geo_get_menu_height()) &&
+	     (ev->button != Button4 && ev->button != Button5)) {
 		ui_cleanup();
 		die("Clicked outside menu.");
 		return;
@@ -288,7 +298,7 @@ void mouse_event(XEvent *e)
 		if (menu.title)
 			y += geo_get_item_height();
 		for (item = menu.first; item && item->t[0] && item->prev != menu.last ; item++) {
-			if (ev->y >= y && ev->y <= (y + geo_get_item_height())) {
+			if (mousey >= y && mousey <= (y + geo_get_item_height())) {
 				if (config.spawn) {
 					action_cmd(item->t[1]);
 					break;
@@ -484,9 +494,7 @@ void run(void)
 				y += geo_get_item_height();
 			}
 		}
-
 		oldy = ev.xbutton.y;
-
 	}
 }
 
@@ -549,6 +557,7 @@ int main(int argc, char *argv[])
 	ui_create_window(geo_get_menu_x0(), geo_get_menu_y0(),
 			 geo_get_menu_width(), geo_get_menu_height());
 	ui_init_canvas(geo_get_menu_width(), menu.end * geo_get_item_height());
+
 	ui_init_cairo(geo_get_menu_width(), menu.end * geo_get_item_height(), config.font);
 
 	draw_menu();

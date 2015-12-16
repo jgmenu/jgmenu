@@ -5,9 +5,9 @@ CFLAGS   = -g -Wall -Os
 #CFLAGS  += -pedantic 
 CFLAGS  += -DVERSION='"$(VER)"'
 CFLAGS  += -DXINERAMA
-CFLAGS  += `pkg-config cairo pango pangocairo --cflags`
+CFLAGS  += `pkg-config xrender cairo pango pangocairo --cflags`
 
-LIBS  = `pkg-config x11 xinerama cairo pango pangocairo --libs`
+LIBS  = `pkg-config x11 xinerama xrender cairo pango pangocairo --libs`
 
 LDFLAGS  = $(LIBS)
 

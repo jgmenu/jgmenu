@@ -7,8 +7,8 @@ menu_width	= 150
 item_height	= 30
 font		= Ubuntu condensed 14px
 
-color_norm_bg	= #bbeeee
-color_norm_fg	= #000000 80
+color_norm_bg	= #000000 20
+color_norm_fg	= #eeeeee 100
 #color_sel_bg	= #ffffff 50
-#color_sel_fg	= #000000 100
+#color_sel_fg	= #eeeeee 100
 #color_broke_fg	= #ff0000 80
