@@ -23,6 +23,7 @@ void config_set_defaults(void)
 	parse_hexstr("#ffbb11 80", config.color_sel_bg);
 	parse_hexstr("#000000 100", config.color_sel_fg);
 	parse_hexstr("#ff0000 100", config.color_broke_fg);
+	parse_hexstr("#ff0000 70", config.color_title_bg);
 }
 
 void process_line(char *line)

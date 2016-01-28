@@ -16,7 +16,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
-#include <X11/extensions/Xrender.h>
+//#include <X11/extensions/Xrender.h>
 
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
@@ -33,18 +33,13 @@
 				   MAX(0, MIN((y)+(h), (r).y_org+(r).height) - \
 				   MAX((y), (r).y_org)))
 
-
-void ui_clear_canvas(int x, int y, int w, int h)
+void ui_clear_canvas()
 {
-	Picture background_picture;
-	XRenderColor c;
-
-	background_picture = XRenderCreatePicture(ui->dpy, ui->canvas,
-						  XRenderFindVisualFormat(ui->dpy, ui->vinfo.visual),
-						  0, 0);
-	c.red = c.green = c.blue = c.alpha = 0;
-	XRenderFillRectangle(ui->dpy, PictOpSrc, background_picture, &c, x, y, w, h);
-	XRenderFreePicture(ui->dpy, background_picture);
+	cairo_save(ui->c);
+	cairo_set_source_rgba(ui->c, 0.0, 0.0, 0.0, 0.0);
+	cairo_set_operator(ui->c, CAIRO_OPERATOR_SOURCE);
+	cairo_paint(ui->c);
+	cairo_restore(ui->c);
 }
 
 void grabkeyboard(void)
@@ -220,16 +215,50 @@ void ui_create_window(int x, int y, int w, int h)
 	XDefineCursor(ui->dpy, ui->win, XCreateFontCursor(ui->dpy, 68));
 }
 
-
-void ui_draw_rectangle(int x, int y, int w, int h, int fill, double *rgba)
+void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h, double radius, int fill, double *rgba)
 {
+	double deg = 0.017453292519943295; /* 2 x 3.1415927 / 360.0 */
+
+	cairo_new_sub_path(ui->c);
+	cairo_arc(ui->c, x + w - radius, y + radius, radius, -90 * deg, 0 * deg);  // NE
+	cairo_arc(ui->c, x + w, y + h, 0, 0 * deg, 90 * deg);			   // SE
+	cairo_arc(ui->c, x, y + h, 0, 90 * deg, 180 * deg);			   // SW
+	cairo_arc(ui->c, x + radius, y + radius, radius, 180 * deg, 270 * deg);    // NE
+	cairo_close_path(ui->c);
 	cairo_set_source_rgba(ui->c, rgba[0], rgba[1], rgba[2], rgba[3]);
-	cairo_set_line_width(ui->c, 0.5);
-	cairo_rectangle(ui->c, x, y, w, h);
 	if (fill)
-		cairo_fill(ui->c);
+		cairo_fill_preserve(ui->c);
 	else
+		cairo_set_line_width(ui->c, 0.4);
+	cairo_stroke(ui->c);
+}
+
+void ui_draw_rectangle(double x, double y, double w, double h, double radius, int fill, double *rgba)
+{
+	if (radius > 0) {
+		double deg = 0.017453292519943295; /* 2 x 3.1415927 / 360.0 */
+
+		cairo_new_sub_path(ui->c);
+		cairo_arc(ui->c, x + w - radius, y + radius, radius, -90 * deg, 0 * deg);
+		cairo_arc(ui->c, x + w - radius, y + h - radius, radius, 0 * deg, 90 * deg);
+		cairo_arc(ui->c, x + radius, y + h - radius, radius, 90 * deg, 180 * deg);
+		cairo_arc(ui->c, x + radius, y + radius, radius, 180 * deg, 270 * deg);
+		cairo_close_path(ui->c);
+		cairo_set_source_rgba(ui->c, rgba[0], rgba[1], rgba[2], rgba[3]);
+		if (fill)
+			cairo_fill_preserve(ui->c);
+		else
+			cairo_set_line_width(ui->c, 0.4);
 		cairo_stroke(ui->c);
+	} else {
+		cairo_set_source_rgba(ui->c, rgba[0], rgba[1], rgba[2], rgba[3]);
+		cairo_set_line_width(ui->c, 0.5);
+		cairo_rectangle(ui->c, x, y, w, h);
+		if (fill)
+			cairo_fill(ui->c);
+		else
+			cairo_stroke(ui->c);
+	}
 }
 
 void ui_draw_line(int x0, int y0, int x1, int y1, double *rgba)

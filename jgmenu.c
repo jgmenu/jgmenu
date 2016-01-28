@@ -64,21 +64,22 @@ void draw_menu(void)
 	offset = (h - geo_get_font_height()) / 2;
 
 	/* Set background */
-	ui_clear_canvas(0, 0, w, geo_get_menu_height());
-	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), 1, config.color_norm_bg);
-	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), 0, config.color_sel_bg);
+	ui_clear_canvas();
+	/* ui_clear_canvas2(0, 0, w, geo_get_menu_height()); */
+	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), 9.0, 1, config.color_norm_bg);
+	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), 9.0, 0, config.color_sel_bg);
 
 	/* Draw title */
 	if (menu.title) {
-		ui_draw_rectangle(x, y, w, h, 1, config.color_sel_bg);
-		ui_insert_text(menu.title, x, y + offset, h, config.color_sel_fg);
+		ui_draw_rectangle_rounded_at_top(x, y, w, h, 9.0, 1, config.color_title_bg);
+		ui_insert_text(menu.title, x, y + offset, h, config.color_norm_fg);
 		y += h;
 	}
 
 	/* Draw menu items */
 	for (p = menu.first; p && p->t[0] && p->prev != menu.last; p++) {
 		if (p == menu.sel)
-			ui_draw_rectangle(x, y, w, h, 1, config.color_sel_bg);
+			ui_draw_rectangle(x, y, w, h, 5.0, 1, config.color_sel_bg);
 
 		/* Draw submenu arrow */
 		if (!strncmp(p->t[1], "^checkout(", 10) &&
