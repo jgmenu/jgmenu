@@ -17,7 +17,7 @@ jgmenu is written with the following aims:
     (a bit like dzen2 -m with ^ca parameter).
     E.g. echo -e "terminal,xterm\nfile manager,pcmanfm" | jgmenu
 
-[screenshot](http://imgur.com/ThRLqVS "http://imgur.com/ThRLqVS")
+![screenshot](http://i.imgur.com/ThRLqVS)
 
 Installation
 ------------
@@ -41,28 +41,34 @@ markup in the "command" field.
 Examples
 --------
 Example 1:
-	echo -e "terminal,xterm\nfilemanager,pcmanfm" | jgmenu
+```
+echo -e "terminal,xterm\nfilemanager,pcmanfm" | jgmenu
+```
 
 Example 2:
-	cat << EOF >> menu.txt
-	terminal,xterm
-	file manager,pcmanfm
-	settings,^checkout(settings)
-	Settings,^tag(settings)
-	background,nitrogen
-	EOF
+```
+cat << EOF >> menu.txt
+terminal,xterm
+file manager,pcmanfm
+settings,^checkout(settings)
+Settings,^tag(settings)
+background,nitrogen
+EOF
 
-	jgmenu < menu.txt
-	cat menu.txt | jgmenu
+jgmenu < menu.txt
+cat menu.txt | jgmenu
+```
 
 Example 3:
-	cat << EOF >> menu.sh
-	#!/bin/bash
-	(
-	echo -e "terminal\nxterm"
-	echo -e "file manager\npcmanfm"
-	) | jgmenu
-	EOF
+```
+cat << EOF >> menu.sh
+#!/bin/bash
+(
+echo -e "terminal\nxterm"
+echo -e "file manager\npcmanfm"
+) | jgmenu
+EOF
 
-	chmod +x menu.sh
-	./menu.sh
+chmod +x menu.sh
+./menu.sh
+```
