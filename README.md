@@ -17,7 +17,7 @@ jgmenu is written with the following aims:
     (a bit like dzen2 -m with ^ca parameter).
     E.g. echo -e "terminal,xterm\nfile manager,pcmanfm" | jgmenu
 
-![screenshot](http://i.imgur.com/ThRLqVS)
+<img src="http://i.imgur.com/ThRLqVS" \>
 
 Installation
 ------------
