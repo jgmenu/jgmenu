@@ -17,6 +17,7 @@ void config_set_defaults(void)
 	config.menu_margin_x	= 2;
 	config.menu_margin_y	= 32;
 	config.menu_width	= 200;
+	config.max_items	= 4;
 
 	parse_hexstr("#000000 40", config.color_norm_bg);
 	parse_hexstr("#eeeeee 100", config.color_norm_fg);

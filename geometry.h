@@ -44,6 +44,8 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 
+#include "x11-ui.h"
+
 void geo_update(void);
 void geo_init(void);
 
@@ -62,5 +64,6 @@ int geo_get_menu_height(void);
 int geo_get_menu_width(void);
 int geo_get_item_height(void);
 int geo_get_font_height(void);
+struct Area geo_get_item_coordinates(int item_number);
 
 #endif  /* GEOMETRY_H */

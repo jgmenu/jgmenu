@@ -16,7 +16,6 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
-//#include <X11/extensions/Xrender.h>
 
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
@@ -33,7 +32,7 @@
 				   MAX(0, MIN((y)+(h), (r).y_org+(r).height) - \
 				   MAX((y), (r).y_org)))
 
-void ui_clear_canvas()
+void ui_clear_canvas(void)
 {
 	cairo_save(ui->c);
 	cairo_set_source_rgba(ui->c, 0.0, 0.0, 0.0, 0.0);
@@ -81,6 +80,8 @@ void ui_init_cairo(int canvas_width, int canvas_height, const char *font)
 
 	ui->pangolayout = pango_cairo_create_layout(ui->c);
 	ui->pangofont = pango_font_description_from_string(font);
+
+	ui->font_height_actual = ui_get_text_height(font);
 }
 
 void ui_init(void)
@@ -220,10 +221,10 @@ void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h, do
 	double deg = 0.017453292519943295; /* 2 x 3.1415927 / 360.0 */
 
 	cairo_new_sub_path(ui->c);
-	cairo_arc(ui->c, x + w - radius, y + radius, radius, -90 * deg, 0 * deg);  // NE
-	cairo_arc(ui->c, x + w, y + h, 0, 0 * deg, 90 * deg);			   // SE
-	cairo_arc(ui->c, x, y + h, 0, 90 * deg, 180 * deg);			   // SW
-	cairo_arc(ui->c, x + radius, y + radius, radius, 180 * deg, 270 * deg);    // NE
+	cairo_arc(ui->c, x + w - radius, y + radius, radius, -90 * deg, 0 * deg);  /* NE */
+	cairo_arc(ui->c, x + w, y + h, 0, 0 * deg, 90 * deg);			   /* SE */
+	cairo_arc(ui->c, x, y + h, 0, 90 * deg, 180 * deg);			   /* SW */
+	cairo_arc(ui->c, x + radius, y + radius, radius, 180 * deg, 270 * deg);    /* NE */
 	cairo_close_path(ui->c);
 	cairo_set_source_rgba(ui->c, rgba[0], rgba[1], rgba[2], rgba[3]);
 	if (fill)
@@ -272,15 +273,19 @@ void ui_draw_line(int x0, int y0, int x1, int y1, double *rgba)
 
 void ui_insert_text(char *s, int x, int y, int h, double *rgba)
 {
+	int offset;	/* Used to centre vertical alignment */
+
+	offset = (h - ui->font_height_actual) / 2;
+
 	pango_layout_set_text(ui->pangolayout, s, -1);
 	pango_layout_set_font_description(ui->pangolayout, ui->pangofont);
 	cairo_set_source_rgba(ui->c, rgba[0], rgba[1], rgba[2], rgba[3]);
 	pango_cairo_update_layout(ui->c, ui->pangolayout);
-	cairo_move_to(ui->c, x + 4, y);
+	cairo_move_to(ui->c, x + 4, y + offset);
 	pango_cairo_show_layout(ui->c, ui->pangolayout);
 }
 
-int ui_get_text_height(char *fontdesc)
+int ui_get_text_height(const char *fontdesc)
 {
 	cairo_surface_t *cs;
 	cairo_t *c;
@@ -307,6 +312,18 @@ int ui_get_text_height(char *fontdesc)
 
 	return (logical.height / 1000 + 1);
 }
+
+int ui_is_point_in_area(struct Point p, struct Area a)
+{
+	if ((p.x >= a.x) &&
+	    (p.x <= a.x + a.w - 1) &&
+	    (p.y >= a.y) &&
+	    (p.y <= a.y + a.h - 1))
+		return 1;
+	else
+		return 0;
+}
+
 
 void ui_map_window(unsigned int w, unsigned int h)
 {

@@ -1,3 +1,6 @@
+jgmenu
+======
+
 Introduction
 ------------
 jgmenu is written with the following aims:
@@ -14,11 +17,15 @@ jgmenu is written with the following aims:
     (a bit like dzen2 -m with ^ca parameter).
     E.g. echo -e "terminal,xterm\nfile manager,pcmanfm" | jgmenu
 
+[screenshot](http://imgur.com/ThRLqVS "http://imgur.com/ThRLqVS")
+
 Installation
 ------------
-	make
-	make install
-	jgmenu_run
+```
+$ make
+# make install
+$ jgmenu_run
+```
 
 Usage
 -----

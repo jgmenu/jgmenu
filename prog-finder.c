@@ -49,7 +49,7 @@ int is_prog(char *filename)
 	char prog[4096], *p;
 	struct Path_segment *tmp;
 	int pos, cmd_length;
-	static int is_path_parsed = 0;
+	static int is_path_parsed;
 
 	if (!is_path_parsed) {
 		parse_path();

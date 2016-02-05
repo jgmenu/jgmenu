@@ -21,9 +21,13 @@
 
 #define MAX_FIELDS 3		/* nr fields to parse for each stdin line */
 
+#define VERTICAL_FUDGE 3	/* temporary offset */
+				/* Not sure why I need that offset... */
+
 struct Item {
 	char *t[MAX_FIELDS];	/* pointers name, cmd			  */
 	char *tag;		/* used to tag the start of a submenu	  */
+	struct Area area;
 	struct Item *next, *prev;
 };
 
@@ -34,6 +38,8 @@ struct Menu {
 	struct Item *sel;	/* pointer to the currently selected item  */
 	struct Item *first;	/* pointer to the first item in submenu	   */
 	struct Item *last;	/* pointer to the first item in submenu	   */
+
+	/* FIXME is nr_items still needed ??? */
 	int nr_items;		/* number of items in menu/submenu	   */
 	char *title;
 };
@@ -50,54 +56,65 @@ void usage(void)
 	exit(0);
 }
 
+void init_menuitem_coordinates(void)
+{
+	struct Item *p;
+	int i = 0;
+
+	if (menu.title)
+		++i;
+
+	for (p = menu.first; p && p->t[0] && p->prev != menu.last; p++) {
+		p->area = geo_get_item_coordinates(i);
+		++i;
+	}
+}
 
 void draw_menu(void)
 {
 	struct Item *p;
-	int x, y, w, h, offset;
+	int w, h;
 
-	x = 0;
-	y = 0;
 	h = geo_get_item_height();
 	w = geo_get_menu_width();
 
-	offset = (h - geo_get_font_height()) / 2;
-
 	/* Set background */
 	ui_clear_canvas();
-	/* ui_clear_canvas2(0, 0, w, geo_get_menu_height()); */
 	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), 9.0, 1, config.color_norm_bg);
 	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), 9.0, 0, config.color_sel_bg);
 
 	/* Draw title */
 	if (menu.title) {
-		ui_draw_rectangle_rounded_at_top(x, y, w, h, 9.0, 1, config.color_title_bg);
-		ui_insert_text(menu.title, x, y + offset, h, config.color_norm_fg);
-		y += h;
+		ui_draw_rectangle_rounded_at_top(0, 0, w, h, 9.0, 1, config.color_title_bg);
+		ui_insert_text(menu.title, 0, 0, h, config.color_norm_fg);
 	}
+
 
 	/* Draw menu items */
 	for (p = menu.first; p && p->t[0] && p->prev != menu.last; p++) {
 		if (p == menu.sel)
-			ui_draw_rectangle(x, y, w, h, 5.0, 1, config.color_sel_bg);
+			ui_draw_rectangle(p->area.x, p->area.y, p->area.w, p->area.h,
+					  5.0, 1, config.color_sel_bg);
 
+		/* FIXME - move draw arrow to x11-ui... */
 		/* Draw submenu arrow */
 		if (!strncmp(p->t[1], "^checkout(", 10) &&
 		    strncmp(p->t[0], "..", 2)) {
-			ui_draw_line(x + w - 8, y + h / 2 - 2, x + w - 2, y + h / 2, config.color_norm_fg);
-			ui_draw_line(x + w - 8, y + h / 2 + 2, x + w - 2, y + h / 2, config.color_norm_fg);
+			ui_draw_line(p->area.x + p->area.w - 8, p->area.y + p->area.h / 2 - 2,
+				     p->area.x + p->area.w - 2, p->area.y + p->area.h / 2, config.color_norm_fg);
+			ui_draw_line(p->area.x + p->area.w - 8, p->area.y + p->area.h / 2 + 2,
+				     p->area.x + p->area.w - 2, p->area.y + p->area.h / 2, config.color_norm_fg);
 		}
 
 		if (strncmp(p->t[1], "^checkout(", 10) &&
 		    strncmp(p->t[0], "..", 2) &&
 		    !is_prog(p->t[1]))
-			ui_insert_text(p->t[0], x, y + offset, h, config.color_broke_fg);
+			ui_insert_text(p->t[0], p->area.x, p->area.y, p->area.h, config.color_broke_fg);
 		else if (p == menu.sel)
-			ui_insert_text(p->t[0], x, y + offset, h, config.color_sel_fg);
+			ui_insert_text(p->t[0], p->area.x, p->area.y, p->area.h, config.color_sel_fg);
 		else
-			ui_insert_text(p->t[0], x, y + offset, h, config.color_norm_fg);
+			ui_insert_text(p->t[0], p->area.x, p->area.y, p->area.h, config.color_norm_fg);
 
-		y += h;
 	}
 
 	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
@@ -200,6 +217,7 @@ void action_cmd(char *cmd)
 			XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
 					  geo_get_menu_width(), geo_get_menu_height());
 
+			init_menuitem_coordinates();
 			draw_menu();
 		} else {
 			die("item began with ^ but was not checkout()");
@@ -251,6 +269,20 @@ void key_event(XKeyEvent *ev)
 		if (menu.sel && menu.sel->next && (menu.sel != menu.last))
 			menu.sel = menu.sel->next;
 		break;
+	case XK_d:
+		config.color_norm_bg[3] += 0.2;
+		if (config.color_norm_bg[3] > 1.0)
+			config.color_norm_bg[3] = 1.0;
+		init_menuitem_coordinates();
+		draw_menu();
+		break;
+	case XK_l:
+		config.color_norm_bg[3] -= 0.2;
+		if (config.color_norm_bg[3] < 0.0)
+			config.color_norm_bg[3] = 0.0;
+		init_menuitem_coordinates();
+		draw_menu();
+		break;
 	}
 }
 
@@ -258,11 +290,13 @@ void mouse_event(XEvent *e)
 {
 	struct Item *item;
 	XButtonPressedEvent *ev = &e->xbutton;
-	int y;
 	int mousex, mousey;
+	struct Point mouse_coords;
 
 	mousex = ev->x - geo_get_menu_x0();
 	mousey = ev->y - geo_get_menu_y0();
+	mouse_coords.x = mousex;
+	mouse_coords.y = mousey - VERTICAL_FUDGE;
 
 	/* Die if mouse clicked outside window */
 	if ((ev->x < geo_get_menu_x0() ||
@@ -295,11 +329,8 @@ void mouse_event(XEvent *e)
 
 	/* left-click */
 	if (ev->button == Button1) {
-		y = 0;
-		if (menu.title)
-			y += geo_get_item_height();
 		for (item = menu.first; item && item->t[0] && item->prev != menu.last ; item++) {
-			if (mousey >= y && mousey <= (y + geo_get_item_height())) {
+			if (ui_is_point_in_area(mouse_coords, item->area)) {
 				if (config.spawn) {
 					action_cmd(item->t[1]);
 					break;
@@ -307,7 +338,6 @@ void mouse_event(XEvent *e)
 					puts(item->t[1]);
 				}
 			}
-			y += geo_get_item_height();
 		}
 	}
 }
@@ -456,7 +486,7 @@ void run(void)
 {
 	XEvent ev;
 	struct Item *item;
-	int y, oldy = 0;
+	int oldy = 0;
 
 	while (!XNextEvent(ui->dpy, &ev)) {
 		switch (ev.type) {
@@ -479,20 +509,21 @@ void run(void)
 
 		/* Move highlighting with mouse */
 		/* Current mouse position is (ev.xbutton.x, ev.xbutton.y) */
-		y = geo_get_menu_y0();
+
+		struct Point mouse_coords;
+
+		mouse_coords.x = ev.xbutton.x - geo_get_menu_x0();
+		mouse_coords.y = ev.xbutton.y - geo_get_menu_y0() - VERTICAL_FUDGE;
 
 		if ((oldy != 0) && (ev.xbutton.y != oldy) && (ev.xbutton.x < geo_get_menu_width())) {
-			if (menu.title)
-				y += geo_get_item_height();
 			for (item = menu.first; item && item->t[0] && item->prev != menu.last; item++) {
-				if (ev.xbutton.y > y && ev.xbutton.y <= (y + geo_get_item_height())) {
+				if (ui_is_point_in_area(mouse_coords, item->area)) {
 					if (menu.sel != item) {
 						menu.sel = item;
 						draw_menu();
 						break;
 					}
 				}
-				y += geo_get_item_height();
 			}
 		}
 		oldy = ev.xbutton.y;
@@ -557,10 +588,11 @@ int main(int argc, char *argv[])
 
 	ui_create_window(geo_get_menu_x0(), geo_get_menu_y0(),
 			 geo_get_menu_width(), geo_get_menu_height());
-	ui_init_canvas(geo_get_menu_width(), menu.end * geo_get_item_height());
+	ui_init_canvas(geo_get_menu_width(), menu.end * geo_get_item_height() * 2);
 
-	ui_init_cairo(geo_get_menu_width(), menu.end * geo_get_item_height(), config.font);
+	ui_init_cairo(geo_get_menu_width(), menu.end * geo_get_item_height() * 2, config.font);
 
+	init_menuitem_coordinates();
 	draw_menu();
 
 	run();

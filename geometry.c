@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "x11-ui.h"
 #include "geometry.h"
 
 enum Alignment {TOP, CENTER, BOTTOM, LEFT, RIGHT};
@@ -16,6 +15,9 @@ int menu_height;	/* sg */
 int menu_width;		/* sg */
 int menu_x0;		/* g  */
 int menu_y0;		/* g  */
+
+int item_margin_x;
+int item_margin_y;
 
 int screen_width;
 int screen_height;
@@ -37,7 +39,7 @@ void geo_update(void)
 {
 	menu_x0 = menu_margin_x;
 
-	menu_height = nr_items * item_height;
+	menu_height = nr_items * (item_height + item_margin_y) + item_margin_y;
 	if (show_title)
 		menu_height = menu_height + item_height;
 
@@ -54,8 +56,10 @@ void geo_init(void)
 
 	item_height = 20;
 	strncpy(item_font, "Sans 18px", 9);
-	show_title = 0;
+	item_margin_x = 4;
+	item_margin_y = 4;
 
+	show_title = 0;
 	nr_items = 1;
 
 	ui_get_screen_res(&screen_x0, &screen_y0, &screen_width,
@@ -96,7 +100,7 @@ void geo_set_item_height(int h)
 	int font_height;
 
 	font_height =  ui_get_text_height(item_font);
-	item_height = h > font_height ? h : font_height;
+	item_height = (h > font_height) ? h : font_height;
 	geo_update();
 }
 
@@ -154,4 +158,23 @@ int geo_get_item_height(void)
 int geo_get_font_height(void)
 {
 	return ui_get_text_height(item_font);
+}
+
+
+/*
+ * item_number is the sequential number of the item starting with zero
+ */
+struct Area geo_get_item_coordinates(int item_number)
+{
+	struct Area a;
+
+	a.x = 0 + item_margin_x;
+	a.y = item_number * (item_height + item_margin_y) + item_margin_y;
+	if (show_title)
+		a.y -= item_margin_y;
+
+	a.h = item_height;
+	a.w = menu_width - (item_margin_x * 2);
+
+	return a;
 }

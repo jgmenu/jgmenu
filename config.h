@@ -9,6 +9,8 @@ struct Config {
 	int menu_margin_x;
 	int menu_margin_y;
 	int menu_width;
+	int max_items;		/* max number of items to show in menu */
+				/* if more items present, user has to scroll */
 
 	double color_norm_bg[4];
 	double color_norm_fg[4];
