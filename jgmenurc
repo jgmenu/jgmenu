@@ -1,14 +1,25 @@
 # .jgmenurc example
 
-menu_margin_x	= 5
-menu_margin_y	= 50
-menu_width	= 150
+menu_margin_x	= 2
+menu_margin_y	= 33
+menu_width	= 200
+menu_radius	= 7
+menu_border	= 0.0
 
-item_height	= 30
+item_margin_x	= 3
+item_margin_y	= 3
+item_height	= 25
+item_padding_x	= 4
+item_radius	= 3
+item_border	= 0.0
+
 font		= Ubuntu condensed 14px
 
-color_norm_bg	= #000000 20
+color_menu_bg	= #000000 60
+color_menu_fg	= #eeeeee 100
+color_norm_bg	= #000000 00
 color_norm_fg	= #eeeeee 100
-#color_sel_bg	= #ffffff 50
-#color_sel_fg	= #eeeeee 100
-#color_broke_fg	= #ff0000 80
+color_sel_bg	= #ffbb22 60
+color_sel_fg	= #eeeeee 100
+color_noprog_fg	= #ff0000 80
+color_title_bg	= #ffbb22 60

@@ -12,19 +12,28 @@ void config_set_defaults(void)
 {
 	config.spawn		= 1;
 	config.debug_mode	= 0;
-	config.item_height	= 30;
-	config.font		= strdup("Ubuntu condensed 18px");
+	config.item_height	= 25;
+	config.font		= strdup("Ubuntu condensed 14px");
 	config.menu_margin_x	= 2;
-	config.menu_margin_y	= 32;
+	config.menu_margin_y	= 33;
 	config.menu_width	= 200;
-	config.max_items	= 4;
+	config.menu_radius	= 7;
+	config.menu_border	= 0;
+	config.item_margin_x	= 3;
+	config.item_margin_y	= 3;
+	config.item_radius	= 3;
+	config.item_border	= 0;
+	config.item_padding_x	= 4;
+	config.max_items	= 4;				/* NEW */
 
-	parse_hexstr("#000000 40", config.color_norm_bg);
+	parse_hexstr("#000000 60", config.color_menu_bg);
+	parse_hexstr("#000000 60", config.color_menu_fg);
+	parse_hexstr("#000000 00", config.color_norm_bg);
 	parse_hexstr("#eeeeee 100", config.color_norm_fg);
-	parse_hexstr("#ffbb11 80", config.color_sel_bg);
-	parse_hexstr("#000000 100", config.color_sel_fg);
-	parse_hexstr("#ff0000 100", config.color_broke_fg);
-	parse_hexstr("#ff0000 70", config.color_title_bg);
+	parse_hexstr("#ffbb22 60", config.color_sel_bg);
+	parse_hexstr("#eeeeee 100", config.color_sel_fg);
+	parse_hexstr("#ff0000 80", config.color_noprog_fg);
+	parse_hexstr("#ffbb22 60", config.color_title_bg);
 }
 
 void process_line(char *line)
@@ -44,7 +53,25 @@ void process_line(char *line)
 		config.menu_margin_y = atoi(value);
 	else if (!strncmp(option, "menu_width", 10))
 		config.menu_width = atoi(value);
+	else if (!strncmp(option, "menu_radius", 11))
+		config.menu_radius = atoi(value);
+	else if (!strncmp(option, "menu_border", 11))
+		config.menu_border = atoi(value);
+	else if (!strncmp(option, "item_margin_x", 13))
+		config.item_margin_x = atoi(value);
+	else if (!strncmp(option, "item_margin_y", 13))
+		config.item_margin_y = atoi(value);
+	else if (!strncmp(option, "item_radius", 11))
+		config.item_radius = atoi(value);
+	else if (!strncmp(option, "item_border", 11))
+		config.item_border = atoi(value);
+	else if (!strncmp(option, "item_padding_x", 14))
+		config.item_padding_x = atoi(value);
 
+	else if (!strncmp(option, "color_menu_bg", 13))
+		parse_hexstr(value, config.color_menu_bg);
+	else if (!strncmp(option, "color_menu_fg", 13))
+		parse_hexstr(value, config.color_menu_fg);
 	else if (!strncmp(option, "color_norm_bg", 13))
 		parse_hexstr(value, config.color_norm_bg);
 	else if (!strncmp(option, "color_norm_fg", 13))
@@ -53,8 +80,10 @@ void process_line(char *line)
 		parse_hexstr(value, config.color_sel_bg);
 	else if (!strncmp(option, "color_sel_fg", 12))
 		parse_hexstr(value, config.color_sel_fg);
-	else if (!strncmp(option, "color_broke_fg", 14))
-		parse_hexstr(value, config.color_broke_fg);
+	else if (!strncmp(option, "color_noprog_fg", 14))
+		parse_hexstr(value, config.color_noprog_fg);
+	else if (!strncmp(option, "color_title_bg", 14))
+		parse_hexstr(value, config.color_title_bg);
 }
 
 

@@ -21,7 +21,7 @@
 
 #define MAX_FIELDS 3		/* nr fields to parse for each stdin line */
 
-#define VERTICAL_FUDGE 3	/* temporary offset */
+#define MOUSE_FUDGE 3		/* temporary offset */
 				/* Not sure why I need that offset... */
 
 struct Item {
@@ -39,8 +39,7 @@ struct Menu {
 	struct Item *first;	/* pointer to the first item in submenu	   */
 	struct Item *last;	/* pointer to the first item in submenu	   */
 
-	/* FIXME is nr_items still needed ??? */
-	int nr_items;		/* number of items in menu/submenu	   */
+	int nr_items_in_submenu;
 	char *title;
 };
 
@@ -80,40 +79,44 @@ void draw_menu(void)
 
 	/* Set background */
 	ui_clear_canvas();
-	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), 9.0, 1, config.color_norm_bg);
-	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), 9.0, 0, config.color_sel_bg);
+	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius, 0.0, 1, config.color_menu_bg);
+	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius, config.menu_border, 0, config.color_menu_fg);
 
 	/* Draw title */
 	if (menu.title) {
-		ui_draw_rectangle_rounded_at_top(0, 0, w, h, 9.0, 1, config.color_title_bg);
-		ui_insert_text(menu.title, 0, 0, h, config.color_norm_fg);
+		ui_draw_rectangle_rounded_at_top(0, 0, w, h, config.menu_radius, 0.0, 1, config.color_title_bg);
+		ui_insert_text(menu.title, config.item_padding_x, 0, h, config.color_norm_fg);
 	}
 
 
 	/* Draw menu items */
 	for (p = menu.first; p && p->t[0] && p->prev != menu.last; p++) {
-		if (p == menu.sel)
-			ui_draw_rectangle(p->area.x, p->area.y, p->area.w, p->area.h,
-					  5.0, 1, config.color_sel_bg);
+		if (p == menu.sel) {
+			ui_draw_rectangle(p->area.x, p->area.y, p->area.w, p->area.h, config.item_radius, 0.0, 1, config.color_sel_bg);
+			ui_draw_rectangle(p->area.x, p->area.y, p->area.w, p->area.h, config.item_radius, config.item_border, 0, config.color_sel_fg);
+		} else {
+			ui_draw_rectangle(p->area.x, p->area.y, p->area.w, p->area.h, config.item_radius, 0.0, 1, config.color_norm_bg);
+			ui_draw_rectangle(p->area.x, p->area.y, p->area.w, p->area.h, config.item_radius, config.item_border, 0, config.color_norm_fg);
+		}
 
 		/* FIXME - move draw arrow to x11-ui... */
 		/* Draw submenu arrow */
 		if (!strncmp(p->t[1], "^checkout(", 10) &&
 		    strncmp(p->t[0], "..", 2)) {
-			ui_draw_line(p->area.x + p->area.w - 8, p->area.y + p->area.h / 2 - 2,
-				     p->area.x + p->area.w - 2, p->area.y + p->area.h / 2, config.color_norm_fg);
-			ui_draw_line(p->area.x + p->area.w - 8, p->area.y + p->area.h / 2 + 2,
-				     p->area.x + p->area.w - 2, p->area.y + p->area.h / 2, config.color_norm_fg);
+			ui_draw_line(p->area.x + p->area.w - config.item_padding_x - 6, p->area.y + p->area.h / 2 - 2,
+				     p->area.x + p->area.w - config.item_padding_x, p->area.y + p->area.h / 2, 1.5, config.color_norm_fg);
+			ui_draw_line(p->area.x + p->area.w - config.item_padding_x - 6, p->area.y + p->area.h / 2 + 2,
+				     p->area.x + p->area.w - config.item_padding_x, p->area.y + p->area.h / 2, 1.5, config.color_norm_fg);
 		}
 
 		if (strncmp(p->t[1], "^checkout(", 10) &&
 		    strncmp(p->t[0], "..", 2) &&
 		    !is_prog(p->t[1]))
-			ui_insert_text(p->t[0], p->area.x, p->area.y, p->area.h, config.color_broke_fg);
+			ui_insert_text(p->t[0], p->area.x + config.item_padding_x, p->area.y, p->area.h, config.color_noprog_fg);
 		else if (p == menu.sel)
-			ui_insert_text(p->t[0], p->area.x, p->area.y, p->area.h, config.color_sel_fg);
+			ui_insert_text(p->t[0], p->area.x + config.item_padding_x, p->area.y, p->area.h, config.color_sel_fg);
 		else
-			ui_insert_text(p->t[0], p->area.x, p->area.y, p->area.h, config.color_norm_fg);
+			ui_insert_text(p->t[0], p->area.x + config.item_padding_x, p->area.y, p->area.h, config.color_norm_fg);
 
 	}
 
@@ -170,9 +173,9 @@ void checkout_submenu(char *tag)
 			die("menu.last pointer not set");
 	}
 
-	menu.nr_items = 1;
+	menu.nr_items_in_submenu = 1;
 	for (item = menu.first; item && item->t[0] && item != menu.last; item++)
-		menu.nr_items++;
+		menu.nr_items_in_submenu++;
 }
 
 char *parse_caret_action(char *s, char *token)
@@ -211,7 +214,7 @@ void action_cmd(char *cmd)
 			checkout_submenu(p);
 			menu.sel = menu.first;
 			geo_set_show_title(menu.title);
-			geo_set_nr_items(menu.nr_items);
+			geo_set_nr_items(menu.nr_items_in_submenu);
 
 			/* menu height has changed - need to redraw window */
 			XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
@@ -270,16 +273,16 @@ void key_event(XKeyEvent *ev)
 			menu.sel = menu.sel->next;
 		break;
 	case XK_d:
-		config.color_norm_bg[3] += 0.2;
-		if (config.color_norm_bg[3] > 1.0)
-			config.color_norm_bg[3] = 1.0;
+		config.color_menu_bg[3] += 0.2;
+		if (config.color_menu_bg[3] > 1.0)
+			config.color_menu_bg[3] = 1.0;
 		init_menuitem_coordinates();
 		draw_menu();
 		break;
 	case XK_l:
-		config.color_norm_bg[3] -= 0.2;
-		if (config.color_norm_bg[3] < 0.0)
-			config.color_norm_bg[3] = 0.0;
+		config.color_menu_bg[3] -= 0.2;
+		if (config.color_menu_bg[3] < 0.0)
+			config.color_menu_bg[3] = 0.0;
 		init_menuitem_coordinates();
 		draw_menu();
 		break;
@@ -295,8 +298,8 @@ void mouse_event(XEvent *e)
 
 	mousex = ev->x - geo_get_menu_x0();
 	mousey = ev->y - geo_get_menu_y0();
-	mouse_coords.x = mousex;
-	mouse_coords.y = mousey - VERTICAL_FUDGE;
+	mouse_coords.x = mousex - MOUSE_FUDGE;
+	mouse_coords.y = mousey - MOUSE_FUDGE;
 
 	/* Die if mouse clicked outside window */
 	if ((ev->x < geo_get_menu_x0() ||
@@ -383,7 +386,7 @@ void debug_dlist(void)
 	printf("menu.first->t[0]: %s\n", menu.first->t[0]);
 	printf("menu.sel->t[0]: %s\n", menu.sel->t[0]);
 	printf("menu.last->t[0]: %s\n", menu.last->t[0]);
-	printf("menu.nr_items: %d\n", menu.nr_items);
+	printf("menu.nr_items_in_submenu: %d\n", menu.nr_items_in_submenu);
 }
 
 char *next_field(char *str)
@@ -486,7 +489,9 @@ void run(void)
 {
 	XEvent ev;
 	struct Item *item;
-	int oldy = 0;
+	int oldy, oldx;
+
+	oldx = oldy = 0;
 
 	while (!XNextEvent(ui->dpy, &ev)) {
 		switch (ev.type) {
@@ -512,10 +517,10 @@ void run(void)
 
 		struct Point mouse_coords;
 
-		mouse_coords.x = ev.xbutton.x - geo_get_menu_x0();
-		mouse_coords.y = ev.xbutton.y - geo_get_menu_y0() - VERTICAL_FUDGE;
+		mouse_coords.x = ev.xbutton.x - geo_get_menu_x0() - MOUSE_FUDGE;
+		mouse_coords.y = ev.xbutton.y - geo_get_menu_y0() - MOUSE_FUDGE;
 
-		if ((oldy != 0) && (ev.xbutton.y != oldy) && (ev.xbutton.x < geo_get_menu_width())) {
+		if ((mouse_coords.x != oldx) || (mouse_coords.y != oldy)) {
 			for (item = menu.first; item && item->t[0] && item->prev != menu.last; item++) {
 				if (ui_is_point_in_area(mouse_coords, item->area)) {
 					if (menu.sel != item) {
@@ -526,8 +531,21 @@ void run(void)
 				}
 			}
 		}
-		oldy = ev.xbutton.y;
+		oldx = mouse_coords.x;
+		oldy = mouse_coords.y;
 	}
+}
+
+
+void init_geo_variables_from_config(void)
+{
+	geo_set_menu_margin_x(config.menu_margin_x);
+	geo_set_menu_margin_y(config.menu_margin_y);
+	geo_set_menu_width(config.menu_width);
+	geo_set_item_margin_x(config.item_margin_x);
+	geo_set_item_margin_y(config.item_margin_y);
+	geo_set_font(config.font);
+	geo_set_item_height(config.item_height);
 }
 
 int main(int argc, char *argv[])
@@ -571,15 +589,11 @@ int main(int argc, char *argv[])
 	ui_init();
 
 	geo_init();
-	geo_set_menu_margin_x(config.menu_margin_x);
-	geo_set_menu_margin_y(config.menu_margin_y);
-	geo_set_menu_width(config.menu_width);
-	geo_set_font(config.font);
-	geo_set_item_height(config.item_height);
+	init_geo_variables_from_config();
 
 	/* calculate menu geometry */
 	geo_set_show_title(menu.title);
-	geo_set_nr_items(menu.nr_items);
+	geo_set_nr_items(menu.nr_items_in_submenu);
 
 	/*
 	 * FIXME Would be tidier to calc height to largest submenu rather than

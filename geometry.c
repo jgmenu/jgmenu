@@ -13,27 +13,27 @@ int menu_margin_x;	/* s  */
 int menu_margin_y;	/* s  */
 int menu_height;	/* sg */
 int menu_width;		/* sg */
-int menu_x0;		/* g  */
-int menu_y0;		/* g  */
+int menu_x0;		/*  g */
+int menu_y0;		/*  g */
 
-int item_margin_x;
-int item_margin_y;
+int item_margin_x;	/* s  */
+int item_margin_y;	/* s  */
 
 int screen_width;
 int screen_height;
 int screen_x0;
 int screen_y0;
 
-int nr_items;
-int show_title;
+int nr_items;		/* s  */
+int show_title;		/* s  */
 
-int item_height;
-char item_font[1024];
+int item_height;	/* sg */
+
+/* FIXME item_font and its getters/setters could probably be deleted */
+char item_font[1024];	/* s  */
 
 /*
  * geo_update() contains algorithms for geometric variables
- *
- * item_height is not recalculated as it's too slow
  */
 void geo_update(void)
 {
@@ -49,6 +49,11 @@ void geo_update(void)
 
 void geo_init(void)
 {
+	/*
+	 * With the exception of the ui_get_screen_res() variables, the
+	 * variables below will be changed in init_geo_variables_from_config()
+	 * in jgmenu.c
+	 */
 	menu_margin_x = 1;
 	menu_margin_y = 30;
 	menu_width = 200;
@@ -65,8 +70,25 @@ void geo_init(void)
 	ui_get_screen_res(&screen_x0, &screen_y0, &screen_width,
 			  &screen_height);
 
-	geo_set_item_height(item_height);
 	geo_update();
+}
+
+/*
+ * item_number is the sequential number of the item starting with zero
+ */
+struct Area geo_get_item_coordinates(int item_number)
+{
+	struct Area a;
+
+	a.x = 0 + item_margin_x;
+	a.y = item_number * (item_height + item_margin_y) + item_margin_y;
+	if (show_title)
+		a.y -= item_margin_y;
+
+	a.h = item_height;
+	a.w = menu_width - (item_margin_x * 2);
+
+	return a;
 }
 
 /*********************************************************************/
@@ -97,10 +119,7 @@ void geo_set_menu_margin_y(int y)
 
 void geo_set_item_height(int h)
 {
-	int font_height;
-
-	font_height =  ui_get_text_height(item_font);
-	item_height = (h > font_height) ? h : font_height;
+	item_height = h;
 	geo_update();
 }
 
@@ -108,7 +127,6 @@ void geo_set_item_height(int h)
 void geo_set_font(char *font)
 {
 	strncpy(item_font, font, strlen(font));
-	geo_set_item_height(item_height);
 	geo_update();
 }
 
@@ -126,6 +144,19 @@ void geo_set_show_title(char *s)
 		show_title = 0;
 	geo_update();
 }
+
+void geo_set_item_margin_x(int margin)
+{
+	item_margin_x = margin;
+	geo_update();
+}
+
+void geo_set_item_margin_y(int margin)
+{
+	item_margin_y = margin;
+	geo_update();
+}
+
 
 /*********************************************************************/
 
@@ -161,20 +192,3 @@ int geo_get_font_height(void)
 }
 
 
-/*
- * item_number is the sequential number of the item starting with zero
- */
-struct Area geo_get_item_coordinates(int item_number)
-{
-	struct Area a;
-
-	a.x = 0 + item_margin_x;
-	a.y = item_number * (item_height + item_margin_y) + item_margin_y;
-	if (show_title)
-		a.y -= item_margin_y;
-
-	a.h = item_height;
-	a.w = menu_width - (item_margin_x * 2);
-
-	return a;
-}

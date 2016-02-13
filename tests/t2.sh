@@ -14,4 +14,4 @@ echo -e 'bar,bar'
 echo -e 'baz,baz'
 echo -e 'qux,qux'
 echo -e 'foobar,foobar'
-) | ../jgmenu --config-file=../jgmenurc
+) | ../jgmenu --config-file=./jgmenurc

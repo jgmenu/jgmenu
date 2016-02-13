@@ -48,6 +48,7 @@
 
 void geo_update(void);
 void geo_init(void);
+struct Area geo_get_item_coordinates(int item_number);
 
 void geo_set_menu_width(int w);
 void geo_set_menu_height(int h);
@@ -57,6 +58,8 @@ void geo_set_item_height(int h);
 void geo_set_font(char *font);
 void geo_set_nr_items(int nr);
 void geo_set_show_title(char *s);
+void geo_set_item_margin_x(int margin);
+void geo_set_item_margin_y(int margin);
 
 int geo_get_menu_x0(void);
 int geo_get_menu_y0(void);
@@ -64,6 +67,5 @@ int geo_get_menu_height(void);
 int geo_get_menu_width(void);
 int geo_get_item_height(void);
 int geo_get_font_height(void);
-struct Area geo_get_item_coordinates(int item_number);
 
 #endif  /* GEOMETRY_H */

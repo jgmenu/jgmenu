@@ -216,7 +216,7 @@ void ui_create_window(int x, int y, int w, int h)
 	XDefineCursor(ui->dpy, ui->win, XCreateFontCursor(ui->dpy, 68));
 }
 
-void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h, double radius, int fill, double *rgba)
+void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h, double radius, double line_width, int fill, double *rgba)
 {
 	double deg = 0.017453292519943295; /* 2 x 3.1415927 / 360.0 */
 
@@ -227,15 +227,25 @@ void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h, do
 	cairo_arc(ui->c, x + radius, y + radius, radius, 180 * deg, 270 * deg);    /* NE */
 	cairo_close_path(ui->c);
 	cairo_set_source_rgba(ui->c, rgba[0], rgba[1], rgba[2], rgba[3]);
-	if (fill)
+	if (fill) {
+		cairo_set_line_width(ui->c, 0.0);
 		cairo_fill_preserve(ui->c);
-	else
-		cairo_set_line_width(ui->c, 0.4);
+	} else {
+		cairo_set_line_width(ui->c, line_width);
+	}
 	cairo_stroke(ui->c);
 }
 
-void ui_draw_rectangle(double x, double y, double w, double h, double radius, int fill, double *rgba)
+void ui_draw_rectangle(double x, double y, double w, double h, double radius, double line_width, int fill, double *rgba)
 {
+//	if (!fill) {
+		x += line_width / 2;
+		y += line_width / 2;
+		w -= line_width;
+		h -= line_width;
+//	}
+
+	cairo_set_line_width(ui->c, 0.0);
 	if (radius > 0) {
 		double deg = 0.017453292519943295; /* 2 x 3.1415927 / 360.0 */
 
@@ -246,26 +256,28 @@ void ui_draw_rectangle(double x, double y, double w, double h, double radius, in
 		cairo_arc(ui->c, x + radius, y + radius, radius, 180 * deg, 270 * deg);
 		cairo_close_path(ui->c);
 		cairo_set_source_rgba(ui->c, rgba[0], rgba[1], rgba[2], rgba[3]);
-		if (fill)
+		if (fill) {
+			cairo_set_line_width(ui->c, 0.0);
 			cairo_fill_preserve(ui->c);
-		else
-			cairo_set_line_width(ui->c, 0.4);
+		} else {
+			cairo_set_line_width(ui->c, line_width);
+		}
 		cairo_stroke(ui->c);
 	} else {
 		cairo_set_source_rgba(ui->c, rgba[0], rgba[1], rgba[2], rgba[3]);
-		cairo_set_line_width(ui->c, 0.5);
+		cairo_set_line_width(ui->c, line_width);
 		cairo_rectangle(ui->c, x, y, w, h);
 		if (fill)
-			cairo_fill(ui->c);
+			cairo_fill(ui->c);	/* FIXME Should line width be 0 here? */
 		else
 			cairo_stroke(ui->c);
 	}
 }
 
-void ui_draw_line(int x0, int y0, int x1, int y1, double *rgba)
+void ui_draw_line(int x0, int y0, int x1, int y1, double line_width, double *rgba)
 {
 	cairo_set_source_rgba(ui->c, rgba[0], rgba[1], rgba[2], rgba[3]);
-	cairo_set_line_width(ui->c, 1.5);
+	cairo_set_line_width(ui->c, line_width);
 	cairo_move_to(ui->c, x0, y0);
 	cairo_line_to(ui->c, x1, y1);
 	cairo_stroke(ui->c);
@@ -281,7 +293,7 @@ void ui_insert_text(char *s, int x, int y, int h, double *rgba)
 	pango_layout_set_font_description(ui->pangolayout, ui->pangofont);
 	cairo_set_source_rgba(ui->c, rgba[0], rgba[1], rgba[2], rgba[3]);
 	pango_cairo_update_layout(ui->c, ui->pangolayout);
-	cairo_move_to(ui->c, x + 4, y + offset);
+	cairo_move_to(ui->c, x, y + offset);
 	pango_cairo_show_layout(ui->c, ui->pangolayout);
 }
 

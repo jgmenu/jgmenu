@@ -42,8 +42,8 @@ prog-finder.o: prog-finder.c prog-finder.h list.h
 
 install: jgmenu
 	@echo installing...
-	@sudo cp -pv ./jgmenu /usr/bin/
-	@sudo cp -pv ./jgmenu_run /usr/bin/
+	@install -m755 jgmenu /usr/bin/
+	@install -m755 jgmenu_run /usr/bin/
 
 clean:
 	@echo cleaning...
