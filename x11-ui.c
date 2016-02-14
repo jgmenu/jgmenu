@@ -285,9 +285,13 @@ void ui_draw_line(int x0, int y0, int x1, int y1, double line_width, double *rgb
 
 void ui_insert_text(char *s, int x, int y, int h, double *rgba)
 {
-	int offset;	/* Used to centre vertical alignment */
+	/* Used to centre vertical alignment */
+	int offset;
 
 	offset = (h - ui->font_height_actual) / 2;
+
+	/* Text seems to sit one pixel to high */
+	++offset;
 
 	pango_layout_set_text(ui->pangolayout, s, -1);
 	pango_layout_set_font_description(ui->pangolayout, ui->pangofont);

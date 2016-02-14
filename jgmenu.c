@@ -77,10 +77,9 @@ void draw_menu(void)
 	h = geo_get_item_height();
 	w = geo_get_menu_width();
 
-	/* Set background */
+	/* Draw background */
 	ui_clear_canvas();
 	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius, 0.0, 1, config.color_menu_bg);
-	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius, config.menu_border, 0, config.color_menu_fg);
 
 	/* Draw title */
 	if (menu.title) {
@@ -88,6 +87,8 @@ void draw_menu(void)
 		ui_insert_text(menu.title, config.item_padding_x, 0, h, config.color_norm_fg);
 	}
 
+	/* Draw menu border */
+	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius, config.menu_border, 0, config.color_menu_fg);
 
 	/* Draw menu items */
 	for (p = menu.first; p && p->t[0] && p->prev != menu.last; p++) {

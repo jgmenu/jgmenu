@@ -22,4 +22,4 @@ color_norm_fg	= #eeeeee 100
 color_sel_bg	= #ffbb22 60
 color_sel_fg	= #eeeeee 100
 color_noprog_fg	= #ff00cc 80
-color_title_bg	= #22bbff 60
+color_title_bg	= #223355 90
