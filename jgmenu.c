@@ -446,6 +446,10 @@ void parse_csv(struct Item *p)
 
 	while ((q = strrchr(p->t[0], ',')))
 		*q = '\0';
+
+	/* Prevents seg fault when t[1] == NULL */
+	if (!p->t[1])
+		p->t[1] = strdup("");
 }
 
 
@@ -494,7 +498,7 @@ void read_stdin(void)
 		parse_csv(&menu.head[i]);
 	}
 
-	if (!menu.head)
+	if (!menu.head || i <= 0)
 		die("No stdin.");
 
 	/*
