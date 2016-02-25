@@ -32,14 +32,18 @@ struct Item {
 };
 
 struct Menu {
-	struct Item *head;	/* pointer to the first menu item	   */
-	struct Item *tail;	/* end of dynamic array			   */
-	int end;		/* number of items in dynamic array	   */
-	struct Item *sel;	/* pointer to the currently selected item  */
-	struct Item *first;	/* pointer to the first item in submenu	   */
-	struct Item *last;	/* pointer to the first item in submenu	   */
+	struct Item *head;	/* first menu item			  */
+	struct Item *tail;	/* end of dynamic array			  */
+	int end;		/* number of items in dynamic array	  */
 
+	struct Item *sel;	/* currently selected item		  */
+	struct Item *first;	/* first item in checked out submenu	  */
+	struct Item *last;	/* first item in checked out submenu	  */
 	int nr_items_in_submenu;
+
+	struct Item *subhead;
+	struct Item *subtail;
+
 	char *title;
 };
 
@@ -103,12 +107,9 @@ void draw_menu(void)
 		/* FIXME - move draw arrow to x11-ui... */
 		/* Draw submenu arrow */
 		if (!strncmp(p->t[1], "^checkout(", 10) &&
-		    strncmp(p->t[0], "..", 2)) {
-			ui_draw_line(p->area.x + p->area.w - config.item_padding_x - 6, p->area.y + p->area.h / 2 - 2,
-				     p->area.x + p->area.w - config.item_padding_x, p->area.y + p->area.h / 2, 1.5, config.color_norm_fg);
-			ui_draw_line(p->area.x + p->area.w - config.item_padding_x - 6, p->area.y + p->area.h / 2 + 2,
-				     p->area.x + p->area.w - config.item_padding_x, p->area.y + p->area.h / 2, 1.5, config.color_norm_fg);
-		}
+		    strncmp(p->t[0], "..", 2))
+			ui_insert_text("→", p->area.x + p->area.w - config.item_padding_x - 10, p->area.y, p->area.h, config.color_norm_fg);
+			/* → ▶ ➔ ➙ ➛ ➜ ➝ ➞ ➟ ➠ ➡ ➢ ➣ ➤ ➥ ➦ ↦ ⇒ ⇝ ⇢ ⇥ ⇨ ⇾ ➭ ➮ ➯ ➱ ➲ ➺ ➼ ➽ ➾ */
 
 		if (strncmp(p->t[1], "^checkout(", 10) &&
 		    strncmp(p->t[0], "..", 2) &&
@@ -118,7 +119,6 @@ void draw_menu(void)
 			ui_insert_text(p->t[0], p->area.x + config.item_padding_x, p->area.y, p->area.h, config.color_sel_fg);
 		else
 			ui_insert_text(p->t[0], p->area.x + config.item_padding_x, p->area.y, p->area.h, config.color_norm_fg);
-
 	}
 
 	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
@@ -177,6 +177,25 @@ void checkout_submenu(char *tag)
 	menu.nr_items_in_submenu = 1;
 	for (item = menu.first; item && item->t[0] && item != menu.last; item++)
 		menu.nr_items_in_submenu++;
+
+	/*
+	 * menu.subhead remembers where the submenu starts.
+	 * menu.first will change with scrolling
+	 */
+	/* FIXME - subhead and subtail should be used above for first/last
+	 * only initiated at the end of this function */
+	menu.subhead = menu.first;
+	menu.subtail = menu.last;
+
+	menu.sel = menu.first;
+
+	geo_set_show_title(menu.title);
+	if (config.max_items < menu.nr_items_in_submenu)
+		geo_set_nr_visible_items(config.max_items);
+	else
+		geo_set_nr_visible_items(menu.nr_items_in_submenu);
+
+	menu.last = menu.first + geo_get_nr_visible_items() - 1;
 }
 
 char *parse_caret_action(char *s, char *token)
@@ -213,9 +232,6 @@ void action_cmd(char *cmd)
 		p = parse_caret_action(cmd, "^checkout(");
 		if (p) {
 			checkout_submenu(p);
-			menu.sel = menu.first;
-			geo_set_show_title(menu.title);
-			geo_set_nr_items(menu.nr_items_in_submenu);
 
 			/* menu height has changed - need to redraw window */
 			XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
@@ -253,8 +269,16 @@ void key_event(XKeyEvent *ev)
 		menu.sel = menu.first;
 		break;
 	case XK_Up:
-		if (menu.sel && menu.sel->prev && (menu.sel != menu.first))
+		if (!menu.sel || !menu.sel->prev)
+			break;
+		if (menu.sel != menu.first) {
 			menu.sel = menu.sel->prev;
+		} else if (menu.sel == menu.first && menu.first != menu.subhead) {
+			menu.first = menu.first->prev;
+			menu.last = menu.last->prev;
+			menu.sel = menu.first;
+			init_menuitem_coordinates();
+		}
 		break;
 	case XK_Next:
 		menu.sel = menu.last;
@@ -270,8 +294,16 @@ void key_event(XKeyEvent *ev)
 			puts(menu.sel->t[1]);
 		break;
 	case XK_Down:
-		if (menu.sel && menu.sel->next && (menu.sel != menu.last))
+		if (!menu.sel || !menu.sel->next)
+			break;
+		if (menu.sel != menu.last) {
 			menu.sel = menu.sel->next;
+		} else if (menu.sel == menu.last && menu.last != menu.subtail) {
+			menu.first = menu.first->next;
+			menu.last = menu.last->next;
+			menu.sel = menu.last;
+			init_menuitem_coordinates();
+		}
 		break;
 	case XK_d:
 		config.color_menu_bg[3] += 0.2;
@@ -576,25 +608,19 @@ int main(int argc, char *argv[])
 			config.debug_mode = 1;
 		}
 
+	ui_init();
+	geo_init();
+	init_geo_variables_from_config();
+
 	read_stdin();
 
 	if (menu.head->tag)
 		checkout_submenu(menu.head->tag);
 	else
 		checkout_submenu(NULL);
-	menu.sel = menu.first;
 
 	if (config.debug_mode)
 		debug_dlist();
-
-	ui_init();
-
-	geo_init();
-	init_geo_variables_from_config();
-
-	/* calculate menu geometry */
-	geo_set_show_title(menu.title);
-	geo_set_nr_items(menu.nr_items_in_submenu);
 
 	/*
 	 * FIXME Would be tidier to calc height to largest submenu rather than

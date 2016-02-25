@@ -24,7 +24,7 @@ int screen_height;
 int screen_x0;
 int screen_y0;
 
-int nr_items;		/* s  */
+int nr_visible_items;	/* sg */
 int show_title;		/* s  */
 
 int item_height;	/* sg */
@@ -39,7 +39,7 @@ void geo_update(void)
 {
 	menu_x0 = menu_margin_x;
 
-	menu_height = nr_items * (item_height + item_margin_y) + item_margin_y;
+	menu_height = nr_visible_items * (item_height + item_margin_y) + item_margin_y;
 	if (show_title)
 		menu_height = menu_height + item_height;
 
@@ -65,7 +65,7 @@ void geo_init(void)
 	item_margin_y = 4;
 
 	show_title = 0;
-	nr_items = 1;
+	nr_visible_items = 1;
 
 	ui_get_screen_res(&screen_x0, &screen_y0, &screen_width,
 			  &screen_height);
@@ -89,6 +89,22 @@ struct Area geo_get_item_coordinates(int item_number)
 	a.w = menu_width - (item_margin_x * 2);
 
 	return a;
+}
+
+int geo_get_nr_items_that_fit_on_screen()
+{
+	int nr_items, h;
+
+	h = screen_height - menu_margin_y - item_margin_y;
+
+	if (show_title)
+		h = h - item_height;
+
+	nr_items = h / (item_height + item_margin_y);
+
+	printf("\nnr_items_that_fit_on_screen: %d\n", nr_items);
+
+	return nr_items;
 }
 
 /*********************************************************************/
@@ -130,9 +146,12 @@ void geo_set_font(char *font)
 	geo_update();
 }
 
-void geo_set_nr_items(int nr)
+void geo_set_nr_visible_items(int nr)
 {
-	nr_items = nr;
+	if (nr > geo_get_nr_items_that_fit_on_screen())
+		nr_visible_items = geo_get_nr_items_that_fit_on_screen();
+	else
+		nr_visible_items = nr;
 	geo_update();
 }
 
@@ -191,4 +210,7 @@ int geo_get_font_height(void)
 	return ui_get_text_height(item_font);
 }
 
-
+int geo_get_nr_visible_items(void)
+{
+	return nr_visible_items;
+}
