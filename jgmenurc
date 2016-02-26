@@ -13,6 +13,7 @@ item_padding_x	= 4
 item_radius	= 3
 item_border	= 0.0
 
+max_items	= 100
 font		= Ubuntu condensed 14px
 
 color_menu_bg	= #000000 60

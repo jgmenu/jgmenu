@@ -31,18 +31,29 @@ struct Item {
 	struct Item *next, *prev;
 };
 
+/*
+ * All menu items in the input file are stored in a dynamic array (=vector).
+ * These items are also joined in a doubly linked list.
+ *
+ * When a submenu is checked out, *subhead and *subtail are set.
+ *
+ * *first and *last point to the first/last visible menu items (i.e. what can
+ * pysically be seen on the screen.) 
+ * The "number of visible menu items" is not a variable in the Menu struct,
+ * but can be got by calling geo_get_nr_visible_items().
+ */
 struct Menu {
-	struct Item *head;	/* first menu item			  */
-	struct Item *tail;	/* end of dynamic array			  */
-	int end;		/* number of items in dynamic array	  */
+	struct Item *head;	/* first item in linked list		  */
+	struct Item *tail;	/* last item in linked list		  */
+	int nr_items_in_list;
 
-	struct Item *sel;	/* currently selected item		  */
-	struct Item *first;	/* first item in checked out submenu	  */
-	struct Item *last;	/* first item in checked out submenu	  */
+	struct Item *subhead;	/* first item in checked out submenu	  */
+	struct Item *subtail;	/* first item in checked out submenu	  */
 	int nr_items_in_submenu;
 
-	struct Item *subhead;
-	struct Item *subtail;
+	struct Item *first;	/* first visible item			  */
+	struct Item *last;	/* last visible item			  */
+	struct Item *sel;	/* currently selected item		  */
 
 	char *title;
 };
@@ -83,42 +94,62 @@ void draw_menu(void)
 
 	/* Draw background */
 	ui_clear_canvas();
-	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius, 0.0, 1, config.color_menu_bg);
+	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius,
+			  0.0, 1, config.color_menu_bg);
 
 	/* Draw title */
 	if (menu.title) {
-		ui_draw_rectangle_rounded_at_top(0, 0, w, h, config.menu_radius, 0.0, 1, config.color_title_bg);
-		ui_insert_text(menu.title, config.item_padding_x, 0, h, config.color_norm_fg);
+		ui_draw_rectangle_rounded_at_top(0, 0, w, h, config.menu_radius,
+						 0.0, 1, config.color_title_bg);
+		ui_insert_text(menu.title, config.item_padding_x, 0, h,
+			       config.color_norm_fg);
 	}
 
 	/* Draw menu border */
-	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius, config.menu_border, 0, config.color_menu_fg);
+	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius,
+			  config.menu_border, 0, config.color_menu_fg);
 
 	/* Draw menu items */
 	for (p = menu.first; p && p->t[0] && p->prev != menu.last; p++) {
 		if (p == menu.sel) {
-			ui_draw_rectangle(p->area.x, p->area.y, p->area.w, p->area.h, config.item_radius, 0.0, 1, config.color_sel_bg);
-			ui_draw_rectangle(p->area.x, p->area.y, p->area.w, p->area.h, config.item_radius, config.item_border, 0, config.color_sel_fg);
+			ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
+					  p->area.h, config.item_radius, 0.0, 1,
+					  config.color_sel_bg);
+			ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
+					  p->area.h, config.item_radius,
+					  config.item_border, 0,
+					  config.color_sel_fg);
 		} else {
-			ui_draw_rectangle(p->area.x, p->area.y, p->area.w, p->area.h, config.item_radius, 0.0, 1, config.color_norm_bg);
-			ui_draw_rectangle(p->area.x, p->area.y, p->area.w, p->area.h, config.item_radius, config.item_border, 0, config.color_norm_fg);
+			ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
+					  p->area.h, config.item_radius, 0.0, 1,
+					  config.color_norm_bg);
+			ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
+					  p->area.h, config.item_radius,
+					  config.item_border, 0,
+					  config.color_norm_fg);
 		}
 
-		/* FIXME - move draw arrow to x11-ui... */
 		/* Draw submenu arrow */
 		if (!strncmp(p->t[1], "^checkout(", 10) &&
 		    strncmp(p->t[0], "..", 2))
-			ui_insert_text("→", p->area.x + p->area.w - config.item_padding_x - 10, p->area.y, p->area.h, config.color_norm_fg);
-			/* → ▶ ➔ ➙ ➛ ➜ ➝ ➞ ➟ ➠ ➡ ➢ ➣ ➤ ➥ ➦ ↦ ⇒ ⇝ ⇢ ⇥ ⇨ ⇾ ➭ ➮ ➯ ➱ ➲ ➺ ➼ ➽ ➾ */
+			ui_insert_text("→", p->area.x + p->area.w -
+				       config.item_padding_x - 10, p->area.y,
+				       p->area.h, config.color_norm_fg);
 
 		if (strncmp(p->t[1], "^checkout(", 10) &&
 		    strncmp(p->t[0], "..", 2) &&
 		    !is_prog(p->t[1]))
-			ui_insert_text(p->t[0], p->area.x + config.item_padding_x, p->area.y, p->area.h, config.color_noprog_fg);
+			ui_insert_text(p->t[0], p->area.x +
+				       config.item_padding_x, p->area.y,
+				       p->area.h, config.color_noprog_fg);
 		else if (p == menu.sel)
-			ui_insert_text(p->t[0], p->area.x + config.item_padding_x, p->area.y, p->area.h, config.color_sel_fg);
+			ui_insert_text(p->t[0], p->area.x +
+				       config.item_padding_x, p->area.y,
+				       p->area.h, config.color_sel_fg);
 		else
-			ui_insert_text(p->t[0], p->area.x + config.item_padding_x, p->area.y, p->area.h, config.color_norm_fg);
+			ui_insert_text(p->t[0], p->area.x +
+				       config.item_padding_x, p->area.y,
+				       p->area.h, config.color_norm_fg);
 	}
 
 	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
@@ -183,7 +214,8 @@ void checkout_submenu(char *tag)
 	 * menu.first will change with scrolling
 	 */
 	/* FIXME - subhead and subtail should be used above for first/last
-	 * only initiated at the end of this function */
+	 * only initiated at the end of this function
+	 */
 	menu.subhead = menu.first;
 	menu.subtail = menu.last;
 
@@ -248,6 +280,22 @@ void action_cmd(char *cmd)
 	}
 }
 
+int scroll_step_down()
+{
+	if (menu.subtail - menu.last < geo_get_nr_visible_items())
+		return (menu.subtail - menu.last);
+	else
+		return geo_get_nr_visible_items();
+}
+
+int scroll_step_up()
+{
+	if (menu.first - menu.subhead < geo_get_nr_visible_items())
+		return (menu.first - menu.subhead);
+	else
+		return geo_get_nr_visible_items();
+}
+
 void key_event(XKeyEvent *ev)
 {
 	char buf[32];
@@ -261,11 +309,21 @@ void key_event(XKeyEvent *ev)
 	default:
 		break;
 	case XK_End:
+		if (menu.nr_items_in_submenu > geo_get_nr_visible_items()) {
+			menu.first = menu.subtail - geo_get_nr_visible_items() + 1;
+			menu.last = menu.subtail;
+			init_menuitem_coordinates();
+		}
 		menu.sel = menu.last;
 		break;
 	case XK_Escape:
 		exit(0);
 	case XK_Home:
+		if (menu.nr_items_in_submenu > geo_get_nr_visible_items()) {
+			menu.first = menu.subhead;
+			menu.last = menu.subhead + geo_get_nr_visible_items() - 1;
+			init_menuitem_coordinates();
+		}
 		menu.sel = menu.first;
 		break;
 	case XK_Up:
@@ -280,10 +338,20 @@ void key_event(XKeyEvent *ev)
 			init_menuitem_coordinates();
 		}
 		break;
-	case XK_Next:
+	case XK_Next:	/* PageDown */
+		if (menu.nr_items_in_submenu > geo_get_nr_visible_items()) {
+			menu.first += scroll_step_down();
+			menu.last = menu.first + geo_get_nr_visible_items() - 1;
+			init_menuitem_coordinates();
+		}
 		menu.sel = menu.last;
 		break;
-	case XK_Prior:
+	case XK_Prior:	/* PageUp */
+		if (menu.nr_items_in_submenu > geo_get_nr_visible_items()) {
+			menu.first -= scroll_step_up();
+			menu.last = menu.first + geo_get_nr_visible_items() - 1;
+			init_menuitem_coordinates();
+		}
 		menu.sel = menu.first;
 		break;
 	case XK_Return:
@@ -350,15 +418,29 @@ void mouse_event(XEvent *e)
 		die("Right clicked.");
 
 	/* scroll up */
-	if (ev->button == Button4 && menu.sel->prev && menu.sel != menu.first) {
-		menu.sel = menu.sel->prev;
+	if (ev->button == Button4 && menu.sel->prev) {
+		if (menu.sel != menu.first) {
+			menu.sel = menu.sel->prev;
+		} else if (menu.first != menu.subhead) {
+			menu.first = menu.first->prev;
+			menu.last = menu.last->prev;
+			menu.sel = menu.first;
+			init_menuitem_coordinates();
+		}
 		draw_menu();
 		return;
 	}
 
 	/* scroll down */
-	if (ev->button == Button5 && menu.sel->next && menu.sel != menu.last) {
-		menu.sel = menu.sel->next;
+	if (ev->button == Button5 && menu.sel->next) {
+		if (menu.sel != menu.last) {
+			menu.sel = menu.sel->next;
+		} else if (menu.last != menu.subtail) {
+			menu.first = menu.first->next;
+			menu.last = menu.last->next;
+			menu.sel = menu.last;
+			init_menuitem_coordinates();
+		}
 		draw_menu();
 		return;
 	}
@@ -449,7 +531,7 @@ void parse_csv(struct Item *p)
 
 	/* Prevents seg fault when t[1] == NULL */
 	if (!p->t[1])
-		p->t[1] = strdup("");
+		p->t[1] = p->t[0];
 }
 
 
@@ -499,17 +581,17 @@ void read_stdin(void)
 	}
 
 	if (!menu.head || i <= 0)
-		die("No stdin.");
+		die("input file contains no menu items");
 
 	/*
 	 * Using "menu.head[i].t[0] = NULL" as a dynamic array end-marker
-	 * rather than menu.end or menu.tail.
+	 * rather than menu.nr_items_in_list or menu.tail.
 	 */
 	menu.head[i].t[0] = NULL;
 
-	/* menu.end holds the number of items in the dynamic array */
-	/* Not currently using menu.end in code except to define the cairo buf */
-	menu.end = i;
+	/* menu.nr_items_in_list holds the number of items in the dynamic array */
+	/* Not currently using menu.nr_items_in_list in code except to define the cairo buf */
+	menu.nr_items_in_list = i;
 
 	/* Create doubly-linked list */
 	menu.tail = NULL;
@@ -626,16 +708,10 @@ int main(int argc, char *argv[])
 	if (config.debug_mode)
 		debug_dlist();
 
-	/*
-	 * FIXME Would be tidier to calc height to largest submenu rather than
-	 * allocating memory for (menu.end * geo_get_item_height())
-	 */
-
 	ui_create_window(geo_get_menu_x0(), geo_get_menu_y0(),
 			 geo_get_menu_width(), geo_get_menu_height());
-	ui_init_canvas(geo_get_menu_width(), menu.end * geo_get_item_height() * 2);
-
-	ui_init_cairo(geo_get_menu_width(), menu.end * geo_get_item_height() * 2, config.font);
+	ui_init_canvas(geo_get_menu_width(), geo_get_screen_height());
+	ui_init_cairo(geo_get_menu_width(), geo_get_screen_height(), config.font);
 
 	init_menuitem_coordinates();
 	draw_menu();

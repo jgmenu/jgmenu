@@ -49,7 +49,7 @@
 void geo_update(void);
 void geo_init(void);
 struct Area geo_get_item_coordinates(int item_number);
-int geo_get_nr_items_that_fit_on_screen();
+int geo_get_nr_items_that_fit_on_screen(void);
 
 void geo_set_menu_width(int w);
 void geo_set_menu_height(int h);
@@ -68,6 +68,7 @@ int geo_get_menu_height(void);
 int geo_get_menu_width(void);
 int geo_get_item_height(void);
 int geo_get_font_height(void);
+int geo_get_screen_height(void);
 int geo_get_nr_visible_items(void);
 
 #endif  /* GEOMETRY_H */

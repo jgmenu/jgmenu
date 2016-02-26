@@ -2,7 +2,6 @@ VER = $(shell git describe 2>/dev/null)
 CC = gcc
 
 CFLAGS   = -g -Wall -Os
-#CFLAGS  += -pedantic 
 CFLAGS  += -DVERSION='"$(VER)"'
 CFLAGS  += -DXINERAMA
 CFLAGS  += `pkg-config cairo pango pangocairo --cflags`
@@ -18,7 +17,6 @@ all: jgmenu $(OBJS)
 jgmenu: jgmenu.c $(OBJS)
 	@echo $(CC) $@
 	@$(CC) $(LDFLAGS) $(CFLAGS) -o jgmenu $(OBJS) jgmenu.c
-
 
 x11-ui.o: x11-ui.c x11-ui.h
 	@echo $(CC) $@

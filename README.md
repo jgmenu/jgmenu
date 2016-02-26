@@ -64,8 +64,8 @@ Example 3:
 cat << EOF >> menu.sh
 #!/bin/bash
 (
-echo -e "terminal\nxterm"
-echo -e "file manager\npcmanfm"
+echo -e "terminal,xterm"
+echo -e "file manager,pcmanfm"
 ) | jgmenu
 EOF
 

@@ -20,7 +20,7 @@ int item_margin_x;	/* s  */
 int item_margin_y;	/* s  */
 
 int screen_width;
-int screen_height;
+int screen_height;	/*  g */
 int screen_x0;
 int screen_y0;
 
@@ -91,7 +91,7 @@ struct Area geo_get_item_coordinates(int item_number)
 	return a;
 }
 
-int geo_get_nr_items_that_fit_on_screen()
+int geo_get_nr_items_that_fit_on_screen(void)
 {
 	int nr_items, h;
 
@@ -101,8 +101,6 @@ int geo_get_nr_items_that_fit_on_screen()
 		h = h - item_height;
 
 	nr_items = h / (item_height + item_margin_y);
-
-	printf("\nnr_items_that_fit_on_screen: %d\n", nr_items);
 
 	return nr_items;
 }
@@ -208,6 +206,11 @@ int geo_get_item_height(void)
 int geo_get_font_height(void)
 {
 	return ui_get_text_height(item_font);
+}
+
+int geo_get_screen_height(void)
+{
+	return screen_height;
 }
 
 int geo_get_nr_visible_items(void)

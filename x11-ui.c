@@ -216,7 +216,8 @@ void ui_create_window(int x, int y, int w, int h)
 	XDefineCursor(ui->dpy, ui->win, XCreateFontCursor(ui->dpy, 68));
 }
 
-void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h, double radius, double line_width, int fill, double *rgba)
+void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h,
+				      double radius, double line_width, int fill, double *rgba)
 {
 	double deg = 0.017453292519943295; /* 2 x 3.1415927 / 360.0 */
 
@@ -238,12 +239,10 @@ void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h, do
 
 void ui_draw_rectangle(double x, double y, double w, double h, double radius, double line_width, int fill, double *rgba)
 {
-//	if (!fill) {
-		x += line_width / 2;
-		y += line_width / 2;
-		w -= line_width;
-		h -= line_width;
-//	}
+	x += line_width / 2;
+	y += line_width / 2;
+	w -= line_width;
+	h -= line_width;
 
 	cairo_set_line_width(ui->c, 0.0);
 	if (radius > 0) {
