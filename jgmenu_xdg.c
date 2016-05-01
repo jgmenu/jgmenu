@@ -9,7 +9,8 @@
 
 char name[1024];
 char exec[1024];
-char *search_pattern;
+char *search_pattern = NULL;
+char *config_parent = NULL;
 int ismatch;
 
 void process_line(char *line)
@@ -79,17 +80,33 @@ int list_dir(const char *path)
 	return 0;
 }
 
+void usage(void)
+{
+        printf("Usage: jgmenu_xdg [OPTIONS] [XDG CATEGORY]\n"
+               "    --parent=<cmd>       parent menu\n");
+        exit(1);
+}
+
+
 int main(int argc, char **argv)
 {
-	if (argc > 1)
-		search_pattern = strdup(argv[1]);
-	else
-		search_pattern = NULL;
+	int i;
+
+	if (argc)
+		for (i = 1; i < argc; i++) {
+			if (argv[i][0] != '-' && !search_pattern)
+				search_pattern = argv[i];
+			else if (!strncmp(argv[i], "--parent=", 9))
+				config_parent = argv[i] + 9;
+		}
 
 	if (search_pattern)
 		printf("/xdg/%s,^tag(xdg)\n", search_pattern);
 	else
 		printf("/xdg/all,^tag(xdg)\n");
+
+	if (config_parent)
+		printf("..,%s\n", config_parent);
 
 	list_dir(XDG_DIRECTORY);
 

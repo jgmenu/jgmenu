@@ -37,7 +37,8 @@ struct UI {
 struct UI *ui;
 
 void ui_clear_canvas(void);
-void ui_clear_canvas2(int x, int y, int w, int h);
+void grabkeyboard(void);
+void grabpointer(void);
 void ui_init_cairo(int canvas_width, int canvas_height, const char *font);
 void ui_init(void);
 void ui_get_screen_res(int *x0, int *y0, int *width, int *height);

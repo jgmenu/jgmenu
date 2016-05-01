@@ -23,7 +23,7 @@ Installation
 ------------
 ```
 $ make
-# make install
+$ make install
 $ jgmenu_run
 ```
 
@@ -37,6 +37,10 @@ The menu item "description" and "command" are seperated by a comma.
 
 Submenus can be defined and checked out using ^tag() and ^checkout()
 markup in the "command" field.
+
+The ^sub() markup draws an arrow to denote "submenu". This is useful for
+moving to a submenu in a separate menu file/pipe.
+tests/t3.sh shows an example of this.
 
 Examples
 --------

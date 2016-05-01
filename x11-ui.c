@@ -111,9 +111,6 @@ void ui_init(void)
 
 	ui->screen = DefaultScreen(ui->dpy);
 	ui->root = RootWindow(ui->dpy, ui->screen);
-
-	grabkeyboard();
-	grabpointer();
 }
 
 /*

@@ -130,15 +130,17 @@ void draw_menu(void)
 		}
 
 		/* Draw submenu arrow */
-		if (!strncmp(p->t[1], "^checkout(", 10) &&
-		    strncmp(p->t[0], "..", 2))
+		if ((!strncmp(p->t[1], "^checkout(", 10) && strncmp(p->t[0], "..", 2)) ||
+		     !strncmp(p->t[1], "^sub(", 5))
 			ui_insert_text("→", p->area.x + p->area.w -
 				       config.item_padding_x - 10, p->area.y,
 				       p->area.h, config.color_norm_fg);
 
 		if (strncmp(p->t[1], "^checkout(", 10) &&
+		    strncmp(p->t[1], "^sub(", 5) &&
 		    strncmp(p->t[0], "..", 2) &&
 		    !is_prog(p->t[1]))
+			/* Set color for programs not available in $PATH */
 			ui_insert_text(p->t[0], p->area.x +
 				       config.item_padding_x, p->area.y,
 				       p->area.h, config.color_noprog_fg);
@@ -260,7 +262,7 @@ void action_cmd(char *cmd)
 
 	if (!cmd)
 		return;
-	if (cmd[0] == '^') {
+	if (!strncmp(cmd, "^checkout(", 10)) {
 		p = parse_caret_action(cmd, "^checkout(");
 		if (p) {
 			checkout_submenu(p);
@@ -271,8 +273,12 @@ void action_cmd(char *cmd)
 
 			init_menuitem_coordinates();
 			draw_menu();
-		} else {
-			die("item began with ^ but was not checkout()");
+		}
+	} else if (!strncmp(cmd, "^sub(", 5)) {
+		p = parse_caret_action(cmd, "^sub(");
+		if (p) {
+			spawn(p);
+			exit(0);
 		}
 	} else {
 		spawn(cmd);
@@ -671,6 +677,7 @@ int main(int argc, char *argv[])
 {
 	int i;
 	char *config_file = NULL;
+	char *checkout_arg = NULL;
 
 	config_set_defaults();
 	menu.title = NULL;
@@ -692,6 +699,8 @@ int main(int argc, char *argv[])
 			config.spawn = 0;
 		} else if (!strncmp(argv[i], "--debug", 7)) {
 			config.debug_mode = 1;
+		} else if (!strncmp(argv[i], "--checkout=", 11)) {
+			checkout_arg = argv[i] + 11;
 		}
 
 	ui_init();
@@ -699,14 +708,19 @@ int main(int argc, char *argv[])
 	init_geo_variables_from_config();
 
 	read_stdin();
-
-	if (menu.head->tag)
+	
+	if (checkout_arg)
+		checkout_submenu(checkout_arg);
+	else if (menu.head->tag)
 		checkout_submenu(menu.head->tag);
 	else
 		checkout_submenu(NULL);
 
 	if (config.debug_mode)
 		debug_dlist();
+
+	grabkeyboard();
+	grabpointer();
 
 	ui_create_window(geo_get_menu_x0(), geo_get_menu_y0(),
 			 geo_get_menu_width(), geo_get_menu_height());
