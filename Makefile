@@ -1,5 +1,6 @@
-VER = $(shell git describe 2>/dev/null)
-CC = gcc
+VER      = $(shell git describe 2>/dev/null)
+CC       = gcc
+prefix   = $(HOME)/bin
 
 CFLAGS   = -g -Wall -Os
 CFLAGS  += -DVERSION='"$(VER)"'
@@ -12,7 +13,7 @@ LDFLAGS  = $(LIBS)
 
 OBJS =  x11-ui.o config.o util.o geometry.o prog-finder.o
 
-all: jgmenu $(OBJS)
+all: jgmenu $(OBJS) jgmenu_xdg
 
 jgmenu: jgmenu.c $(OBJS)
 	@echo $(CC) $@
@@ -38,10 +39,15 @@ prog-finder.o: prog-finder.c prog-finder.h list.h
 	@echo $(CC) $@
 	@$(CC) $(CFLAGS) $(LIBS) -c prog-finder.c
 
+jgmenu_xdg: jgmenu_xdg.c util.o
+	@echo $(CC) $@
+	@$(CC) -o jgmenu_xdg jgmenu_xdg.c util.o
+
 install: jgmenu
 	@echo installing...
-	@install -m755 jgmenu /usr/bin/
-	@install -m755 jgmenu_run /usr/bin/
+	@install -m755 jgmenu $(prefix)
+	@install -m755 jgmenu_run $(prefix)
+	@install -m755 jgmenu_xdg $(prefix)
 
 clean:
 	@echo cleaning...
