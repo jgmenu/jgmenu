@@ -64,8 +64,8 @@ void usage(void)
 {
 	printf("Usage: jgmenu [OPTIONS]\n"
 	       "    --version             show version\n"
-	       "    -r                    redirect command to stdout rather than executing\n"
-	       "    --debug               debug mode\n"
+	       "    --no-spawn            redirect command to stdout rather than executing it\n"
+	       "    --checkout=<tag>      checkout submenu <tag> on startup\n"
 	       "    --config-file=<file>  read config file\n");
 	exit(0);
 }
@@ -226,10 +226,15 @@ void checkout_submenu(char *tag)
 	geo_set_show_title(menu.title);
 	if (config.max_items < menu.nr_items_in_submenu)
 		geo_set_nr_visible_items(config.max_items);
+	else if (config.min_items > menu.nr_items_in_submenu)
+		geo_set_nr_visible_items(config.min_items);
 	else
 		geo_set_nr_visible_items(menu.nr_items_in_submenu);
 
-	menu.last = menu.first + geo_get_nr_visible_items() - 1;
+	if (config.min_items > menu.nr_items_in_submenu)
+		menu.last = menu.first + menu.nr_items_in_submenu - 1;
+	else
+		menu.last = menu.first + geo_get_nr_visible_items() - 1;
 }
 
 char *parse_caret_action(char *s, char *token)
@@ -695,12 +700,15 @@ int main(int argc, char *argv[])
 		if (!strncmp(argv[i], "--version", 9)) {
 			printf("%s\n", VERSION);
 			exit(0);
-		} else if (!strcmp(argv[i], "-r")) {
+		} else if (!strncmp(argv[i], "--no-spawn", 10)) {
 			config.spawn = 0;
 		} else if (!strncmp(argv[i], "--debug", 7)) {
 			config.debug_mode = 1;
 		} else if (!strncmp(argv[i], "--checkout=", 11)) {
 			checkout_arg = argv[i] + 11;
+		} else if (!strncmp(argv[i], "--fixed-height=", 15)) {
+			config.min_items = atoi(argv[i] + 15);
+			config.max_items = config.min_items;
 		}
 
 	ui_init();

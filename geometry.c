@@ -40,6 +40,7 @@ void geo_update(void)
 	menu_x0 = menu_margin_x;
 
 	menu_height = nr_visible_items * (item_height + item_margin_y) + item_margin_y;
+
 	if (show_title)
 		menu_height = menu_height + item_height;
 

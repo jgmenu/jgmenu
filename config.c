@@ -25,6 +25,7 @@ void config_set_defaults(void)
 	config.item_border	= 0;
 	config.item_padding_x	= 4;
 	config.max_items	= 80;
+	config.min_items	= 0;
 
 	parse_hexstr("#000000 60", config.color_menu_bg);
 	parse_hexstr("#000000 60", config.color_menu_fg);
@@ -69,6 +70,8 @@ void process_line(char *line)
 		config.item_padding_x = atoi(value);
 	else if (!strncmp(option, "max_items", 8))
 		config.max_items = atoi(value);
+	else if (!strncmp(option, "min_items", 8))
+		config.min_items = atoi(value);
 
 	else if (!strncmp(option, "color_menu_bg", 13))
 		parse_hexstr(value, config.color_menu_bg);

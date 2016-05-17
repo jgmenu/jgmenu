@@ -18,6 +18,7 @@ struct Config {
 	int item_padding_x;
 	int max_items;		/* max number of items to show in menu */
 				/* if more items present, user has to scroll */
+	int min_items;
 
 	double color_menu_bg[4];
 	double color_menu_fg[4];
