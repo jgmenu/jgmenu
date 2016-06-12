@@ -3,15 +3,8 @@
 # $MENU_IF in jgmenu_runrc can specify a jgmenu file.
 
 jgmenu_runrc=~/.config/jgmenu/jgmenu_runrc
-jgmenurc=~/.config/jgmenu/jgmenurc
 
-if test -e ${jgmenurc}
-then
-	cmd="jgmenu --config-file=${jgmenurc}"
-else
-	cmd=jgmenu
-fi
-
+cmd="jgmenu $@"
 
 [[ -e ${jgmenu_runrc} ]] && . ${jgmenu_runrc}
 
@@ -28,6 +21,3 @@ web browser,firefox\n\
 poweroff,poweroff" | ${cmd}
 
 fi
-
-
-

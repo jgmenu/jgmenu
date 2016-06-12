@@ -18,7 +18,7 @@ min_items	= 10
 font		= Ubuntu 14px
 
 color_menu_bg	= #000000 00
-color_menu_fg	= #eeeeee 80
+color_menu_fg	= #eeeeee 40
 color_norm_bg	= #000000 100
 color_norm_fg	= #eeeeee 100
 color_sel_bg	= #ffbb22 60

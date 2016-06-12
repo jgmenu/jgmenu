@@ -1,0 +1,24 @@
+jgmenu v0.2 release notes
+=========================
+
+Updates since v0.1.2
+--------------------
+
+  - Enabled window transparency and rounded corners.
+
+  - Added various config file options including colour, margin,
+    padding, radius and border thickness.
+
+  - Added options for max/min number of "visible" menu items.
+    Also added --fixed-items=N command line option.
+
+  - Enabled vertical scrolling.
+
+  - Enabled xdg parsing functionality (to show default Linux desktop
+    menu).
+
+  - Added ability to check if a program is installed.
+
+  - Added --checkout=<tag> and --parent=<cmd> options.
+ 
+  - Added ^sub() markup for drawing submenu arrow.

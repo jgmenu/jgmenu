@@ -1,0 +1,12 @@
+jgmenu v0.2 release notes
+=========================
+
+Updates since v0.2
+--------------------
+
+  - Makefile tidy-up to make packaging easier
+
+  - Set ~/.config/jgmenu/jgmenurc as the default config file if no
+    --config-file= is specified
+
+  - Set more neutral default colours

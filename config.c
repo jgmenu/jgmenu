@@ -17,8 +17,8 @@ void config_set_defaults(void)
 	config.menu_margin_x	= 2;
 	config.menu_margin_y	= 33;
 	config.menu_width	= 200;
-	config.menu_radius	= 7;
-	config.menu_border	= 0;
+	config.menu_radius	= 6;
+	config.menu_border	= 1;
 	config.item_margin_x	= 3;
 	config.item_margin_y	= 3;
 	config.item_radius	= 3;
@@ -28,13 +28,13 @@ void config_set_defaults(void)
 	config.min_items	= 0;
 
 	parse_hexstr("#000000 60", config.color_menu_bg);
-	parse_hexstr("#000000 60", config.color_menu_fg);
+	parse_hexstr("#eeeeee 20", config.color_menu_fg);
 	parse_hexstr("#000000 00", config.color_norm_bg);
 	parse_hexstr("#eeeeee 100", config.color_norm_fg);
-	parse_hexstr("#ffbb22 60", config.color_sel_bg);
+	parse_hexstr("#ffffff 20", config.color_sel_bg);
 	parse_hexstr("#eeeeee 100", config.color_sel_fg);
 	parse_hexstr("#ff0000 80", config.color_noprog_fg);
-	parse_hexstr("#ffbb22 60", config.color_title_bg);
+	parse_hexstr("#ffffff 20", config.color_title_bg);
 }
 
 void process_line(char *line)
@@ -105,8 +105,10 @@ void config_parse_file(char *filename)
 	FILE *fp;
 
 	fp = fopen(filename, "r");
-	if (!fp)
-		die("could not open file %s", filename);
-	read_file(fp);
-	fclose(fp);
+	if (!fp) {
+		fprintf(stderr, "warning: could not open file %s\n", filename);
+	} else {
+		read_file(fp);
+		fclose(fp);
+	}
 }

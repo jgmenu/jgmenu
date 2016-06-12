@@ -1,6 +1,8 @@
 VER      = $(shell git describe 2>/dev/null)
 CC       = gcc
-prefix   = $(HOME)/bin
+
+prefix   = $(HOME)
+bindir   = $(prefix)/bin
 
 CFLAGS   = -g -Wall -Os
 CFLAGS  += -DVERSION='"$(VER)"'
@@ -11,9 +13,12 @@ LIBS  = `pkg-config x11 xinerama cairo pango pangocairo --libs`
 
 LDFLAGS  = $(LIBS)
 
+SCRIPTS  = jgmenu_run
+PROGS	 = jgmenu jgmenu_xdg
+
 OBJS =  x11-ui.o config.o util.o geometry.o prog-finder.o
 
-all: jgmenu $(OBJS) jgmenu_xdg
+all: $(PROGS) $(OBJS)
 
 jgmenu: jgmenu.c $(OBJS)
 	@echo $(CC) $@
@@ -43,16 +48,11 @@ jgmenu_xdg: jgmenu_xdg.c util.o
 	@echo $(CC) $@
 	@$(CC) -o jgmenu_xdg jgmenu_xdg.c util.o
 
-install: jgmenu
-	@echo installing...
-	@install -m755 jgmenu $(prefix)
-	@install -m755 jgmenu_run $(prefix)
-	@install -m755 jgmenu_xdg $(prefix)
+install: $(PROGS) $(SCRIPTS)
+	@install -m755 $(PROGS) $(SCRIPTS) $(DESTDIR)$(bindir)
 
 clean:
-	@echo cleaning...
-	@rm -f jgmenu
-	@rm -f *.o
+	@rm -f $(PROGS) *.o
 
 test:
 	$(MAKE) -C tests/ all

@@ -690,6 +690,9 @@ int main(int argc, char *argv[])
 	for (i = 1; i < argc; i++)
 		if (!strncmp(argv[i], "--config-file=", 14))
 			config_file = strdup(argv[i] + 14);
+	if (!config_file)
+		config_file = strdup("~/.config/jgmenu/jgmenurc");
+
 	if (config_file) {
 		if (config_file[0] == '~')
 			config_file = expand_tilde(config_file);
