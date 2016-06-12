@@ -1,4 +1,4 @@
-jgmenu v0.2 release notes
+jgmenu v0.2.1 release notes
 =========================
 
 Updates since v0.2

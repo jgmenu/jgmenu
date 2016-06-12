@@ -49,6 +49,7 @@ jgmenu_xdg: jgmenu_xdg.c util.o
 	@$(CC) -o jgmenu_xdg jgmenu_xdg.c util.o
 
 install: $(PROGS) $(SCRIPTS)
+	@install -d $(DESTDIR)$(bindir)
 	@install -m755 $(PROGS) $(SCRIPTS) $(DESTDIR)$(bindir)
 
 clean:
