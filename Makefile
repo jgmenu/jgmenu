@@ -22,7 +22,7 @@ all: $(PROGS) $(OBJS)
 
 jgmenu: jgmenu.c $(OBJS)
 	@echo $(CC) $@
-	@$(CC) $(LDFLAGS) $(CFLAGS) -o jgmenu $(OBJS) jgmenu.c
+	@$(CC) $(CFLAGS) -o jgmenu $(OBJS) jgmenu.c $(LDFLAGS)
 
 x11-ui.o: x11-ui.c x11-ui.h
 	@echo $(CC) $@

@@ -38,7 +38,7 @@ struct Item {
  * When a submenu is checked out, *subhead and *subtail are set.
  *
  * *first and *last point to the first/last visible menu items (i.e. what can
- * pysically be seen on the screen.) 
+ * pysically be seen on the screen.)
  * The "number of visible menu items" is not a variable in the Menu struct,
  * but can be got by calling geo_get_nr_visible_items().
  */
@@ -291,7 +291,7 @@ void action_cmd(char *cmd)
 	}
 }
 
-int scroll_step_down()
+int scroll_step_down(void)
 {
 	if (menu.subtail - menu.last < geo_get_nr_visible_items())
 		return (menu.subtail - menu.last);
@@ -299,7 +299,7 @@ int scroll_step_down()
 		return geo_get_nr_visible_items();
 }
 
-int scroll_step_up()
+int scroll_step_up(void)
 {
 	if (menu.first - menu.subhead < geo_get_nr_visible_items())
 		return (menu.first - menu.subhead);
@@ -429,29 +429,21 @@ void mouse_event(XEvent *e)
 		die("Right clicked.");
 
 	/* scroll up */
-	if (ev->button == Button4 && menu.sel->prev) {
-		if (menu.sel != menu.first) {
-			menu.sel = menu.sel->prev;
-		} else if (menu.first != menu.subhead) {
-			menu.first = menu.first->prev;
-			menu.last = menu.last->prev;
-			menu.sel = menu.first;
-			init_menuitem_coordinates();
-		}
+	if (ev->button == Button4 && menu.first != menu.subhead) {
+		menu.first = menu.first->prev;
+		menu.last = menu.last->prev;
+		menu.sel = menu.sel->prev;
+		init_menuitem_coordinates();
 		draw_menu();
 		return;
 	}
 
 	/* scroll down */
-	if (ev->button == Button5 && menu.sel->next) {
-		if (menu.sel != menu.last) {
-			menu.sel = menu.sel->next;
-		} else if (menu.last != menu.subtail) {
-			menu.first = menu.first->next;
-			menu.last = menu.last->next;
-			menu.sel = menu.last;
-			init_menuitem_coordinates();
-		}
+	if (ev->button == Button5 && menu.last != menu.subtail) {
+		menu.first = menu.first->next;
+		menu.last = menu.last->next;
+		menu.sel = menu.sel->next;
+		init_menuitem_coordinates();
 		draw_menu();
 		return;
 	}
@@ -719,7 +711,7 @@ int main(int argc, char *argv[])
 	init_geo_variables_from_config();
 
 	read_stdin();
-	
+
 	if (checkout_arg)
 		checkout_submenu(checkout_arg);
 	else if (menu.head->tag)
