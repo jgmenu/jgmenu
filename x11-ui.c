@@ -357,7 +357,38 @@ void ui_cleanup(void)
 	if (ui)
 		free(ui);
 
+
+	/* cairo_surface_destroy(ICONS); */
+
 	/* TODO: Free cairo stuff */
 	pango_font_description_free(ui->pangofont);
 	g_object_unref(ui->pangolayout);
+}
+
+cairo_surface_t *ui_get_icon(const char *filename)
+{
+	cairo_surface_t *image;
+
+	image = cairo_image_surface_create_from_png(filename);
+	if (cairo_surface_status(image)) {
+		fprintf(stderr, "warning: cannot find icon %s\n", filename);
+		cairo_surface_destroy(image);
+		return NULL;
+	}
+
+	return image;
+}
+
+void ui_insert_image(cairo_surface_t *image, double x, double y, double size)
+{
+	int w, h;
+
+	w = cairo_image_surface_get_width(image);
+	h = cairo_image_surface_get_height(image);
+	cairo_save(ui->c);
+	if (w > size || h > size)
+		cairo_scale(ui->c, size / w, size / h);
+	cairo_set_source_surface(ui->c, image, x, y);
+	cairo_paint(ui->c);
+	cairo_restore(ui->c);
 }

@@ -24,4 +24,4 @@ echo -e 'item12,xterm'
 echo -e 'item13,xterm'
 echo -e 'item14,xterm'
 echo -e 'item15 (last),xterm'
-) | ../jgmenu --config-file=./jgmenurc
+) | ../jgmenu --config-file=./t2-jgmenurc

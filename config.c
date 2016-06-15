@@ -26,6 +26,7 @@ void config_set_defaults(void)
 	config.item_padding_x	= 4;
 	config.max_items	= 80;
 	config.min_items	= 0;
+	config.icon_size	= 0;
 
 	parse_hexstr("#000000 60", config.color_menu_bg);
 	parse_hexstr("#eeeeee 20", config.color_menu_fg);
@@ -106,7 +107,8 @@ void config_parse_file(char *filename)
 
 	fp = fopen(filename, "r");
 	if (!fp) {
-		fprintf(stderr, "warning: could not open file %s\n", filename);
+		fprintf(stderr, "warning: could not open config file %s\n",
+			filename);
 	} else {
 		read_file(fp);
 		fclose(fp);

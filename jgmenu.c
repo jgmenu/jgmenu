@@ -25,9 +25,10 @@
 				/* Not sure why I need that offset... */
 
 struct Item {
-	char *t[MAX_FIELDS];	/* pointers name, cmd			  */
+	char *t[MAX_FIELDS];	/* pointers to name, cmd, icon		  */
 	char *tag;		/* used to tag the start of a submenu	  */
 	struct Area area;
+	cairo_surface_t *icon;
 	struct Item *next, *prev;
 };
 
@@ -152,6 +153,12 @@ void draw_menu(void)
 			ui_insert_text(p->t[0], p->area.x +
 				       config.item_padding_x, p->area.y,
 				       p->area.h, config.color_norm_fg);
+
+		if (config.icon_size && p->icon)
+			ui_insert_image(p->icon, p->area.x, p->area.y + 1 +
+					(config.item_height - config.icon_size) / 2,
+					config.icon_size);
+
 	}
 
 	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
@@ -485,7 +492,7 @@ void debug_dlist(void)
 	struct Item *item;
 
 	printf("---------------------------------------------------------------\n");
-	printf("Name                Cmd                 Spare               Tag\n");
+	printf("Name                Cmd                 Icon                Tag\n");
 	printf("---------------------------------------------------------------\n");
 
 	for (item = menu.head; item && item->t[0]; item++) {
@@ -605,6 +612,13 @@ void read_stdin(void)
 	for (item = menu.head; item && item->t[0]; item++)
 		item->tag = parse_caret_action(item->t[1], "^tag(");
 
+	/* Get icons */
+	for (item = menu.head; item && item->t[0]; item++)
+		if (item->t[2])
+			item->icon = ui_get_icon(item->t[2]);
+		else
+			item->icon = NULL;
+
 }
 
 void run(void)
@@ -701,10 +715,18 @@ int main(int argc, char *argv[])
 			config.debug_mode = 1;
 		} else if (!strncmp(argv[i], "--checkout=", 11)) {
 			checkout_arg = argv[i] + 11;
+		} else if (!strncmp(argv[i], "--icon-size=", 12)) {
+			config.icon_size = atoi(argv[i] + 12);
 		} else if (!strncmp(argv[i], "--fixed-height=", 15)) {
 			config.min_items = atoi(argv[i] + 15);
 			config.max_items = config.min_items;
 		}
+
+	/* FIXME: Find a better place for this */
+	if (config.icon_size) {
+		config.item_padding_x *= 2;
+		config.item_padding_x += config.icon_size;
+	}
 
 	ui_init();
 	geo_init();

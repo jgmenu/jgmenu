@@ -19,6 +19,7 @@ struct Config {
 	int max_items;		/* max number of items to show in menu */
 				/* if more items present, user has to scroll */
 	int min_items;
+	int icon_size;		/* if set to zero, icons won't show */
 
 	double color_menu_bg[4];
 	double color_menu_fg[4];

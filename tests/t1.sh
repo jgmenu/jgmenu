@@ -1,2 +1,2 @@
 #!/bin/bash
-../jgmenu < rootmenu.txt
+../jgmenu --icon-size=22 --config-file= < t1-menu.csv
