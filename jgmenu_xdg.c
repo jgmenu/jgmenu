@@ -82,9 +82,9 @@ int list_dir(const char *path)
 
 void usage(void)
 {
-        printf("Usage: jgmenu_xdg [OPTIONS] [XDG CATEGORY]\n"
-               "    --parent=<cmd>       parent menu\n");
-        exit(1);
+	printf("Usage: jgmenu_xdg [OPTIONS] [XDG CATEGORY]\n"
+	       "    --parent=<cmd>       parent menu\n");
+	exit(1);
 }
 
 

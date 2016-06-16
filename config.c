@@ -38,7 +38,7 @@ void config_set_defaults(void)
 	parse_hexstr("#ffffff 20", config.color_title_bg);
 }
 
-void process_line(char *line)
+static void process_line(char *line)
 {
 	char *option, *value;
 
@@ -93,7 +93,7 @@ void process_line(char *line)
 }
 
 
-void read_file(FILE *fp)
+static void read_file(FILE *fp)
 {
 	char line[1024];
 

@@ -89,6 +89,7 @@ void draw_menu(void)
 {
 	struct Item *p;
 	int w, h;
+	int text_x_coord;
 
 	h = geo_get_item_height();
 	w = geo_get_menu_width();
@@ -133,32 +134,33 @@ void draw_menu(void)
 		/* Draw submenu arrow */
 		if ((!strncmp(p->t[1], "^checkout(", 10) && strncmp(p->t[0], "..", 2)) ||
 		     !strncmp(p->t[1], "^sub(", 5))
-			ui_insert_text("→", p->area.x + p->area.w -
+			ui_insert_text("▶", p->area.x + p->area.w -
 				       config.item_padding_x - 10, p->area.y,
 				       p->area.h, config.color_norm_fg);
+
+		/* Draw menu items text */
+		text_x_coord = p->area.x + config.item_padding_x;
+		if (config.icon_size)
+			text_x_coord += config.icon_size + config.item_padding_x;
 
 		if (strncmp(p->t[1], "^checkout(", 10) &&
 		    strncmp(p->t[1], "^sub(", 5) &&
 		    strncmp(p->t[0], "..", 2) &&
 		    !is_prog(p->t[1]))
 			/* Set color for programs not available in $PATH */
-			ui_insert_text(p->t[0], p->area.x +
-				       config.item_padding_x, p->area.y,
+			ui_insert_text(p->t[0], text_x_coord, p->area.y,
 				       p->area.h, config.color_noprog_fg);
 		else if (p == menu.sel)
-			ui_insert_text(p->t[0], p->area.x +
-				       config.item_padding_x, p->area.y,
+			ui_insert_text(p->t[0], text_x_coord, p->area.y,
 				       p->area.h, config.color_sel_fg);
 		else
-			ui_insert_text(p->t[0], p->area.x +
-				       config.item_padding_x, p->area.y,
+			ui_insert_text(p->t[0], text_x_coord, p->area.y,
 				       p->area.h, config.color_norm_fg);
 
 		if (config.icon_size && p->icon)
 			ui_insert_image(p->icon, p->area.x, p->area.y + 1 +
 					(config.item_height - config.icon_size) / 2,
 					config.icon_size);
-
 	}
 
 	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
@@ -190,6 +192,7 @@ void checkout_submenu(char *tag)
 			}
 		}
 
+		/* If ^checkout() called without associated ^tag() */
 		if (!menu.title)
 			die("menu.title pointer not set.  Tag not found.");
 		if (!menu.first)
@@ -721,12 +724,6 @@ int main(int argc, char *argv[])
 			config.min_items = atoi(argv[i] + 15);
 			config.max_items = config.min_items;
 		}
-
-	/* FIXME: Find a better place for this */
-	if (config.icon_size) {
-		config.item_padding_x *= 2;
-		config.item_padding_x += config.icon_size;
-	}
 
 	ui_init();
 	geo_init();

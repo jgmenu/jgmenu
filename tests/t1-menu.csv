@@ -2,7 +2,12 @@
 # This is an example menu
 #
 
+jgmenu demo,^tag(root)
 browser,firefox,/usr/share/icons/hicolor/24x24/apps/firefox.png
 file manager,pcmanfm,/usr/share/icons/Adwaita/22x22/apps/system-file-manager.png
 terminal,xterm,/usr/share/icons/Adwaita/22x22/apps/utilities-terminal.png
 background image,nitrogen ~/bg/,/usr/share/icons/hicolor/22x22/apps/nitrogen.png
+directory,^checkout(submenu),/usr/share/icons/Adwaita/22x22/places/folder.png
+
+submenu,^tag(submenu)
+go back,^checkout(root),/usr/share/icons/Adwaita/22x22/places/folder.png
