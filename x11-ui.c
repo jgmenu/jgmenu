@@ -365,9 +365,9 @@ void ui_cleanup(void)
 	g_object_unref(ui->pangolayout);
 }
 
-cairo_surface_t *ui_get_icon(const char *filename)
+cairo_surface_t *ui_get_png_icon(const char *filename)
 {
-	cairo_surface_t *image;
+	cairo_surface_t *image = NULL;
 
 	image = cairo_image_surface_create_from_png(filename);
 	if (cairo_surface_status(image)) {
@@ -377,6 +377,31 @@ cairo_surface_t *ui_get_icon(const char *filename)
 	}
 
 	return image;
+}
+
+
+RsvgHandle *ui_get_svg_icon(const char *filename)
+{
+	GError *err = NULL;
+	RsvgHandle *svg = rsvg_handle_new_from_file(filename, &err);
+	if (err) {
+		fprintf(stderr, "warning: problem loading svg: %s\n", err->message);
+		g_error_free(err);
+	}
+
+	return svg;
+}
+
+void ui_insert_svg(RsvgHandle *svg, double x, double y, double size)
+{
+	RsvgDimensionData dimensions;
+	rsvg_handle_get_dimensions(svg, &dimensions);
+
+	cairo_save(ui->c);
+	cairo_translate(ui->c, x, y);
+	cairo_scale(ui->c, size / dimensions.width, size / dimensions.width);
+	rsvg_handle_render_cairo(svg, ui->c);
+	cairo_restore(ui->c);
 }
 
 void ui_insert_image(cairo_surface_t *image, double x, double y, double size)

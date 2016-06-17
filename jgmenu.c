@@ -28,7 +28,8 @@ struct Item {
 	char *t[MAX_FIELDS];	/* pointers to name, cmd, icon		  */
 	char *tag;		/* used to tag the start of a submenu	  */
 	struct Area area;
-	cairo_surface_t *icon;
+	cairo_surface_t *png_icon;
+	RsvgHandle *svg_icon;
 	struct Item *next, *prev;
 };
 
@@ -90,6 +91,7 @@ void draw_menu(void)
 	struct Item *p;
 	int w, h;
 	int text_x_coord;
+	int icon_y_coord;
 
 	h = geo_get_item_height();
 	w = geo_get_menu_width();
@@ -113,6 +115,7 @@ void draw_menu(void)
 
 	/* Draw menu items */
 	for (p = menu.first; p && p->t[0] && p->prev != menu.last; p++) {
+		/* Draw Item background */
 		if (p == menu.sel) {
 			ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
 					  p->area.h, config.item_radius, 0.0, 1,
@@ -157,10 +160,16 @@ void draw_menu(void)
 			ui_insert_text(p->t[0], text_x_coord, p->area.y,
 				       p->area.h, config.color_norm_fg);
 
-		if (config.icon_size && p->icon)
-			ui_insert_image(p->icon, p->area.x, p->area.y + 1 +
-					(config.item_height - config.icon_size) / 2,
-					config.icon_size);
+		/* Draw Icons */
+		if (config.icon_size) {
+			icon_y_coord = p->area.y + 1 + (config.item_height - config.icon_size) / 2;
+			if (p->png_icon)
+				ui_insert_image(p->png_icon, p->area.x,
+						icon_y_coord, config.icon_size);
+			if (p->svg_icon)
+				ui_insert_svg(p->svg_icon, p->area.x,
+					      icon_y_coord, config.icon_size);
+		}
 	}
 
 	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
@@ -560,6 +569,21 @@ void dlist_append(struct Item *item, struct Item **list, struct Item **last)
 	*last = item;
 }
 
+void init_icons(void)
+{
+	struct Item *item;
+
+	for (item = menu.head; item && item->t[0]; item++) {
+		item->png_icon = NULL;
+		item->svg_icon = NULL;
+		if (!item->t[2])
+			continue;
+		if (strstr(item->t[2], ".png"))
+			item->png_icon = ui_get_png_icon(item->t[2]);
+		if (strstr(item->t[2], ".svg"))
+			item->svg_icon = ui_get_svg_icon(item->t[2]);
+	}
+}
 
 void read_stdin(void)
 {
@@ -615,13 +639,7 @@ void read_stdin(void)
 	for (item = menu.head; item && item->t[0]; item++)
 		item->tag = parse_caret_action(item->t[1], "^tag(");
 
-	/* Get icons */
-	for (item = menu.head; item && item->t[0]; item++)
-		if (item->t[2])
-			item->icon = ui_get_icon(item->t[2]);
-		else
-			item->icon = NULL;
-
+	init_icons();
 }
 
 void run(void)

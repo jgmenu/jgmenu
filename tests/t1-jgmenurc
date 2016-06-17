@@ -11,8 +11,8 @@ item_padding_x	= 3
 item_radius	= 0
 item_border	= 0
 
-max_items	= 5
-min_items	= 5
+max_items	= 6
+min_items	= 6
 font		= Ubuntu 14px
 
 color_menu_bg	= #eeeeee 100
