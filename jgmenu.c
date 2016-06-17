@@ -77,7 +77,7 @@ void init_menuitem_coordinates(void)
 	struct Item *p;
 	int i = 0;
 
-	if (menu.title)
+	if (menu.title && config.show_title)
 		++i;
 
 	for (p = menu.first; p && p->t[0] && p->prev != menu.last; p++) {
@@ -102,7 +102,7 @@ void draw_menu(void)
 			  0.0, 1, config.color_menu_bg);
 
 	/* Draw title */
-	if (menu.title) {
+	if (menu.title && config.show_title) {
 		ui_draw_rectangle_rounded_at_top(0, 0, w, h, config.menu_radius,
 						 0.0, 1, config.color_title_bg);
 		ui_insert_text(menu.title, config.item_padding_x, 0, h,
@@ -242,7 +242,11 @@ void checkout_submenu(char *tag)
 
 	menu.sel = menu.first;
 
-	geo_set_show_title(menu.title);
+	if (config.show_title)
+		geo_set_show_title(menu.title);
+	else
+		geo_set_show_title(0);
+
 	if (config.max_items < menu.nr_items_in_submenu)
 		geo_set_nr_visible_items(config.max_items);
 	else if (config.min_items > menu.nr_items_in_submenu)

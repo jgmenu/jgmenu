@@ -14,6 +14,8 @@ item_border	= 0
 max_items	= 6
 min_items	= 6
 font		= Ubuntu 14px
+icon_size	= 22
+show_title	= 0
 
 color_menu_bg	= #eeeeee 100
 color_menu_fg	= #111111 100

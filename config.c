@@ -27,6 +27,7 @@ void config_set_defaults(void)
 	config.max_items	= 80;
 	config.min_items	= 0;
 	config.icon_size	= 0;
+	config.show_title	= 1;
 
 	parse_hexstr("#000000 60", config.color_menu_bg);
 	parse_hexstr("#eeeeee 20", config.color_menu_fg);
@@ -73,6 +74,10 @@ static void process_line(char *line)
 		config.max_items = atoi(value);
 	else if (!strncmp(option, "min_items", 8))
 		config.min_items = atoi(value);
+	else if (!strncmp(option, "icon_size", 9))
+		config.icon_size = atoi(value);
+	else if (!strncmp(option, "show_title", 10))
+		config.show_title = atoi(value);
 
 	else if (!strncmp(option, "color_menu_bg", 13))
 		parse_hexstr(value, config.color_menu_bg);
