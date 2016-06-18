@@ -380,23 +380,38 @@ cairo_surface_t *ui_get_png_icon(const char *filename)
 }
 
 
-RsvgHandle *ui_get_svg_icon(const char *filename)
+cairo_surface_t *ui_get_svg_icon(const char *filename, int size)
 {
+	cairo_surface_t *surface;
+	cairo_t *cr;
+	RsvgHandle *svg;
+	RsvgDimensionData  dimensions;
 	GError *err = NULL;
-	RsvgHandle *svg = rsvg_handle_new_from_file(filename, &err);
+
+	svg = rsvg_handle_new_from_file(filename, &err);
 	if (err) {
 		fprintf(stderr, "warning: problem loading svg: %s\n", err->message);
 		g_error_free(err);
 	}
-
-	return svg;
+	rsvg_handle_get_dimensions(svg, &dimensions);
+	surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, size, size);
+	cr = cairo_create(surface);
+	cairo_scale(cr, (double) size / dimensions.width, (double) size / dimensions.width);
+	rsvg_handle_render_cairo(svg, cr);
+	cairo_destroy(cr);
+	g_object_unref(svg);
+	return surface;
 }
 
+/*
+ * ui_insert_svg() is not currently used as it's quite slow
+ * I've kept the code here am I might use it later
+ */
 void ui_insert_svg(RsvgHandle *svg, double x, double y, double size)
 {
 	RsvgDimensionData dimensions;
-	rsvg_handle_get_dimensions(svg, &dimensions);
 
+	rsvg_handle_get_dimensions(svg, &dimensions);
 	cairo_save(ui->c);
 	cairo_translate(ui->c, x, y);
 	cairo_scale(ui->c, size / dimensions.width, size / dimensions.width);
