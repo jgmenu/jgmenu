@@ -20,6 +20,7 @@ struct Config {
 				/* if more items present, user has to scroll */
 	int min_items;
 	int icon_size;		/* if set to zero, icons won't show */
+	char *icon_theme;
 	int show_title;		/* will only show if ^tag() is set */
 
 	double color_menu_bg[4];

@@ -390,8 +390,9 @@ cairo_surface_t *ui_get_svg_icon(const char *filename, int size)
 
 	svg = rsvg_handle_new_from_file(filename, &err);
 	if (err) {
-		fprintf(stderr, "warning: problem loading svg: %s\n", err->message);
+		fprintf(stderr, "warning: problem loading svg %s-%s\n", filename, err->message);
 		g_error_free(err);
+		return NULL;
 	}
 	rsvg_handle_get_dimensions(svg, &dimensions);
 	surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, size, size);

@@ -1,0 +1,18 @@
+#
+# ex01
+#
+# Simple menu
+#
+# Icons with paths
+#
+
+jgmenu demo,^tag(root)
+directory,^checkout(submenu),folder-documents
+browser,firefox,web-browser
+file manager,pcmanfm,system-file-manager
+terminal,xterm,utilities-terminal
+leafpad,leafpad,leafpad
+gparted,gparted,gparted
+
+submenu,^tag(submenu)
+go back,^checkout(root),folder

@@ -1,14 +1,13 @@
 #!/bin/bash
 
 (
-echo -e 'ROOT MENU,^tag(root)'
+echo -e 'Playing with margins/padding,^tag(root)'
+echo -e 'submenu,^checkout(foo)'
 echo -e 'terminal,xterm'
 echo -e 'browser,firefox'
 echo -e 'file manager,pcmanfm'
-echo -e 'config,^checkout(config)'
-echo -e 'CONFIG,^tag(config)'
+echo -e 'Try Scrolling/PgUp/PgDn/Home/End,^tag(foo)'
 echo -e '..,^checkout(root)'
-echo -e 'background,nitrogen ~/bg/'
 echo -e 'item1,xterm'
 echo -e 'item2,xterm'
 echo -e 'item3,xterm'
@@ -23,5 +22,8 @@ echo -e 'item11,xterm'
 echo -e 'item12,xterm'
 echo -e 'item13,xterm'
 echo -e 'item14,xterm'
-echo -e 'item15 (last),xterm'
-) | ../jgmenu --config-file=./t2-jgmenurc
+echo -e 'item14,xterm'
+echo -e 'item15,xterm'
+echo -e 'item16,xterm'
+echo -e 'item17 (last),xterm'
+) | ../jgmenu --config-file=./ex02-jgmenurc

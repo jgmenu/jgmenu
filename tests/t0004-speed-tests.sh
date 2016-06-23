@@ -15,6 +15,6 @@ done
 printf "Press key to run jgmenu\n"
 read a
 
-cat ${tmp_file} | ../jgmenu --icon-size=22 --config-file=
+cat ${tmp_file} | ../jgmenu --icon-size=48 --config-file=
 
 rm ${tmp_file}

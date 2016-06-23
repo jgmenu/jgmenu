@@ -18,6 +18,8 @@
 #include "util.h"
 #include "geometry.h"
 #include "prog-finder.h"
+#include "sbuf.h"
+#include "xdgicon.h"
 
 #define MAX_FIELDS 3		/* nr fields to parse for each stdin line */
 
@@ -160,7 +162,7 @@ void draw_menu(void)
 				       p->area.h, config.color_norm_fg);
 
 		/* Draw Icons */
-		if (config.icon_size) {
+		if (config.icon_size && p->icon) {
 			icon_y_coord = p->area.y + 1 + (config.item_height - config.icon_size) / 2;
 			ui_insert_image(p->icon, p->area.x, icon_y_coord, config.icon_size);
 		}
@@ -570,15 +572,22 @@ void dlist_append(struct Item *item, struct Item **list, struct Item **last)
 void init_icons(void)
 {
 	struct Item *item;
+	struct String s;
+
+	sbuf_init(&s);
 
 	for (item = menu.head; item && item->t[0]; item++) {
 		item->icon = NULL;
 		if (!item->t[2])
 			continue;
-		if (strstr(item->t[2], ".png"))
-			item->icon = ui_get_png_icon(item->t[2]);
-		if (strstr(item->t[2], ".svg"))
-			item->icon = ui_get_svg_icon(item->t[2], config.icon_size);
+
+		sbuf_cpy(&s, item->t[2]);
+		icon_find(&s, config.icon_theme, config.icon_size);
+
+		if (strstr(s.buf, ".png"))
+			item->icon = ui_get_png_icon(s.buf);
+		if (strstr(s.buf, ".svg"))
+			item->icon = ui_get_svg_icon(s.buf, config.icon_size);
 	}
 }
 

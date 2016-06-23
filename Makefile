@@ -16,7 +16,7 @@ LDFLAGS  = $(LIBS)
 SCRIPTS  = jgmenu_run
 PROGS	 = jgmenu jgmenu_xdg
 
-OBJS =  x11-ui.o config.o util.o geometry.o prog-finder.o
+OBJS =  x11-ui.o config.o util.o geometry.o prog-finder.o sbuf.o xdgicon.o
 
 all: $(PROGS) $(OBJS)
 
@@ -28,7 +28,7 @@ x11-ui.o: x11-ui.c x11-ui.h
 	@echo $(CC) $@
 	@$(CC) $(CFLAGS) $(LIBS) -c x11-ui.c
 
-config.o: config.c config.h util.c
+config.o: config.c config.h util.h
 	@echo $(CC) $@
 	@$(CC) $(CFLAGS) $(LIBS) -c config.c util.c
 
@@ -44,6 +44,14 @@ prog-finder.o: prog-finder.c prog-finder.h list.h
 	@echo $(CC) $@
 	@$(CC) $(CFLAGS) $(LIBS) -c prog-finder.c
 
+sbuf.o: sbuf.c sbuf.h
+	@echo $(CC) $@
+	@$(CC) $(CFLAGS) $(LIBS) -c sbuf.c
+
+xdgicon.o: xdgicon.c xdgicon.h sbuf.h
+	@echo $(CC) $@
+	@$(CC) $(CFLAGS) $(LIBS) -c xdgicon.c sbuf.c
+
 jgmenu_xdg: jgmenu_xdg.c util.o
 	@echo $(CC) $@
 	@$(CC) -o jgmenu_xdg jgmenu_xdg.c util.o
@@ -57,3 +65,6 @@ clean:
 
 test:
 	$(MAKE) -C tests/ all
+
+ex:
+	$(MAKE) -C examples/ all

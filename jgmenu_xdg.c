@@ -9,6 +9,7 @@
 
 char name[1024];
 char exec[1024];
+char icon[1024];
 char *search_pattern = NULL;
 char *config_parent = NULL;
 int ismatch;
@@ -25,6 +26,8 @@ void process_line(char *line)
 		strcpy(name, line + 5);
 	if (!strncmp("Exec=", line, 5))
 		strcpy(exec, line + 5);
+	if (!strncmp("Icon=", line, 5))
+		strcpy(icon, line + 5);
 
 	/* Remove %U, %f, etc at the end of Exec cmd */
 	p = strchr(exec, '%');
@@ -46,7 +49,7 @@ void read_file(FILE *fp)
 		process_line(line);
 
 	if (!search_pattern || ismatch)
-		printf("%s,%s\n", name, exec);
+		printf("%s,%s,%s\n", name, exec, icon);
 }
 
 int parse_file(char *filename)

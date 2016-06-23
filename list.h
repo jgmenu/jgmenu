@@ -13,6 +13,11 @@
  * All the hlist stuff was deleted.
  *
  * All CONFIG_DEBUG_LIST bits were removed
+ *
+ * Renamed offsetof to _offsetof as there is a name-clash with a macro
+ * in stddef.h
+ *
+ * Changes by Johan Malm
  */
 
 /*
@@ -345,7 +350,7 @@ static inline void list_splice_tail_init(struct list_head *list,
 	}
 }
 
-#define offsetof(TYPE, MEMBER)	((size_t)&((TYPE *)0)->MEMBER)
+#define _offsetof(TYPE, MEMBER)	((size_t)&((TYPE *)0)->MEMBER)
 
 /**
  * container_of - cast a member of a structure out to the containing structure
@@ -356,7 +361,7 @@ static inline void list_splice_tail_init(struct list_head *list,
  */
 #define container_of(ptr, type, member) ({			\
 	const typeof( ((type *)0)->member ) *__mptr = (ptr);	\
-	(type *)( (char *)__mptr - offsetof(type,member) );})
+	(type *)( (char *)__mptr - _offsetof(type,member) );})
 
 /**
  * list_entry - get the struct for this entry
