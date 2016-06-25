@@ -12,6 +12,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
+#include <pthread.h>
 
 #include "x11-ui.h"
 #include "config.h"
@@ -25,6 +26,9 @@
 
 #define MOUSE_FUDGE 3		/* temporary offset */
 				/* Not sure why I need that offset... */
+
+static pthread_t thread;
+static int icons_loaded_refresh_needed;
 
 struct Item {
 	char *t[MAX_FIELDS];	/* pointers to name, cmd, icon		  */
@@ -51,7 +55,7 @@ struct Menu {
 	int nr_items_in_list;
 
 	struct Item *subhead;	/* first item in checked out submenu	  */
-	struct Item *subtail;	/* first item in checked out submenu	  */
+	struct Item *subtail;	/* last item in checked out submenu	  */
 	int nr_items_in_submenu;
 
 	struct Item *first;	/* first visible item			  */
@@ -579,7 +583,12 @@ void dlist_append(struct Item *item, struct Item **list, struct Item **last)
 	*last = item;
 }
 
-void init_icons(void)
+/*
+ * This function is loaded in background under new pthread
+ * Not sure how clever it is to call draw_menu(), for here
+ * but it seems to work fine.
+ */
+void *init_icons()
 {
 	struct Item *item;
 	struct String s;
@@ -598,7 +607,32 @@ void init_icons(void)
 			item->icon = ui_get_png_icon(s.buf);
 		if (strstr(s.buf, ".svg"))
 			item->icon = ui_get_svg_icon(s.buf, config.icon_size);
+
+		/* Refresh "visible" menu */
+		if (item == menu.last) {
+			draw_menu();
+			XFlush(ui->dpy);
+		}
 	}
+
+	icons_loaded_refresh_needed = 1;
+	fprintf(stderr, "ICONS LOADED\n");
+
+	draw_menu();
+	XFlush(ui->dpy);
+
+	return 0;
+}
+
+void init_icon_thread(void)
+{
+	icons_loaded_refresh_needed = 0;
+	pthread_create(&thread, NULL, init_icons, NULL);
+}
+
+void end_icon_thread(void)
+{
+	pthread_join(thread, NULL);
 }
 
 void read_stdin(void)
@@ -654,8 +688,6 @@ void read_stdin(void)
 	/* Populate tag field */
 	for (item = menu.head; item && item->t[0]; item++)
 		item->tag = parse_caret_action(item->t[1], "^tag(");
-
-	init_icons();
 }
 
 void run(void)
@@ -665,6 +697,8 @@ void run(void)
 	int oldy, oldx;
 
 	oldx = oldy = 0;
+
+	init_icon_thread();
 
 	while (!XNextEvent(ui->dpy, &ev)) {
 		switch (ev.type) {
@@ -709,6 +743,13 @@ void run(void)
 				}
 			}
 		}
+
+		if (icons_loaded_refresh_needed) {
+			end_icon_thread();
+			icons_loaded_refresh_needed = 0;
+			draw_menu();
+		}
+
 		oldx = mouse_coords.x;
 		oldy = mouse_coords.y;
 	}

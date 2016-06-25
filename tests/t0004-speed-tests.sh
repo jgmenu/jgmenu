@@ -1,20 +1,26 @@
 #!/bin/bash
 
 tmp_file=$(mktemp)
-N_ITEMS=100
+N_ITEMS=1000
 
 printf "Creating temporary file with ${N_ITEMS} items...\n"
 
 for i in $(seq "${N_ITEMS}")
 do
+
+# NO ICON
 #	echo "foo ${i},bar${i}" >> ${tmp_file}
-#	echo "foo ${i},bar${i},/usr/share/icons/Adwaita/22x22/apps/utilities-terminal.png" >> ${tmp_file}
-	echo "foo ${i},bar${i},/usr/share/icons/hicolor/scalable/apps/leafpad.svg" >> ${tmp_file}
+
+# PNG
+#	echo "foo ${i},bar${i},firefox" >> ${tmp_file}
+
+# SVG
+	echo "foo ${i},bar${i},jabber" >> ${tmp_file}
 done
 
 printf "Press key to run jgmenu\n"
 read a
 
-cat ${tmp_file} | ../jgmenu --icon-size=48 --config-file=
+cat ${tmp_file} | ../jgmenu --icon-size=22 --config-file=t0004-jgmenurc
 
 rm ${tmp_file}
