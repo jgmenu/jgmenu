@@ -420,17 +420,27 @@ void key_event(XKeyEvent *ev)
 	}
 }
 
+struct Point mousexy(void)
+{
+	Window dw;
+	int di;
+	unsigned int du;
+	struct Point coords;
+
+	XQueryPointer(ui->dpy, ui->win, &dw, &dw, &di, &di, &(coords.x),
+		      &(coords.y), &du);
+
+	return coords;
+}
+
 void mouse_event(XEvent *e)
 {
 	struct Item *item;
 	XButtonPressedEvent *ev = &e->xbutton;
-	int mousex, mousey;
 	struct Point mouse_coords;
 
-	mousex = ev->x - geo_get_menu_x0();
-	mousey = ev->y - geo_get_menu_y0();
-	mouse_coords.x = mousex - MOUSE_FUDGE;
-	mouse_coords.y = mousey - MOUSE_FUDGE;
+	mouse_coords = mousexy();
+	mouse_coords.y -= MOUSE_FUDGE;
 
 	/* Die if mouse clicked outside window */
 	if ((ev->x < geo_get_menu_x0() ||
@@ -675,13 +685,18 @@ void run(void)
 			break;
 		}
 
-		/* Move highlighting with mouse */
-		/* Current mouse position is (ev.xbutton.x, ev.xbutton.y) */
+		/*
+		 * Move highlighting with mouse
+		 *
+		 * Get mouse coordinates using XQueryPointer()
+		 * ev.xbutton.x and ev.xbutton.y work most of the time,
+		 * but occasionally throw in odd values.
+		 */
 
 		struct Point mouse_coords;
 
-		mouse_coords.x = ev.xbutton.x - geo_get_menu_x0() - MOUSE_FUDGE;
-		mouse_coords.y = ev.xbutton.y - geo_get_menu_y0() - MOUSE_FUDGE;
+		mouse_coords = mousexy();
+		mouse_coords.y -= MOUSE_FUDGE;
 
 		if ((mouse_coords.x != oldx) || (mouse_coords.y != oldy)) {
 			for (item = menu.first; item && item->t[0] && item->prev != menu.last; item++) {
