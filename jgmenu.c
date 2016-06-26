@@ -585,8 +585,7 @@ void dlist_append(struct Item *item, struct Item **list, struct Item **last)
 
 /*
  * This function is loaded in background under new pthread
- * Not sure how clever it is to call draw_menu(), for here
- * but it seems to work fine.
+ * X11 is not thread-safe, so this function must not have any X-calls.
  */
 void *init_icons()
 {
@@ -609,17 +608,12 @@ void *init_icons()
 			item->icon = ui_get_svg_icon(s.buf, config.icon_size);
 
 		/* Refresh "visible" menu */
-		if (item == menu.last) {
-			draw_menu();
-			XFlush(ui->dpy);
-		}
+		if (item == menu.last)
+			icons_loaded_refresh_needed = 1;
 	}
 
 	icons_loaded_refresh_needed = 1;
-	fprintf(stderr, "ICONS LOADED\n");
-
-	draw_menu();
-	XFlush(ui->dpy);
+	fprintf(stderr, "Message: All icons loaded\n");
 
 	return 0;
 }
@@ -700,58 +694,64 @@ void run(void)
 
 	init_icon_thread();
 
-	while (!XNextEvent(ui->dpy, &ev)) {
-		switch (ev.type) {
-		case ButtonPress:
-			mouse_event(&ev);
-			break;
-		case KeyPress:
-			key_event(&ev.xkey);
-			draw_menu();
-			break;
-		case Expose:
-			if (ev.xexpose.count == 0)
-				ui_map_window(geo_get_menu_width(), geo_get_menu_height());
-			break;
-		case VisibilityNotify:
-			if (ev.xvisibility.state != VisibilityUnobscured)
-				XRaiseWindow(ui->dpy, ui->win);
-			break;
-		}
+	for (;;) {
+		if (XPending(ui->dpy)) {
+			XNextEvent(ui->dpy, &ev);
+			switch (ev.type) {
+			case ButtonPress:
+				mouse_event(&ev);
+				break;
+			case KeyPress:
+				key_event(&ev.xkey);
+				draw_menu();
+				break;
+			case Expose:
+				if (ev.xexpose.count == 0)
+					ui_map_window(geo_get_menu_width(), geo_get_menu_height());
+				break;
+			case VisibilityNotify:
+				if (ev.xvisibility.state != VisibilityUnobscured)
+					XRaiseWindow(ui->dpy, ui->win);
+				break;
+			}
 
-		/*
-		 * Move highlighting with mouse
-		 *
-		 * Get mouse coordinates using XQueryPointer()
-		 * ev.xbutton.x and ev.xbutton.y work most of the time,
-		 * but occasionally throw in odd values.
-		 */
+			/*
+			 * Move highlighting with mouse
+			 *
+			 * Get mouse coordinates using XQueryPointer()
+			 * ev.xbutton.x and ev.xbutton.y work most of the time,
+			 * but occasionally throw in odd values.
+			 */
 
-		struct Point mouse_coords;
+			struct Point mouse_coords;
 
-		mouse_coords = mousexy();
-		mouse_coords.y -= MOUSE_FUDGE;
+			mouse_coords = mousexy();
+			mouse_coords.y -= MOUSE_FUDGE;
 
-		if ((mouse_coords.x != oldx) || (mouse_coords.y != oldy)) {
-			for (item = menu.first; item && item->t[0] && item->prev != menu.last; item++) {
-				if (ui_is_point_in_area(mouse_coords, item->area)) {
-					if (menu.sel != item) {
-						menu.sel = item;
-						draw_menu();
-						break;
+			if ((mouse_coords.x != oldx) || (mouse_coords.y != oldy)) {
+				for (item = menu.first; item && item->t[0] && item->prev != menu.last; item++) {
+					if (ui_is_point_in_area(mouse_coords, item->area)) {
+						if (menu.sel != item) {
+							menu.sel = item;
+							draw_menu();
+							break;
+						}
 					}
 				}
 			}
+
+			oldx = mouse_coords.x;
+			oldy = mouse_coords.y;
+
+
 		}
 
 		if (icons_loaded_refresh_needed) {
-			end_icon_thread();
+			printf("REFRESH NEED\n");
+//			end_icon_thread();
 			icons_loaded_refresh_needed = 0;
 			draw_menu();
 		}
-
-		oldx = mouse_coords.x;
-		oldy = mouse_coords.y;
 	}
 }
 
