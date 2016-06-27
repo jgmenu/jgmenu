@@ -584,8 +584,8 @@ void dlist_append(struct Item *item, struct Item **list, struct Item **last)
 }
 
 /*
- * This function is loaded in background under new pthread
- * X11 is not thread-safe, so this function must not have any X-calls.
+ * This function is loaded in the background under a new pthread
+ * X11 is not thread-safe, so init_icons() must not call any X functions.
  */
 void *init_icons()
 {
@@ -607,13 +607,12 @@ void *init_icons()
 		if (strstr(s.buf, ".svg"))
 			item->icon = ui_get_svg_icon(s.buf, config.icon_size);
 
-		/* Refresh "visible" menu */
-		if (item == menu.last)
+		/* Refresh window if item is "visible" */
+		if (item <= menu.last && item >= menu.first)
 			icons_loaded_refresh_needed = 1;
 	}
 
 	icons_loaded_refresh_needed = 1;
-	fprintf(stderr, "Message: All icons loaded\n");
 
 	return 0;
 }
@@ -682,6 +681,9 @@ void read_stdin(void)
 	/* Populate tag field */
 	for (item = menu.head; item && item->t[0]; item++)
 		item->tag = parse_caret_action(item->t[1], "^tag(");
+
+	for (item = menu.head; item && item->t[0]; item++)
+		item->icon = NULL;
 }
 
 void run(void)
@@ -747,8 +749,7 @@ void run(void)
 		}
 
 		if (icons_loaded_refresh_needed) {
-			printf("REFRESH NEED\n");
-//			end_icon_thread();
+//			end_icon_thread(); /* FIXME: Put this in clean_up() */
 			icons_loaded_refresh_needed = 0;
 			draw_menu();
 		}

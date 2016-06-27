@@ -13,6 +13,10 @@ LIBS  = `pkg-config x11 xinerama cairo pango pangocairo librsvg-2.0 --libs`
 
 LDFLAGS  = $(LIBS)
 
+ASAN_FLAGS = -O0 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic
+CFLAGS    += $(ASAN_FLAGS)
+LDFLAGS   += $(ASAN_FLAGS)
+
 SCRIPTS  = jgmenu_run
 PROGS	 = jgmenu jgmenu_xdg
 
@@ -22,7 +26,7 @@ all: $(PROGS) $(OBJS)
 
 jgmenu: jgmenu.c $(OBJS)
 	@echo $(CC) $@
-	@$(CC) $(CFLAGS) -o jgmenu $(OBJS) jgmenu.c $(LDFLAGS) -pthread
+	@$(CC) $(CFLAGS) -o jgmenu $(OBJS) jgmenu.c -pthread $(LDFLAGS)
 
 x11-ui.o: x11-ui.c x11-ui.h
 	@echo $(CC) $@
@@ -54,7 +58,7 @@ xdgicon.o: xdgicon.c xdgicon.h sbuf.h
 
 jgmenu_xdg: jgmenu_xdg.c util.o
 	@echo $(CC) $@
-	@$(CC) -o jgmenu_xdg jgmenu_xdg.c util.o
+	@$(CC) -o jgmenu_xdg jgmenu_xdg.c util.o $(LDFLAGS)
 
 install: $(PROGS) $(SCRIPTS)
 	@install -d $(DESTDIR)$(bindir)

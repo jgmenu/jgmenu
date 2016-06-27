@@ -32,6 +32,8 @@
 				   MAX(0, MIN((y)+(h), (r).y_org+(r).height) - \
 				   MAX((y), (r).y_org)))
 
+struct UI *ui;
+
 void ui_clear_canvas(void)
 {
 	cairo_save(ui->c);

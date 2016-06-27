@@ -35,7 +35,7 @@ struct UI {
 	PangoFontDescription *pangofont;
 };
 
-struct UI *ui;
+extern struct UI *ui;
 
 void ui_clear_canvas(void);
 void grabkeyboard(void);
