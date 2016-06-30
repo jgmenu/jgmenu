@@ -13,6 +13,9 @@
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 #include <pthread.h>
+#include <sys/select.h>
+#include <fcntl.h>
+#include <errno.h>
 
 #include "x11-ui.h"
 #include "config.h"
@@ -24,11 +27,11 @@
 
 #define MAX_FIELDS 3		/* nr fields to parse for each stdin line */
 
-#define MOUSE_FUDGE 3		/* temporary offset */
-				/* Not sure why I need that offset... */
+#define MOUSE_FUDGE 3		/* Pointer vertical offset		  */
+				/* Not sure why I need this		  */
 
-static pthread_t thread;
-static int icons_loaded_refresh_needed;
+static pthread_t thread;	/* worker thread for loading icons	  */
+static int pipe_fds[2];		/* pipe to communicate between threads	  */
 
 struct Item {
 	char *t[MAX_FIELDS];	/* pointers to name, cmd, icon		  */
@@ -606,26 +609,13 @@ void *init_icons()
 			item->icon = ui_get_png_icon(s.buf);
 		if (strstr(s.buf, ".svg"))
 			item->icon = ui_get_svg_icon(s.buf, config.icon_size);
-
-		/* Refresh window if item is "visible" */
-		if (item <= menu.last && item >= menu.first)
-			icons_loaded_refresh_needed = 1;
 	}
 
-	icons_loaded_refresh_needed = 1;
+	printf("Icons loaded\n");
+	if (write(pipe_fds[1], "x", 1) == -1)
+		die("error writing to icon_pipe");
 
 	return 0;
-}
-
-void init_icon_thread(void)
-{
-	icons_loaded_refresh_needed = 0;
-	pthread_create(&thread, NULL, init_icons, NULL);
-}
-
-void end_icon_thread(void)
-{
-	pthread_join(thread, NULL);
 }
 
 void read_stdin(void)
@@ -686,19 +676,134 @@ void read_stdin(void)
 		item->icon = NULL;
 }
 
+
+void init_pipe_flags()
+{
+	int flags;
+
+	flags = fcntl(pipe_fds[0], F_GETFL);
+	if (flags == -1)
+		die("error getting pipe flags");
+	flags |= O_NONBLOCK;
+	if (fcntl(pipe_fds[0], F_SETFL, flags) == -1)
+		die("error setting pipe flags");
+
+	flags = fcntl(pipe_fds[1], F_GETFL);
+	if (flags == -1)
+		die("error getting pipe flags");
+	flags |= O_NONBLOCK;
+	if (fcntl(pipe_fds[1], F_SETFL, flags) == -1)
+		die("error setting pipe flags");
+}
+
+
+/*
+ * Move highlighting with mouse
+ *
+ * Get mouse coordinates using XQueryPointer()
+ * ev.xbutton.x and ev.xbutton.y work most of the time,
+ * but occasionally throw in odd values.
+ */
+void process_pointer_position(void)
+{
+	struct Item *item;
+	struct Point mouse_coords;
+	static int oldy = 0;
+	static int oldx = 0;
+
+	mouse_coords = mousexy();
+	mouse_coords.y -= MOUSE_FUDGE;
+
+	if ((mouse_coords.x == oldx) && (mouse_coords.y == oldy))
+		return;
+
+	for (item = menu.first; item && item->t[0] && item->prev != menu.last; item++) {
+		if (ui_is_point_in_area(mouse_coords, item->area)) {
+			if (menu.sel != item) {
+				menu.sel = item;
+				draw_menu();
+				break;
+			}
+		}
+	}
+
+	oldx = mouse_coords.x;
+	oldy = mouse_coords.y;
+}
+
+
+/*
+ * The select() call in the main loop is a better alternative than usleep().
+ */
 void run(void)
 {
 	XEvent ev;
-	struct Item *item;
-	int oldy, oldx;
 
-	oldx = oldy = 0;
+	char ch;
+	int ready, nfds, x11_fd;
+	fd_set readfds;
 
-	init_icon_thread();
+	FD_ZERO(&readfds);
+	nfds = 0;
+
+	/* Set x11 fd */
+	x11_fd = ConnectionNumber(ui->dpy);
+	nfds = MAX(nfds, x11_fd + 1);
+	FD_SET(x11_fd, &readfds);
+
+	/* Create icon pipe */
+	if (pipe(pipe_fds) == -1)
+		die("error creating pipe");
+
+	FD_SET(pipe_fds[0], &readfds);
+	nfds = MAX(nfds, pipe_fds[0] + 1);
+
+	init_pipe_flags();
+
+	pthread_create(&thread, NULL, init_icons, NULL);
 
 	for (;;) {
+
+		FD_ZERO(&readfds);
+		FD_SET(x11_fd, &readfds);
+		FD_SET(pipe_fds[0], &readfds);
+
+		/*
+		 * XPending() is non-blocking whereas select() is blocking.
+		 *
+		 * Some X events are stored in a queue in memory, so we cannot
+		 * rely on reading ConnectionNumber() to catch all events.
+		 */
+		ready = 0;
+		if (!XPending(ui->dpy))
+			ready = select(nfds, &readfds, NULL, NULL, NULL);
+
+		if (ready == -1 && errno == EINTR)
+			continue;
+
+		if (ready == -1)
+			die("select()");
+
+		/* The icon thread has finished */
+		if (FD_ISSET(pipe_fds[0], &readfds) && ready) {
+			printf("There is something in pipe.\n");
+			for (;;) {
+				if (read(pipe_fds[0], &ch, 1) == -1) {
+					if (errno == EAGAIN)
+						break;
+					else
+						die("error reading pipe");
+				}
+
+				printf("Refresh menu\n\n");
+				pthread_join(thread, NULL);
+				draw_menu();
+			}
+		}
+
 		if (XPending(ui->dpy)) {
 			XNextEvent(ui->dpy, &ev);
+
 			switch (ev.type) {
 			case ButtonPress:
 				mouse_event(&ev);
@@ -717,41 +822,7 @@ void run(void)
 				break;
 			}
 
-			/*
-			 * Move highlighting with mouse
-			 *
-			 * Get mouse coordinates using XQueryPointer()
-			 * ev.xbutton.x and ev.xbutton.y work most of the time,
-			 * but occasionally throw in odd values.
-			 */
-
-			struct Point mouse_coords;
-
-			mouse_coords = mousexy();
-			mouse_coords.y -= MOUSE_FUDGE;
-
-			if ((mouse_coords.x != oldx) || (mouse_coords.y != oldy)) {
-				for (item = menu.first; item && item->t[0] && item->prev != menu.last; item++) {
-					if (ui_is_point_in_area(mouse_coords, item->area)) {
-						if (menu.sel != item) {
-							menu.sel = item;
-							draw_menu();
-							break;
-						}
-					}
-				}
-			}
-
-			oldx = mouse_coords.x;
-			oldy = mouse_coords.y;
-
-
-		}
-
-		if (icons_loaded_refresh_needed) {
-//			end_icon_thread(); /* FIXME: Put this in clean_up() */
-			icons_loaded_refresh_needed = 0;
-			draw_menu();
+			process_pointer_position();
 		}
 	}
 }
