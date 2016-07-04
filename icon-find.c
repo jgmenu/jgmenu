@@ -1,8 +1,8 @@
 /*
- * icon.c: finds icon by theme and size loosely iaw XDG spec
+ * icon-find.c: finds icon by theme and size loosely iaw XDG spec
  */
 
-#include "xdgicon.h"
+#include "icon-find.h"
 #include "list.h"
 #include <ftw.h>
 
@@ -133,11 +133,11 @@ void icon_find(struct String *name, const char *theme, int size)
 			}
 
 			if (most_suitable_icon.len)
-				goto clean_up;
+				goto out;
 		}
 	}
 
-clean_up:
+out:
 	sbuf_cpy(name, most_suitable_icon.buf);
 
 	free(path.buf);

@@ -11,7 +11,6 @@ struct Config config;
 void config_set_defaults(void)
 {
 	config.spawn		= 1;
-	config.debug_mode	= 0;
 	config.item_height	= 25;
 	config.font		= strdup("Ubuntu condensed 14px");
 	config.menu_margin_x	= 2;

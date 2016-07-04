@@ -16,3 +16,69 @@ gparted,gparted,gparted
 
 submenu,^tag(submenu)
 go back,^checkout(root),folder
+Image Viewer,gpicview ,gpicview
+Widget Factory,gtk3-widget-factory,gtk3-widget-factory
+Qt V4L2 test Utility,qv4l2,qv4l2
+TigerVNC Viewer,/usr/bin/vncviewer,tigervnc
+Icon Browser,gtk3-icon-browser,gtk3-icon-browser
+New Spreadsheet,libreoffice --calc,libreoffice-calc
+New Database,libreoffice --base,libreoffice-base
+New private window,firefox -private-window,firefox
+LibreOffice XSLT based filters,libreoffice ,firefox
+MPlayer Media Player,mplayer ,mplayer
+Print Preview,evince-previewer ,document-print-preview
+View file,/usr/bin/gcr-viewer,document-print-preview
+GNU Image Manipulation Program,gimp-2.8 ,gimp
+Qt4 Config ,qtconfig-qt4,qt4logo
+PulseAudio Volume Control,pavucontrol,multimedia-volume-control
+urxvt,urxvt,utilities-terminal
+Document Viewer,evince ,evince
+CMake,cmake-gui ,CMakeSetup
+Privilege granting,gksu-properties,gksu.png
+Access Prompt,/usr/lib/gcr/gcr-prompter,security-medium
+Access Prompt,/usr/lib/gcr/gcr-prompter,security-medium
+File Manager PCManFM,pcmanfm ,system-file-manager
+New Document,libreoffice --writer,libreoffice-writer
+Tint2,tint2,tint2
+Shortcut Editor,lxshortcut -i ,applications-other
+mtPaint,mtpaint ,mtpaint
+Avahi Zeroconf Browser,/usr/bin/avahi-discover,network-wired
+KeePassX,keepassx ,keepassx
+urxvt (client),urxvtc,utilities-terminal
+Avahi SSH Server Browser,/usr/bin/bssh,network-wired
+Avahi SSH Server Browser,/usr/bin/bssh,network-wired
+Qt Designer,/usr/lib/qt/bin/designer,QtProject-designer
+NetSurf Web Browser,netsurf ,netsurf.png
+Desktop Preferences,pcmanfm --desktop-pref,user-desktop
+urxvt (tabbed),urxvt-tabbed,utilities-terminal
+Root Terminal,gksu -l gnome-terminal,gksu-root-terminal
+Tint2 Settings,tint2conf,tint2conf
+GTK+ Demo,gtk3-demo,gtk3-demo
+Preferred Applications,libfm-pref-apps,preferences-desktop
+Qt QDbusViewer ,/usr/lib/qt/bin/qdbusviewer,qdbusviewer
+Qt Linguist,/usr/lib/qt/bin/linguist,linguist
+Formula,libreoffice --math,libreoffice-startcenter
+compton,compton --xrender-sync-fence,compton
+UXTerm,uxterm,xterm-color_48x48
+Archive Manager,file-roller ,file-roller
+New Formula,libreoffice --math,libreoffice-math
+New Formula,libreoffice --math,libreoffice-math
+New Drawing,libreoffice --draw,libreoffice-draw
+Avahi VNC Server Browser,/usr/bin/bvnc,network-wired
+Qt Assistant,/usr/lib/qt/bin/assistant,assistant
+FLUID,fluid ,fluid
+Qt4 Designer,designer-qt4,designer-qt4
+Qt4 Assistant ,assistant-qt4,assistant-qt4
+Tint2 Openbox Menu,xdotool key ctrl+alt+q,/usr/share/icons/starthere.png
+Qt Creator,qtcreator ,QtProject-qtcreator
+Qt4 Linguist ,linguist-qt4,linguist-qt4
+Customize Look and Feel,lxappearance,preferences-desktop-theme
+Dropbox,dropbox,dropbox
+Qt4 QDbusViewer ,qdbusviewer-qt4,qdbusviewer-qt4
+XTerm,xterm,xterm-color_48x48
+Openbox,openbox,openbox
+Adobe Flash Player,flash-player-properties,flash-player-properties
+Links,xlinks -g,links_32x32.xpm
+GParted,/usr/bin/gparted_polkit ,gparted
+New Presentation,libreoffice --impress,libreoffice-impress
+Leafpad,leafpad ,leafpad

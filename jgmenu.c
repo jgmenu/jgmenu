@@ -21,9 +21,9 @@
 #include "config.h"
 #include "util.h"
 #include "geometry.h"
-#include "prog-finder.h"
+#include "isprog.h"
 #include "sbuf.h"
-#include "xdgicon.h"
+#include "icon-cache.h"
 
 #define MAX_FIELDS 3		/* nr fields to parse for each stdin line */
 
@@ -263,26 +263,28 @@ void checkout_submenu(char *tag)
 		menu.last = menu.first + geo_get_nr_visible_items() - 1;
 }
 
+/* 
+ * Returns bar from ^foo(bar)
+ * s="^foo(bar)"
+ * token="^foo("
+ */
 char *parse_caret_action(char *s, char *token)
 {
-	/* Returns bar from ^foo(bar)
-	 * s="^foo(bar)"
-	 * token="^foo("
-	 */
-
 	char *p, *q;
 
 	p = NULL;
 	q = NULL;
 
-	if (s)
-		if (strncmp(s, token, strlen(token)) == 0) {
-			p = strdup(s);
-			p += strlen(token);
-			q = strchr(p, ')');
-			if (q)
-				*q = '\0';
-		}
+	if (!s)
+		return NULL;
+
+	if (!strncmp(s, token, strlen(token))) {
+		p = strdup(s);
+		p += strlen(token);
+		q = strchr(p, ')');
+		if (q)
+			*q = '\0';
+	}
 
 	return p;
 }
@@ -499,50 +501,6 @@ void mouse_event(XEvent *e)
 	}
 }
 
-void tabulate(char *s)
-{
-	int i = 0;
-	int n = 20;		/* column spacing */
-
-	if (s)
-		n -= strlen(s);
-	else
-		n -= 6;		/* because strlen("(null)") = 6 */
-
-	if (n < 0)
-		n = 0;
-
-	for (i = 0; i < n; i++)
-		printf(" ");
-}
-
-void debug_dlist(void)
-{
-	struct Item *item;
-
-	printf("---------------------------------------------------------------\n");
-	printf("Name                Cmd                 Icon                Tag\n");
-	printf("---------------------------------------------------------------\n");
-
-	for (item = menu.head; item && item->t[0]; item++) {
-		printf("%s", item->t[0]);
-		tabulate(item->t[0]);
-		printf("%s", item->t[1]);
-		tabulate(item->t[1]);
-		printf("%s", item->t[2]);
-		tabulate(item->t[2]);
-		printf("%s", item->tag);
-		tabulate(item->tag);
-		printf("\n");
-	}
-	printf("menu.head->t[0]: %s\n", menu.head->t[0]);
-	printf("menu.tail->t[0]: %s\n", menu.tail->t[0]);
-	printf("menu.first->t[0]: %s\n", menu.first->t[0]);
-	printf("menu.sel->t[0]: %s\n", menu.sel->t[0]);
-	printf("menu.last->t[0]: %s\n", menu.last->t[0]);
-	printf("menu.nr_items_in_submenu: %d\n", menu.nr_items_in_submenu);
-}
-
 char *next_field(char *str)
 {
 	char *tmp;
@@ -588,34 +546,16 @@ void dlist_append(struct Item *item, struct Item **list, struct Item **last)
 
 /*
  * This function is loaded in the background under a new pthread
- * X11 is not thread-safe, so init_icons() must not call any X functions.
+ * X11 is not thread-safe, so load_icons() must not call any X functions.
  */
-void *init_icons()
+void *load_icons(void *arg)
 {
-	struct Item *item;
-	struct String s;
+	icon_cache_load();
 
-	sbuf_init(&s);
-
-	for (item = menu.head; item && item->t[0]; item++) {
-		item->icon = NULL;
-		if (!item->t[2])
-			continue;
-
-		sbuf_cpy(&s, item->t[2]);
-		icon_find(&s, config.icon_theme, config.icon_size);
-
-		if (strstr(s.buf, ".png"))
-			item->icon = ui_get_png_icon(s.buf);
-		if (strstr(s.buf, ".svg"))
-			item->icon = ui_get_svg_icon(s.buf, config.icon_size);
-	}
-
-	printf("Icons loaded\n");
 	if (write(pipe_fds[1], "x", 1) == -1)
 		die("error writing to icon_pipe");
 
-	return 0;
+	return NULL;
 }
 
 void read_stdin(void)
@@ -627,7 +567,7 @@ void read_stdin(void)
 	menu.head = NULL;
 
 	for (i = 0; fgets(buf, sizeof(buf), stdin); i++) {
-		if (size <= (i+1) * sizeof(*menu.head)) {
+		if (size <= (i + 1) * sizeof(struct Item)) {
 			size += BUFSIZ;
 			menu.head = xrealloc(menu.head, size);
 		}
@@ -738,10 +678,12 @@ void process_pointer_position(void)
 void run(void)
 {
 	XEvent ev;
+	struct Item *item;
 
 	char ch;
 	int ready, nfds, x11_fd;
 	fd_set readfds;
+	static int all_icons_have_been_requested = 0;
 
 	FD_ZERO(&readfds);
 	nfds = 0;
@@ -760,7 +702,18 @@ void run(void)
 
 	init_pipe_flags();
 
-	pthread_create(&thread, NULL, init_icons, NULL);
+	if (config.icon_size) {
+		icon_cache_init();
+		icon_cache_set_size(config.icon_size);
+		icon_cache_set_theme(config.icon_theme);
+
+		/* Get icons in top level menu (or the one specified with --check-out= */
+		for (item = menu.subhead; item && item->t[0] && item != menu.subtail + 1; item++)
+			if (item->t[2])
+				icon_cache_set_name(item->t[2]);
+
+		pthread_create(&thread, NULL, load_icons, NULL);
+	}
 
 	for (;;) {
 
@@ -772,7 +725,7 @@ void run(void)
 		 * XPending() is non-blocking whereas select() is blocking.
 		 *
 		 * Some X events are stored in a queue in memory, so we cannot
-		 * rely on reading ConnectionNumber() to catch all events.
+		 * rely on reading ConnectionNumber() alone to catch all events.
 		 */
 		ready = 0;
 		if (!XPending(ui->dpy))
@@ -786,7 +739,6 @@ void run(void)
 
 		/* The icon thread has finished */
 		if (FD_ISSET(pipe_fds[0], &readfds) && ready) {
-			printf("There is something in pipe.\n");
 			for (;;) {
 				if (read(pipe_fds[0], &ch, 1) == -1) {
 					if (errno == EAGAIN)
@@ -795,9 +747,34 @@ void run(void)
 						die("error reading pipe");
 				}
 
-				printf("Refresh menu\n\n");
+				/* 'x' means that icons have finished loading */
+				if (ch != 'x')
+					continue;
+
+				if (all_icons_have_been_requested)
+					fprintf(stderr, "All icons loaded\n");
+				else
+					fprintf(stderr, "Root menu icons loaded\n");
+
+
 				pthread_join(thread, NULL);
+
+				for (item = menu.head; item && item->t[0]; item++)
+					if (!item->icon)
+						item->icon = icon_cache_get_surface(item->t[2]);
+
 				draw_menu();
+
+				if (all_icons_have_been_requested)
+					continue;
+
+				/* Get remaining icons */
+				for (item = menu.head; item && item->t[0]; item++)
+					if (item->t[2])
+						icon_cache_set_name(item->t[2]);
+
+				pthread_create(&thread, NULL, load_icons, NULL);
+				all_icons_have_been_requested = 1;
 			}
 		}
 
@@ -864,10 +841,11 @@ int main(int argc, char *argv[])
 		if (!strncmp(argv[i], "--version", 9)) {
 			printf("%s\n", VERSION);
 			exit(0);
+		} else if (!strncmp(argv[i], "--help", 6) ||
+			   !strncmp(argv[i], "-h", 2)) {
+			usage();
 		} else if (!strncmp(argv[i], "--no-spawn", 10)) {
 			config.spawn = 0;
-		} else if (!strncmp(argv[i], "--debug", 7)) {
-			config.debug_mode = 1;
 		} else if (!strncmp(argv[i], "--checkout=", 11)) {
 			checkout_arg = argv[i] + 11;
 		} else if (!strncmp(argv[i], "--icon-size=", 12)) {
@@ -889,9 +867,6 @@ int main(int argc, char *argv[])
 		checkout_submenu(menu.head->tag);
 	else
 		checkout_submenu(NULL);
-
-	if (config.debug_mode)
-		debug_dlist();
 
 	grabkeyboard();
 	grabpointer();

@@ -1,5 +1,5 @@
-#ifndef XDGICON_H
-#define XDGICON_H
+#ifndef ICON_FIND_H
+#define ICON_FIND_H
 
 #include <stdio.h>
 
@@ -7,4 +7,4 @@
 
 extern void icon_find(struct String *name, const char *theme, int size);
 
-#endif /* XDGICON_H */
+#endif /* ICON_FIND_H */

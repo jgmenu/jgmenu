@@ -3,7 +3,6 @@
 
 struct Config {
 	int spawn;		/* 1:execute commands  0:print to stdout */
-	int debug_mode;		/* print debug messages */
 	int item_height;	/* set to font height if greater */
 	char *font;
 	int menu_margin_x;

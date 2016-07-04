@@ -53,8 +53,6 @@ int ui_get_text_height(const char *fontdesc);
 int ui_is_point_in_area(struct Point p, struct Area a);
 void ui_map_window(unsigned int w, unsigned int h);
 void ui_cleanup(void);
-cairo_surface_t *ui_get_png_icon(const char *filename);
-cairo_surface_t *ui_get_svg_icon(const char *filename, int size);
 void ui_insert_svg(RsvgHandle *svg, double x, double y, double size);
 void ui_insert_image(cairo_surface_t *image, double x, double y, double size);
 
