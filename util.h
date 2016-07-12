@@ -19,5 +19,6 @@ char *strstrip(char *s);
 int parse_config_line(char *line, char **option, char **value);
 int hex_to_dec(char c);
 int parse_hexstr(char *hex, double *rgba);
+int get_first_num_from_str(const char *s);
 
 #endif /* UTIL_H */

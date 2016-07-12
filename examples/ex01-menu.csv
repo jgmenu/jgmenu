@@ -69,7 +69,6 @@ Qt Assistant,/usr/lib/qt/bin/assistant,assistant
 FLUID,fluid ,fluid
 Qt4 Designer,designer-qt4,designer-qt4
 Qt4 Assistant ,assistant-qt4,assistant-qt4
-Tint2 Openbox Menu,xdotool key ctrl+alt+q,/usr/share/icons/starthere.png
 Qt Creator,qtcreator ,QtProject-qtcreator
 Qt4 Linguist ,linguist-qt4,linguist-qt4
 Customize Look and Feel,lxappearance,preferences-desktop-theme

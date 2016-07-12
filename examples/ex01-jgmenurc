@@ -15,6 +15,7 @@ max_items	= 6
 min_items	= 6
 font		= Ubuntu 14px
 icon_size	= 22
+icon_theme	= elementary-xfce-dark
 show_title	= 0
 
 color_menu_bg	= #eeeeee 100

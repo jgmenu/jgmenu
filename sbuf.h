@@ -4,14 +4,15 @@
  * Copyright Johan Malm 2016
  *
  * The buffer is a byte array which is at least (len + 1) bytes in size.
- * All sbuf functions add '\0' at the end, allowing the buffer to be used
- * be used as a C string (i.e. buf[len] == 0).
+ * The sbuf functions are designed too maintain/add '\0' at the end,
+ * allowing the buffer to be used be used as a C string
+ * (i.e. buf[len] == 0).
  *
  * sbuf_init allocates one byte so that the buffer can always be safely:
  *	- assumed to be a valid C string (i.e. buf != NULL)
  *	- freed (i.e. buf must not to point to memory on the stack)
  *
- * Life cycle:
+ * Exampel life cycle:
  *	struct String s;
  *	sbuf_init(&s);
  *	sbuf_addch(&s, 'F');
@@ -40,6 +41,10 @@ extern void sbuf_init(struct String *s);
 extern void sbuf_addch(struct String *s, char ch);
 extern void sbuf_addstr(struct String *s, const char *data);
 extern void sbuf_cpy(struct String *s, const char *data);
+extern void sbuf_prepend(struct String *s, const char *data);
+extern void sbuf_shift_left(struct String *s, int n_bytes);
+extern void sbuf_split(struct list_head *sl, const char *data, char field_separator);
 extern void sbuf_list_append(struct list_head *sl, const char *data);
+extern void sbuf_list_prepend(struct list_head *sl, const char *data);
 
 #endif /* SBUF_H */

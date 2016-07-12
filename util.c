@@ -153,3 +153,25 @@ int parse_hexstr(char *hex, double *rgba)
 
 	return 1;
 }
+
+int get_first_num_from_str(const char *s)
+{
+	char *str, *a, *b;
+	int num;
+
+	str = strdup(s);
+	a = str;
+
+	while (!isdigit(*a) && a != '\0')
+		++a;
+
+	b = a;
+	while (isdigit(*b))
+		++b;
+
+	*b = '\0';
+	num = atoi(a);
+	free(str);
+
+	return num;
+}

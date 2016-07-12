@@ -263,7 +263,7 @@ void checkout_submenu(char *tag)
 		menu.last = menu.first + geo_get_nr_visible_items() - 1;
 }
 
-/* 
+/*
  * Returns bar from ^foo(bar)
  * s="^foo(bar)"
  * token="^foo("
@@ -617,7 +617,7 @@ void read_stdin(void)
 }
 
 
-void init_pipe_flags()
+void init_pipe_flags(void)
 {
 	int flags;
 

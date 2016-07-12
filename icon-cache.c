@@ -36,7 +36,7 @@ void icon_cache_init(void)
 {
 	INIT_LIST_HEAD(&icon_cache);
 	sbuf_init(&icon_theme);
-	sbuf_cpy(&icon_theme, "Adwaita");
+	sbuf_cpy(&icon_theme, "default");
 	icon_size = 22;
 }
 
@@ -110,6 +110,15 @@ void icon_cache_load(void)
 {
 	struct Icon *icon;
 	struct String s;
+	static int first_load = 1;
+
+	if (first_load) {
+		icon_find_init();
+		icon_find_add_theme(icon_theme.buf);
+		icon_find_add_theme("hicolor");
+		icon_find_print_themes();
+		first_load = 0;
+	}
 
 	sbuf_init(&s);
 
@@ -118,13 +127,15 @@ void icon_cache_load(void)
 			die("no icon name set\n");
 
 		sbuf_cpy(&s, icon->name);
-		icon_find(&s, icon_theme.buf, icon_size);
+		icon_find(&s, icon_size);
 
 		if (strstr(s.buf, ".png"))
 			icon->surface = get_png_icon(s.buf);
 		if (strstr(s.buf, ".svg"))
 			icon->surface = get_svg_icon(s.buf, 22);
 	}
+
+	free(s.buf);
 }
 
 cairo_surface_t *icon_cache_get_surface(const char *name)

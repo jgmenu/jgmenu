@@ -20,7 +20,7 @@ LDFLAGS   += $(ASAN_FLAGS)
 SCRIPTS  = jgmenu_run
 PROGS	 = jgmenu jgmenu_xdg
 
-OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o icon-cache.o
+OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o icon-cache.o xdgdirs.o
 
 all: $(PROGS) $(OBJS)
 
@@ -34,7 +34,7 @@ x11-ui.o: x11-ui.c x11-ui.h
 
 config.o: config.c config.h util.h
 	@echo $(CC) $@
-	@$(CC) $(CFLAGS) $(LIBS) -c config.c util.c
+	@$(CC) $(CFLAGS) $(LIBS) -c config.c
 
 util.o: util.c util.h
 	@echo $(CC) $@
@@ -52,17 +52,21 @@ sbuf.o: sbuf.c sbuf.h
 	@echo $(CC) $@
 	@$(CC) $(CFLAGS) $(LIBS) -c sbuf.c
 
-icon-find.o: icon-find.c icon-find.h sbuf.h
+icon-find.o: icon-find.c icon-find.h sbuf.h util.h
 	@echo $(CC) $@
-	@$(CC) $(CFLAGS) $(LIBS) -c icon-find.c sbuf.c
+	@$(CC) $(CFLAGS) $(LIBS) -c icon-find.c
 
 icon-cache.o: icon-cache.c icon-cache.h icon-find.h sbuf.h
 	@echo $(CC) $@
 	@$(CC) $(CFLAGS) $(LIBS) -c icon-cache.c
 
-jgmenu_xdg: jgmenu_xdg.c util.o
+xdgdirs.o: xdgdirs.c xdgdirs.h
 	@echo $(CC) $@
-	@$(CC) -o jgmenu_xdg jgmenu_xdg.c util.o $(LDFLAGS)
+	@$(CC) $(CFLAGS) $(LIBS) -c xdgdirs.c
+
+jgmenu_xdg: xdgmenu.c util.o
+	@echo $(CC) $@
+	@$(CC) -o jgmenu_xdg xdgmenu.c util.o $(LDFLAGS)
 
 install: $(PROGS) $(SCRIPTS)
 	@install -d $(DESTDIR)$(bindir)

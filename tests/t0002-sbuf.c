@@ -53,5 +53,27 @@ int main(void)
 
 	printf("\n");
 
+	/* Testing prepend */
+	sbuf_cpy(&s, "bar");
+	sbuf_prepend(&s, "foo");
+	if (!strncmp(s.buf, "foobar", 6))
+		printf("[PASS] - sbuf_prepend()\n\n");
+	else
+		exit(1);
+
+	/* Testing sbuf_shift_left */
+	sbuf_cpy(&s, "abcdefghijkl");
+	sbuf_shift_left(&s, 3);
+	printf("%s\n", s.buf);
+	printf("\n");
+
+	/* Testing sbuf_split */
+	sbuf_cpy(&s, "abc:def:ghi:jkl");
+	struct list_head my_split_list;
+	INIT_LIST_HEAD(&my_split_list);
+	sbuf_split(&my_split_list, s.buf, ':');
+	list_for_each_entry(tmp, &my_split_list, list)
+		printf("SPLIT:%s\n", tmp->buf);
+
 	return 0;
 }
