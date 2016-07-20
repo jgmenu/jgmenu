@@ -1,5 +1,6 @@
 #include "../sbuf.h"
 #include "../list.h"
+#include "../util.h"
 
 static char test_name[] = "test0002-sbuf";
 static int verbose = 0;
@@ -74,6 +75,14 @@ int main(void)
 	sbuf_split(&my_split_list, s.buf, ':');
 	list_for_each_entry(tmp, &my_split_list, list)
 		printf("SPLIT:%s\n", tmp->buf);
+
+	printf("\n");
+	printf("%d\n", get_first_num_from_str("axxx"));
+	printf("%d\n", get_first_num_from_str("ax1xx"));
+	printf("%d\n", get_first_num_from_str("22axxx"));
+	printf("%d\n", get_first_num_from_str("axxx333"));
+	printf("%d\n", get_first_num_from_str("a4444xxx"));
+
 
 	return 0;
 }

@@ -1,3 +1,9 @@
+#
+# Define ASAN=1 to enable AddressSanitizer
+#
+# Define VERBOSE=1 for a more verbose compilation
+#
+
 VER      = $(shell git describe 2>/dev/null)
 CC       = gcc
 
@@ -13,60 +19,33 @@ LIBS  = `pkg-config x11 xinerama cairo pango pangocairo librsvg-2.0 --libs`
 
 LDFLAGS  = $(LIBS)
 
+ifdef ASAN
 ASAN_FLAGS = -O0 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic
 CFLAGS    += $(ASAN_FLAGS)
 LDFLAGS   += $(ASAN_FLAGS)
+endif
 
 SCRIPTS  = jgmenu_run
 PROGS	 = jgmenu jgmenu_xdg
 
+LIB_H = $(shell find . -name '*.h' -print)
 OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o icon-cache.o xdgdirs.o
 
-all: $(PROGS) $(OBJS)
+ifndef VERBOSE
+QUIET_CC	= @echo '   ' CC $@;
+QUIET_LINK	= @echo '   ' LINK $@;
+endif
+
+all: $(PROGS)
 
 jgmenu: jgmenu.c $(OBJS)
-	@echo $(CC) $@
-	@$(CC) $(CFLAGS) -o jgmenu $(OBJS) jgmenu.c -pthread $(LDFLAGS)
-
-x11-ui.o: x11-ui.c x11-ui.h
-	@echo $(CC) $@
-	@$(CC) $(CFLAGS) $(LIBS) -c x11-ui.c
-
-config.o: config.c config.h util.h
-	@echo $(CC) $@
-	@$(CC) $(CFLAGS) $(LIBS) -c config.c
-
-util.o: util.c util.h
-	@echo $(CC) $@
-	@$(CC) $(CFLAGS) $(LIBS) -c util.c
-
-geometry.o: geometry.c geometry.h
-	@echo $(CC) $@
-	@$(CC) $(CFLAGS) $(LIBS) -c geometry.c
-
-isprog.o: isprog.c isprog.h list.h
-	@echo $(CC) $@
-	@$(CC) $(CFLAGS) $(LIBS) -c isprog.c
-
-sbuf.o: sbuf.c sbuf.h
-	@echo $(CC) $@
-	@$(CC) $(CFLAGS) $(LIBS) -c sbuf.c
-
-icon-find.o: icon-find.c icon-find.h sbuf.h util.h
-	@echo $(CC) $@
-	@$(CC) $(CFLAGS) $(LIBS) -c icon-find.c
-
-icon-cache.o: icon-cache.c icon-cache.h icon-find.h sbuf.h
-	@echo $(CC) $@
-	@$(CC) $(CFLAGS) $(LIBS) -c icon-cache.c
-
-xdgdirs.o: xdgdirs.c xdgdirs.h
-	@echo $(CC) $@
-	@$(CC) $(CFLAGS) $(LIBS) -c xdgdirs.c
+	$(QUIET_LINK)$(CC) $(CFLAGS) -o jgmenu $(OBJS) jgmenu.c -pthread $(LDFLAGS)
 
 jgmenu_xdg: xdgmenu.c util.o
-	@echo $(CC) $@
-	@$(CC) -o jgmenu_xdg xdgmenu.c util.o $(LDFLAGS)
+	$(QUIET_LINK)$(CC) -o jgmenu_xdg xdgmenu.c util.o $(LDFLAGS)
+
+%.o: %.c $(LIB_H)
+	$(QUIET_CC)$(CC) $(CFLAGS) $(LIBS) -c $*.c
 
 install: $(PROGS) $(SCRIPTS)
 	@install -d $(DESTDIR)$(bindir)

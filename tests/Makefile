@@ -2,7 +2,7 @@ all: t0002 t0003 t0005
 
 # string buffer tests
 t0002:
-	gcc -o t0002-sbuf t0002-sbuf.c ../sbuf.c
+	gcc -o t0002-sbuf t0002-sbuf.c ../sbuf.c ../util.c
 	./t0002-sbuf
 
 # icon-lookup tests

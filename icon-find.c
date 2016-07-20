@@ -80,7 +80,7 @@ void icon_find_add_theme(const char *theme)
 
 	/* ignore duplicates */
 	list_for_each_entry(t, &theme_list, list)
-		if (!strcmp(t->buf, theme))
+		if (!strcasecmp(t->buf, theme))
 			return;
 
 	sbuf_list_append(&theme_list, theme);

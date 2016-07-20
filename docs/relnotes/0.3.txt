@@ -1,0 +1,21 @@
+jgmenu v0.3 release notes
+=========================
+
+Updates since v0.2.2
+--------------------
+  - Added icon support (issue #5)
+
+    The icons are loaded under a worker thread which notifies the main-
+    loop through a "self-pipe" and a select() call
+
+  - Added xdgicon.c which finds suitable icon based on theme, name and
+    size (including any parent themes specified in index.theme)
+
+  - Added config options:
+	icon_size
+	show_title
+	icon_theme
+
+  - Changed the scrolling behaviour to feel more intuitive (issue #4)
+
+  - Fixed various bugs (incl issue #1)
