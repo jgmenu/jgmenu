@@ -13,9 +13,9 @@ bindir   = $(prefix)/bin
 CFLAGS   = -g -Wall -Os
 CFLAGS  += -DVERSION='"$(VER)"'
 CFLAGS  += -DXINERAMA
-CFLAGS  += `pkg-config cairo pango pangocairo librsvg-2.0 --cflags`
+CFLAGS  += `pkg-config cairo pango pangocairo librsvg-2.0 gtk+-3.0 --cflags`
 
-LIBS  = `pkg-config x11 xinerama cairo pango pangocairo librsvg-2.0 --libs`
+LIBS  = `pkg-config x11 xinerama cairo pango pangocairo librsvg-2.0 gtk+-3.0 --libs`
 
 LDFLAGS  = $(LIBS)
 

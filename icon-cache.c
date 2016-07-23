@@ -14,6 +14,9 @@
 
 #include <librsvg/rsvg.h>
 
+/* for xpm icons */
+#include <gtk/gtk.h>
+
 #include "icon-cache.h"
 #include "icon-find.h"
 #include "list.h"
@@ -90,6 +93,37 @@ static cairo_surface_t *get_svg_icon(const char *filename, int size)
 	return surface;
 }
 
+static cairo_surface_t *get_xpm_icon(const char *filename)
+{
+	GdkPixbuf *pixbuf;
+	gint width;
+	gint height;
+	cairo_format_t format;
+	cairo_surface_t *surface;
+	cairo_t *cr;
+
+	pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+	if (!pixbuf) {
+		fprintf(stderr, "warning: error loading icon %s\n", filename);
+		return NULL;
+	}
+
+	format = gdk_pixbuf_get_has_alpha(pixbuf) ? CAIRO_FORMAT_ARGB32 : CAIRO_FORMAT_RGB24;
+	width = gdk_pixbuf_get_width(pixbuf);
+	height = gdk_pixbuf_get_height(pixbuf);
+	surface = cairo_image_surface_create(format, width, height);
+	if (!pixbuf) {
+		fprintf(stderr, "warning: error loading icon %s\n", filename);
+		return NULL;
+	}
+
+	cr = cairo_create(surface);
+	gdk_cairo_set_source_pixbuf(cr, pixbuf, 0, 0);
+	cairo_paint(cr);
+	cairo_destroy (cr);
+	return surface;
+}
+
 void icon_cache_set_name(const char *name)
 {
 	struct Icon *icon;
@@ -112,10 +146,15 @@ void icon_cache_load(void)
 	struct String s;
 	static int first_load = 1;
 
+	/*
+	 * Add "" to make searched the top level directory is searched
+	 * E.g. /usr/share/pixmaps/
+	 */
 	if (first_load) {
 		icon_find_init();
 		icon_find_add_theme(icon_theme.buf);
 		icon_find_add_theme("hicolor");
+		icon_find_add_theme("");
 		icon_find_print_themes();
 		first_load = 0;
 	}
@@ -131,8 +170,10 @@ void icon_cache_load(void)
 
 		if (strstr(s.buf, ".png"))
 			icon->surface = get_png_icon(s.buf);
-		if (strstr(s.buf, ".svg"))
+		else if (strstr(s.buf, ".svg"))
 			icon->surface = get_svg_icon(s.buf, icon_size);
+		else if (strstr(s.buf, ".xpm"))
+			icon->surface = get_xpm_icon(s.buf);
 	}
 
 	free(s.buf);

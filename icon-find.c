@@ -14,6 +14,7 @@
 static int DEBUG = 0;
 static int DEBUG_MORE = 0;
 static int DEBUG_THEME = 0;
+static int DEBUG_ICON_DIRS = 0;
 
 /*
  * e.g. "/usr/share/icons", "/usr/loca/share/icons"
@@ -118,6 +119,18 @@ static void init_icon_dirs(void)
 
 	list_for_each_entry(path, &icon_dirs, list)
 		sbuf_addstr(path, "/icons");
+
+	struct list_head xdg_dirs;
+	INIT_LIST_HEAD(&xdg_dirs);
+	xdgdirs_get_basedirs(&xdg_dirs);
+	list_for_each_entry(path, &xdg_dirs, list) {
+		sbuf_addstr(path, "/pixmaps");
+		sbuf_list_append(&icon_dirs, path->buf);
+	}
+
+	if (DEBUG_ICON_DIRS)
+		list_for_each_entry(path, &icon_dirs, list)
+			printf("%s\n", path->buf);
 }
 
 
@@ -134,14 +147,39 @@ static int parse_icon_size(const char *fpath)
 {
 	int size;
 	char *s;
+	char *p;
 
-	s = strdup(fpath + base_dir_length + 1);
+	s = strdup(fpath + base_dir_length);
 
-	if (strstr(s, "scalable"))
-		return 65535;
+	if (strstr(s, "scalable")) {
+		size = 65535;
+		goto clean_up;
+	}
+
+	/*
+	 * Remove filename (after last '/') in case it contains digits
+	 * (e.g. gtk3)
+	 */
+	p = strrchr(s, '/');
+	if (p) {
+		*p = '\0';
+	} else {
+		size = 65534;
+		goto clean_up;
+	}
 
 	size = get_first_num_from_str(s);
 
+	/*
+	 * There are a few without an iconsize in the path.
+	 * For example:
+	 * 	- /usr/share/pixmaps/
+	 *	- those without a theme (directly in /usr/share/icons)
+	 */
+	if (!size)
+		size = 65534;
+
+clean_up:
 	if (s)
 		free(s);
 
@@ -157,6 +195,7 @@ static int process_file(const char *fpath, const struct stat *sb, int typeflag)
 			size_of_this_one = parse_icon_size(fpath);
 			if (!size_of_this_one)
 				return 0;
+
 			if (DEBUG_MORE)
 				printf("%s -- %d", fpath, size_of_this_one);
 
@@ -213,7 +252,8 @@ void icon_find(struct String *name, int size)
 	 * we don't want "folder-documents.png" returned.
 	 */
 	sbuf_prepend(name, "/");
-	if (!strstr(name->buf, ".png") && !strstr(name->buf, ".svg"))
+	if (!strstr(name->buf, ".png") && !strstr(name->buf, ".svg") &&
+	    !strstr(name->buf, ".xpm"))
 		sbuf_addch(name, '.');
 
 	sbuf_init(&path);
