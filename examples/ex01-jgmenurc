@@ -1,20 +1,20 @@
 menu_margin_x	= 0
 menu_margin_y	= 31
-menu_width	= 180
+menu_width	= 300
 menu_radius	= 2
 menu_border	= 0
 
 item_margin_x	= 1
 item_margin_y	= 1
-item_height	= 30
+item_height	= 52
 item_padding_x	= 3
 item_radius	= 0
 item_border	= 0
 
 max_items	= 6
 min_items	= 6
-font		= Ubuntu 14px
-icon_size	= 22
+font		= Ubuntu 24px
+icon_size	= 48
 icon_theme	= Adwaita
 show_title	= 0
 

@@ -12,7 +12,7 @@ item_radius	= 0
 item_border	= 0
 
 font		= Ubuntu 30px
-icon_size	= 30
+icon_size	= 48
 icon_theme	= theme1
 show_title	= 0
 

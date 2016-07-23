@@ -160,7 +160,8 @@ static int process_file(const char *fpath, const struct stat *sb, int typeflag)
 			if (DEBUG_MORE)
 				printf("%s -- %d", fpath, size_of_this_one);
 
-			if (!smallest_match) {
+			if (!smallest_match &&
+			    size_of_this_one >= requested_icon_size) {
 				smallest_match = size_of_this_one;
 				sbuf_addstr(&most_suitable_icon, fpath);
 				if (DEBUG_MORE)

@@ -132,7 +132,7 @@ void icon_cache_load(void)
 		if (strstr(s.buf, ".png"))
 			icon->surface = get_png_icon(s.buf);
 		if (strstr(s.buf, ".svg"))
-			icon->surface = get_svg_icon(s.buf, 22);
+			icon->surface = get_svg_icon(s.buf, icon_size);
 	}
 
 	free(s.buf);

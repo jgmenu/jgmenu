@@ -171,6 +171,7 @@ int get_first_num_from_str(const char *s)
 		if (!has_found_number && isdigit(c)) {
 			num = c - '0';
 			has_found_number = 1;
+			continue;
 		}
 
 		if (has_found_number && isdigit(c))
