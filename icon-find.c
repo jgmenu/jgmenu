@@ -5,22 +5,24 @@
  */
 
 #include <ftw.h>
+#include <dirent.h>
 
 #include "icon-find.h"
 #include "xdgdirs.h"
 #include "list.h"
 #include "util.h"
 
-static int DEBUG = 0;
-static int DEBUG_MORE = 0;
-static int DEBUG_THEME = 0;
-static int DEBUG_ICON_DIRS = 0;
+static int DEBUG_PRINT_FINAL_SELECTION = 0;
+static int DEBUG_PRINT_ALL_HITS = 0;		/* regardless of size */
+static int DEBUG_PRINT_INHERITED_THEMES = 0;
+static int DEBUG_PRINT_ICON_DIRS = 0;
 
 /*
  * e.g. "/usr/share/icons", "/usr/loca/share/icons"
  * see xdgdirs.c for more details
  */
 static struct list_head icon_dirs;
+static struct list_head pixmap_dirs;
 
 /* e.g. "Adwaita", "default", "hicolor" */
 static struct list_head theme_list;
@@ -60,7 +62,7 @@ static void get_parent_themes(struct list_head *parent_themes, const char *child
 				continue;
 
 			if (!strncmp(option, "Inherits", 8)) {
-				if (DEBUG_THEME)
+				if (DEBUG_PRINT_INHERITED_THEMES)
 					printf("%s inherits %s\n", child_theme, value);
 				sbuf_split(parent_themes, value, ',');
 				fclose(fp);
@@ -72,6 +74,34 @@ out2:
 	free(filename.buf);
 }
 
+/*
+ * Some themes have case-insensitive "Inherit" definitions.
+ * For example, if an index.theme contains Inherit=adwaita
+ * we want this changed to Adwaita (with a capital A).
+ */
+static void case_sensitize_themes(struct list_head *parent_themes)
+{
+	struct String *theme, *dir;
+	struct dirent *entry;
+	DIR *dp;
+
+	list_for_each_entry(dir, &icon_dirs, list) {
+		dp = opendir(dir->buf);
+		if (!dp)
+			continue;
+
+		while ((entry = readdir(dp))) {
+			list_for_each_entry(theme, parent_themes, list) {
+				if (!strcasecmp(entry->d_name, theme->buf)) {
+					sbuf_cpy(theme, entry->d_name);
+					break;
+				}
+			}
+		}
+		closedir(dp);
+	}
+	return;
+}
 
 void icon_find_add_theme(const char *theme)
 {
@@ -89,6 +119,7 @@ void icon_find_add_theme(const char *theme)
 	/* Add parent themes too */
 	INIT_LIST_HEAD(&parent_themes);
 	get_parent_themes(&parent_themes, theme);
+	case_sensitize_themes(&parent_themes);
 
 	list_for_each_entry(tmp, &parent_themes, list)
 		icon_find_add_theme(tmp->buf);
@@ -99,9 +130,10 @@ void icon_find_print_themes(void)
 {
 	struct String *t;
 
-	printf("THEMES:\n");
+	printf("THEMES: ");
 	list_for_each_entry(t, &theme_list, list)
-		printf("%s\n", t->buf);
+		printf("%s, ", t->buf);
+	printf("\n");
 }
 
 static void init_theme_list(void)
@@ -114,25 +146,24 @@ static void init_icon_dirs(void)
 	struct String *path;
 
 	INIT_LIST_HEAD(&icon_dirs);
-
 	xdgdirs_get_basedirs(&icon_dirs);
-
 	list_for_each_entry(path, &icon_dirs, list)
 		sbuf_addstr(path, "/icons");
 
-	struct list_head xdg_dirs;
-	INIT_LIST_HEAD(&xdg_dirs);
-	xdgdirs_get_basedirs(&xdg_dirs);
-	list_for_each_entry(path, &xdg_dirs, list) {
-		sbuf_addstr(path, "/pixmaps");
-		sbuf_list_append(&icon_dirs, path->buf);
-	}
-
-	if (DEBUG_ICON_DIRS)
+	if (DEBUG_PRINT_ICON_DIRS)
 		list_for_each_entry(path, &icon_dirs, list)
 			printf("%s\n", path->buf);
 }
 
+static void init_pixmap_dirs(void)
+{
+	struct String *path;
+
+	INIT_LIST_HEAD(&pixmap_dirs);
+	xdgdirs_get_basedirs(&pixmap_dirs);
+	list_for_each_entry(path, &pixmap_dirs, list)
+		sbuf_addstr(path, "/pixmaps");
+}
 
 /*
  * Simplistic approach to getting icon size.
@@ -145,87 +176,124 @@ static void init_icon_dirs(void)
  */
 static int parse_icon_size(const char *fpath)
 {
-	int size;
+	int size = 0;
 	char *s;
 	char *p;
 
 	s = strdup(fpath + base_dir_length);
 
-	if (strstr(s, "scalable")) {
-		size = 65535;
-		goto clean_up;
-	}
-
 	/*
 	 * Remove filename (after last '/') in case it contains digits
-	 * (e.g. gtk3)
+	 * (e.g. gtk3-foo.png)
 	 */
 	p = strrchr(s, '/');
 	if (p) {
 		*p = '\0';
-	} else {
-		size = 65534;
-		goto clean_up;
+		size = get_first_num_from_str(s);
 	}
-
-	size = get_first_num_from_str(s);
 
 	/*
 	 * There are a few without an iconsize in the path.
 	 * For example:
+	 *	- $XDG_DATA_DIRS/icons/<theme>/scalable
 	 * 	- /usr/share/pixmaps/
 	 *	- those without a theme (directly in /usr/share/icons)
 	 */
 	if (!size)
-		size = 65534;
+		size = 65535;
 
-clean_up:
 	if (s)
 		free(s);
 
 	return size;
 }
 
-static int process_file(const char *fpath, const struct stat *sb, int typeflag)
+
+static void process_file(const char *fpath)
 {
 	int size_of_this_one = 0;
 
+	size_of_this_one = parse_icon_size(fpath);
+	if (!size_of_this_one)
+		return;
+
+	if (DEBUG_PRINT_ALL_HITS)
+		printf("%s - %d", fpath, size_of_this_one);
+
+	if (!smallest_match &&
+	    size_of_this_one >= requested_icon_size) {
+		smallest_match = size_of_this_one;
+		sbuf_addstr(&most_suitable_icon, fpath);
+		if (DEBUG_PRINT_ALL_HITS)
+			printf(" - Grab");
+	} else if (size_of_this_one < smallest_match &&
+		   size_of_this_one >= requested_icon_size) {
+		smallest_match = size_of_this_one;
+		sbuf_cpy(&most_suitable_icon, fpath);
+		if (DEBUG_PRINT_ALL_HITS)
+			printf(" - Grab");
+	}
+	if (DEBUG_PRINT_ALL_HITS)
+		printf("\n");
+}
+
+static int ftw_filter(const char *fpath, const struct stat *sb, int typeflag)
+{
 	if (typeflag == FTW_F)
-		if (strstr(fpath, requested_icon_name)) {
-			size_of_this_one = parse_icon_size(fpath);
-			if (!size_of_this_one)
-				return 0;
+		if (strstr(fpath, requested_icon_name))
+			process_file(fpath);
 
-			if (DEBUG_MORE)
-				printf("%s -- %d", fpath, size_of_this_one);
+	return 0;
+}
 
-			if (!smallest_match &&
-			    size_of_this_one >= requested_icon_size) {
-				smallest_match = size_of_this_one;
-				sbuf_addstr(&most_suitable_icon, fpath);
-				if (DEBUG_MORE)
-					printf(" - Grab");
-			} else if (size_of_this_one < smallest_match &&
-				   size_of_this_one >= requested_icon_size) {
-				smallest_match = size_of_this_one;
-				sbuf_cpy(&most_suitable_icon, fpath);
-				if (DEBUG_MORE)
-					printf(" - Grab");
-			}
-			if (DEBUG_MORE)
-				printf("\n");
+/*
+ * Alternative to ftw_filter for search of one directory only
+ */
+int search_dir_for_file(const char *path, const char *file)
+{
+	struct dirent *entry;
+	DIR *dp;
+	struct String s;
+
+	sbuf_init(&s);
+	dp = opendir(path);
+	if (!dp)
+		return 1;
+
+	while ((entry = readdir(dp))) {
+		if (strstr(entry->d_name, file)) {
+			sbuf_cpy(&s, path);
+			sbuf_addch(&s, '/');
+			sbuf_addstr(&s, entry->d_name);
+			process_file(s.buf);
 		}
+	}
 
-
+	closedir(dp);
 	return 0;
 }
 
 void icon_find_init(void)
 {
 	init_icon_dirs();
+	init_pixmap_dirs();
 	init_theme_list();
 	sbuf_init(&most_suitable_icon);
 	has_been_inited = 1;
+}
+
+void remove_pngsvgxpm_extensions(struct String *name)
+{
+	char *ext;
+
+	ext = name->buf + name->len - 4;
+
+	if (!strncmp(ext, ".png", 4) ||
+	    !strncmp(ext, ".svg", 4) ||
+	    !strncmp(ext, ".xpm", 4)) {
+		*ext = '\0';
+		name->len -= 4;
+	}
 }
 
 void icon_find(struct String *name, int size)
@@ -234,10 +302,8 @@ void icon_find(struct String *name, int size)
 	struct String *s, *t;
 	char *p;
 
-	if (!has_been_inited) {
-		fprintf(stderr, "warn: icon_find() was called before icon_find_init()");
+	if (!has_been_inited)
 		icon_find_init();
-	}
 
 	/*
 	 * Don't search for icon if path (absolute or relative)
@@ -248,18 +314,23 @@ void icon_find(struct String *name, int size)
 		return;
 
 	/*
+	 * .desktop files should not specify file-extensions, but some do.
+	 * Themes use different file-formats, so it's best to remove them.
+	 */
+	remove_pngsvgxpm_extensions(name);
+
+	/*
 	 * Ensure we only find exact matches. E.g. if we search for "folder"
 	 * we don't want "folder-documents.png" returned.
 	 */
 	sbuf_prepend(name, "/");
-	if (!strstr(name->buf, ".png") && !strstr(name->buf, ".svg") &&
-	    !strstr(name->buf, ".xpm"))
-		sbuf_addch(name, '.');
+	sbuf_addch(name, '.');
 
 	sbuf_init(&path);
 	strcpy(requested_icon_name, name->buf);
 	requested_icon_size = size;
 
+	/* Search through $XDG_DATA_DIRS/icons/<theme>/ */
 	list_for_each_entry(s, &icon_dirs, list) {
 		list_for_each_entry(t, &theme_list, list) {
 			sbuf_cpy(&most_suitable_icon, "");
@@ -270,19 +341,35 @@ void icon_find(struct String *name, int size)
 			base_dir_length = strlen(path.buf);
 			smallest_match = 0;
 
-			ftw(path.buf, process_file, 32);
+			ftw(path.buf, ftw_filter, 32);
 
-			if (DEBUG) {
-				if (most_suitable_icon.len)
+			if (DEBUG_PRINT_FINAL_SELECTION &&
+			    most_suitable_icon.len)
 					printf("OUTPUT: %s\n", most_suitable_icon.buf);
-				else
-					printf("OUTPUT: (NULL)\n");
-			}
 
 			if (most_suitable_icon.len)
 				goto out;
 		}
 	}
+
+	/*
+	 * A small number of icons are stored in other places:
+	 * 	- $XDG_DATA_DIRS/pixmaps/  (e.g. xpm icons)
+	 * 	- $XDG_DATA_DIRS/icons/    (i.e. top level directory)
+	 *
+	 * For this search we remove the prepended '/'
+	 */
+	sbuf_shift_left(name, 1);
+	strcpy(requested_icon_name, name->buf);
+
+	list_for_each_entry(s, &icon_dirs, list)
+		search_dir_for_file(s->buf, requested_icon_name);
+
+	if (most_suitable_icon.len)
+		goto out;
+
+	list_for_each_entry(s, &pixmap_dirs, list)
+		search_dir_for_file(s->buf, requested_icon_name);
 
 out:
 	sbuf_cpy(name, most_suitable_icon.buf);

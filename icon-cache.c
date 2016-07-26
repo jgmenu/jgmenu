@@ -146,15 +146,10 @@ void icon_cache_load(void)
 	struct String s;
 	static int first_load = 1;
 
-	/*
-	 * Add "" to make searched the top level directory is searched
-	 * E.g. /usr/share/pixmaps/
-	 */
 	if (first_load) {
 		icon_find_init();
 		icon_find_add_theme(icon_theme.buf);
 		icon_find_add_theme("hicolor");
-		icon_find_add_theme("");
 		icon_find_print_themes();
 		first_load = 0;
 	}

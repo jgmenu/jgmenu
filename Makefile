@@ -55,7 +55,7 @@ clean:
 	@rm -f $(PROGS) *.o
 
 test:
-	$(MAKE) -C tests/ all
+	@$(MAKE) --no-print-directory -C tests/ all
 
 ex:
-	$(MAKE) -C examples/ all
+	@$(MAKE) --no-print-directory -C examples/ all

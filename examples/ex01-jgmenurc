@@ -6,16 +6,17 @@ menu_border	= 0
 
 item_margin_x	= 1
 item_margin_y	= 1
-item_height	= 52
+item_height	= 30
 item_padding_x	= 3
 item_radius	= 0
 item_border	= 0
 
 max_items	= 6
 min_items	= 6
-font		= Ubuntu 24px
-icon_size	= 48
+font		= Ubuntu 18px
+icon_size	= 22
 icon_theme	= Adwaita
+#icon_theme	= jgmenu-cache
 show_title	= 0
 
 color_menu_bg	= #eeeeee 100

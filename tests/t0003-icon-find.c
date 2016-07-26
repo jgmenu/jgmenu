@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 
 	icon_find_init();
 
-	icon_find_add_theme("elementary-xfce");
+	icon_find_add_theme("Adwaita");
 	sbuf_cpy(&s, "folder-documents");
 	test(&s, 22);
 
