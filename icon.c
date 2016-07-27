@@ -17,7 +17,7 @@
 /* for xpm icons */
 #include <gtk/gtk.h>
 
-#include "icon-cache.h"
+#include "icon.h"
 #include "icon-find.h"
 #include "list.h"
 #include "util.h"
@@ -35,7 +35,7 @@ struct list_head icon_cache;
 struct String icon_theme;
 int icon_size;
 
-void icon_cache_init(void)
+void icon_init(void)
 {
 	INIT_LIST_HEAD(&icon_cache);
 	sbuf_init(&icon_theme);
@@ -43,13 +43,13 @@ void icon_cache_init(void)
 	icon_size = 22;
 }
 
-void icon_cache_set_theme(const char *theme)
+void icon_set_theme(const char *theme)
 {
 	if (theme)
 		sbuf_cpy(&icon_theme, theme);
 }
 
-void icon_cache_set_size(int size)
+void icon_set_size(int size)
 {
 	icon_size = size;
 }
@@ -124,7 +124,7 @@ static cairo_surface_t *get_xpm_icon(const char *filename)
 	return surface;
 }
 
-void icon_cache_set_name(const char *name)
+void icon_set_name(const char *name)
 {
 	struct Icon *icon;
 
@@ -140,7 +140,7 @@ void icon_cache_set_name(const char *name)
 	list_add(&(icon->list), &icon_cache);
 }
 
-void icon_cache_load(void)
+void icon_load(void)
 {
 	struct Icon *icon;
 	struct String s;
@@ -174,7 +174,7 @@ void icon_cache_load(void)
 	free(s.buf);
 }
 
-cairo_surface_t *icon_cache_get_surface(const char *name)
+cairo_surface_t *icon_get_surface(const char *name)
 {
 	struct Icon *icon;
 

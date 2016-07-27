@@ -25,11 +25,11 @@ CFLAGS    += $(ASAN_FLAGS)
 LDFLAGS   += $(ASAN_FLAGS)
 endif
 
-SCRIPTS  = jgmenu_run
-PROGS	 = jgmenu jgmenu_xdg
+SCRIPTS  = jgmenu_run jgmenu-cache
+PROGS	 = jgmenu jgmenu_xdg jgmenu-icon-find
 
 LIB_H = $(shell find . -name '*.h' -print)
-OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o icon-cache.o xdgdirs.o
+OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o icon.o xdgdirs.o
 
 ifndef VERBOSE
 QUIET_CC	= @echo '   ' CC $@;
@@ -43,6 +43,10 @@ jgmenu: jgmenu.c $(OBJS)
 
 jgmenu_xdg: xdgmenu.c util.o
 	$(QUIET_LINK)$(CC) -o jgmenu_xdg xdgmenu.c util.o $(LDFLAGS)
+
+jgmenu-icon-find: jgmenu-icon-find.c icon-find.o xdgdirs.o sbuf.o util.o
+	$(QUIET_LINK)$(CC) -o jgmenu-icon-find jgmenu-icon-find.c icon-find.o \
+			      xdgdirs.o sbuf.o util.o $(LDFLAGS)
 
 %.o: %.c $(LIB_H)
 	$(QUIET_CC)$(CC) $(CFLAGS) $(LIBS) -c $*.c

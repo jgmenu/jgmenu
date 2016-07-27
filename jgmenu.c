@@ -23,7 +23,7 @@
 #include "geometry.h"
 #include "isprog.h"
 #include "sbuf.h"
-#include "icon-cache.h"
+#include "icon.h"
 
 #define MAX_FIELDS 3		/* nr fields to parse for each stdin line */
 
@@ -550,7 +550,7 @@ void dlist_append(struct Item *item, struct Item **list, struct Item **last)
  */
 void *load_icons(void *arg)
 {
-	icon_cache_load();
+	icon_load();
 
 	if (write(pipe_fds[1], "x", 1) == -1)
 		die("error writing to icon_pipe");
@@ -703,14 +703,14 @@ void run(void)
 	init_pipe_flags();
 
 	if (config.icon_size) {
-		icon_cache_init();
-		icon_cache_set_size(config.icon_size);
-		icon_cache_set_theme(config.icon_theme);
+		icon_init();
+		icon_set_size(config.icon_size);
+		icon_set_theme(config.icon_theme);
 
 		/* Get icons in top level menu (or the one specified with --check-out= */
 		for (item = menu.subhead; item && item->t[0] && item != menu.subtail + 1; item++)
 			if (item->t[2])
-				icon_cache_set_name(item->t[2]);
+				icon_set_name(item->t[2]);
 
 		pthread_create(&thread, NULL, load_icons, NULL);
 	}
@@ -761,7 +761,7 @@ void run(void)
 
 				for (item = menu.head; item && item->t[0]; item++)
 					if (!item->icon)
-						item->icon = icon_cache_get_surface(item->t[2]);
+						item->icon = icon_get_surface(item->t[2]);
 
 				draw_menu();
 
@@ -771,7 +771,7 @@ void run(void)
 				/* Get remaining icons */
 				for (item = menu.head; item && item->t[0]; item++)
 					if (item->t[2])
-						icon_cache_set_name(item->t[2]);
+						icon_set_name(item->t[2]);
 
 				pthread_create(&thread, NULL, load_icons, NULL);
 				all_icons_have_been_requested = 1;
