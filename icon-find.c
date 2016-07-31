@@ -286,6 +286,9 @@ void remove_pngsvgxpm_extensions(struct String *name)
 {
 	char *ext;
 
+	if (name->len < 4)
+		return;
+
 	ext = name->buf + name->len - 4;
 
 	if (!strncmp(ext, ".png", 4) ||
