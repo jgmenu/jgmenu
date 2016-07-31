@@ -1,0 +1,13 @@
+jgmenu v0.3.1 release notes
+===========================
+
+Updates since v0.3
+------------------
+  - Added initial support for icon cache.
+
+    This is currently just in the form of symlinks, but it does speed
+    up the loading of icons when jgmenu is started.
+    
+  - Added support for xpm icons.
+
+  - Improved icon-find.c search algorithms and fixed some bugs.

@@ -19,6 +19,13 @@ jgmenu is written with the following aims:
 
 <img src="http://i.imgur.com/ThRLqVS.png" \>
 
+Old screenshot from around v0.1.2
+
+<img src="http://i.imgur.com/4oprqYZ.png" \>
+
+jgmenu v0.3.1 using Numix-Circle icon theme and pmenu-jgmenu.py
+(https://gitlab.com/o9000/pmenu/blob/master/pmenu-jgmenu.py)
+
 Installation
 ------------
 ```
@@ -27,8 +34,8 @@ $ make install
 $ jgmenu_run
 ```
 
-Usage
------
+Basic Usage
+-----------
 The program reads the menu items from stdin.  Menu items are seperated by a
 new-line character ('\n').  Empty lines and lines beginning with '#' are
 ignored.
@@ -40,10 +47,9 @@ markup in the "command" field.
 
 The ^sub() markup draws an arrow to denote "submenu". This is useful for
 moving to a submenu in a separate menu file/pipe.
-tests/t3.sh shows an example of this.
 
-Examples
---------
+Simple Examples
+---------------
 Example 1:
 ```
 echo -e "terminal,xterm\nfilemanager,pcmanfm" | jgmenu
@@ -76,3 +82,14 @@ EOF
 chmod +x menu.sh
 ./menu.sh
 ```
+
+Icons
+-----
+Icons can be displayed by taking the following steps
+  - add the command line argument --icon-size=X or set icon_size=X in jgmenurc
+  - add a third field to the stdin data
+    For example
+	Terminal,xterm,utilities-terminal
+	Firefox,firefox,firefox
+
+

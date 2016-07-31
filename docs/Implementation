@@ -1,0 +1,45 @@
+Implementation
+==============
+
+jgmenu
+------
+
+                          xdgdirs.c
+                             |
+                          icon-find.c  xpm.c (TBD)
+                             |           |
+			     +-----------+
+ geometry.c   x11-ui.c    icon.c
+     |           |           |
+     +-----------+-----------+
+                 |
+              jgmenu.c
+                 |
+              jgmenu
+
+jgmenu-xdg (not working yet)
+----------
+
+ xdgapps.c
+ xdgdirs.c
+    |
+ xdgmenu.c
+    |
+ jgmenu-xdg
+
+
+jgmenu-cache
+------------
+
+ icon-find.c
+     |
+ jgmenu-icon-find.c     svg2png.c
+     |                       |
+ jgmenu-icon-find       jgmenu-svg2png
+     |                       |
+     +-----------+-----------+
+                 |
+            jgmenu-cache
+
+
+"helpers"-libs: util, sbuf, list, isprog

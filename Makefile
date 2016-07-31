@@ -14,8 +14,10 @@ CFLAGS   = -g -Wall -Os
 CFLAGS  += -DVERSION='"$(VER)"'
 CFLAGS  += -DXINERAMA
 CFLAGS  += `pkg-config cairo pango pangocairo librsvg-2.0 gtk+-3.0 --cflags`
+CFLAGS  += `xml2-config --cflags`
 
 LIBS  = `pkg-config x11 xinerama cairo pango pangocairo librsvg-2.0 gtk+-3.0 --libs`
+LIBS += `xml2-config --libs`
 
 LDFLAGS  = $(LIBS)
 
@@ -26,7 +28,7 @@ LDFLAGS   += $(ASAN_FLAGS)
 endif
 
 SCRIPTS  = jgmenu_run jgmenu-cache
-PROGS	 = jgmenu jgmenu_xdg jgmenu-icon-find
+PROGS	 = jgmenu jgmenu-xdg jgmenu-icon-find
 
 LIB_H = $(shell find . -name '*.h' -print)
 OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o icon.o xdgdirs.o
@@ -41,8 +43,8 @@ all: $(PROGS)
 jgmenu: jgmenu.c $(OBJS)
 	$(QUIET_LINK)$(CC) $(CFLAGS) -o jgmenu $(OBJS) jgmenu.c -pthread $(LDFLAGS)
 
-jgmenu_xdg: xdgmenu.c util.o
-	$(QUIET_LINK)$(CC) -o jgmenu_xdg xdgmenu.c util.o $(LDFLAGS)
+jgmenu-xdg: xdgmenu.c util.o sbuf.o
+	$(QUIET_LINK)$(CC) $(CFLAGS) -o jgmenu-xdg xdgmenu.c util.o sbuf.o $(LDFLAGS)
 
 jgmenu-icon-find: jgmenu-icon-find.c icon-find.o xdgdirs.o sbuf.o util.o
 	$(QUIET_LINK)$(CC) -o jgmenu-icon-find jgmenu-icon-find.c icon-find.o \

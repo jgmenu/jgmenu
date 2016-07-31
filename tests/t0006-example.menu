@@ -1,0 +1,30 @@
+<Menu>
+	<Name>Applications</Name>
+	<Directory>lxde-menu-applications.directory</Directory>
+	<Menu>
+		<Name>Accessories</Name>
+		<Directory>lxde-utility.directory</Directory>
+
+		<Menu>
+			<Name>Submenu-test</Name>
+			<Directory>submenu-test.directory</Directory>	
+		</Menu>
+
+		<Include>
+			<And>
+				<Category>Utility</Category>
+			</And>
+		</Include>
+	</Menu>
+
+	<Menu>
+		<Name>Development</Name>
+		<Directory>lxde-development.directory</Directory>
+		<Include>
+			<And>
+				<Category>Development</Category>
+			</And>
+			<Filename>emacs.desktop</Filename>
+		</Include>
+	</Menu>
+</Menu>
