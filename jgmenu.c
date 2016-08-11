@@ -395,10 +395,12 @@ void key_event(XKeyEvent *ev)
 		break;
 	case XK_Return:
 	case XK_KP_Enter:
-		if (config.spawn)
+		if (config.spawn) {
 			action_cmd(menu.sel->t[1]);
-		else
+		} else {
 			puts(menu.sel->t[1]);
+			exit(0);
+		}
 		break;
 	case XK_Down:
 		if (!menu.sel || !menu.sel->next)
