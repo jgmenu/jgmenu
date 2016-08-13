@@ -23,6 +23,8 @@
 #include "util.h"
 #include "sbuf.h"
 
+#define DEBUG_THEMES 0
+
 
 struct Icon {
 	char *name;
@@ -150,7 +152,8 @@ void icon_load(void)
 		icon_find_init();
 		icon_find_add_theme(icon_theme.buf);
 		icon_find_add_theme("hicolor");
-		icon_find_print_themes();
+		if (DEBUG_THEMES)
+			icon_find_print_themes();
 		first_load = 0;
 	}
 
