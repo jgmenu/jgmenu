@@ -1,4 +1,6 @@
-all: t0002 t0003 t0005
+ASAN_FLAGS = -O0 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic
+
+all: t0002 t0003 t0005 t0007
 
 # string buffer tests
 t0002:
@@ -14,3 +16,8 @@ t0003:
 t0005:
 	gcc -o t0005-xdgdirs t0005-xdgdirs.c ../xdgdirs.c ../sbuf.c
 	./t0005-xdgdirs
+
+t0007:
+	gcc -o t0007-xdgapps t0007-xdgapps.c ../xdgapps.c ../sbuf.c ../util.c $(ASAN_FLAGS)
+	./t0007-xdgapps
+

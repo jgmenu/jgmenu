@@ -2,8 +2,8 @@
  * icon-cache.c: Loads icons in background
  *
  * This library is designed to
- * 	- ensure the core menu (without icons) runs fast
- * 	- avoid the use of mutex-locks
+ *	- ensure the core menu (without icons) runs fast
+ *	- avoid the use of mutex-locks
  *
  * It requires the functions to be called in these distinct phases:
  *	- populate the cache early with icon names ("set_name");
@@ -122,7 +122,7 @@ static cairo_surface_t *get_xpm_icon(const char *filename)
 	cr = cairo_create(surface);
 	gdk_cairo_set_source_pixbuf(cr, pixbuf, 0, 0);
 	cairo_paint(cr);
-	cairo_destroy (cr);
+	cairo_destroy(cr);
 	return surface;
 }
 

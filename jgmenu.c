@@ -206,7 +206,7 @@ void checkout_submenu(char *tag)
 
 		/* If ^checkout() called without associated ^tag() */
 		if (!menu.title)
-			die("menu.title pointer not set.  Tag not found.");
+			die("cannot find ^tag(%s)", tag);
 		if (!menu.first)
 			die("menu.first not set. Menu has no content");
 	}
@@ -216,7 +216,8 @@ void checkout_submenu(char *tag)
 	if (!menu.first->next) {
 		menu.last = menu.first;
 	} else {
-		item = menu.first->next;
+//		item = menu.first->next;
+		item = menu.first;
 
 		while (!menu.last && item && item->t[0]) {
 			if (!item->next || !strncmp(item->next->t[1], tagtok, strlen(tagtok)))
