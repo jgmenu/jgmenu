@@ -6,6 +6,59 @@
  * Parses xml .menu file and outputs a csv formatted jgmenu file
  *
  * It aim to be XDG compliant, although it has a long way to go!
+ *
+ * See this spec for further details:
+ * https://specifications.freedesktop.org/menu-spec/menu-spec-1.0.html
+ *
+ * ===================================================================
+ *
+ * Quick outline of how this file works:
+ *
+ * #1 - Read .menu-file (XML format)
+ * ---------------------------------
+ * <Menu>
+ * 	<Name>Programming</Name>
+ * 	<Directory>Development.directory</Directory>
+ * 	<Category>Development</Category>
+ * </Menu
+ * <Menu>
+ * 	<Name>Graphics</Name>
+ * 	<Directory>Graphics.directory</Directory>
+ * 	<Category>Graphics</Category>
+ * </Menu>
+ *
+ * #2 - Parse XML tree into nodes
+ * ------------------------------
+ * Menu.Name = Development
+ * Menu.Directory = Development.directory
+ * Menu.Category = Development
+ *
+ * Menu.Name = Graphics
+ * Menu.Directory = Graphics.directory
+ * Menu.Category = Graphics
+ *
+ * #3 - Create cache for each <Menu></Menu>
+ * ----------------------------------------
+ * Name=Development
+ * Directory=Development.directory
+ * Categories=	 	(this takes into account all includes and excludes)
+ * Desktop-files=	(individual .desktop files if specified)
+ * etc.
+ *
+ * #4 - Create jgmenu style csv file
+ * ---------------------------------
+ * root,^tag(root)
+ * Programming,^checkout(Development)
+ * Graphics,^checkout(Graphics)
+ *
+ * Programming,^tag(Development)
+ * foo1,foo1
+ * foo2,foo2
+ *
+ * Graphics,^tag(Graphics)
+ * bar1,bar1
+ * bar2,bar2
+ *
  */
 
 #include <stdio.h>
@@ -22,7 +75,7 @@
 
 /*
  * In jgmenu-speak,
- * 	- a "node" is an item with a ^tag() mark-up
+ *	- a "node" is an item with a ^tag() mark-up
  *	- everything else is an "item"
  *	  "items" hang off "nodes"
  */
@@ -48,7 +101,7 @@ struct JGMenu_item {
  *     (we need to know the names to great new ^tag() sections, etc)
  *   - to create lists of desktop files taking into account all <Include> and
  *     <Exclude> tags
- */ 
+ */
 struct Cache {
 	char *name;
 	char *directory;
@@ -64,11 +117,11 @@ static LIST_HEAD(menu_nodes);
 static LIST_HEAD(cache);
 static int menu_level;
 
-static void print_csv_menu()
+static void print_csv_menu(void)
 {
 	struct JGMenu_node *n;
 	struct JGMenu_item *item;
-	
+
 	list_for_each_entry(n, &menu_nodes, list) {
 		printf("%s,^tag(%s)\n", n->name, n->tag);
 		if (n->parent)
@@ -149,7 +202,7 @@ static void add_jgmenu_node(const char *content, const char *parent)
 	INIT_LIST_HEAD(&(node->menu_items));
 }
 
-static void build_jgmenu_structure_from_cache()
+static void build_jgmenu_structure_from_cache(void)
 {
 	struct Cache *cache_item;
 	static char parent[16][1024];
@@ -167,7 +220,7 @@ static void build_jgmenu_structure_from_cache()
 		/* Add .directory file data to parent */
 		/* The directory information is only useful to your parent! */
 		list_for_each_entry(directory_file, &directory_files, list) {
-			if (cache_item->level && 
+			if (cache_item->level &&
 			    !strcmp(directory_file->filename, cache_item->directory)) {
 				add_dir_to_jgmenu_node(parent[cache_item->level - 1],
 						       directory_file->name,
@@ -193,7 +246,7 @@ static void build_jgmenu_structure_from_cache()
  * TODO: Process stuff within <Menu></Menu> to establish categories and
  * .dekstop-files, etc taking into account includes and excludes.
  */
-static void process_cache()
+static void process_cache(void)
 {
 	struct Cache *cache_item;
 	struct String *cat;
@@ -253,14 +306,14 @@ static void add_to_cache(const char *node_name, const char *content)
 	} else if (!strcasecmp(node_name, "Directory")) {
 		cache_item->directory = strdup(content);
 	} else if (!strcasecmp(node_name, "Include.And.Category")) {
-		category = xmalloc(sizeof(struct String));		
+		category = xmalloc(sizeof(struct String));
 		sbuf_init(category);
 		sbuf_addstr(category, content);
 		list_add_tail(&(category->list), &(cache_item->category_includes));
 	}
 }
 
-static void create_new_cache_entry()
+static void create_new_cache_entry(void)
 {
 	struct Cache *cache_item;
 
@@ -276,7 +329,7 @@ static int level(xmlNode *node)
 {
 	int level = 0;
 
-	for(;;) {
+	for (;;) {
 		node = node->parent;
 		if (!node || !node->name)
 			return level;
@@ -299,7 +352,7 @@ static void get_full_node_name(struct String *node_name, xmlNode *node)
 	}
 
 	ismenu = !strcmp((char *)node->name, "Menu");
-	for(;;) {
+	for (;;) {
 		if (!ismenu)
 			sbuf_prepend(node_name, (char *)node->name);
 
@@ -329,9 +382,8 @@ static void process_node(xmlNode *node)
 	get_full_node_name(&node_name, node);
 
 	/* This if statement filters out a lot */
-	if (node_name.len || !strlen(strstrip((char *)node->content))) {
+	if (node_name.len || !strlen(strstrip((char *)node->content)))
 		add_to_cache(node_name.buf, strstrip((char *)node->content));
-	}
 
 	free(node_name.buf);
 }

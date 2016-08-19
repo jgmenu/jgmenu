@@ -31,7 +31,7 @@ static char *xdg_base_dirs[] = {
 	"/usr/share", "/usr/local/share", "/opt/share"
 };
 
-#define COUNT_OF(x) (sizeof (x) / sizeof (x)[0])
+#define COUNT_OF(x) (sizeof(x) / sizeof(x)[0])
 
 
 static void expand_env_vars(struct String *s)

@@ -25,6 +25,8 @@
 #include "sbuf.h"
 #include "icon.h"
 
+#define DEBUG_ICONS_LOADED_NOTIFICATION 0
+
 #define MAX_FIELDS 3		/* nr fields to parse for each stdin line */
 
 #define MOUSE_FUDGE 3		/* Pointer vertical offset		  */
@@ -216,7 +218,6 @@ void checkout_submenu(char *tag)
 	if (!menu.first->next) {
 		menu.last = menu.first;
 	} else {
-//		item = menu.first->next;
 		item = menu.first;
 
 		while (!menu.last && item && item->t[0]) {
@@ -296,6 +297,7 @@ void action_cmd(char *cmd)
 
 	if (!cmd)
 		return;
+
 	if (!strncmp(cmd, "^checkout(", 10)) {
 		p = parse_caret_action(cmd, "^checkout(");
 		if (p) {
@@ -498,6 +500,7 @@ void mouse_event(XEvent *e)
 					break;
 				} else {
 					puts(item->t[1]);
+					exit(0);
 				}
 			}
 		}
@@ -651,8 +654,8 @@ void process_pointer_position(void)
 {
 	struct Item *item;
 	struct Point mouse_coords;
-	static int oldy = 0;
-	static int oldx = 0;
+	static int oldy;
+	static int oldx;
 
 	mouse_coords = mousexy();
 	mouse_coords.y -= MOUSE_FUDGE;
@@ -686,7 +689,7 @@ void run(void)
 	char ch;
 	int ready, nfds, x11_fd;
 	fd_set readfds;
-	static int all_icons_have_been_requested = 0;
+	static int all_icons_have_been_requested;
 
 	FD_ZERO(&readfds);
 	nfds = 0;
@@ -754,9 +757,10 @@ void run(void)
 				if (ch != 'x')
 					continue;
 
-				if (all_icons_have_been_requested)
+				if (DEBUG_ICONS_LOADED_NOTIFICATION && all_icons_have_been_requested)
 					fprintf(stderr, "All icons loaded\n");
-				else
+
+				if (DEBUG_ICONS_LOADED_NOTIFICATION && !all_icons_have_been_requested)
 					fprintf(stderr, "Root menu icons loaded\n");
 
 
@@ -834,7 +838,7 @@ int main(int argc, char *argv[])
 	if (!config_file)
 		config_file = strdup("~/.config/jgmenu/jgmenurc");
 
-	if (config_file) {
+	if (config_file && config_file[0] != '\0') {
 		if (config_file[0] == '~')
 			config_file = expand_tilde(config_file);
 		config_parse_file(config_file);

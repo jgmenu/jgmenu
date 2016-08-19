@@ -12,10 +12,10 @@
 #include "list.h"
 #include "util.h"
 
-static int DEBUG_PRINT_FINAL_SELECTION = 0;
-static int DEBUG_PRINT_ALL_HITS = 0;		/* regardless of size */
-static int DEBUG_PRINT_INHERITED_THEMES = 0;
-static int DEBUG_PRINT_ICON_DIRS = 0;
+#define DEBUG_PRINT_FINAL_SELECTION 0
+#define DEBUG_PRINT_ALL_HITS 0		/* regardless of size */
+#define DEBUG_PRINT_INHERITED_THEMES 0
+#define DEBUG_PRINT_ICON_DIRS 0
 
 /*
  * e.g. "/usr/share/icons", "/usr/loca/share/icons"
@@ -27,14 +27,14 @@ static struct list_head pixmap_dirs;
 /* e.g. "Adwaita", "default", "hicolor" */
 static struct list_head theme_list;
 
-static int has_been_inited = 0;
+static int has_been_inited;
 
 /* Variables used in the "find" algorithm */
 static char requested_icon_name[1024];
 static int  requested_icon_size;
 static struct String most_suitable_icon;
 static int base_dir_length;
-static int smallest_match = 0;
+static int smallest_match;
 
 
 static void get_parent_themes(struct list_head *parent_themes, const char *child_theme)
@@ -100,7 +100,6 @@ static void case_sensitize_themes(struct list_head *parent_themes)
 		}
 		closedir(dp);
 	}
-	return;
 }
 
 void icon_find_add_theme(const char *theme)
@@ -196,7 +195,7 @@ static int parse_icon_size(const char *fpath)
 	 * There are a few without an iconsize in the path.
 	 * For example:
 	 *	- $XDG_DATA_DIRS/icons/<theme>/scalable
-	 * 	- /usr/share/pixmaps/
+	 *	- /usr/share/pixmaps/
 	 *	- those without a theme (directly in /usr/share/icons)
 	 */
 	if (!size)
@@ -346,9 +345,8 @@ void icon_find(struct String *name, int size)
 
 			ftw(path.buf, ftw_filter, 32);
 
-			if (DEBUG_PRINT_FINAL_SELECTION &&
-			    most_suitable_icon.len)
-					printf("OUTPUT: %s\n", most_suitable_icon.buf);
+			if (DEBUG_PRINT_FINAL_SELECTION && most_suitable_icon.len)
+				printf("OUTPUT: %s\n", most_suitable_icon.buf);
 
 			if (most_suitable_icon.len)
 				goto out;
@@ -357,8 +355,8 @@ void icon_find(struct String *name, int size)
 
 	/*
 	 * A small number of icons are stored in other places:
-	 * 	- $XDG_DATA_DIRS/pixmaps/  (e.g. xpm icons)
-	 * 	- $XDG_DATA_DIRS/icons/    (i.e. top level directory)
+	 *	- $XDG_DATA_DIRS/pixmaps/  (e.g. xpm icons)
+	 *	- $XDG_DATA_DIRS/icons/    (i.e. top level directory)
 	 *
 	 * For this search we remove the prepended '/'
 	 */

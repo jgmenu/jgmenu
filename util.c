@@ -165,6 +165,7 @@ int get_first_num_from_str(const char *s)
 
 	for (;;) {
 		unsigned char c = s[i++];
+
 		if (!c)
 			return num;
 

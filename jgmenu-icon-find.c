@@ -4,8 +4,8 @@
 #include "sbuf.h"
 #include "util.h"
 
-static char *theme = NULL;
-static char *icon_name = NULL;
+static char *theme;
+static char *icon_name;
 static int icon_size = 22;
 
 void usage(void)

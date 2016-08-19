@@ -6,6 +6,8 @@
 
 VER      = $(shell git describe 2>/dev/null)
 CC       = gcc
+LD       = gcc
+MAKE     = make
 
 prefix   = $(HOME)
 bindir   = $(prefix)/bin
@@ -13,11 +15,14 @@ bindir   = $(prefix)/bin
 CFLAGS   = -g -Wall -Os
 CFLAGS  += -DVERSION='"$(VER)"'
 CFLAGS  += -DXINERAMA
-CFLAGS  += `pkg-config cairo pango pangocairo librsvg-2.0 gtk+-3.0 --cflags`
+CFLAGS  += `pkg-config cairo pango pangocairo librsvg-2.0 --cflags`
+CFLAGS  += `pkg-config gtk+-3.0 --cflags`
 CFLAGS  += `xml2-config --cflags`
 
-LIBS  = `pkg-config x11 xinerama cairo pango pangocairo librsvg-2.0 gtk+-3.0 --libs`
+LIBS  = `pkg-config x11 xinerama cairo pango pangocairo librsvg-2.0 --libs`
+LIBS += `pkg-config gtk+-3.0 --libs`
 LIBS += `xml2-config --libs`
+LIBS += -pthread
 
 LDFLAGS  = $(LIBS)
 
@@ -32,7 +37,7 @@ PROGS	 = jgmenu jgmenu-xdg jgmenu-icon-find
 
 LIB_H = $(shell find . -name '*.h' -print)
 OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o icon.o \
-        xdgdirs.o
+        xdgdirs.o xdgapps.o 
 
 ifndef VERBOSE
 QUIET_CC	= @echo '   ' CC $@;
@@ -42,13 +47,13 @@ endif
 all: $(PROGS)
 
 jgmenu: jgmenu.c $(OBJS)
-	$(QUIET_LINK)$(CC) $(CFLAGS) -o jgmenu $(OBJS) jgmenu.c -pthread $(LDFLAGS)
+	$(QUIET_LINK)$(LD) $(CFLAGS) -o jgmenu jgmenu.c $(OBJS) $(LDFLAGS)
 
-jgmenu-xdg: xdgmenu.c xdgapps.o util.o sbuf.o
-	$(QUIET_LINK)$(CC) $(CFLAGS) -o jgmenu-xdg xdgmenu.c xdgapps.o util.o sbuf.o $(LDFLAGS)
+jgmenu-xdg: xdgmenu.c $(OBJS)
+	$(QUIET_LINK)$(LD) $(CFLAGS) -o jgmenu-xdg xdgmenu.c $(OBJS) $(LDFLAGS)
 
 jgmenu-icon-find: jgmenu-icon-find.c $(OBJS)
-	$(QUIET_LINK)$(CC) -o jgmenu-icon-find jgmenu-icon-find.c $(OBJS) $(LDFLAGS)
+	$(QUIET_LINK)$(LD) $(CFLAGS) -o jgmenu-icon-find jgmenu-icon-find.c $(OBJS) $(LDFLAGS)
 
 %.o: %.c $(LIB_H)
 	$(QUIET_CC)$(CC) $(CFLAGS) $(LIBS) -c $*.c

@@ -114,10 +114,10 @@ void config_parse_file(char *filename)
 
 	fp = fopen(filename, "r");
 	if (!fp) {
-		fprintf(stderr, "warning: could not open config file %s\n",
-			filename);
-	} else {
-		read_file(fp);
-		fclose(fp);
+		fprintf(stderr, "warning: could not open config file %s\n", filename);
+		return;
 	}
+
+	read_file(fp);
+	fclose(fp);
 }
