@@ -6,8 +6,8 @@
 
 VER      = $(shell git describe 2>/dev/null)
 CC       = gcc
-LD       = gcc
 MAKE     = make
+RM       = rm -f
 
 prefix   = $(HOME)
 bindir   = $(prefix)/bin
@@ -32,38 +32,34 @@ CFLAGS    += $(ASAN_FLAGS)
 LDFLAGS   += $(ASAN_FLAGS)
 endif
 
+ifndef VERBOSE
+QUIET_CC   = @echo '     CC    '$@;
+QUIET_LINK = @echo '     LINK  '$@;
+endif
+
 SCRIPTS  = jgmenu_run jgmenu-cache
 PROGS	 = jgmenu jgmenu-xdg jgmenu-icon-find
 
 LIB_H = $(shell find . -name '*.h' -print)
-OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o icon.o \
-        xdgdirs.o xdgapps.o 
 
-ifndef VERBOSE
-QUIET_CC	= @echo '   ' CC $@;
-QUIET_LINK	= @echo '   ' LINK $@;
-endif
+OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
+        icon.o xdgdirs.o xdgapps.o
+
 
 all: $(PROGS)
 
-jgmenu: jgmenu.c $(OBJS)
-	$(QUIET_LINK)$(LD) $(CFLAGS) -o jgmenu jgmenu.c $(OBJS) $(LDFLAGS)
-
-jgmenu-xdg: xdgmenu.c $(OBJS)
-	$(QUIET_LINK)$(LD) $(CFLAGS) -o jgmenu-xdg xdgmenu.c $(OBJS) $(LDFLAGS)
-
-jgmenu-icon-find: jgmenu-icon-find.c $(OBJS)
-	$(QUIET_LINK)$(LD) $(CFLAGS) -o jgmenu-icon-find jgmenu-icon-find.c $(OBJS) $(LDFLAGS)
+$(PROGS): % : $(OBJS) %.o
+	$(QUIET_LINK)$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 %.o: %.c $(LIB_H)
-	$(QUIET_CC)$(CC) $(CFLAGS) $(LIBS) -c $*.c
+	$(QUIET_CC)$(CC) $(CFLAGS) -c $*.c
 
 install: $(PROGS) $(SCRIPTS)
 	@install -d $(DESTDIR)$(bindir)
 	@install -m755 $(PROGS) $(SCRIPTS) $(DESTDIR)$(bindir)
 
 clean:
-	@rm -f $(PROGS) *.o
+	@$(RM) $(PROGS) *.o
 
 test:
 	@$(MAKE) --no-print-directory -C tests/ all

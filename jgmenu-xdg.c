@@ -58,7 +58,6 @@
  * Graphics,^tag(Graphics)
  * bar1,bar1
  * bar2,bar2
- *
  */
 
 #include <stdio.h>
