@@ -6,8 +6,9 @@
 		<Directory>lxde-utility.directory</Directory>
 
 		<Menu>
-			<Name>Submenu-test</Name>
-			<Directory>submenu-test.directory</Directory>	
+			<Name>Graphics (submenu)</Name>
+			<Directory>Graphics.directory</Directory>
+			<Include><And><Category>Graphics</Category></And></Include>
 		</Menu>
 
 		<Include>
