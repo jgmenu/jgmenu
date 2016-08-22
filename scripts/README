@@ -1,0 +1,4 @@
+checkpatch.pl is copied directly from the linux kernel tree:
+https://github.com/torvalds/linux/blob/master/scripts/checkpatch.pl
+
+Use the wrapper to check code.

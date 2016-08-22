@@ -66,3 +66,6 @@ test:
 
 ex:
 	@$(MAKE) --no-print-directory -C examples/ all
+
+check:
+	@./scripts/checkpatch-wrapper.sh *.{c,h}
