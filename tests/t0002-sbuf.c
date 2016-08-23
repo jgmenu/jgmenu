@@ -8,7 +8,7 @@ static int verbose = 0;
 int main(void)
 {
 	int i;
-	struct String s;
+	struct sbuf s;
 
 	sbuf_init(&s);
 	for (i = 0; i < 5; i++) {
@@ -40,7 +40,7 @@ int main(void)
 	printf("\nString List Test:\n");
 
 	struct list_head sl;	/* String List */
-	struct String *tmp;	/* temp string for the for_each loop */
+	struct sbuf *tmp;	/* temp string for the for_each loop */
 
 	INIT_LIST_HEAD(&sl);
 	sbuf_list_append(&sl, "zero");

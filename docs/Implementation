@@ -1,12 +1,14 @@
 Implementation
 ==============
 
+Filenames in brackets do not exist yet.
+
 jgmenu
 ------
 
                           xdgdirs.c
                              |
-                          icon-find.c  xpm.c (TBD)
+                          icon-find.c  (xpm.c)
                              |           |
 			     +-----------+
  geometry.c   x11-ui.c    icon.c
@@ -17,13 +19,13 @@ jgmenu
                  |
               jgmenu
 
-jgmenu-xdg (not working yet)
+jgmenu-xdg
 ----------
 
  xdgapps.c
  xdgdirs.c
     |
- xdgmenu.c
+ jgmenu-xdg.c
     |
  jgmenu-xdg
 
@@ -33,9 +35,9 @@ jgmenu-cache
 
  icon-find.c
      |
- jgmenu-icon-find.c     svg2png.c
+ jgmenu-icon-find.c     (jgmenu-svg2png.c)
      |                       |
- jgmenu-icon-find       jgmenu-svg2png
+ jgmenu-icon-find       (jgmenu-svg2png)
      |                       |
      +-----------+-----------+
                  |

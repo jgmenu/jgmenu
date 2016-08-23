@@ -6,7 +6,7 @@
 
 int main(int argc, char **argv)
 {
-	struct Desktop_file_data *desktop_file;
+	struct desktop_file_data *desktop_file;
 
 	xdgapps_init_lists();
 

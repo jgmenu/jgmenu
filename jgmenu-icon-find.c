@@ -19,7 +19,7 @@ void usage(void)
 int main(int argc, char **argv)
 {
 	int i;
-	struct String s;
+	struct sbuf s;
 
 	if (argc < 2)
 		usage();

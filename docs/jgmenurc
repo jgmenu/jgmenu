@@ -16,6 +16,9 @@ item_border	= 0.0
 max_items	= 100
 min_items	= 0
 font		= Ubuntu condensed 14px
+icon_size	= 22
+icon_theme	= Adwaita
+show_title	= 0
 
 color_menu_bg	= #000000 60
 color_menu_fg	= #eeeeee 100

@@ -11,20 +11,23 @@ struct Config config;
 void config_set_defaults(void)
 {
 	config.spawn		= 1;
-	config.item_height	= 25;
-	config.font		= strdup("Ubuntu condensed 14px");
+
 	config.menu_margin_x	= 2;
 	config.menu_margin_y	= 33;
 	config.menu_width	= 200;
 	config.menu_radius	= 6;
 	config.menu_border	= 1;
+
 	config.item_margin_x	= 3;
 	config.item_margin_y	= 3;
+	config.item_height	= 25;
+	config.item_padding_x	= 4;
 	config.item_radius	= 3;
 	config.item_border	= 0;
-	config.item_padding_x	= 4;
+
 	config.max_items	= 80;
 	config.min_items	= 0;
+	config.font		= strdup("Ubuntu condensed 14px");
 	config.icon_size	= 0;
 	config.icon_theme	= strdup("Adwaita");
 	config.show_title	= 1;
@@ -46,11 +49,7 @@ static void process_line(char *line)
 	if (!parse_config_line(line, &option, &value))
 		return;
 
-	if (!strncmp(option, "item_height", 11))
-		config.item_height = atoi(value);
-	else if (!strncmp(option, "font", 4))
-		config.font = strdup(value);
-	else if (!strncmp(option, "menu_margin_x", 13))
+	if (!strncmp(option, "menu_margin_x", 13))
 		config.menu_margin_x = atoi(value);
 	else if (!strncmp(option, "menu_margin_y", 13))
 		config.menu_margin_y = atoi(value);
@@ -60,20 +59,26 @@ static void process_line(char *line)
 		config.menu_radius = atoi(value);
 	else if (!strncmp(option, "menu_border", 11))
 		config.menu_border = atoi(value);
+
 	else if (!strncmp(option, "item_margin_x", 13))
 		config.item_margin_x = atoi(value);
 	else if (!strncmp(option, "item_margin_y", 13))
 		config.item_margin_y = atoi(value);
+	else if (!strncmp(option, "item_height", 11))
+		config.item_height = atoi(value);
+	else if (!strncmp(option, "item_padding_x", 14))
+		config.item_padding_x = atoi(value);
 	else if (!strncmp(option, "item_radius", 11))
 		config.item_radius = atoi(value);
 	else if (!strncmp(option, "item_border", 11))
 		config.item_border = atoi(value);
-	else if (!strncmp(option, "item_padding_x", 14))
-		config.item_padding_x = atoi(value);
+
 	else if (!strncmp(option, "max_items", 8))
 		config.max_items = atoi(value);
 	else if (!strncmp(option, "min_items", 8))
 		config.min_items = atoi(value);
+	else if (!strncmp(option, "font", 4))
+		config.font = strdup(value);
 	else if (!strncmp(option, "icon_size", 9))
 		config.icon_size = atoi(value);
 	else if (!strncmp(option, "icon_theme", 10))
@@ -98,7 +103,6 @@ static void process_line(char *line)
 	else if (!strncmp(option, "color_title_bg", 14))
 		parse_hexstr(value, config.color_title_bg);
 }
-
 
 static void read_file(FILE *fp)
 {

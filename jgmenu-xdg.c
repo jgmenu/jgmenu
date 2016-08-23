@@ -78,7 +78,7 @@
  *	- everything else is an "item"
  *	  "items" hang off "nodes"
  */
-struct JGMenu_node {
+struct jgmenu_node {
 	char *tag;
 	char *name;
 	char *parent;
@@ -86,7 +86,7 @@ struct JGMenu_node {
 	struct list_head list;
 };
 
-struct JGMenu_item {
+struct jgmenu_item {
 	char *name;
 	char *cmd;
 	char *icon_name;
@@ -94,14 +94,14 @@ struct JGMenu_item {
 };
 
 /*
- * Cache is needed to temporarily store data for each menu chunk (i.e. what's
+ * cache_entry is needed to temporarily store data for each menu chunk (i.e. what's
  * within each <Menu></Menu>) for the following reasons:
  *   - in case <Name></Name> does not come first
  *     (we need to know the names to great new ^tag() sections, etc)
  *   - to create lists of desktop files taking into account all <Include> and
  *     <Exclude> tags
  */
-struct Cache {
+struct cache_entry {
 	char *name;
 	char *directory;
 	struct list_head category_includes;
@@ -118,8 +118,8 @@ static int menu_level;
 
 static void print_csv_menu(void)
 {
-	struct JGMenu_node *n;
-	struct JGMenu_item *item;
+	struct jgmenu_node *n;
+	struct jgmenu_item *item;
 
 	list_for_each_entry(n, &menu_nodes, list) {
 		printf("%s,^tag(%s)\n", n->name, n->tag);
@@ -142,16 +142,16 @@ static void print_csv_menu(void)
 	}
 }
 
-static void add_app_to_jgmenu_node(const char *node, struct Desktop_file_data *data)
+static void add_app_to_jgmenu_node(const char *node, struct desktop_file_data *data)
 {
-	struct JGMenu_node *n;
-	struct JGMenu_item *item;
+	struct jgmenu_node *n;
+	struct jgmenu_item *item;
 
 	list_for_each_entry(n, &menu_nodes, list) {
 		if (strcmp(n->name, node))
 			continue;
 
-		item = xmalloc(sizeof(struct JGMenu_item));
+		item = xmalloc(sizeof(struct jgmenu_item));
 		item->name = strdup(data->name);
 		item->cmd = strdup(data->exec);
 		item->icon_name = strdup(data->icon);
@@ -162,9 +162,9 @@ static void add_app_to_jgmenu_node(const char *node, struct Desktop_file_data *d
 
 static void add_dir_to_jgmenu_node(const char *node, const char *name, const char *tag)
 {
-	struct JGMenu_node *n;
-	struct JGMenu_item *item;
-	struct String s;
+	struct jgmenu_node *n;
+	struct jgmenu_item *item;
+	struct sbuf s;
 
 	if (!name || !tag)
 		die("XXXXX");
@@ -178,7 +178,7 @@ static void add_dir_to_jgmenu_node(const char *node, const char *name, const cha
 		if (strcmp(n->name, node))
 			continue;
 
-		item = xmalloc(sizeof(struct JGMenu_item));
+		item = xmalloc(sizeof(struct jgmenu_item));
 		item->name = strdup(name);
 		item->cmd = strdup(s.buf);
 		item->icon_name = strdup("folder");
@@ -189,9 +189,9 @@ static void add_dir_to_jgmenu_node(const char *node, const char *name, const cha
 
 static void add_jgmenu_node(const char *content, const char *parent)
 {
-	struct JGMenu_node *node;
+	struct jgmenu_node *node;
 
-	node = xmalloc(sizeof(struct JGMenu_node));
+	node = xmalloc(sizeof(struct jgmenu_node));
 	node->name = strdup(content);
 	node->tag = strdup(content);
 	if (parent)
@@ -205,27 +205,27 @@ static void add_jgmenu_node(const char *content, const char *parent)
 
 static void build_jgmenu_structure_from_cache(void)
 {
-	struct Cache *cache_item;
+	struct cache_entry *ce;
 	static char parent[16][1024];
-	struct Directory_file_data *directory_file;
-	struct Desktop_file_data *desktop_file;
-	struct String *cat;
+	struct directory_file_data *directory_file;
+	struct desktop_file_data *desktop_file;
+	struct sbuf *cat;
 
-	list_for_each_entry_reverse(cache_item, &cache, list) {
-		strcpy(parent[cache_item->level], cache_item->name);
-		if (cache_item->level > 1)
-			add_jgmenu_node(cache_item->name, parent[cache_item->level - 1]);
+	list_for_each_entry_reverse(ce, &cache, list) {
+		strcpy(parent[ce->level], ce->name);
+		if (ce->level > 1)
+			add_jgmenu_node(ce->name, parent[ce->level - 1]);
 		else
-			add_jgmenu_node(cache_item->name, NULL);
+			add_jgmenu_node(ce->name, NULL);
 
 		/* Add .directory file data to parent */
 		/* The directory information is only useful to your parent! */
 		list_for_each_entry(directory_file, &directory_files, list) {
-			if (cache_item->level &&
-			    !strcmp(directory_file->filename, cache_item->directory)) {
-				add_dir_to_jgmenu_node(parent[cache_item->level - 1],
+			if (ce->level &&
+			    !strcmp(directory_file->filename, ce->directory)) {
+				add_dir_to_jgmenu_node(parent[ce->level - 1],
 						       directory_file->name,
-						       cache_item->name);
+						       ce->name);
 			}
 		}
 
@@ -234,10 +234,10 @@ static void build_jgmenu_structure_from_cache(void)
 		 *  TODO: This needs to be changed to categories rather than
 		 *       category_includes
 		 */
-		list_for_each_entry(cat, &cache_item->category_includes, list) {
+		list_for_each_entry(cat, &ce->category_includes, list) {
 			xdgapps_filter_desktop_files_on_category(cat->buf);
 			list_for_each_entry(desktop_file, &desktop_files_filtered, filtered_list)
-				add_app_to_jgmenu_node(cache_item->name, desktop_file);
+				add_app_to_jgmenu_node(ce->name, desktop_file);
 		}
 	}
 }
@@ -248,15 +248,15 @@ static void build_jgmenu_structure_from_cache(void)
  */
 static void process_cache(void)
 {
-	struct Cache *cache_item;
-	struct String *cat;
+	struct cache_entry *ce;
+	struct sbuf *cat;
 
 	if (DEBUG_PRINT_CACHE) {
 		printf("PRINT CACHE:\n");
-		list_for_each_entry_reverse(cache_item, &cache, list) {
-			printf("Level=%d; Name=%s; Directory=%s\n", cache_item->level,
-			       cache_item->name, cache_item->directory);
-			list_for_each_entry(cat, &cache_item->category_includes, list)
+		list_for_each_entry_reverse(ce, &cache, list) {
+			printf("Level=%d; Name=%s; Directory=%s\n", ce->level,
+			       ce->name, ce->directory);
+			list_for_each_entry(cat, &ce->category_includes, list)
 				printf("--Categories:%s\n", cat->buf);
 		}
 	}
@@ -274,8 +274,8 @@ static int iskeyword(const char *node_name)
 
 static void add_to_cache(const char *node_name, const char *content)
 {
-	struct Cache *cache_item;
-	struct String *category;
+	struct cache_entry *ce;
+	struct sbuf *category;
 	static int prev_level;
 
 	/* TODO: Consider deleting iskeyword() */
@@ -287,15 +287,15 @@ static void add_to_cache(const char *node_name, const char *content)
 		return;
 	}
 
-	cache_item = list_first_entry(&cache, struct Cache, list);
+	ce = list_first_entry(&cache, struct cache_entry, list);
 
 	/*
 	 * If menu_level has decreased (i.e. the </Menu> of a submenu has been reached)
 	 * then use the first item in the cache list that matches that level.
 	 */
 	if (prev_level > menu_level) {
-		list_for_each_entry(cache_item, &cache, list)
-			if (cache_item->level == menu_level)
+		list_for_each_entry(ce, &cache, list)
+			if (ce->level == menu_level)
 				break;
 		if (DEBUG_PRINT_XML_NODES)
 			printf("^");
@@ -304,19 +304,19 @@ static void add_to_cache(const char *node_name, const char *content)
 	if (DEBUG_PRINT_XML_NODES)
 		printf("%d-%s: %s\n", menu_level, node_name, content);
 
-	if (!cache_item->level)
-		cache_item->level = menu_level;
+	if (!ce->level)
+		ce->level = menu_level;
 
 	/* TODO: Lots to be added here */
 	if (!strcasecmp(node_name, "Name")) {
-		cache_item->name = strdup(content);
+		ce->name = strdup(content);
 	} else if (!strcasecmp(node_name, "Directory")) {
-		cache_item->directory = strdup(content);
+		ce->directory = strdup(content);
 	} else if (!strcasecmp(node_name, "Include.And.Category")) {
-		category = xmalloc(sizeof(struct String));
+		category = xmalloc(sizeof(struct sbuf));
 		sbuf_init(category);
 		sbuf_addstr(category, content);
-		list_add_tail(&category->list, &cache_item->category_includes);
+		list_add_tail(&category->list, &ce->category_includes);
 	}
 
 	prev_level = menu_level;
@@ -324,14 +324,14 @@ static void add_to_cache(const char *node_name, const char *content)
 
 static void create_new_cache_entry(void)
 {
-	struct Cache *cache_item;
+	struct cache_entry *ce;
 
-	cache_item = xcalloc(1, sizeof(struct Cache));
-	INIT_LIST_HEAD(&cache_item->category_includes);
-	INIT_LIST_HEAD(&cache_item->category_excludes);
-	INIT_LIST_HEAD(&cache_item->categories);
-	INIT_LIST_HEAD(&cache_item->desktop_files);
-	list_add(&cache_item->list, &cache);
+	ce = xcalloc(1, sizeof(struct cache_entry));
+	INIT_LIST_HEAD(&ce->category_includes);
+	INIT_LIST_HEAD(&ce->category_excludes);
+	INIT_LIST_HEAD(&ce->categories);
+	INIT_LIST_HEAD(&ce->desktop_files);
+	list_add(&ce->list, &cache);
 }
 
 static int level(xmlNode *node)
@@ -348,7 +348,7 @@ static int level(xmlNode *node)
 	}
 }
 
-static void get_full_node_name(struct String *node_name, xmlNode *node)
+static void get_full_node_name(struct sbuf *node_name, xmlNode *node)
 {
 	int ismenu;
 
@@ -377,7 +377,7 @@ static void get_full_node_name(struct String *node_name, xmlNode *node)
 
 static void process_node(xmlNode *node)
 {
-	struct String node_name;
+	struct sbuf node_name;
 
 	/*
 	 * Just filtering out a lot of rubbish here for the time being.

@@ -3,7 +3,7 @@
 
 #include "list.h"
 
-struct Desktop_file_data {
+struct desktop_file_data {
 	char *name;
 	char *exec;
 	char *icon;
@@ -12,7 +12,7 @@ struct Desktop_file_data {
 	struct list_head filtered_list;
 };
 
-struct Directory_file_data {
+struct directory_file_data {
 	char *filename;
 	char *name;
 	char *icon;

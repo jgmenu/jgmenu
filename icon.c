@@ -25,7 +25,6 @@
 
 #define DEBUG_THEMES 0
 
-
 struct Icon {
 	char *name;
 	cairo_surface_t *surface;
@@ -34,7 +33,7 @@ struct Icon {
 
 struct list_head icon_cache;
 
-struct String icon_theme;
+struct sbuf icon_theme;
 int icon_size;
 
 void icon_init(void)
@@ -87,7 +86,7 @@ static cairo_surface_t *get_svg_icon(const char *filename, int size)
 	rsvg_handle_get_dimensions(svg, &dimensions);
 	surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, size, size);
 	cr = cairo_create(surface);
-	cairo_scale(cr, (double) size / dimensions.width, (double) size / dimensions.width);
+	cairo_scale(cr, (double)size / dimensions.width, (double)size / dimensions.width);
 	rsvg_handle_render_cairo(svg, cr);
 	cairo_destroy(cr);
 	g_object_unref(svg);
@@ -139,13 +138,13 @@ void icon_set_name(const char *name)
 
 	icon->name = strdup(name);
 	icon->surface = NULL;
-	list_add(&(icon->list), &icon_cache);
+	list_add(&icon->list, &icon_cache);
 }
 
 void icon_load(void)
 {
 	struct Icon *icon;
-	struct String s;
+	struct sbuf s;
 	static int first_load = 1;
 
 	if (first_load) {

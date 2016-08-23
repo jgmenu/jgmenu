@@ -32,18 +32,17 @@ static int has_been_inited;
 /* Variables used in the "find" algorithm */
 static char requested_icon_name[1024];
 static int  requested_icon_size;
-static struct String most_suitable_icon;
+static struct sbuf most_suitable_icon;
 static int base_dir_length;
 static int smallest_match;
-
 
 static void get_parent_themes(struct list_head *parent_themes, const char *child_theme)
 {
 	FILE *fp;
 	char line[1024];
 	char *option, *value;
-	struct String *s;
-	struct String filename;
+	struct sbuf *s;
+	struct sbuf filename;
 
 	sbuf_init(&filename);
 
@@ -81,7 +80,7 @@ out2:
  */
 static void case_sensitize_themes(struct list_head *parent_themes)
 {
-	struct String *theme, *dir;
+	struct sbuf *theme, *dir;
 	struct dirent *entry;
 	DIR *dp;
 
@@ -104,9 +103,9 @@ static void case_sensitize_themes(struct list_head *parent_themes)
 
 void icon_find_add_theme(const char *theme)
 {
-	struct String *t;
+	struct sbuf *t;
 	struct list_head parent_themes;
-	struct String *tmp;
+	struct sbuf *tmp;
 
 	/* ignore duplicates */
 	list_for_each_entry(t, &theme_list, list)
@@ -124,10 +123,9 @@ void icon_find_add_theme(const char *theme)
 		icon_find_add_theme(tmp->buf);
 }
 
-
 void icon_find_print_themes(void)
 {
-	struct String *t;
+	struct sbuf *t;
 
 	printf("THEMES: ");
 	list_for_each_entry(t, &theme_list, list)
@@ -142,7 +140,7 @@ static void init_theme_list(void)
 
 static void init_icon_dirs(void)
 {
-	struct String *path;
+	struct sbuf *path;
 
 	INIT_LIST_HEAD(&icon_dirs);
 	xdgdirs_get_basedirs(&icon_dirs);
@@ -156,7 +154,7 @@ static void init_icon_dirs(void)
 
 static void init_pixmap_dirs(void)
 {
-	struct String *path;
+	struct sbuf *path;
 
 	INIT_LIST_HEAD(&pixmap_dirs);
 	xdgdirs_get_basedirs(&pixmap_dirs);
@@ -207,7 +205,6 @@ static int parse_icon_size(const char *fpath)
 	return size;
 }
 
-
 static void process_file(const char *fpath)
 {
 	int size_of_this_one = 0;
@@ -252,7 +249,7 @@ int search_dir_for_file(const char *path, const char *file)
 {
 	struct dirent *entry;
 	DIR *dp;
-	struct String s;
+	struct sbuf s;
 
 	sbuf_init(&s);
 	dp = opendir(path);
@@ -281,7 +278,7 @@ void icon_find_init(void)
 	has_been_inited = 1;
 }
 
-void remove_pngsvgxpm_extensions(struct String *name)
+void remove_pngsvgxpm_extensions(struct sbuf *name)
 {
 	char *ext;
 
@@ -298,10 +295,10 @@ void remove_pngsvgxpm_extensions(struct String *name)
 	}
 }
 
-void icon_find(struct String *name, int size)
+void icon_find(struct sbuf *name, int size)
 {
-	struct String path;
-	struct String *s, *t;
+	struct sbuf path;
+	struct sbuf *s, *t;
 	char *p;
 
 	if (!has_been_inited)

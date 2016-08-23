@@ -27,9 +27,9 @@
 #include "util.h"
 
 /* INTERSECT is required by Xinerama.  MAX and MIN are defined in glib */
-#define INTERSECT(x, y, w, h, r)  (MAX(0, MIN((x)+(w), (r).x_org+(r).width)  - \
+#define INTERSECT(x, y, w, h, r)  (MAX(0, MIN((x) + (w), (r).x_org + (r).width)  - \
 				   MAX((x), (r).x_org)) * \
-				   MAX(0, MIN((y)+(h), (r).y_org+(r).height) - \
+				   MAX(0, MIN((y) + (h), (r).y_org + (r).height) - \
 				   MAX((y), (r).y_org)))
 
 struct UI *ui;
@@ -58,7 +58,6 @@ void grabkeyboard(void)
 	die("cannot grab keyboard");
 }
 
-
 /*
  * grabpointer() is needed in order to detect when pointer is clicked
  * outside menu
@@ -72,8 +71,6 @@ void grabpointer(void)
 		     EnterWindowMask | LeaveWindowMask,
 		     GrabModeAsync, GrabModeAsync, None, None, CurrentTime);
 }
-
-
 
 void ui_init_cairo(int canvas_width, int canvas_height, const char *font)
 {
@@ -102,7 +99,7 @@ void ui_init(void)
 	if (!ui->dpy)
 		die("cannot open display");
 
-	XMatchVisualInfo(ui->dpy, DefaultScreen(ui->dpy), 32, TrueColor, &(ui->vinfo));
+	XMatchVisualInfo(ui->dpy, DefaultScreen(ui->dpy), 32, TrueColor, &ui->vinfo);
 
 	ui->swa.override_redirect = True;
 	ui->swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask | ButtonPressMask;
@@ -178,8 +175,6 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
 		*height = DisplayHeight(ui->dpy, ui->screen);
 	}
 }
-
-
 
 /*
  * max_height is that associated with the longest submenu
@@ -338,7 +333,6 @@ int ui_is_point_in_area(struct Point p, struct Area a)
 		return 0;
 }
 
-
 void ui_map_window(unsigned int w, unsigned int h)
 {
 	XCopyArea(ui->dpy, ui->canvas, ui->win, ui->gc, 0, 0, w, h, 0, 0);
@@ -358,7 +352,6 @@ void ui_cleanup(void)
 		XCloseDisplay(ui->dpy);
 	if (ui)
 		free(ui);
-
 
 	/* cairo_surface_destroy(ICONS); */
 

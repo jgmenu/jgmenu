@@ -17,7 +17,6 @@ struct Point {
 	int x, y;
 };
 
-
 struct UI {
 	Display *dpy;
 	int screen;
@@ -45,8 +44,10 @@ void ui_init(void);
 void ui_get_screen_res(int *x0, int *y0, int *width, int *height);
 void ui_init_canvas(int max_width, int max_height);
 void ui_create_window(int x, int y, int w, int h);
-void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h, double radius, double line_width, int fill, double *rgba);
-void ui_draw_rectangle(double x, double y, double w, double h, double radius, double line_width, int fill, double *rgba);
+void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h, double radius,
+				      double line_width, int fill, double *rgba);
+void ui_draw_rectangle(double x, double y, double w, double h, double radius, double line_width,
+		       int fill, double *rgba);
 void ui_draw_line(int x0, int y0, int x1, int y1, double line_width, double *rgba);
 void ui_insert_text(char *s, int x, int y, int h, double *rgba);
 int ui_get_text_height(const char *fontdesc);

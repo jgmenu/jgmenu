@@ -13,7 +13,6 @@ void die(const char *err, ...)
 	exit(1);
 }
 
-
 void spawn(const char *arg)
 {
 	const char *shell = NULL;
@@ -36,7 +35,6 @@ void spawn(const char *arg)
 		exit(0);
 	}
 }
-
 
 void *xmalloc(size_t size)
 {
@@ -64,7 +62,6 @@ void *xcalloc(size_t nb, size_t size)
 		die("Out of memory, calloc failed");
 	return ret;
 }
-
 
 char *expand_tilde(char *s)
 {
@@ -99,7 +96,6 @@ char *strstrip(char *s)
 
 	return s;
 }
-
 
 int parse_config_line(char *line, char **option, char **value)
 {
@@ -139,7 +135,7 @@ int hex_to_dec(char c)
 
 int parse_hexstr(char *hex, double *rgba)
 {
-	if (hex == NULL || hex[0] != '#' || strlen(hex) < 7)
+	if (!hex || hex[0] != '#' || strlen(hex) < 7)
 		return 0;
 
 	rgba[0] = (hex_to_dec(hex[1]) * 16 + hex_to_dec(hex[2])) / 255.0;
@@ -156,12 +152,10 @@ int parse_hexstr(char *hex, double *rgba)
 
 int get_first_num_from_str(const char *s)
 {
-	int i, num, has_found_number;
+	int i = 0, num = 0, has_found_number = 0;
 
 	if (!s)
 		return 0;
-
-	i = num = has_found_number = 0;
 
 	for (;;) {
 		unsigned char c = s[i++];

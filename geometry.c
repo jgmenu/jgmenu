@@ -45,7 +45,6 @@ void geo_update(void)
 		menu_height = menu_height + item_height;
 
 	menu_y0 = screen_y0 + screen_height - menu_height - menu_margin_y;
-
 }
 
 void geo_init(void)
@@ -138,7 +137,6 @@ void geo_set_item_height(int h)
 	geo_update();
 }
 
-
 void geo_set_font(char *font)
 {
 	strncpy(item_font, font, strlen(font));
@@ -175,14 +173,12 @@ void geo_set_item_margin_y(int margin)
 	geo_update();
 }
 
-
 /*********************************************************************/
 
 int geo_get_menu_x0(void)
 {
 	return menu_x0;
 }
-
 
 int geo_get_menu_y0(void)
 {

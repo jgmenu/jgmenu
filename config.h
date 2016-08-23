@@ -3,21 +3,24 @@
 
 struct Config {
 	int spawn;		/* 1:execute commands  0:print to stdout */
-	int item_height;	/* set to font height if greater */
-	char *font;
+
 	int menu_margin_x;
 	int menu_margin_y;
 	int menu_width;
 	int menu_radius;
 	int menu_border;
+
 	int item_margin_x;
 	int item_margin_y;
+	int item_height;	/* set to font height if greater */
+	int item_padding_x;
 	int item_radius;
 	int item_border;
-	int item_padding_x;
+
 	int max_items;		/* max number of items to show in menu */
 				/* if more items present, user has to scroll */
 	int min_items;
+	char *font;
 	int icon_size;		/* if set to zero, icons won't show */
 	char *icon_theme;
 	int show_title;		/* will only show if ^tag() is set */

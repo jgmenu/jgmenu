@@ -33,11 +33,10 @@ static char *xdg_base_dirs[] = {
 
 #define COUNT_OF(x) (sizeof(x) / sizeof(x)[0])
 
-
-static void expand_env_vars(struct String *s)
+static void expand_env_vars(struct sbuf *s)
 {
 	char *p;
-	struct String env_name;
+	struct sbuf env_name;
 
 	sbuf_init(&env_name);
 	sbuf_cpy(&env_name, s->buf);
@@ -57,11 +56,10 @@ static void expand_env_vars(struct String *s)
 	free(env_name.buf);
 }
 
-
 void xdgdirs_get_basedirs(struct list_head *dir_list)
 {
 	int i;
-	struct String tmp;
+	struct sbuf tmp;
 
 	sbuf_init(&tmp);
 

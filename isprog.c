@@ -27,7 +27,7 @@ void parse_path(void)
 	for (;;) {
 		tmp = malloc(sizeof(struct Path_segment));
 		tmp->path = p;
-		list_add_tail(&(tmp->list), &head);
+		list_add_tail(&tmp->list, &head);
 		p = strchr(p, ':');
 		if (!p)
 			break;

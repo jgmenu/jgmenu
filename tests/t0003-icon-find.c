@@ -5,7 +5,7 @@
 #include "../util.h"
 
 
-static void test(struct String *name, int size)
+static void test(struct sbuf *name, int size)
 {
 	printf("INPUT: %s; %d\n", name->buf, size);
 	icon_find(name, size);
@@ -14,7 +14,7 @@ static void test(struct String *name, int size)
 
 int main(int argc, char **argv)
 {
-	struct String s;
+	struct sbuf s;
 
 	sbuf_init(&s);
 

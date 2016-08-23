@@ -13,7 +13,7 @@
  *	- freed (i.e. buf must not to point to memory on the stack)
  *
  * Exampel life cycle:
- *	struct String s;
+ *	struct sbuf s;
  *	sbuf_init(&s);
  *	sbuf_addch(&s, 'F');
  *	sbuf_addstr(&s, "oo");
@@ -30,19 +30,19 @@
 
 #include "list.h"
 
-struct String {
+struct sbuf {
 	char *buf;
 	int bufsiz;
 	int len;
 	struct list_head list;
 };
 
-extern void sbuf_init(struct String *s);
-extern void sbuf_addch(struct String *s, char ch);
-extern void sbuf_addstr(struct String *s, const char *data);
-extern void sbuf_cpy(struct String *s, const char *data);
-extern void sbuf_prepend(struct String *s, const char *data);
-extern void sbuf_shift_left(struct String *s, int n_bytes);
+extern void sbuf_init(struct sbuf *s);
+extern void sbuf_addch(struct sbuf *s, char ch);
+extern void sbuf_addstr(struct sbuf *s, const char *data);
+extern void sbuf_cpy(struct sbuf *s, const char *data);
+extern void sbuf_prepend(struct sbuf *s, const char *data);
+extern void sbuf_shift_left(struct sbuf *s, int n_bytes);
 extern void sbuf_split(struct list_head *sl, const char *data, char field_separator);
 extern void sbuf_list_append(struct list_head *sl, const char *data);
 extern void sbuf_list_prepend(struct list_head *sl, const char *data);

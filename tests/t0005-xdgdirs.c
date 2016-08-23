@@ -8,7 +8,7 @@
 int main(int argc, char **argv)
 {
 	struct list_head foo;
-	struct String *dir;
+	struct sbuf *dir;
 
 	INIT_LIST_HEAD(&foo);
 

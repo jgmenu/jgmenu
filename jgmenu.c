@@ -146,7 +146,7 @@ void draw_menu(void)
 
 		/* Draw submenu arrow */
 		if ((!strncmp(p->t[1], "^checkout(", 10) && strncmp(p->t[0], "..", 2)) ||
-		     !strncmp(p->t[1], "^sub(", 5))
+		    !strncmp(p->t[1], "^sub(", 5))
 			ui_insert_text("▸", p->area.x + p->area.w -
 				       config.item_padding_x - (p->area.h / 3), p->area.y,
 				       p->area.h, config.color_norm_fg);
@@ -441,8 +441,8 @@ struct Point mousexy(void)
 	unsigned int du;
 	struct Point coords;
 
-	XQueryPointer(ui->dpy, ui->win, &dw, &dw, &di, &di, &(coords.x),
-		      &(coords.y), &du);
+	XQueryPointer(ui->dpy, ui->win, &dw, &dw, &di, &di, &coords.x,
+		      &coords.y, &du);
 
 	return coords;
 }
@@ -498,10 +498,9 @@ void mouse_event(XEvent *e)
 				if (config.spawn) {
 					action_cmd(item->t[1]);
 					break;
-				} else {
-					puts(item->t[1]);
-					exit(0);
 				}
+				puts(item->t[1]);
+				exit(0);
 			}
 		}
 	}
@@ -527,7 +526,7 @@ void parse_csv(struct Item *p)
 
 	for (j = 0; j < MAX_FIELDS - 1; j++)
 		if (p->t[j])
-			p->t[j+1] = next_field(p->t[j]);
+			p->t[j + 1] = next_field(p->t[j]);
 
 	while ((q = strrchr(p->t[0], ',')))
 		*q = '\0';
@@ -536,7 +535,6 @@ void parse_csv(struct Item *p)
 	if (!p->t[1])
 		p->t[1] = p->t[0];
 }
-
 
 void dlist_append(struct Item *item, struct Item **list, struct Item **last)
 {
@@ -583,8 +581,8 @@ void read_stdin(void)
 			*p = '\0';
 
 		if ((buf[0] == '#') ||
-		   (buf[0] == '\n') ||
-		   (buf[0] == '\0')) {
+		    (buf[0] == '\n') ||
+		    (buf[0] == '\0')) {
 			i--;
 			continue;
 		}
@@ -622,7 +620,6 @@ void read_stdin(void)
 		item->icon = NULL;
 }
 
-
 void init_pipe_flags(void)
 {
 	int flags;
@@ -641,7 +638,6 @@ void init_pipe_flags(void)
 	if (fcntl(pipe_fds[1], F_SETFL, flags) == -1)
 		die("error setting pipe flags");
 }
-
 
 /*
  * Move highlighting with mouse
@@ -676,7 +672,6 @@ void process_pointer_position(void)
 	oldx = mouse_coords.x;
 	oldy = mouse_coords.y;
 }
-
 
 /*
  * The select() call in the main loop is a better alternative than usleep().
@@ -722,7 +717,6 @@ void run(void)
 	}
 
 	for (;;) {
-
 		FD_ZERO(&readfds);
 		FD_SET(x11_fd, &readfds);
 		FD_SET(pipe_fds[0], &readfds);
@@ -749,8 +743,7 @@ void run(void)
 				if (read(pipe_fds[0], &ch, 1) == -1) {
 					if (errno == EAGAIN)
 						break;
-					else
-						die("error reading pipe");
+					die("error reading pipe");
 				}
 
 				/* 'x' means that icons have finished loading */
@@ -762,7 +755,6 @@ void run(void)
 
 				if (DEBUG_ICONS_LOADED_NOTIFICATION && !all_icons_have_been_requested)
 					fprintf(stderr, "Root menu icons loaded\n");
-
 
 				pthread_join(thread, NULL);
 
@@ -810,7 +802,6 @@ void run(void)
 		}
 	}
 }
-
 
 void init_geo_variables_from_config(void)
 {

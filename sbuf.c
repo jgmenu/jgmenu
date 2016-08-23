@@ -1,6 +1,6 @@
 #include "sbuf.h"
 
-void sbuf_init(struct String *s)
+void sbuf_init(struct sbuf *s)
 {
 	s->buf = malloc(1);
 	s->buf[0] = 0;
@@ -8,7 +8,7 @@ void sbuf_init(struct String *s)
 	s->len = 0;
 }
 
-void sbuf_addch(struct String *s, char ch)
+void sbuf_addch(struct sbuf *s, char ch)
 {
 	if (s->bufsiz <= s->len + 1) {
 		s->bufsiz = s->bufsiz * 2 + 16;
@@ -18,7 +18,7 @@ void sbuf_addch(struct String *s, char ch)
 	s->buf[s->len] = 0;
 }
 
-void sbuf_addstr(struct String *s, const char *data)
+void sbuf_addstr(struct sbuf *s, const char *data)
 {
 	size_t len = strlen(data);
 
@@ -31,15 +31,15 @@ void sbuf_addstr(struct String *s, const char *data)
 	s->buf[s->len] = 0;
 }
 
-void sbuf_cpy(struct String *s, const char *data)
+void sbuf_cpy(struct sbuf *s, const char *data)
 {
 	s->len = 0;
 	sbuf_addstr(s, data);
 }
 
-void sbuf_prepend(struct String *s, const char *data)
+void sbuf_prepend(struct sbuf *s, const char *data)
 {
-	struct String tmp;
+	struct sbuf tmp;
 
 	sbuf_init(&tmp);
 	sbuf_addstr(&tmp, s->buf);
@@ -48,7 +48,7 @@ void sbuf_prepend(struct String *s, const char *data)
 	free(tmp.buf);
 }
 
-void sbuf_shift_left(struct String *s, int n_bytes)
+void sbuf_shift_left(struct sbuf *s, int n_bytes)
 {
 	char *data;
 
@@ -83,22 +83,22 @@ void sbuf_split(struct list_head *sl, const char *data, char field_separator)
 
 void sbuf_list_append(struct list_head *sl, const char *data)
 {
-	struct String *new_string;
+	struct sbuf *new_string;
 
-	new_string = malloc(sizeof(struct String));
+	new_string = malloc(sizeof(struct sbuf));
 	sbuf_init(new_string);
 	sbuf_addstr(new_string, data);
 
-	list_add_tail(&(new_string->list), sl);
+	list_add_tail(&new_string->list, sl);
 }
 
 void sbuf_list_prepend(struct list_head *sl, const char *data)
 {
-	struct String *new_string;
+	struct sbuf *new_string;
 
-	new_string = malloc(sizeof(struct String));
+	new_string = malloc(sizeof(struct sbuf));
 	sbuf_init(new_string);
 	sbuf_addstr(new_string, data);
 
-	list_add(&(new_string->list), sl);
+	list_add(&new_string->list, sl);
 }

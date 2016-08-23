@@ -24,9 +24,9 @@ static void parse_directory_file(FILE *fp, const char *filename)
 {
 	char line[8192];
 	char *p;
-	struct Directory_file_data *tmp;
+	struct directory_file_data *tmp;
 
-	tmp = xcalloc(1, sizeof(struct Directory_file_data));
+	tmp = xcalloc(1, sizeof(struct directory_file_data));
 
 	tmp->filename = strdup(filename);
 
@@ -41,16 +41,16 @@ static void parse_directory_file(FILE *fp, const char *filename)
 			tmp->icon = strdup(line + 5);
 	}
 
-	list_add_tail(&(tmp->list), &directory_files);
+	list_add_tail(&tmp->list, &directory_files);
 }
 
 static void parse_desktop_file(FILE *fp)
 {
 	char line[8192];
 	char *p;
-	struct Desktop_file_data *tmp;
+	struct desktop_file_data *tmp;
 
-	tmp = xcalloc(1, sizeof(struct Desktop_file_data));
+	tmp = xcalloc(1, sizeof(struct desktop_file_data));
 
 	while (fgets(line, sizeof(line), fp)) {
 		p = strchr(line, '\n');
@@ -74,7 +74,7 @@ static void parse_desktop_file(FILE *fp)
 			*p = '\0';
 	}
 
-	list_add_tail(&(tmp->full_list), &desktop_files_all);
+	list_add_tail(&tmp->full_list, &desktop_files_all);
 }
 
 static void process_file(char *filename, int isdir)
@@ -135,7 +135,7 @@ void xdgapps_init_lists(void)
 
 void xdgapps_filter_desktop_files_on_category(const char *category)
 {
-	struct Desktop_file_data *a, *pos;
+	struct desktop_file_data *a, *pos;
 
 	list_for_each_entry_safe(pos, a, &desktop_files_filtered, filtered_list)
 		list_del(&pos->filtered_list);
@@ -145,6 +145,6 @@ void xdgapps_filter_desktop_files_on_category(const char *category)
 			continue;
 
 		if (strstr(a->categories, category))
-			list_add_tail(&(a->filtered_list), &desktop_files_filtered);
+			list_add_tail(&a->filtered_list, &desktop_files_filtered);
 	}
 }
