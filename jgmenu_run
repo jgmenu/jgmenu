@@ -1,23 +1,87 @@
 #!/bin/bash
 
-# $MENU_IF in jgmenu_runrc can specify a jgmenu file.
+die () {
+	printf "Fatal: %s\n" "$1"
+	exit 1
+}
 
-jgmenu_runrc=~/.config/jgmenu/jgmenu_runrc
+usage () {
+	echo "usage: jgmenu_run [<options>]"
+	echo "Wrapper script for jgmenu and jgmenu-xdg"
+	echo ""
+	echo "    --xdg                 ignore anything that is not a .menu file"
+	echo "    --help                display this"
+	echo ""
+}
 
+render_simple_menu () {
+	(
+	echo -e "Terminal,xterm,utilities-terminal"
+	echo -e "File Manager,pcmanfm,folder"
+	echo -e "Web Browser,firefox,firefox"
+	echo -e "Poweroff,poweroff,system-shutdown"
+	) | ${cmd}
+}
+
+#
+# Files to base menu on in order of preference
+#
+dirs="${HOME}/.config/jgmenu/default.csv \
+      ${HOME}/.config/jgmenu/default.menu \
+      /etc/xdg/menus/gnome-applications.menu \
+      /etc/xdg/menus/lxde-applications.menu"
+
+verbose=f
+force_xdg=f
+
+#
+# Command line arguments are passed on to jgmenu, although
+# --xdg and --help have a special meaning.
+#
 cmd="jgmenu $@"
 
-[[ -e ${jgmenu_runrc} ]] && . ${jgmenu_runrc}
+while test $# != 0
+do
+	case "$1" in
+	--xdg)
+		force_xdg=t ;;
+	--help)
+		usage
+		exit 0
+		;;
+	esac
+	shift
+done
 
-if [[ -n ${MENU_IF} ]]; then
+#
+# Files with extension .menu are parsed as XDG menus
+# All other files are processed as jgmenu csv files
+#
+for i in ${dirs}
+do
+	extension=${i##*.}
+	test ${verbose} == "t" && echo "${i}"
 
-cat ${MENU_IF} | ${cmd}
+	if test ${force_xdg} == "t"
+	then
+		if test ${extension} != "menu"
+		then
+			continue
+		fi
+	fi
 
-else
+	if test -e "${i}"
+	then
+		if test ${extension} == "menu"
+		then
+			jgmenu-xdg ${i} | ${cmd}
+		else
+			cat ${i} | ${cmd}
+		fi
 
-echo -e "\
-terminal,xterm\n\
-file manager,pcmanfm\n\
-web browser,firefox\n\
-poweroff,poweroff" | ${cmd}
+		exit 0
+	fi
+done
 
-fi
+# If none of the menu files were found:
+render_simple_menu

@@ -116,6 +116,16 @@ static LIST_HEAD(menu_nodes);
 static LIST_HEAD(cache);
 static int menu_level;
 
+/* command line args */
+static char *data_dir;
+
+void usage(void)
+{
+	printf("Usage: jgmenu-xdg [OPTIONS] <menu-file>\n"
+	       "    --data-dir=<dir>      specify directory containing .menu file\n");
+	exit(0);
+}
+
 static void print_csv_menu(void)
 {
 	struct jgmenu_node *n;
@@ -434,16 +444,38 @@ static void parse_xml(const char *filename)
 
 int main(int argc, char **argv)
 {
+	char *file_name = NULL;
+	int i;
+
+	if (argc < 2)
+		usage();
+
 	LIBXML_TEST_VERSION
 
 	/* Create lists of .desktop- and .directory files */
 	xdgapps_init_lists();
 
-	if (argc < 2)
-		parse_xml("/etc/xdg/menus/gnome-applications.menu");
-	else
-		parse_xml(argv[1]);
+	i = 1;
+	while (i < argc) {
+		if (argv[i][0] != '-') {
+			file_name = argv[i];
+			break;
+		}
 
+		if (!strncmp(argv[i], "--data-dir=", 11))
+			data_dir = argv[i] + 11;
+		else
+			die("unknown option '%s'", argv[i]);
+
+		i++;
+	}
+
+	if (!file_name) {
+		fprintf(stderr, "error: no menu-file specified\n");
+		usage();
+	}
+
+	parse_xml(file_name);
 	process_cache();
 	build_jgmenu_structure_from_cache();
 
