@@ -37,7 +37,7 @@ QUIET_CC   = @echo '     CC    '$@;
 QUIET_LINK = @echo '     LINK  '$@;
 endif
 
-SCRIPTS  = jgmenu_run jgmenu-cache
+SCRIPTS  = jgmenu_run jgmenu-cache jgmenu-pmenu
 PROGS	 = jgmenu jgmenu-xdg jgmenu-icon-find
 
 LIB_H = $(shell find . -name '*.h' -print)
