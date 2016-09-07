@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/bin/sh
+#
+# Convenience wrapper for jgmenu, jgmenu-pmenu, jgmenu-cache, etc
+#
 
 die () {
 	printf "Fatal: %s\n" "$1"
@@ -6,82 +9,196 @@ die () {
 }
 
 usage () {
-	echo "usage: jgmenu_run [<options>]"
-	echo "Wrapper script for jgmenu and jgmenu-xdg"
-	echo ""
-	echo "    --xdg                 ignore anything that is not a .menu file"
-	echo "    --help                display this"
-	echo ""
+	printf "Usage: jgmenu_run (<file> | <command>) [<options>]\n"
+	printf "\n"
+	printf "Convenience wrapper for jgmenu\n"
+	printf "\n"
+	printf "Any file specified as the first argument must be one of the following:\n"
+	printf "  - jgmenu type .csv file\n"
+	printf "  - XDG .menu file\n"
+	printf "\n"
+	printf "The following 'commands' are available:\n"
+	printf "    pmenu               Menu based on .directory and .desktop files\n"
+#	printf "    xdg                 Menu based on .menu file\n"
+	printf "    csv                 Menu based on .csv file\n"
+#	printf "    cache               Create icon cache\n"
+	printf "    simple              Simple fall-back menu\n"
+	printf "    help                Display this\n"
+	printf "\n"
+	printf "The commands xdg and csv search for .menu and .csv files in\n"
+	printf "standard locations, but will fail if no files are found.\n"
+	printf "\n"
+	exit 0
 }
-
-render_simple_menu () {
-	(
-	echo -e "Terminal,xterm,utilities-terminal"
-	echo -e "File Manager,pcmanfm,folder"
-	echo -e "Web Browser,firefox,firefox"
-	echo -e "Poweroff,poweroff,system-shutdown"
-	) | ${cmd}
-}
-
-#
-# Files to base menu on in order of preference
-#
-dirs="${HOME}/.config/jgmenu/default.csv \
-      ${HOME}/.config/jgmenu/default.menu \
-      /etc/xdg/menus/gnome-applications.menu \
-      /etc/xdg/menus/lxde-applications.menu"
-
-verbose=f
-force_xdg=f
-
-#
-# Command line arguments are passed on to jgmenu, although
-# --xdg and --help have a special meaning.
-#
-cmd="jgmenu $@"
-
-while test $# != 0
-do
-	case "$1" in
-	--xdg)
-		force_xdg=t ;;
-	--help)
-		usage
-		exit 0
-		;;
-	esac
-	shift
-done
 
 #
 # Files with extension .menu are parsed as XDG menus
 # All other files are processed as jgmenu csv files
 #
-for i in ${dirs}
-do
+# Usage: process_file <file>
+#
+process_file () {
+	i="${1}"
 	extension=${i##*.}
-	test ${verbose} == "t" && echo "${i}"
 
-	if test ${force_xdg} == "t"
+	if test ${extension} == "menu"
 	then
-		if test ${extension} != "menu"
-		then
-			continue
-		fi
+		jgmenu-xdg ${i} | ${jgmenu_cmd}
+	else
+		cat ${i} | ${jgmenu_cmd}
+	fi
+}
+
+#
+# Fallback if all else fails
+#
+render_simple_menu () {
+	(
+	echo -e "Terminal,xterm,utilities-terminal"
+	echo -e "File Manager,pcmanfm,folder"
+	echo -e "Web Browser,firefox,firefox"
+	echo -e "Suspend,systemctl -i suspend,system-log-out"
+	echo -e "Reboot,systemctl -i reboot,system-reboot"
+	echo -e "Poweroff,systemctl -i poweroff,system-shutdown"
+	) | ${jgmenu_cmd}
+}
+
+#
+# Script starts here
+# 
+
+args_pmenu=f
+args_xdg=f
+args_csv=f
+args_cache=f
+args_simple=f
+
+if test $# -lt 1
+then
+	usage
+fi
+
+case "$1" in
+pmenu)
+	args_pmenu=t ;;
+xdg)
+	args_xdg=t ;;
+csv)
+	args_csv=t ;;
+cache)
+	args_cache=t ;;
+simple)
+	args_simple=t ;;
+help)
+	usage ;;
+*)
+	filename="$1" ;;
+esac
+
+#
+# Command line arguments are passed to jgmenu, ignoring $1
+#
+shift
+jgmenu_cmd="jgmenu $@"
+
+#
+# Interpret $1 as file name
+#
+if ! test -z ${filename}
+then
+	test -e ${filename} || die "cannot find file '${filename}'"
+	process_file "${filename}"
+	exit 0
+fi
+
+#
+# pmenu
+#
+test ${args_pmenu} = "t" && jgmenu-pmenu | ${jgmenu_cmd}
+
+#
+# XDG Menu
+#
+# Set $XDG_MENU_PREFIX if you have several .menu files on your system
+# For example $XDG_MENU_PREFIX=lxde- will load lxde-applications.menu
+#
+if test ${args_xdg} = "t"
+then
+	if test -z ${XDG_CONFIG_DIRS}
+	then
+		config_dirs="/etc/xdg"
+	else
+		config_dirs="${XDG_CONFIG_DIRS}"
 	fi
 
-	if test -e "${i}"
+	if ! test -z ${XDG_MENU_PREFIX}
 	then
-		if test ${extension} == "menu"
-		then
-			jgmenu-xdg ${i} | ${cmd}
-		else
-			cat ${i} | ${cmd}
-		fi
+		file_list="${config_dirs}/menus/${XDG_MENU_PREFIX}applications.menu"
+	else
+		file_list="${HOME}/.config/jgmenu/default.menu \
+			  ${config_dirs}/menus/gnome-applications.menu \
+			  ${config_dirs}/menus/lxde-applications.menu \
+			  ${config_dirs}/menus/kde-applications.menu"
+	fi
 
+	menu_file=
+	for f in ${file_list}
+	do
+		if test -e ${f}
+		then
+			menu_file=${f}
+			break
+		fi
+	done
+
+	# TODO Consider doing a 'find ${config_dirs} -name "*.menu"' here
+	#      if menu_file is still empty
+
+	if ! test -z ${menu_file}
+	then
+		jgmenu-xdg ${menu_file} | ${jgmenu_cmd}
 		exit 0
+	else
+		die "cannot find .menu file"
 	fi
-done
+fi
 
-# If none of the menu files were found:
-render_simple_menu
+#
+# CSV Menu
+#
+if test ${args_csv} = "t"
+then
+	file_list="${HOME}/.config/jgmenu/default.csv"
+
+	menu_file=
+	for f in ${file_list}
+	do
+		if test -e ${f}
+		then
+			menu_file=${f}
+			break
+		fi
+	done
+
+	if ! test -z ${menu_file}
+	then
+		cat ${menu_file} | ${jgmenu_cmd}
+		exit 0
+	else
+		die "cannot find .csv file"
+	fi
+fi
+
+#
+#
+#
+if test ${args_cache} = "t"
+then
+	echo "Coming soon..."
+	exit 0
+fi
+
+#
+# Simple fall-back menu
+#
+test ${args_simple} = "t" && render_simple_menu
