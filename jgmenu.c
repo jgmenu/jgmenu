@@ -462,9 +462,7 @@ void mouse_event(XEvent *e)
 	     ev->y < geo_get_menu_y0() ||
 	     ev->y > geo_get_menu_y0() + geo_get_menu_height()) &&
 	     (ev->button != Button4 && ev->button != Button5)) {
-		ui_cleanup();
-		die("Clicked outside menu.");
-		return;
+		exit(0);
 	}
 
 	/* right-click */

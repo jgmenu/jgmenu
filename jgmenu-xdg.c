@@ -1,63 +1,14 @@
 /*
  * jgmenu-xdg.c
  *
- * This is still completely experimental and only just works
+ * Parses XML .menu file and outputs a csv formatted jgmenu file
  *
- * Parses xml .menu file and outputs a csv formatted jgmenu file
+ * This is still completely experimental and only just works
  *
  * It aim to be XDG compliant, although it has a long way to go!
  *
  * See this spec for further details:
  * https://specifications.freedesktop.org/menu-spec/menu-spec-1.0.html
- *
- * ===================================================================
- *
- * Quick outline of how this file works:
- *
- * #1 - Read .menu-file (XML format)
- * ---------------------------------
- * <Menu>
- *	<Name>Programming</Name>
- *	<Directory>Development.directory</Directory>
- *	<Category>Development</Category>
- * </Menu
- * <Menu>
- *	<Name>Graphics</Name>
- *	<Directory>Graphics.directory</Directory>
- *	<Category>Graphics</Category>
- * </Menu>
- *
- * #2 - Parse XML tree into nodes
- * ------------------------------
- * Menu.Name = Development
- * Menu.Directory = Development.directory
- * Menu.Category = Development
- *
- * Menu.Name = Graphics
- * Menu.Directory = Graphics.directory
- * Menu.Category = Graphics
- *
- * #3 - Create cache for each <Menu></Menu>
- * ----------------------------------------
- * Name=Development
- * Directory=Development.directory
- * Categories=		(this takes into account all includes and excludes)
- * Desktop-files=	(individual .desktop files if specified)
- * etc.
- *
- * #4 - Create jgmenu style csv file
- * ---------------------------------
- * root,^tag(root)
- * Programming,^checkout(Development)
- * Graphics,^checkout(Graphics)
- *
- * Programming,^tag(Development)
- * foo1,foo1
- * foo2,foo2
- *
- * Graphics,^tag(Graphics)
- * bar1,bar1
- * bar2,bar2
  */
 
 #include <stdio.h>
@@ -70,18 +21,28 @@
 #include "sbuf.h"
 
 #define DEBUG_PRINT_XML_NODES 0
-#define DEBUG_PRINT_CACHE 0
+
+static const char jgmenu_xdg_usage[] =
+"Usage: jgmenu-xdg [options] <file>\n"
+"    --data-dir=<dir>      specify directory containing .menu file\n";
 
 /*
- * In jgmenu-speak,
- *	- a "node" is an item with a ^tag() mark-up
- *	- everything else is an "item"
- *	  "items" hang off "nodes"
+ * In jgmenu-speak:
+ *	- A "node" is a root-menu or a submenu.
+ *	  It corresponds roughly to an XML <Menu> element.
+ *	- An "item" is a individual menu entry (with name, command and icon)
+ *	  These are defined by "categories", .desktop-files, etc
  */
 struct jgmenu_node {
-	char *tag;
 	char *name;
-	char *parent;
+	char *tag;
+	char *directory;
+	int level;
+	struct jgmenu_node *parent;
+	struct list_head category_includes;
+	struct list_head category_excludes;
+	struct list_head categories;
+	struct list_head desktop_files;
 	struct list_head menu_items;
 	struct list_head list;
 };
@@ -93,37 +54,26 @@ struct jgmenu_item {
 	struct list_head list;
 };
 
-/*
- * cache_entry is needed to temporarily store data for each menu chunk (i.e. what's
- * within each <Menu></Menu>) for the following reasons:
- *   - in case <Name></Name> does not come first
- *     (we need to know the names to great new ^tag() sections, etc)
- *   - to create lists of desktop files taking into account all <Include> and
- *     <Exclude> tags
- */
-struct cache_entry {
-	char *name;
-	char *directory;
-	struct list_head category_includes;
-	struct list_head category_excludes;
-	struct list_head categories;
-	struct list_head desktop_files;
-	int level;
-	struct list_head list;
-};
-
-static LIST_HEAD(menu_nodes);
-static LIST_HEAD(cache);
-static int menu_level;
+static LIST_HEAD(jgmenu_nodes);
+static struct jgmenu_node *current_jgmenu_node;
 
 /* command line args */
 static char *data_dir;
 
-void usage(void)
+static void usage(void)
 {
-	printf("Usage: jgmenu-xdg [OPTIONS] <menu-file>\n"
-	       "    --data-dir=<dir>      specify directory containing .menu file\n");
+	printf("%s", jgmenu_xdg_usage);
 	exit(0);
+}
+
+static void print_menu_item(struct jgmenu_item *item)
+{
+	printf("%s,", item->name);
+	if (item->cmd)
+		printf("%s", item->cmd);
+	if (item->icon_name)
+		printf(",%s", item->icon_name);
+	printf("\n");
 }
 
 static void print_csv_menu(void)
@@ -131,217 +81,169 @@ static void print_csv_menu(void)
 	struct jgmenu_node *n;
 	struct jgmenu_item *item;
 
-	list_for_each_entry(n, &menu_nodes, list) {
+	list_for_each_entry(n, &jgmenu_nodes, list) {
+		if (list_empty(&n->menu_items))
+			continue;
+
 		printf("%s,^tag(%s)\n", n->name, n->tag);
 		if (n->parent)
-			printf("Go back,^checkout(%s),folder\n", n->parent);
+			printf("Go back,^checkout(%s),folder\n",
+			       n->parent->name);
 
-		/* TODO: Consider printing directories first */
+		/* Print directories first */
+		list_for_each_entry(item, &n->menu_items, list)
+			if (item->cmd && !strncmp(item->cmd, "^checkout", 9))
+				print_menu_item(item);
 
-		list_for_each_entry(item, &n->menu_items, list) {
-			if (!item->name)
-				die("item->name not specified");
-			printf("%s,", item->name);
-			if (item->cmd)
-				printf("%s", item->cmd);
-			if (item->icon_name)
-				printf(",%s", item->icon_name);
-			printf("\n");
-		}
+		/* Then all other items */
+		list_for_each_entry(item, &n->menu_items, list)
+			if (!item->cmd || strncmp(item->cmd, "^checkout", 9))
+				print_menu_item(item);
+
 		printf("\n");
 	}
 }
 
-static void add_app_to_jgmenu_node(const char *node, struct desktop_file_data *data)
+static void init_jgmenu_item(struct jgmenu_item *item)
 {
-	struct jgmenu_node *n;
-	struct jgmenu_item *item;
-
-	list_for_each_entry(n, &menu_nodes, list) {
-		if (strcmp(n->name, node))
-			continue;
-
-		item = xmalloc(sizeof(struct jgmenu_item));
-		item->name = strdup(data->name);
-		item->cmd = strdup(data->exec);
-		item->icon_name = strdup(data->icon);
-		list_add_tail(&item->list, &n->menu_items);
-		return;
-	}
+	item->name = NULL;
+	item->cmd = NULL;
+	item->icon_name = NULL;
 }
 
-static void add_dir_to_jgmenu_node(const char *node, const char *name, const char *tag)
+static void add_item_to_jgmenu_node(struct jgmenu_node *node,
+				    struct desktop_file_data *data)
 {
-	struct jgmenu_node *n;
+	struct jgmenu_item *item;
+
+	item = xmalloc(sizeof(struct jgmenu_item));
+	init_jgmenu_item(item);
+	if (data->name)
+		item->name = strdup(data->name);
+	if (data->exec)
+		item->cmd = strdup(strstrip(data->exec));
+	if (data->icon)
+		item->icon_name = strdup(data->icon);
+	list_add_tail(&item->list, &node->menu_items);
+}
+
+static void add_dir_to_jgmenu_node(struct jgmenu_node *parent,
+				   const char *name,
+				   const char *tag)
+{
 	struct jgmenu_item *item;
 	struct sbuf s;
 
 	if (!name || !tag)
-		die("XXXXX");
+		die("no name or tag specified in add_dir_to_jgmenu_node()");
+
+	if (!parent)
+		return;
 
 	sbuf_init(&s);
 	sbuf_addstr(&s, "^checkout(");
 	sbuf_addstr(&s, tag);
 	sbuf_addstr(&s, ")");
 
-	list_for_each_entry(n, &menu_nodes, list) {
-		if (strcmp(n->name, node))
-			continue;
-
-		item = xmalloc(sizeof(struct jgmenu_item));
-		item->name = strdup(name);
-		item->cmd = strdup(s.buf);
-		item->icon_name = strdup("folder");
-		list_add_tail(&item->list, &n->menu_items);
-		return;
-	}
+	item = xmalloc(sizeof(struct jgmenu_item));
+	init_jgmenu_item(item);
+	item->name = strdup(name);
+	item->cmd = strdup(s.buf);
+	item->icon_name = strdup("folder");
+	list_add_tail(&item->list, &parent->menu_items);
 }
 
-static void add_jgmenu_node(const char *content, const char *parent)
+/* TODO: This needs to be changed to categories rather than category_includes */
+static void process_categories_and_populate_desktop_files(void)
 {
-	struct jgmenu_node *node;
-
-	node = xmalloc(sizeof(struct jgmenu_node));
-	node->name = strdup(content);
-	node->tag = strdup(content);
-	if (parent)
-		node->parent = strdup(parent);
-	else
-		node->parent = NULL;
-
-	list_add_tail(&node->list, &menu_nodes);
-	INIT_LIST_HEAD(&node->menu_items);
-}
-
-static void build_jgmenu_structure_from_cache(void)
-{
-	struct cache_entry *ce;
-	static char parent[16][1024];
-	struct directory_file_data *directory_file;
+	struct jgmenu_node *jgmenu_node;
 	struct desktop_file_data *desktop_file;
 	struct sbuf *cat;
 
-	list_for_each_entry_reverse(ce, &cache, list) {
-		strcpy(parent[ce->level], ce->name);
-		if (ce->level > 1)
-			add_jgmenu_node(ce->name, parent[ce->level - 1]);
-		else
-			add_jgmenu_node(ce->name, NULL);
-
-		/* Add .directory file data to parent */
-		/* The directory information is only useful to your parent! */
-		list_for_each_entry(directory_file, &directory_files, list) {
-			if (ce->level &&
-			    !strcmp(directory_file->filename, ce->directory)) {
-				add_dir_to_jgmenu_node(parent[ce->level - 1],
-						       directory_file->name,
-						       ce->name);
-			}
-		}
-
-		/* Add .desktop files filtered on category */
-		/*
-		 *  TODO: This needs to be changed to categories rather than
-		 *       category_includes
-		 */
-		list_for_each_entry(cat, &ce->category_includes, list) {
+	list_for_each_entry(jgmenu_node, &jgmenu_nodes, list) {
+		list_for_each_entry(cat, &jgmenu_node->category_includes, list) {
 			xdgapps_filter_desktop_files_on_category(cat->buf);
 			list_for_each_entry(desktop_file, &desktop_files_filtered, filtered_list)
-				add_app_to_jgmenu_node(ce->name, desktop_file);
+				add_item_to_jgmenu_node(jgmenu_node, desktop_file);
 		}
 	}
 }
 
 /*
- * TODO: Process stuff within <Menu></Menu> to establish categories and
- * .dekstop-files, etc taking into account includes and excludes.
+ * For each directory within a <Menu></Menu>, a menu item is added to the
+ * _parent_ jgmenu node. This is slighly counter intuitive, but it's just
+ * how it is.
+ *
+ * TODO: Throw error if .directory file does not exist
  */
-static void process_cache(void)
+static void process_directory_files(void)
 {
-	struct cache_entry *ce;
-	struct sbuf *cat;
+	struct jgmenu_node *jgmenu_node;
+	struct directory_file_data *directory_file;
 
-	if (DEBUG_PRINT_CACHE) {
-		printf("PRINT CACHE:\n");
-		list_for_each_entry_reverse(ce, &cache, list) {
-			printf("Level=%d; Name=%s; Directory=%s\n", ce->level,
-			       ce->name, ce->directory);
-			list_for_each_entry(cat, &ce->category_includes, list)
-				printf("--Categories:%s\n", cat->buf);
-		}
+	list_for_each_entry(jgmenu_node, &jgmenu_nodes, list) {
+		if (list_empty(&jgmenu_node->menu_items))
+			continue;
+
+		list_for_each_entry(directory_file, &directory_files, list)
+			if (!strcmp(directory_file->filename, jgmenu_node->directory))
+				add_dir_to_jgmenu_node(jgmenu_node->parent, jgmenu_node->name, jgmenu_node->tag);
 	}
 }
 
-static int iskeyword(const char *node_name)
+static void add_data_to_jgmenu_node(const char *xml_node_name,
+				    const char *content)
 {
-	if (!strcasecmp(node_name, "Include.And.Category") ||
-	    !strcasecmp(node_name, "Name") ||
-	    !strcasecmp(node_name, "Directory"))
-		return 1;
-
-	return 0;
-}
-
-static void add_to_cache(const char *node_name, const char *content)
-{
-	struct cache_entry *ce;
+	struct jgmenu_node *jgmenu_node;
 	struct sbuf *category;
-	static int prev_level;
 
-	/* TODO: Consider deleting iskeyword() */
-	if (!iskeyword(node_name))
-		return;
-
-	if (list_empty(&cache)) {
-		fprintf(stderr, "warning: cache is empty\n");
-		return;
-	}
-
-	ce = list_first_entry(&cache, struct cache_entry, list);
-
-	/*
-	 * If menu_level has decreased (i.e. the </Menu> of a submenu has been reached)
-	 * then use the first item in the cache list that matches that level.
-	 */
-	if (prev_level > menu_level) {
-		list_for_each_entry(ce, &cache, list)
-			if (ce->level == menu_level)
-				break;
-		if (DEBUG_PRINT_XML_NODES)
-			printf("^");
-	}
-
-	if (DEBUG_PRINT_XML_NODES)
-		printf("%d-%s: %s\n", menu_level, node_name, content);
-
-	if (!ce->level)
-		ce->level = menu_level;
+	jgmenu_node = current_jgmenu_node;
 
 	/* TODO: Lots to be added here */
-	if (!strcasecmp(node_name, "Name")) {
-		ce->name = strdup(content);
-	} else if (!strcasecmp(node_name, "Directory")) {
-		ce->directory = strdup(content);
-	} else if (!strcasecmp(node_name, "Include.And.Category")) {
+	/* TODO: Check for tag duplicates */
+	if (!strcasecmp(xml_node_name, "Name")) {
+		jgmenu_node->name = strdup(content);
+		jgmenu_node->tag = strdup(content);
+	} else if (!strcasecmp(xml_node_name, "Directory")) {
+		jgmenu_node->directory = strdup(content);
+	} else if (!strcasecmp(xml_node_name, "Include.And.Category")) {
 		category = xmalloc(sizeof(struct sbuf));
 		sbuf_init(category);
 		sbuf_addstr(category, content);
-		list_add_tail(&category->list, &ce->category_includes);
+		list_add_tail(&category->list, &jgmenu_node->category_includes);
 	}
 
-	prev_level = menu_level;
+	if (DEBUG_PRINT_XML_NODES)
+		printf("%d-%s: %s\n", jgmenu_node->level, xml_node_name, content);
 }
 
-static void create_new_cache_entry(void)
+static void create_new_jgmenu_node(struct jgmenu_node *parent,
+				   int level)
 {
-	struct cache_entry *ce;
+	struct jgmenu_node *node;
 
-	ce = xcalloc(1, sizeof(struct cache_entry));
-	INIT_LIST_HEAD(&ce->category_includes);
-	INIT_LIST_HEAD(&ce->category_excludes);
-	INIT_LIST_HEAD(&ce->categories);
-	INIT_LIST_HEAD(&ce->desktop_files);
-	list_add(&ce->list, &cache);
+	if (DEBUG_PRINT_XML_NODES)
+		printf("---\n");
+
+	node = xcalloc(1, sizeof(struct jgmenu_node));
+	node->name = NULL;
+	node->tag = NULL;
+	node->directory = NULL;
+	node->level = level;
+
+	if (parent)
+		node->parent = parent;
+	else
+		node->parent = NULL;
+
+	INIT_LIST_HEAD(&node->category_includes);
+	INIT_LIST_HEAD(&node->category_excludes);
+	INIT_LIST_HEAD(&node->categories);
+	INIT_LIST_HEAD(&node->desktop_files);
+	INIT_LIST_HEAD(&node->menu_items);
+	list_add_tail(&node->list, &jgmenu_nodes);
+
+	current_jgmenu_node = node;
 }
 
 static int level(xmlNode *node)
@@ -358,6 +260,12 @@ static int level(xmlNode *node)
 	}
 }
 
+/*
+ * Gives the node name back to the parent "Menu" element.
+ * For example, it would convert
+ * <Include><And><Category></Category></And></Include> to
+ * "Include.And.Category"
+ */
 static void get_full_node_name(struct sbuf *node_name, xmlNode *node)
 {
 	int ismenu;
@@ -365,7 +273,7 @@ static void get_full_node_name(struct sbuf *node_name, xmlNode *node)
 	if (!strcmp((char *)node->name, "text")) {
 		node = node->parent;
 		if (!node || !node->name) {
-			fprintf(stderr, "warning: node->name == 'text' and node is 'root'\n");
+			fprintf(stderr, "warning: node is root\n");
 			return;
 		}
 	}
@@ -400,31 +308,37 @@ static void process_node(xmlNode *node)
 
 	get_full_node_name(&node_name, node);
 
-	/* This if statement filters out a lot */
-	if (node_name.len || !strlen(strstrip((char *)node->content)))
-		add_to_cache(node_name.buf, strstrip((char *)node->content));
+	if (node_name.len && strlen(strstrip((char *)node->content)))
+		add_data_to_jgmenu_node(node_name.buf, strstrip((char *)node->content));
 
 	free(node_name.buf);
 }
 
+static void revert_to_parent(void)
+{
+	if (current_jgmenu_node && current_jgmenu_node->parent)
+		current_jgmenu_node = current_jgmenu_node->parent;
+}
+
+/*
+ * n->next refers to siblings
+ * n->children is obviously the children
+ */
 static void xml_tree_walk(xmlNode *node)
 {
 	xmlNode *n;
 
 	for (n = node; n; n = n->next) {
 		if (!strcasecmp((char *)n->name, "Menu")) {
-			if (DEBUG_PRINT_XML_NODES)
-				printf("---\n");
-			menu_level = level(n);
-			create_new_cache_entry();
+			create_new_jgmenu_node(current_jgmenu_node, level(n));
 			xml_tree_walk(n->children);
+			revert_to_parent();
 			continue;
 		}
 
 		if (!strcasecmp((char *)n->name, "Comment"))
 			continue;
 
-		menu_level = level(n);
 		process_node(n);
 		xml_tree_walk(n->children);
 	}
@@ -476,9 +390,8 @@ int main(int argc, char **argv)
 	}
 
 	parse_xml(file_name);
-	process_cache();
-	build_jgmenu_structure_from_cache();
-
+	process_categories_and_populate_desktop_files();
+	process_directory_files();
 	print_csv_menu();
 
 	return 0;

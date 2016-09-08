@@ -1,0 +1,325 @@
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+ "http://www.freedesktop.org/standards/menu-spec/1.0/menu.dtd">
+
+<Menu>
+
+  <Name>Applications</Name>
+  <Directory>X-GNOME-Menu-Applications.directory</Directory>
+
+  <!-- Scan legacy dirs first, as later items take priority -->
+  <KDELegacyDirs/>
+  <LegacyDir>/etc/X11/applnk</LegacyDir>
+  <LegacyDir>/usr/share/gnome/apps</LegacyDir>
+
+  <!-- Read standard .directory and .desktop file locations -->
+  <DefaultAppDirs/>
+  <DefaultDirectoryDirs/>
+
+  <!-- Read in overrides and child menus from applications-merged/ -->
+  <DefaultMergeDirs/>
+
+  <!-- Accessories submenu -->
+  <Menu>
+    <Name>Accessories</Name>
+    <Directory>Utility.directory</Directory>
+    <Include>
+      <And>
+        <Category>Utility</Category>
+	<!-- Accessibility spec must have either the Utility or Settings
+             category, and we display an accessibility submenu already for
+             the ones that do not have Settings, so don't display accessibility
+             applications here -->
+        <Not><Category>Accessibility</Category></Not>
+        <Not><Category>System</Category></Not>
+        <Not><Category>X-GNOME-Utilities</Category></Not>
+      </And>
+    </Include>
+    <Exclude>
+      <!-- Exclude everything we put in the X-GNOME-Utilities whitelist.
+
+           Please keep the list alphabetically sorted! -->
+      <Filename>deja-dup-preferences.desktop</Filename>
+      <Filename>eog.desktop</Filename>
+      <Filename>evince.desktop</Filename>
+      <Filename>file-roller.desktop</Filename>
+      <Filename>gcalctool.desktop</Filename>
+      <Filename>gnome-dictionary.desktop</Filename>
+      <Filename>gnome-disks.desktop</Filename>
+      <Filename>gnome-font-viewer.desktop</Filename>
+      <Filename>gnome-screenshot.desktop</Filename>
+      <Filename>gnome-terminal.desktop</Filename>
+      <Filename>gnome-tweak-tool.desktop</Filename>
+      <Filename>gucharmap.desktop</Filename>
+      <Filename>seahorse.desktop</Filename>
+      <Filename>vinagre.desktop</Filename>
+      <Filename>yelp.desktop</Filename>
+
+      <!-- Exclude Sundry items -->
+      <Filename>alacarte.desktop</Filename>
+    </Exclude>
+  </Menu> <!-- End Accessories -->
+
+
+  <!-- Accessibility submenu -->
+  <Menu>
+    <Name>Universal Access</Name>
+    <Directory>Utility-Accessibility.directory</Directory>
+    <Include>
+      <And>
+        <Category>Accessibility</Category>
+        <Not><Category>Settings</Category></Not>
+      </And>
+    </Include>
+
+    <Exclude>
+      <!-- Sundry exclusions -->
+      <Filename>orca.desktop</Filename>
+    </Exclude>
+  </Menu> <!-- End Accessibility -->
+
+  <!-- Development Tools -->
+  <Menu>
+    <Name>Development</Name>
+    <Directory>Development.directory</Directory>
+    <Include>
+      <And>
+        <Category>Development</Category>
+      </And>
+      <Filename>emacs.desktop</Filename>
+    </Include>
+
+    <Exclude>
+      <!-- Sundry exclusions -->
+      <Filename>jhbuild.desktop</Filename>
+      <Filename>java-1.7.0-openjdk-jconsole.desktop</Filename>
+      <Filename>java-1.7.0-openjdk-policytool.desktop</Filename>
+      <Filename>log4j-chainsaw.desktop</Filename>
+      <Filename>log4j-logfactor5.desktop</Filename>
+    </Exclude>
+  </Menu> <!-- End Development Tools -->
+
+  <!-- Education -->
+  <Menu>
+    <Name>Education</Name>
+    <Directory>Education.directory</Directory>
+    <Include>
+      <And>
+        <Category>Education</Category>
+      </And>
+    </Include>
+  </Menu> <!-- End Education -->
+
+  <!-- Games -->
+  <Menu>
+    <Name>Games</Name>
+    <Directory>Game.directory</Directory>
+    <Include>
+      <And>
+        <Category>Game</Category>
+      </And>
+    </Include>
+  </Menu> <!-- End Games -->
+
+  <!-- Graphics -->
+  <Menu>
+    <Name>Graphics</Name>
+    <Directory>Graphics.directory</Directory>
+    <Include>
+      <And>
+        <Category>Graphics</Category>
+        <Not><Filename>eog.desktop</Filename></Not>
+        <Not><Filename>gnome-eog.desktop</Filename></Not>
+        <Not><Filename>evince.desktop</Filename></Not>
+      </And>
+    </Include>
+  </Menu> <!-- End Graphics -->
+
+  <!-- Internet -->
+  <Menu>
+    <Name>Internet</Name>
+    <Directory>Network.directory</Directory>
+    <Include>
+      <And>
+        <Category>Network</Category>
+	<Not><Category>X-GNOME-WebApplication</Category></Not>
+      </And>
+    </Include>
+
+    <Exclude>
+      <!-- Utilities exclusions -->
+      <Filename>vinagre.desktop</Filename>
+
+      <!-- Sundry exclusions -->
+      <Filename>javaws.desktop</Filename>
+    </Exclude>
+  </Menu>   <!-- End Internet -->
+
+  <!-- Web Applications -->
+  <Menu>
+    <Name>Web Applications</Name>
+    <Directory>X-GNOME-WebApplications.directory</Directory>
+    <Include>
+      <And>
+	<Category>Network</Category>
+	<Category>X-GNOME-WebApplication</Category>
+      </And>
+    </Include>
+  </Menu>
+
+  <!-- Multimedia -->
+  <Menu>
+    <Name>Multimedia</Name>
+    <Directory>AudioVideo.directory</Directory>
+    <Include>
+      <And>
+        <Category>AudioVideo</Category>
+      </And>
+    </Include>
+  </Menu>   <!-- End Multimedia -->
+
+  <!-- Office -->
+  <Menu>
+    <Name>Office</Name>
+    <Directory>Office.directory</Directory>
+    <Include>
+      <And>
+        <Category>Office</Category>
+        <Not><Filename>evince.desktop</Filename></Not>
+        <Not><Filename>gnome-dictionary.desktop</Filename></Not>
+      </And>
+    </Include>
+  </Menu> <!-- End Office -->
+
+  <!-- Sundry -->
+  <Menu>
+    <Name>Sundry</Name>
+    <Directory>X-GNOME-Sundry.directory</Directory>
+    <Include>
+      <Filename>alacarte.desktop</Filename>
+      <Filename>authconfig.desktop</Filename>
+      <Filename>dconf-editor.desktop</Filename>
+      <Filename>fedora-release-notes.desktop</Filename>
+      <Filename>firewall-config.desktop</Filename>
+      <Filename>flash-player-properties.desktop</Filename>
+      <Filename>gconf-editor.desktop</Filename>
+      <Filename>gnome-abrt.desktop</Filename>
+      <Filename>gnome-power-statistics.desktop</Filename>
+      <Filename>ibus-setup-anthy.desktop</Filename>
+      <Filename>ibus-setup.desktop</Filename>
+      <Filename>ibus-setup-hangul.desktop</Filename>
+      <Filename>ibus-setup-libbopomofo.desktop</Filename>
+      <Filename>ibus-setup-libpinyin.desktop</Filename>
+      <Filename>ibus-setup-m17n.desktop</Filename>
+      <Filename>ibus-setup-typing-booster.desktop</Filename>
+      <Filename>im-chooser.desktop</Filename>
+      <Filename>itweb-settings.desktop</Filename>
+      <Filename>jhbuild.desktop</Filename>
+      <Filename>javaws.desktop</Filename>
+      <Filename>java-1.7.0-openjdk-jconsole.desktop</Filename>
+      <Filename>java-1.7.0-openjdk-policytool.desktop</Filename>
+      <Filename>log4j-chainsaw.desktop</Filename>
+      <Filename>log4j-logfactor5.desktop</Filename>
+      <Filename>nm-connection-editor.desktop</Filename>
+      <Filename>orca.desktop</Filename>
+      <Filename>setroubleshoot.desktop</Filename>
+      <Filename>system-config-date.desktop</Filename>
+      <Filename>system-config-firewall.desktop</Filename>
+      <Filename>system-config-keyboard.desktop</Filename>
+      <Filename>system-config-language.desktop</Filename>
+      <Filename>system-config-printer.desktop</Filename>
+      <Filename>system-config-users.desktop</Filename>
+      <Filename>vino-preferences.desktop</Filename>
+    </Include>
+  </Menu>
+
+  <!-- System Tools-->
+  <Menu>
+    <Name>System</Name>
+    <Directory>System-Tools.directory</Directory>
+    <Include>
+      <And>
+        <Category>System</Category>
+        <Not><Category>Settings</Category></Not>
+        <Not><Category>X-GNOME-Utilities</Category></Not>
+      </And>
+    </Include>
+
+    <Exclude>
+      <!-- Utilities exclusions -->
+      <Filename>baobab.desktop</Filename>
+      <Filename>gnome-system-log.desktop</Filename>
+      <Filename>gnome-system-monitor.desktop</Filename>
+      <Filename>gnome-terminal.desktop</Filename>
+
+      <!-- Sundry exclusions -->
+      <Filename>dconf-editor.desktop</Filename>
+      <Filename>fedora-release-notes.desktop</Filename>
+      <Filename>gconf-editor.desktop</Filename>
+      <Filename>gnome-abrt.desktop</Filename>
+      <Filename>gnome-power-statistics.desktop</Filename>
+      <Filename>dconf-editor.desktop</Filename>
+      <Filename>setroubleshoot.desktop</Filename>
+    </Exclude>
+  </Menu>   <!-- End System Tools -->
+
+  <!-- System Settings -->
+  <Menu>
+    <Name>System Settings</Name>
+    <Directory>X-GNOME-SystemSettings.directory</Directory>
+    <Include>
+      <Category>X-GNOME-Settings-Panel</Category>
+    </Include>
+  </Menu>
+
+  <!-- Utilities submenu -->
+  <Menu>
+    <Name>Utilities</Name>
+    <Directory>X-GNOME-Utilities.directory</Directory>
+    <Include>
+      <Category>X-GNOME-Utilities</Category>
+      <Filename>baobab.desktop</Filename>
+      <Filename>deja-dup-preferences.desktop</Filename>
+      <Filename>eog.desktop</Filename>
+      <Filename>evince.desktop</Filename>
+      <Filename>file-roller.desktop</Filename>
+      <Filename>gcalctool.desktop</Filename>
+      <Filename>gnome-dictionary.desktop</Filename>
+      <Filename>gnome-disks.desktop</Filename>
+      <Filename>gnome-font-viewer.desktop</Filename>
+      <Filename>gnome-screenshot.desktop</Filename>
+      <Filename>gnome-system-log.desktop</Filename>
+      <Filename>gnome-system-monitor.desktop</Filename>
+      <Filename>gnome-terminal.desktop</Filename>
+      <Filename>gnome-tweak-tool.desktop</Filename>
+      <Filename>gucharmap.desktop</Filename>
+      <Filename>seahorse.desktop</Filename>
+      <Filename>vinagre.desktop</Filename>
+      <Filename>yelp.desktop</Filename>
+    </Include>
+  </Menu>
+
+  <!-- Other -->
+  <Menu>
+    <Name>Other</Name>
+    <Directory>X-GNOME-Other.directory</Directory>
+    <OnlyUnallocated/>
+    <Include>
+      <And>
+        <Not><Category>Core</Category></Not>
+        <Not><Category>Screensaver</Category></Not>
+
+        <!-- Really Fedora ??? -->
+        <Not><Filename>gnome-eog.desktop</Filename></Not>
+        <Not><Filename>gnome-file-roller.desktop</Filename></Not>
+        <Not><Filename>gnome-gucharmap.desktop</Filename></Not>
+      </And>
+    </Include>
+  </Menu> <!-- End Other -->
+
+   <Layout>
+     <Merge type="menus" />
+     <Menuname>Other</Menuname>
+     <Merge type="files" />
+   </Layout>
+
+</Menu> <!-- End Applications -->

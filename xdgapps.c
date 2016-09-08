@@ -8,17 +8,17 @@
 #include <dirent.h>
 
 #include "xdgapps.h"
+#include "xdgdirs.h"
 #include "util.h"
 #include "sbuf.h"
 #include "list.h"
 
-#define APPLICATIONS "/usr/share/applications/"
-#define DESKTOP_DIRECTORIES "/usr/share/desktop-directories/"
-
 struct list_head desktop_files_all;
 struct list_head desktop_files_filtered;
-
 struct list_head directory_files;
+
+/* "${HOME}/.local/share", "/usr/share", etc. */
+static struct list_head xdg_data_dirs;
 
 static void parse_directory_file(FILE *fp, const char *filename)
 {
@@ -57,6 +57,10 @@ static void parse_desktop_file(FILE *fp)
 		if (p)
 			*p = '\0';
 
+		/* A bit crude, but prevents loading other Exec values */
+		if ((line[0] == '[') && strcmp(line, "[Desktop Entry]"))
+			break;
+
 		if (!strncmp("Name=", line, 5))
 			tmp->name = strdup(line + 5);
 		else if (!strncmp("Exec=", line, 5))
@@ -77,18 +81,13 @@ static void parse_desktop_file(FILE *fp)
 	list_add_tail(&tmp->full_list, &desktop_files_all);
 }
 
-static void process_file(char *filename, int isdir)
+static void process_file(char *filename, const char *path, int isdir)
 {
 	FILE *fp;
-	char fullname[4096];
+	char fullname[8192];
 
-	if (isdir) {
-		strncpy(fullname, DESKTOP_DIRECTORIES, strlen(DESKTOP_DIRECTORIES));
-		strncpy(fullname + strlen(DESKTOP_DIRECTORIES), filename, strlen(filename) + 1);
-	} else {
-		strncpy(fullname, APPLICATIONS, strlen(APPLICATIONS));
-		strncpy(fullname + strlen(APPLICATIONS), filename, strlen(filename) + 1);
-	}
+	strncpy(fullname, path, strlen(path));
+	strncpy(fullname + strlen(path), filename, strlen(filename) + 1);
 
 	fp = fopen(fullname, "r");
 	if (!fp)
@@ -103,34 +102,52 @@ static void process_file(char *filename, int isdir)
 }
 
 /*
- * Set isdir to 1 to process .directory files
+ * isdir=0 will process .desktop files
+ * isdir=1 will process .directory files
  */
-static void init_list(const char *path, int isdir)
+static void populate_desktop_and_directory_lists(const char *path, int isdir)
 {
 	struct dirent *entry;
 	DIR *dp;
 
 	dp = opendir(path);
 	if (!dp)
-		die("could not open dir %s", path);
+		goto close_dir;
 
 	while ((entry = readdir(dp))) {
 		if (!strncmp(entry->d_name, ".", 1) ||
 		    !strncmp(entry->d_name, "..", 2))
 			continue;
-		process_file(entry->d_name, isdir);
+		process_file(entry->d_name, path, isdir);
 	}
 
+close_dir:
 	closedir(dp);
 }
 
 void xdgapps_init_lists(void)
 {
+	struct sbuf *dir;
+	struct sbuf s;
+
 	INIT_LIST_HEAD(&desktop_files_all);
 	INIT_LIST_HEAD(&desktop_files_filtered);
 	INIT_LIST_HEAD(&directory_files);
-	init_list(APPLICATIONS, 0);
-	init_list(DESKTOP_DIRECTORIES, 1);
+	INIT_LIST_HEAD(&xdg_data_dirs);
+
+	xdgdirs_get_basedirs(&xdg_data_dirs);
+
+	sbuf_init(&s);
+	list_for_each_entry(dir, &xdg_data_dirs, list) {
+		sbuf_cpy(&s, dir->buf);
+		sbuf_addstr(&s, "/applications/");
+		populate_desktop_and_directory_lists(s.buf, 0);
+	}
+	list_for_each_entry(dir, &xdg_data_dirs, list) {
+		sbuf_cpy(&s, dir->buf);
+		sbuf_addstr(&s, "/desktop-directories/");
+		populate_desktop_and_directory_lists(s.buf, 1);
+	}
 }
 
 void xdgapps_filter_desktop_files_on_category(const char *category)
@@ -145,6 +162,7 @@ void xdgapps_filter_desktop_files_on_category(const char *category)
 			continue;
 
 		if (strstr(a->categories, category))
-			list_add_tail(&a->filtered_list, &desktop_files_filtered);
+			list_add_tail(&a->filtered_list,
+				      &desktop_files_filtered);
 	}
 }

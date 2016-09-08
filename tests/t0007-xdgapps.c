@@ -10,18 +10,11 @@ int main(int argc, char **argv)
 
 	xdgapps_init_lists();
 
-	xdgapps_filter_desktop_files_on_category("xxxxxxxxxxxxxxxxx");
-
 /*	list_for_each_entry(desktop_file, &desktop_files_all, full_list) */
 
-	printf("Audio:\n");
-	xdgapps_filter_desktop_files_on_category("Audio");
+	printf("Development:\n");
+	xdgapps_filter_desktop_files_on_category("Development");
 	list_for_each_entry(desktop_file, &desktop_files_filtered, filtered_list)
-		printf("%s,%s,%s\n", desktop_file->name, desktop_file->exec, desktop_file->name);
-
-	printf("Graphics:\n");
-	xdgapps_filter_desktop_files_on_category("Graphics");
-	list_for_each_entry(desktop_file, &desktop_files_filtered, filtered_list)
-		printf("%s,%s,%s\n", desktop_file->name, desktop_file->exec, desktop_file->name);
+		printf("%s,%s,%s\n", desktop_file->name, desktop_file->exec, desktop_file->icon);
 
 }
