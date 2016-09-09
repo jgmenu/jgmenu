@@ -39,11 +39,12 @@ endif
 
 SCRIPTS  = jgmenu_run jgmenu-cache jgmenu-pmenu
 PROGS	 = jgmenu jgmenu-xdg jgmenu-icon-find
+PROGS   += xsettings-helper
 
 LIB_H = $(shell find . -name '*.h' -print)
 
 OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
-        icon.o xdgdirs.o xdgapps.o
+        icon.o xdgdirs.o xdgapps.o xsettings.o
 
 
 all: $(PROGS)
