@@ -1,5 +1,5 @@
 *.o
 jgmenu
-jgmenu-xdg
+jgmenu-parse-xdg
 jgmenu-icon-find
 TODO

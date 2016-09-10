@@ -4,19 +4,15 @@ IFS="$(printf '\n\t')"
 
 
 die () {
-	printf "Fatal: %s\n" "$1"
+	printf "fatal: %s\n" "$1"
 	exit 1
 }
 
 usage () {
-	echo "usage: jgmenu-cache [<options>]"
-	echo "Creates symlinks for icons based on jgmenu csv file."
+	echo "usage: jgmenu_run cache --menu-file=<file> [--theme=<theme>]"
+	echo "                        [--icon-size=<size>]"
 	echo ""
-	echo "    --menu-file=<menu-file>"
-	echo "                          specify menu-file"
-	echo "    --theme=<theme>       specify icon-theme"
-	echo "    --icon-size=<size>    specify icon-size"
-	echo "    --help                display this"
+	echo "Creates symlinks for icons based on jgmenu csv file."
 	echo ""
 }
 

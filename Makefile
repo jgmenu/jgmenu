@@ -37,8 +37,10 @@ QUIET_CC   = @echo '     CC    '$@;
 QUIET_LINK = @echo '     LINK  '$@;
 endif
 
-SCRIPTS  = jgmenu_run jgmenu-cache jgmenu-pmenu
-PROGS	 = jgmenu jgmenu-xdg jgmenu-icon-find
+SCRIPTS  = jgmenu_run jgmenu-cache.sh jgmenu-pmenu.sh jgmenu-parse-pmenu.py \
+	   jgmenu-simple.sh jgmenu-csv.sh jgmenu-xdg.sh
+
+PROGS	 = jgmenu jgmenu-parse-xdg jgmenu-icon-find
 PROGS   += xsettings-helper
 
 LIB_H = $(shell find . -name '*.h' -print)
