@@ -4,4 +4,4 @@ css_template     = jg.css
 all:
 	@echo "    PANDOC    README.html"
 	@pandoc -s $(markdown_variant) --css=$(css_template) \
-		-o README.html ../README.md
+		-o ../README.html ../README.md
