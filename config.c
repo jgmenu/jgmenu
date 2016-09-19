@@ -28,7 +28,7 @@ void config_set_defaults(void)
 	config.max_items	= 80;
 	config.min_items	= 0;
 	config.font		= strdup("Ubuntu condensed 14px");
-	config.icon_size	= 0;
+	config.icon_size	= 22;
 	config.icon_theme	= strdup("Adwaita");
 	config.show_title	= 1;
 
