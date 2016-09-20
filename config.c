@@ -10,27 +10,29 @@ struct Config config;
 
 void config_set_defaults(void)
 {
-	config.spawn		= 1;
+	config.spawn		 = 1;
 
-	config.menu_margin_x	= 2;
-	config.menu_margin_y	= 33;
-	config.menu_width	= 200;
-	config.menu_radius	= 6;
-	config.menu_border	= 1;
+	config.menu_margin_x	 = 2;
+	config.menu_margin_y	 = 33;
+	config.menu_width	 = 200;
+	config.menu_radius	 = 6;
+	config.menu_border	 = 1;
 
-	config.item_margin_x	= 3;
-	config.item_margin_y	= 3;
-	config.item_height	= 25;
-	config.item_padding_x	= 4;
-	config.item_radius	= 3;
-	config.item_border	= 0;
+	config.item_margin_x	 = 3;
+	config.item_margin_y	 = 3;
+	config.item_height	 = 25;
+	config.item_padding_x	 = 4;
+	config.item_radius	 = 3;
+	config.item_border	 = 0;
 
-	config.max_items	= 80;
-	config.min_items	= 0;
-	config.font		= strdup("Ubuntu condensed 14px");
-	config.icon_size	= 22;
-	config.icon_theme	= strdup("Adwaita");
-	config.show_title	= 1;
+	config.max_items	 = 80;
+	config.min_items	 = 0;
+	config.font		 = strdup("Ubuntu condensed 14px");
+	config.icon_size	 = 22;
+	config.icon_theme	 = NULL;
+	config.ignore_xsettings  = 0;
+	config.ignore_icon_cache = 0;
+	config.show_title	 = 1;
 
 	parse_hexstr("#000000 60", config.color_menu_bg);
 	parse_hexstr("#eeeeee 20", config.color_menu_fg);
@@ -83,6 +85,10 @@ static void process_line(char *line)
 		config.icon_size = atoi(value);
 	else if (!strncmp(option, "icon_theme", 10))
 		config.icon_theme = strdup(value);
+	else if (!strncmp(option, "ignore_xsettings", 16))
+		config.ignore_xsettings = atoi(value);
+	else if (!strncmp(option, "ignore_icon_cache", 17))
+		config.ignore_icon_cache = atoi(value);
 	else if (!strncmp(option, "show_title", 10))
 		config.show_title = atoi(value);
 

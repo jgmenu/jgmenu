@@ -7,7 +7,7 @@
 static const char jgmenu_xsettings[] =
 "Usage: jgmenu-xsettings (--icon-theme | --all)\n";
 
-void usage(void)
+static void usage(void)
 {
 	printf("%s", jgmenu_xsettings);
 	exit(1);

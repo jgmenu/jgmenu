@@ -24,6 +24,7 @@
 #include "isprog.h"
 #include "sbuf.h"
 #include "icon.h"
+#include "theme.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -850,6 +851,11 @@ int main(int argc, char *argv[])
 			config.min_items = atoi(argv[i] + 15);
 			config.max_items = config.min_items;
 		}
+
+	theme_get(&config.icon_theme, config.ignore_xsettings,
+		  config.ignore_icon_cache);
+	fprintf(stderr, "info: icon theme is '%s'\n",
+		config.icon_theme);
 
 	ui_init();
 	geo_init();

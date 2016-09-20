@@ -61,10 +61,11 @@ static Bool fetch_card8(XSettingsBuffer *buffer, CARD8 *result)
 
 static Bool fetch_card16(XSettingsBuffer *buffer, CARD16 *result)
 {
+	CARD16 x;
 	if (BYTES_LEFT(buffer) < 2)
 		return False;
 
-	CARD16 x = *(CARD16 *)buffer->pos;
+	x = *(CARD16 *)buffer->pos;
 
 	buffer->pos += 2;
 	if (buffer->byte_order == byte_order())
@@ -86,10 +87,12 @@ static Bool fetch_ushort(XSettingsBuffer *buffer, unsigned short *result)
 
 static Bool fetch_card32(XSettingsBuffer *buffer, CARD32 *result)
 {
+	CARD32 x;
+
 	if (BYTES_LEFT(buffer) < 4)
 		return False;
 
-	CARD32 x = *(CARD32 *)buffer->pos;
+	x = *(CARD32 *)buffer->pos;
 
 	buffer->pos += 4;
 	if (buffer->byte_order == byte_order())
@@ -105,9 +108,11 @@ static Bool fetch_card32(XSettingsBuffer *buffer, CARD32 *result)
 static XSetting *parse_settings(unsigned char *data, size_t len, size_t *count)
 {
 	XSetting *result = NULL;
-	*count = 0;
 	XSettingsBuffer buffer;
+	CARD32 serial;
+	CARD32 n_entries;
 
+	*count = 0;
 	buffer.pos = data;
 	buffer.data = data;
 	buffer.len = len;
@@ -122,12 +127,8 @@ static XSetting *parse_settings(unsigned char *data, size_t len, size_t *count)
 		goto err;
 	}
 
-	CARD32 serial;
-
 	if (!fetch_card32(&buffer, &serial))
 		goto err;
-
-	CARD32 n_entries;
 
 	if (!fetch_card32(&buffer, &n_entries) || !n_entries)
 		goto err;
@@ -138,18 +139,20 @@ static XSetting *parse_settings(unsigned char *data, size_t len, size_t *count)
 	*count = n_entries;
 
 	for (size_t i = 0; i < n_entries; i++) {
-		XSetting *setting = &result[i];
+		CARD16 name_len;
+		size_t pad_len;
+		XSetting *setting;
+
+		setting = &result[i];
 
 		if (!fetch_card8(&buffer, &setting->type))
 			goto err;
 		buffer.pos += 1;
 
-		CARD16 name_len;
-
 		if (!fetch_card16(&buffer, &name_len))
 			goto err;
 
-		size_t pad_len = XSETTINGS_PAD(name_len, 4);
+		pad_len = XSETTINGS_PAD(name_len, 4);
 
 		if (BYTES_LEFT(&buffer) < pad_len)
 			goto err;
@@ -233,10 +236,6 @@ static unsigned char *read_xsettings(Display *display, Window manager,
 {
 	int (*old_handler)(Display *, XErrorEvent *);
 	Atom _XSETTINGS_SETTINGS;
-
-	old_handler = XSetErrorHandler(ignore_x11_errors);
-	_XSETTINGS_SETTINGS = XInternAtom(display, "_XSETTINGS_SETTINGS", False);
-
 	Atom type;
 	int format;
 	unsigned char *buffer;
@@ -245,6 +244,9 @@ static unsigned char *read_xsettings(Display *display, Window manager,
 	unsigned char *result = NULL;
 	Bool done = False;
 	Bool failed = False;
+
+	old_handler = XSetErrorHandler(ignore_x11_errors);
+	_XSETTINGS_SETTINGS = XInternAtom(display, "_XSETTINGS_SETTINGS", False);
 
 	*total_size = 0;
 	while (!done && !failed) {
@@ -290,12 +292,12 @@ XSetting *get_xsettings(Display *display, size_t *count)
 	XSetting *result;
 
 	if (!manager) {
-		fprintf(stderr, "No XSETTINGS daemon found\n");
+		fprintf(stderr, "warning: no xsettings daemon found\n");
 		return NULL;
 	}
 	buffer = read_xsettings(display, manager, &size);
 	if (!buffer || !size) {
-		fprintf(stderr, "Could not read XSETTINGS\n");
+		fprintf(stderr, "warning: could not read xsettings\n");
 		return NULL;
 	}
 	result = parse_settings(buffer, size, count);

@@ -45,7 +45,7 @@ PROGS	 = jgmenu jgmenu-parse-xdg jgmenu-icon-find jgmenu-xsettings
 LIB_H = $(shell find . -name '*.h' -print)
 
 OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
-        icon.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o
+        icon.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o theme.o
 
 
 all: $(PROGS)

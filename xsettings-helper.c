@@ -52,18 +52,15 @@ int xsettings_get(struct sbuf *s, const char *key)
 	if (!key)
 		return 1;
 
- 	display = XOpenDisplay(NULL);
-	if (!display) {
-		fprintf(stderr, "Could not open display\n");
+	display = XOpenDisplay(NULL);
+	if (!display)
 		return 1;
-	}
 
 	settings = get_xsettings(display, &count);
 	if (settings) {
 		print_settings(settings, count, key, s);
 		free_xsettings(settings, count);
 	} else {
-		fprintf(stderr, "Could not read settings\n");
 		ret = 1;
 		goto close_disp;
 	}
