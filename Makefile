@@ -38,7 +38,7 @@ QUIET_LINK = @echo '     LINK  '$@;
 endif
 
 SCRIPTS  = jgmenu_run jgmenu-cache.sh jgmenu-pmenu.sh jgmenu-parse-pmenu.py \
-	   jgmenu-simple.sh jgmenu-csv.sh jgmenu-xdg.sh
+	   jgmenu-simple.sh jgmenu-csv.sh jgmenu-xdg.sh jgmenu-config.sh
 
 PROGS	 = jgmenu jgmenu-parse-xdg jgmenu-icon-find jgmenu-xsettings
 
