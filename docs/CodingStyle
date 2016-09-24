@@ -1,0 +1,77 @@
+Coding Style
+============
+
+C programs
+----------
+
+  - Use ANSI C (C89)
+
+  - Kernel coding style (https://www.kernel.org/doc/Documentation/CodingStyle)
+    applies with the following exceptions:
+
+	- Points which are kernel specific (e.g. kmalloc)
+
+ 	- Lines can be up to 120 characters (although 80 is better)
+
+  - Use scripts/checkpatch-wrapper.sh to check code.
+
+
+Shell scripts
+-------------
+
+  - Use tabs for indentation
+
+  - Write <, >, <<, >> with space before, but no space after. E.g.
+
+	cat <<EOF >"${file}"
+
+  - Use $( ) instead of ``
+
+  - Use ${ } for variables
+
+  - Use 'type <command>' to check if command is installed
+
+  - Write "if", "for" and "while" structures with "then"/"do" on the next line
+    (not with semicolon on the same line). E.g. 
+
+	if test -f foo.sh
+	then
+		do something
+	fi
+
+	for i in a b c
+	do
+		echo ${i}
+	done
+
+  - For short constructs, it is okay to use use && and || instead of
+    if-statements. E.g:
+
+	test -e foo || die "cannot find foo"
+
+	type special_command || die "cannot find program `%s`"
+
+  - Use ./* rather than ls/$(ls) for lor loops
+
+	for i in ./*
+	do
+		echo $i
+	done
+
+  - Use "test" instead of [ ] or [[ ]] E.g.
+
+	test -n "${x}" && test "${a}" = "${b}"
+
+  - Use $(( )) to perform maths operations instead of "let" or "expr". E.g:
+
+	: $(( a += 5))
+
+  - Write functions like this
+
+	my_function () {
+		some code
+	}
+
+  - Quote variables except in for-loops and in $(( ))
+
+  - Don't use bash specific features such as arrays and [[ ]]
