@@ -12,35 +12,40 @@ jgmenu_run <*command*> \[<*args*>]
 
 # DESCRIPTION
 
-jgmenu_run makes jgmenu easier to use.
+jgmenu_run makes jgmenu easier to use by  
+
+  - creating a simple interface for common commands
+
+  - saving the user having to remember script file extensions
 
 # COMMANDS
 
 Valid `commands` include:
 
-pmenu
+pmenu  
+        Menu based on .directory and .desktop files
 
-    Menu based on .directory and .desktop files
+xdg  
+        Menu based on .menu file
 
-xdg
+csv  
+        Menu based on .csv file
 
-    Menu based on .menu file
+cache  
+        Create icon cache
 
-csv
-
-    Menu based on .csv file
-
-cache
-
-    Create icon cache
-
-simple
-
-    Simple fall-back menu
+simple  
+        Simple fall-back menu
 
 # EXAMPLES
 
-    jgmenu_run xdg
+Before first use:
+
+    jgmenu_run cache
+
+To run the menu:
+
+    jgmenu_run pmenu
 
 # SEE ALSO
 

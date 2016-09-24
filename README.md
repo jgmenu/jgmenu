@@ -14,7 +14,7 @@ Jgmenu is written with the following aims:
   - Contain similar settings to tint2 (e.g. padding, transparency)
   - Have few dependencies (perferably just Xlib, cairo and Xinerama)
   - Be free from toolkits such as GTK and Qt.
-  - Read the menu items from stdin in a similar way to dmenu and dzen2, but
+  - Read the menu items from stdin in a similar way to dmenu and dzen2, but  
     with seperate fields for the name and command
 
 Screenshots
@@ -33,8 +33,8 @@ $ make
 $ make install
 ```
 
-By default, `make install` will install files to ~/bin/. Use `prefix` to 
-specify a different target location. For example, to install to /usr/bin/,
+By default, `make install` will install files to ~/bin/. Use `prefix` to  
+specify a different target location. For example, to install to /usr/bin/,  
 do:
 
 ```bash
@@ -57,15 +57,12 @@ To get started, use the `jgmenu_run` wrapper. Try:
 $ jgmenu_run xdg
 ```
 
-Some icons themes are slow to load on start-up. Icon load-times can be
+Some icons themes are slow to load on start-up. Icon load-times can be  
 significantly improved by running:
 
 ```bash
 $ jgmenu_run cache
 ```
-
-FIXME: `jgmenu_run cache` is not quite finished yet - will implement
-over the next couple of days.
 
 To change the menu appearance, create a jgmenurc file.
 
@@ -79,17 +76,28 @@ How jgmenu works
 
 The jgmenu binary reads menu-items from *stdin* and draws a menu. 
 
-A number of wrappers (shell and C) exist to extend the feature-set.
+A number of helpers (shell and C) exist to simplify the user interface and  
+extend the feature-set.
 
-### `jgmenu`
+For details, see the man pages:
 
-  - [jgmenu.1](docs/manual/jgmenu.1.md)
+  - [jgmenu_run(1)](docs/manual/jgmenu_run.1.md)
+  - [jgmenu(1)](docs/manual/jgmenu.1.md)
 
-### `jgmenu_run` - top-level wrapper
+### high-level commands
 
-  - [jgmenu_run.1](docs/manual/jgmenu_run.1.md)
+  - jgmenu-pmenu(1)
+  - jgmenu-xdg(1)
+  - jgmenu-csv(1)
+  - [jgmenu-cache(1)](docs/manual/jgmenu-cache.1.md)
+  - jgmenu-simple(1)
 
-### high-level helpers
 
-  - [jgmenu-cache.1](docs/manual/jgmenu-cache.1.md)
+### low-level programs
+
+  - jgmenu-config(1)
+  - jgmenu-icon-find(1)
+  - jgmenu-parse-xdg(1)
+  - jgmenuo-parse-pmenu(1)
+  - jgmenu-xsettings(1)
 

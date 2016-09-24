@@ -7,23 +7,55 @@
 jgmenu \- menu for X11
 .SH SYNOPSIS
 .PP
-jgmenu [\-\-no\-spawn] [\-\-checkout=<\f[I]tag\f[]>]
-[\-\-config\-file=<\f[I]file\f[]>] [\-\-icon\-size=<\f[I]size\f[]>]
+jgmenu\ [\-\-no\-spawn]\ [\-\-checkout=<\f[I]tag\f[]>]\ [\-\-config\-file=<\f[I]file\f[]>]
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \ [\-\-icon\-size=<\f[I]size\f[]>]
 .SH DESCRIPTION
 .PP
-jgmenu is a small menu application for X11, intended to be used with
+Jgmenu is a small menu application for X11, intended to be used with
+.PD 0
+.P
+.PD
 openbox and tint2.
 It has a number of helper\-scripts and wrappers.
+.PD 0
+.P
+.PD
 See \f[I]jgmenu_run\f[](1) for further details.
 .PP
 jgmenu reads a list of new\-line (\[aq]\\n\[aq]) separated items from
-standard input (stdin) and creates a menu.
-Each line is parsed into \f[I]description\f[], \f[I]command\f[] and
-\f[I]icon\f[], using comma as a field separator.
+standard
+.PD 0
+.P
+.PD
+input (stdin) and creates a menu.
+Each line is parsed into
+.PD 0
+.P
+.PD
+\f[I]description\f[], \f[I]command\f[] and \f[I]icon\f[], using comma as
+a field separator.
+.PD 0
+.P
+.PD
 Empty lines and lines beginning with \[aq]#\[aq] are ignored.
-When the user selects an item (by left\-clicking or pressing enter), the
-\f[C]command\f[] of their selection is executed as a new process (i.e.
-not a child process to jgmenu).
+When the user
+.PD 0
+.P
+.PD
+selects an item (by left\-clicking or pressing enter), the
+\f[C]command\f[] of
+.PD 0
+.P
+.PD
+their selection is executed as a new process (i.e.
+not a child process
+.PD 0
+.P
+.PD
+to jgmenu).
 .PP
 For example:
 .IP
@@ -62,7 +94,11 @@ Firefox,firefox,firefox
 .RE
 .PP
 Some icons themes are slow to load on start\-up.
-In order to improve start\-up times:
+In order to improve
+.PD 0
+.P
+.PD
+start\-up times:
 .IP \[bu] 2
 create icon\-cache (see \f[C]jgmenu\-cache\f[] (1))
 .IP \[bu] 2
@@ -81,8 +117,11 @@ checkout submenu <\f[I]tag\f[]> on startup
 .TP
 .B \-\-config\-file=<\f[I]file\f[]>
 read config file.
-If not specified, the default file ~/.config/jgmenu/jgmenurc will be
-read
+If not specified, the default file
+.PD 0
+.P
+.PD
+~/.config/jgmenu/jgmenurc will be read
 .RS
 .RE
 .TP

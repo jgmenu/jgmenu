@@ -10,55 +10,59 @@ jgmenu_run \- top level wrapper for jgmenu
 jgmenu_run <\f[I]command\f[]> [<\f[I]args\f[]>]
 .SH DESCRIPTION
 .PP
-jgmenu_run makes jgmenu easier to use.
+jgmenu_run makes jgmenu easier to use by
+.IP \[bu] 2
+creating a simple interface for common commands
+.IP \[bu] 2
+saving the user having to remember script file extensions
 .SH COMMANDS
 .PP
 Valid \f[C]commands\f[] include:
 .PP
 pmenu
-.IP
-.nf
-\f[C]
-Menu\ based\ on\ .directory\ and\ .desktop\ files
-\f[]
-.fi
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \ \ Menu based on .directory and .desktop files
 .PP
 xdg
-.IP
-.nf
-\f[C]
-Menu\ based\ on\ .menu\ file
-\f[]
-.fi
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \ \ Menu based on .menu file
 .PP
 csv
-.IP
-.nf
-\f[C]
-Menu\ based\ on\ .csv\ file
-\f[]
-.fi
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \ \ Menu based on .csv file
 .PP
 cache
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \ \ Create icon cache
+.PP
+simple
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \ \ Simple fall\-back menu
+.SH EXAMPLES
+.PP
+Before first use:
 .IP
 .nf
 \f[C]
-Create\ icon\ cache
+jgmenu_run\ cache
 \f[]
 .fi
 .PP
-simple
+To run the menu:
 .IP
 .nf
 \f[C]
-Simple\ fall\-back\ menu
-\f[]
-.fi
-.SH EXAMPLES
-.IP
-.nf
-\f[C]
-jgmenu_run\ xdg
+jgmenu_run\ pmenu
 \f[]
 .fi
 .SH SEE ALSO

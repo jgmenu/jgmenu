@@ -1,2 +1,9 @@
 The man pages are commited in order to save you installing pandoc if
-you haven't got it. Any changes are to be made to the .1.md files.
+you haven't got it. Any changes are to be made to the md files.
+
+Set text width to 69 for consistent formatting on 80x25 and bigger.
+
+Use non-breaking spaces (\u00A0) at the beginning of lines if indentation is
+required in a non-"code" area, for example the "usage" lines under SYNOPSIS.
+In vim, this is achieved by ^KNS or ^K<space><space>
+
