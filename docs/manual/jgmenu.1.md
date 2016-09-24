@@ -37,22 +37,15 @@ The following mark-up is supported in the *command* field:
 
   - ^sub() - draw a "submenu" arrow.
 
-Icons can be displayed by:
+Icons will be displayed if the third field is populated; for example:
 
-  - Adding the command line argument `--icon-size=<size>` to jgmenu or  
-    setting `icon_size=<size>` in jgmenurc
-
-  - Add a third field to the stdin data; for example:
-
-        Terminal,xterm,utilities-terminal
-        Firefox,firefox,firefox
+    Terminal,xterm,utilities-terminal
+    Firefox,firefox,firefox
 
 Some icons themes are slow to load on start-up. In order to improve  
 start-up times:
 
-  - create icon-cache (see `jgmenu-cache` (1))
-
-  - set `icon_theme=jgmenu` in your jgmenurc
+  - create icon-cache by running `jgmenu_run cache`
 
 # OPTIONS
 
@@ -67,13 +60,10 @@ start-up times:
     ~/.config/jgmenu/jgmenurc will be read
 
 \--icon-size=<*size*>  
-:   specify icon size (0 by default)
-
+:   specify icon size (22 by default)
 
 # CONFIGURATION SETTINGS
 The default configuration file location is ~/.config/jgmenu/jgmenurc
-
-
 
 # EXAMPLES
 

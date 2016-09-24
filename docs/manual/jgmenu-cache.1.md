@@ -8,8 +8,8 @@ jgmenu-cache - creates icon cache for jgmenu
 
 # SYNOPSIS
 
-jgmenu_run cache \[\--menu-file=<*menu-file*> \[\--theme=<*theme*>]  
-                 \[\--icon-size=<*size*>]
+jgmenu_run cache \[\--verbose] \[\--menu-file=<*menu-file*>  
+                 \[\--theme=<*theme*>] \[\--icon-size=<*size*>]
 
 # DESCRIPTION
 
@@ -39,6 +39,9 @@ ${XDG_DATA_DIRS} in the case that the cache is not updated after
 the installation of new applications.
 
 # OPTIONS
+
+\--verbose  
+:   be more verbose
 
 \--menu-file=<*menu-file*>  
 :   specify menu-file (in jgmenu csv format)

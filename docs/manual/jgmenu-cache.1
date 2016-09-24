@@ -7,12 +7,12 @@
 jgmenu\-cache \- creates icon cache for jgmenu
 .SH SYNOPSIS
 .PP
-jgmenu_run cache [\-\-menu\-file=<\f[I]menu\-file\f[]>
-[\-\-theme=<\f[I]theme\f[]>]
+jgmenu_run cache [\-\-verbose] [\-\-menu\-file=<\f[I]menu\-file\f[]>
 .PD 0
 .P
 .PD
-\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [\-\-icon\-size=<\f[I]size\f[]>]
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [\-\-theme=<\f[I]theme\f[]>]
+[\-\-icon\-size=<\f[I]size\f[]>]
 .SH DESCRIPTION
 .PP
 Some icons themes are slow to load on start\-up.
@@ -71,6 +71,11 @@ ${XDG_DATA_DIRS} in the case that the cache is not updated after
 .PD
 the installation of new applications.
 .SH OPTIONS
+.TP
+.B \-\-verbose
+be more verbose
+.RS
+.RE
 .TP
 .B \-\-menu\-file=<\f[I]menu\-file\f[]>
 specify menu\-file (in jgmenu csv format)

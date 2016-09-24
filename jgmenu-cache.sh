@@ -15,6 +15,7 @@ check_prog_exists () {
 usage () {
 	echo "usage: jgmenu_run cache [<options>]"
 	echo ""
+	echo "    --verbose"
 	echo "    --menu-file=<file>"
 	echo "    --theme=<theme>"
 	echo "    --icon-size=<size>"
@@ -41,20 +42,31 @@ get_gtk3_theme () {
 	    > ${tmp_file}
 
 	icon_theme=$(cat ${tmp_file})
-	printf "ICON THEME: ${icon_theme}\n"
 	rm -f ${tmp_file}
 }
 
 get_icon_theme () {
-	icon_theme=$(jgmenu_run xsettings --icon-theme) && return
+	if icon_theme=$(jgmenu_run xsettings --icon-theme)
+	then
+		printf "info: obtained '${icon_theme}' from xsettings\n"
+		return
+	fi
 
 	icon_theme=$(jgmenu_run config --get icon_theme)
-	test -z ${icon_theme} || return
+	if ! test -z ${icon_theme}
+	then
+		printf "info: obtained '${icon_theme}' from jgmenurc\n"
+		return
+	fi
 
 	get_gtk3_theme
-	test -z ${icon_theme} || return
+	if ! test -z ${icon_theme}
+	then
+		printf "info: obtained '${icon_theme}' from GTK's settings.ini\n"
+		return
+	fi
 
-	icon_theme=Numix
+	icon_theme=Adwaita
 }
 
 get_icon_size () {
@@ -71,7 +83,7 @@ create_symlinks () {
 		die "${menu_file} does not exist"
 	fi
 
-	mkdir -pv ${1}
+	mkdir -pv ${1} &>/dev/null
 	test -d ${1} || die "could not create cache directory"
 	test -w ${1} || die "you do not have write permission to the cache directory"
 
@@ -81,14 +93,14 @@ create_symlinks () {
 		   test -e  ${1}/${f%.*}.svg || \
 		   test -e  ${1}/${f%.*}.xpm
 		then
-			echo "[OVERWRITE] ${f}"
-			rm -f ${1}/${f}.*
+			test ${verbose} = "t" && echo "[ EXISTS  ] ${f}"
+		#	rm -f ${1}/${f}.*
 		else
-			echo "[ CREATE  ] ${f}"
+			test ${verbose} = "t" && echo "[ CREATE  ] ${f}"
+			ln -s "$(jgmenu-icon-find --theme=${icon_theme} \
+				 --icon-size=${icon_size} ${f})" \
+			      ${1} &>/dev/null
 		fi
-
-		ln -s "$(jgmenu-icon-find --theme=${icon_theme} --icon-size=${icon_size} \
-		       ${f})" ${1} 2>/dev/null
 	done
 }
 
@@ -101,7 +113,7 @@ create_symlinks () {
 icon_size=
 icon_theme=
 menu_file=
-verbose=
+verbose=f
 cache_name=jgmenu-cache
 cache_dir=~/.local/share/icons/${cache_name}
 
@@ -143,7 +155,15 @@ test -z ${menu_file} && create_menu_file
 test -z ${icon_theme} && get_icon_theme
 test -z ${icon_size} && get_icon_size
 
+if test ${icon_theme} = "jgmenu-cache"
+then
+	die "icon_theme cannot be called 'jgmenu-cache'"
+fi
+
+printf "Deleting old icon-cache...\n"
 delete_cache
+
+printf "Creating new icon-cache...\n"
 create_symlinks ${cache_dir}/${icon_size}
 
 echo "Inherits=${icon_theme}" >${cache_dir}/index.theme

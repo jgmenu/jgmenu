@@ -73,17 +73,7 @@ The following mark\-up is supported in the \f[I]command\f[] field:
 .IP \[bu] 2
 ^sub() \- draw a "submenu" arrow.
 .PP
-Icons can be displayed by:
-.IP \[bu] 2
-Adding the command line argument \f[C]\-\-icon\-size=<size>\f[] to
-jgmenu or
-.PD 0
-.P
-.PD
-setting \f[C]icon_size=<size>\f[] in jgmenurc
-.IP \[bu] 2
-Add a third field to the stdin data; for example:
-.RS 2
+Icons will be displayed if the third field is populated; for example:
 .IP
 .nf
 \f[C]
@@ -91,7 +81,6 @@ Terminal,xterm,utilities\-terminal
 Firefox,firefox,firefox
 \f[]
 .fi
-.RE
 .PP
 Some icons themes are slow to load on start\-up.
 In order to improve
@@ -100,9 +89,7 @@ In order to improve
 .PD
 start\-up times:
 .IP \[bu] 2
-create icon\-cache (see \f[C]jgmenu\-cache\f[] (1))
-.IP \[bu] 2
-set \f[C]icon_theme=jgmenu\f[] in your jgmenurc
+create icon\-cache by running \f[C]jgmenu_run\ cache\f[]
 .SH OPTIONS
 .TP
 .B \-\-no\-spawn
@@ -126,7 +113,7 @@ If not specified, the default file
 .RE
 .TP
 .B \-\-icon\-size=<\f[I]size\f[]>
-specify icon size (0 by default)
+specify icon size (22 by default)
 .RS
 .RE
 .SH CONFIGURATION SETTINGS
