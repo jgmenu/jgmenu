@@ -75,3 +75,8 @@ Shell scripts
   - Quote variables except in for-loops and in $(( ))
 
   - Don't use bash specific features such as arrays and [[ ]]
+
+  - Avoid non-POSIX re-directions such as '&>', '>&-', '|&', etc
+    For example, to re-direct both stdout and stderr to /dev/null, do:
+
+	command >/dev/null 2>&1

@@ -67,11 +67,19 @@ get_icon_theme () {
 	fi
 
 	icon_theme=Adwaita
+	printf "info: using '${icon_theme}' by default\n"
 }
 
 get_icon_size () {
-	icon_size=$(jgmenu_run config --get icon_size) && return
+	icon_size=$(jgmenu_run config --get icon_size)
+	if ! test -z ${icon_size}
+	then
+		printf "info: obtained '${icon_size}' from jgmenurc\n"
+		return
+	fi
+
 	icon_size=22
+	printf "info: using '${icon_size}' by default\n"
 }
 
 #

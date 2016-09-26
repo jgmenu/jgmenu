@@ -36,7 +36,7 @@ shift
 
 for c in ${cmds}
 do
-	if type ${c} &>/dev/null
+	if type ${c} >/dev/null 2>&1
 	then
 		exec ${c} "$@"
 		exit 0
