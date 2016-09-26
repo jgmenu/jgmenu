@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-struct Config {
+struct config {
 	int spawn;		/* 1:execute commands  0:print to stdout */
 
 	int menu_margin_x;
@@ -37,7 +37,7 @@ struct Config {
 	double color_title_bg[4];
 };
 
-extern struct Config config;
+extern struct config config;
 
 void config_set_defaults(void);
 void config_parse_file(char *filename);

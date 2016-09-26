@@ -11,7 +11,7 @@ item_margin_y	  = 3
 item_height	  = 25
 item_padding_x	  = 4
 item_radius	  = 3
-item_border	  = 0.0
+item_border	  = 0
 
 max_items	  = 100
 min_items	  = 0

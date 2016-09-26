@@ -176,3 +176,45 @@ int get_first_num_from_str(const char *s)
 			return num;
 	}
 }
+
+static void xatoi_warn(const char *msg, const char *val, const char *key)
+{
+	fprintf(stderr, "warning: %s; value='%s'; key='%s'\n", msg, val, key);
+}
+
+/*
+ * xatoi() is an alternative to 'var = atoi(value)'. It was inspired by
+ * http://man7.org/tlpi/code/online/dist/lib/get_num.c.html
+ *
+ * Variable 'var' is only touched if 'value' is a valid integer.
+ *
+ * The variable 'key' is only there for debugging purposes; it would typically
+ * contain the variable name;
+ *
+ * The flags are defined in the header-file (XATOI_*)
+ */
+void xatoi(int *var, const char *value, int flags, const char *key)
+{
+	long res;
+	char *endptr;
+
+	if (!value || *value == '\0') {
+		xatoi_warn("null or empty string", value, key);
+		return;
+	}
+
+	errno = 0;
+	res = strtol(value, &endptr, 10);
+	if (errno != 0)
+		xatoi_warn("strtol() failed", value, key);
+	else if (*endptr != '\0')
+		xatoi_warn("nonnumeric characters", value, key);
+	else if ((flags & XATOI_NONNEG) && res < 0)
+		xatoi_warn("negative value not allowed", value, key);
+	else if ((flags & XATOI_GT_0) && res <= 0)
+		xatoi_warn("value must be > 0", value, key);
+	else if (res > INT_MAX || res < INT_MIN)
+		xatoi_warn("integer out of range", value, key);
+	else
+		*var = (int)res;
+}

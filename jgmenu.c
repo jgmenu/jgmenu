@@ -846,9 +846,11 @@ int main(int argc, char *argv[])
 		} else if (!strncmp(argv[i], "--checkout=", 11)) {
 			checkout_arg = argv[i] + 11;
 		} else if (!strncmp(argv[i], "--icon-size=", 12)) {
-			config.icon_size = atoi(argv[i] + 12);
+			xatoi(&config.icon_size, argv[i] + 12, XATOI_NONNEG,
+			      "icon_size");
 		} else if (!strncmp(argv[i], "--fixed-height=", 15)) {
-			config.min_items = atoi(argv[i] + 15);
+			xatoi(&config.min_items, argv[i] + 15, XATOI_NONNEG,
+			      "min_items");
 			config.max_items = config.min_items;
 		}
 

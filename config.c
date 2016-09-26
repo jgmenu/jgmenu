@@ -1,12 +1,12 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<stdarg.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
 
 #include "util.h"
 #include "config.h"
 
-struct Config config;
+struct config config;
 
 void config_set_defaults(void)
 {
@@ -52,45 +52,45 @@ static void process_line(char *line)
 		return;
 
 	if (!strncmp(option, "menu_margin_x", 13))
-		config.menu_margin_x = atoi(value);
+		xatoi(&config.menu_margin_x, value, XATOI_NONNEG, "margin_x");
 	else if (!strncmp(option, "menu_margin_y", 13))
-		config.menu_margin_y = atoi(value);
+		xatoi(&config.menu_margin_y, value, XATOI_NONNEG, "margin_y");
 	else if (!strncmp(option, "menu_width", 10))
-		config.menu_width = atoi(value);
+		xatoi(&config.menu_width, value, XATOI_GT_0, "menu_width");
 	else if (!strncmp(option, "menu_radius", 11))
-		config.menu_radius = atoi(value);
+		xatoi(&config.menu_radius, value, XATOI_NONNEG, "menu_radius");
 	else if (!strncmp(option, "menu_border", 11))
-		config.menu_border = atoi(value);
+		xatoi(&config.menu_border, value, XATOI_NONNEG, "menu_border");
 
 	else if (!strncmp(option, "item_margin_x", 13))
-		config.item_margin_x = atoi(value);
+		xatoi(&config.item_margin_x, value, XATOI_NONNEG, "item_margin_x");
 	else if (!strncmp(option, "item_margin_y", 13))
-		config.item_margin_y = atoi(value);
+		xatoi(&config.item_margin_y, value, XATOI_NONNEG, "item_margin_y");
 	else if (!strncmp(option, "item_height", 11))
-		config.item_height = atoi(value);
+		xatoi(&config.item_height, value, XATOI_GT_0, "item_height");
 	else if (!strncmp(option, "item_padding_x", 14))
-		config.item_padding_x = atoi(value);
+		xatoi(&config.item_padding_x, value, XATOI_NONNEG, "item_padding_x");
 	else if (!strncmp(option, "item_radius", 11))
-		config.item_radius = atoi(value);
+		xatoi(&config.item_radius, value, XATOI_NONNEG, "item_radius");
 	else if (!strncmp(option, "item_border", 11))
-		config.item_border = atoi(value);
+		xatoi(&config.item_border, value, XATOI_NONNEG, "item_border");
 
 	else if (!strncmp(option, "max_items", 8))
-		config.max_items = atoi(value);
+		xatoi(&config.max_items, value, XATOI_GT_0, "max_items");
 	else if (!strncmp(option, "min_items", 8))
-		config.min_items = atoi(value);
+		xatoi(&config.min_items, value, XATOI_GT_0, "min_items");
 	else if (!strncmp(option, "font", 4))
 		config.font = strdup(value);
 	else if (!strncmp(option, "icon_size", 9))
-		config.icon_size = atoi(value);
+		xatoi(&config.icon_size, value, XATOI_NONNEG, "icon_size");
 	else if (!strncmp(option, "icon_theme", 10))
 		config.icon_theme = strdup(value);
 	else if (!strncmp(option, "ignore_xsettings", 16))
-		config.ignore_xsettings = atoi(value);
+		xatoi(&config.ignore_xsettings, value, XATOI_NONNEG, "ignore_xsettings");
 	else if (!strncmp(option, "ignore_icon_cache", 17))
-		config.ignore_icon_cache = atoi(value);
+		xatoi(&config.ignore_icon_cache, value, XATOI_NONNEG, "ignore_icon_cache");
 	else if (!strncmp(option, "show_title", 10))
-		config.show_title = atoi(value);
+		xatoi(&config.show_title, value, XATOI_NONNEG, "show_title");
 
 	else if (!strncmp(option, "color_menu_bg", 13))
 		parse_hexstr(value, config.color_menu_bg);

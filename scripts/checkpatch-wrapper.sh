@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 cmd_args="--file --terse --no-tree --max-line-length=120"
 cmd_args="${cmd_args} --strict"

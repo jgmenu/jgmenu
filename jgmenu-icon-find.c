@@ -28,7 +28,8 @@ int main(int argc, char **argv)
 		if (argv[i][0] != '-')
 			icon_name = argv[i];
 		if (!strncmp(argv[i], "--icon-size=", 12))
-			icon_size = atoi(argv[i] + 12);
+			xatoi(&icon_size, argv[i] + 12, XATOI_NONNEG,
+			      "icon_size");
 		if (!strncmp(argv[i], "--theme=", 8))
 			theme = argv[i] + 8;
 	}

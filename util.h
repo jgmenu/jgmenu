@@ -8,6 +8,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <limits.h>
+#include <errno.h>
+
+#define XATOI_NONNEG (01)
+#define XATOI_GT_0   (02)
 
 void die(const char *err, ...);
 void spawn(const char *arg);
@@ -20,5 +25,6 @@ int parse_config_line(char *line, char **option, char **value);
 int hex_to_dec(char c);
 int parse_hexstr(char *hex, double *rgba);
 int get_first_num_from_str(const char *s);
+void xatoi(int *var, const char *value, int flags, const char *key);
 
 #endif /* UTIL_H */
