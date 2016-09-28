@@ -1,8 +1,10 @@
 variant = --from=markdown_strict+backtick_code_blocks+pipe_tables
-css     = ../jg.css
+css     = jg.css
 
 man_pages  = jgmenu.1 jgmenu_run.1
-man_pages += jgmenu-cache.1
+
+# High level commands
+man_pages += jgmenu-cache.1 jgmenu-pmenu.1 jgmenu-xdg.1 jgmenu-csv.1
 
 all: $(man_pages) readme
 
@@ -11,7 +13,7 @@ $(man_pages): % : %.md
 	@pandoc -s -t man $^ -o $@
 	@pandoc -s $(variant) --css=$(css) -o $@.html $^
 
-readme:
+readme: ../../README.md
 	@echo "    PANDOC    ../../README.md" 
 	@pandoc -s $(variant) --css=$(css) -o ../../README.html ../../README.md
 

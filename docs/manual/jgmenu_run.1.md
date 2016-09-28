@@ -34,9 +34,6 @@ csv
 cache  
         Create icon cache
 
-simple  
-        Simple fall-back menu
-
 # EXAMPLES
 
 Before first use:

@@ -10,7 +10,7 @@ static int icon_size = 22;
 
 void usage(void)
 {
-	printf("Usage: jgmenu-icon-find [OPTIONS] <icon-name>\n"
+	printf("Usage: jgmenu-icon-find [<options>] <icon-name>\n"
 	       "    --theme=<theme>       specify icon-theme\n"
 	       "    --icon-size=<size>    specify icon-size\n");
 	exit(1);
@@ -32,6 +32,8 @@ int main(int argc, char **argv)
 			      "icon_size");
 		if (!strncmp(argv[i], "--theme=", 8))
 			theme = argv[i] + 8;
+		if (!strncmp(argv[i], "--help", 6))
+			usage();
 	}
 
 	if (!icon_name) {

@@ -378,6 +378,8 @@ int main(int argc, char **argv)
 
 		if (!strncmp(argv[i], "--data-dir=", 11))
 			data_dir = argv[i] + 11;
+		else if (!strncmp(argv[i], "--help", 6))
+			usage();
 		else
 			die("unknown option '%s'", argv[i]);
 

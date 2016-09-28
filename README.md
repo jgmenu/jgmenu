@@ -81,23 +81,23 @@ extend the feature-set.
 
 For details, see the man pages:
 
-  - [jgmenu_run(1)](docs/manual/jgmenu_run.1.md)
-  - [jgmenu(1)](docs/manual/jgmenu.1.md)
+  - [jgmenu_run](docs/manual/jgmenu_run.1.md)
+  - [jgmenu](docs/manual/jgmenu.1.md)
 
-### high-level commands
+### High-level commands
 
-  - jgmenu-pmenu(1)
-  - jgmenu-xdg(1)
-  - jgmenu-csv(1)
-  - [jgmenu-cache(1)](docs/manual/jgmenu-cache.1.md)
-  - jgmenu-simple(1)
+  - `jgmenu_run` [pmenu](docs/manual/jgmenu-pmenu.1.md)
+  - `jgmenu_run` [xdg](docs/manual/jgmenu-xdg.1.md)
+  - `jgmenu_run` [csv](docs/manual/jgmenu-csv.1.md)
+  - `jgmenu_run` [cache](docs/manual/jgmenu-cache.1.md)
 
+### Low-level commands
 
-### low-level programs
+These are designed to be used by the high-level commands.  
+Use the `--help` option for further details on how these work.
 
-  - jgmenu-config(1)
-  - jgmenu-icon-find(1)
-  - jgmenu-parse-xdg(1)
-  - jgmenuo-parse-pmenu(1)
-  - jgmenu-xsettings(1)
-
+  - `jgmenu_run` config
+  - `jgmenu_run` icon-find
+  - `jgmenu_run` parse-xdg
+  - `jgmenu_run` parse-pmenu
+  - `jgmenu_run` xsettings
