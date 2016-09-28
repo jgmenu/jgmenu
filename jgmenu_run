@@ -11,14 +11,13 @@ die () {
 usage () {
 	printf "usage: jgmenu_run <command> [<args>]\n"
 	printf "\n"
-	printf "Top level convenience wrapper for JGMenu\n"
+	printf "Top level convenience wrapper for jgmenu\n"
 	printf "\n"
 	printf "Valid 'commands' include:\n"
-	printf "    pmenu               Menu based on .directory and .desktop files\n"
-	printf "    xdg                 Menu based on .menu file\n"
-	printf "    csv                 Menu based on .csv file\n"
-	printf "    cache               Create icon cache\n"
-	printf "    simple              Simple fall-back menu\n"
+	printf "    pmenu           Menu based on .directory and .desktop files\n"
+	printf "    xdg             Menu based on .menu file\n"
+	printf "    csv             Menu based on .csv file\n"
+	printf "    cache           Create icon cache\n"
 	printf "\n"
 	exit 0
 }

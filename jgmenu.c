@@ -24,7 +24,7 @@
 #include "isprog.h"
 #include "sbuf.h"
 #include "icon.h"
-#include "theme.h"
+#include "config-xs.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -809,8 +809,18 @@ void init_geo_variables_from_config(void)
 	geo_set_menu_width(config.menu_width);
 	geo_set_item_margin_x(config.item_margin_x);
 	geo_set_item_margin_y(config.item_margin_y);
-	geo_set_font(config.font);
 	geo_set_item_height(config.item_height);
+}
+
+void set_theme_and_font(void)
+{
+	config_xs_get_theme(&config.icon_theme, config.ignore_xsettings,
+			    config.ignore_icon_cache);
+
+	if (!config.font && !config.ignore_xsettings)
+		config_xs_get_font(&config.font);
+	if (!config.font)
+		config.font = strdup("Cantarell 14px");
 }
 
 int main(int argc, char *argv[])
@@ -854,10 +864,7 @@ int main(int argc, char *argv[])
 			config.max_items = config.min_items;
 		}
 
-	theme_get(&config.icon_theme, config.ignore_xsettings,
-		  config.ignore_icon_cache);
-	fprintf(stderr, "info: icon theme is '%s'\n",
-		config.icon_theme);
+	set_theme_and_font();
 
 	ui_init();
 	geo_init();
@@ -882,6 +889,8 @@ int main(int argc, char *argv[])
 
 	init_menuitem_coordinates();
 	draw_menu();
+
+	fprintf(stderr, "FONT: %s\n", config.font);
 
 	run();
 

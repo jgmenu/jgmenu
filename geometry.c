@@ -29,9 +29,6 @@ int show_title;		/* s  */
 
 int item_height;	/* sg */
 
-/* FIXME item_font and its getters/setters could probably be deleted */
-char item_font[1024];	/* s  */
-
 /*
  * geo_update() contains algorithms for geometric variables
  */
@@ -60,7 +57,6 @@ void geo_init(void)
 	menu_height = 500;
 
 	item_height = 20;
-	strncpy(item_font, "Sans 18px", 9);
 	item_margin_x = 4;
 	item_margin_y = 4;
 
@@ -137,12 +133,6 @@ void geo_set_item_height(int h)
 	geo_update();
 }
 
-void geo_set_font(char *font)
-{
-	strncpy(item_font, font, strlen(font));
-	geo_update();
-}
-
 void geo_set_nr_visible_items(int nr)
 {
 	if (nr > geo_get_nr_items_that_fit_on_screen())
@@ -198,11 +188,6 @@ int geo_get_menu_width(void)
 int geo_get_item_height(void)
 {
 	return item_height;
-}
-
-int geo_get_font_height(void)
-{
-	return ui_get_text_height(item_font);
 }
 
 int geo_get_screen_height(void)

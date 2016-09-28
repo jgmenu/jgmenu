@@ -38,14 +38,15 @@ QUIET_LINK = @echo '     LINK  '$@;
 endif
 
 SCRIPTS  = jgmenu_run jgmenu-cache.sh jgmenu-pmenu.sh jgmenu-parse-pmenu.py \
-	   jgmenu-simple.sh jgmenu-csv.sh jgmenu-xdg.sh jgmenu-config.sh
+	   jgmenu-csv.sh jgmenu-xdg.sh jgmenu-config.sh
 
 PROGS	 = jgmenu jgmenu-parse-xdg jgmenu-icon-find jgmenu-xsettings
 
 LIB_H = $(shell find . -name '*.h' -print)
 
 OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
-        icon.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o theme.o
+        icon.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o \
+	config-xs.o
 
 
 all: $(PROGS)

@@ -27,9 +27,9 @@ void config_set_defaults(void)
 
 	config.max_items	 = 80;
 	config.min_items	 = 0;
-	config.font		 = strdup("Ubuntu condensed 14px");
+	config.font		 = NULL; /* Leave as NULL. Is set in jgmenu.c */
 	config.icon_size	 = 22;
-	config.icon_theme	 = NULL;
+	config.icon_theme	 = NULL; /* Leave as NULL. Is set in config-xs.c */
 	config.ignore_xsettings  = 0;
 	config.ignore_icon_cache = 0;
 	config.show_title	 = 1;
