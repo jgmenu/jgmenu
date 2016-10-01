@@ -1,32 +1,32 @@
 # .jgmenurc example
 
-menu_margin_x	  = 2
-menu_margin_y	  = 33
+menu_margin_x	  = 0
+menu_margin_y	  = 32
 menu_width	  = 200
-menu_radius	  = 7
-menu_border	  = 0.0
+menu_radius	  = 1
+menu_border	  = 0
 
 item_margin_x	  = 3
 item_margin_y	  = 3
 item_height	  = 25
 item_padding_x	  = 4
-item_radius	  = 3
+item_radius	  = 1
 item_border	  = 0
 
-max_items	  = 100
+max_items	  = 80
 min_items	  = 0
-font		  = Ubuntu condensed 14px
+font		  = Cantarell 10
 icon_size	  = 22
-icon_theme	  = Adwaita
+icon_theme	  = Numix-Circle
 ignore_xsettings  = 0
 ignore_icon_cache = 0
 show_title	  = 0
 
-color_menu_bg	  = #000000 60
-color_menu_fg	  = #eeeeee 100
+color_menu_bg	  = #000000 70
+color_menu_fg	  = #eeeeee 20
 color_norm_bg	  = #000000 00
 color_norm_fg	  = #eeeeee 100
-color_sel_bg	  = #ffbb22 60
+color_sel_bg	  = #ffffff 20
 color_sel_fg	  = #eeeeee 100
-color_noprog_fg	  = #ff0000 80
-color_title_bg	  = #ffbb22 60
+color_noprog_fg	  = #eeeeee 100
+color_title_bg	  = #ffffff 20
