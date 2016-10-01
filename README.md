@@ -38,7 +38,7 @@ specify a different target location. For example, to install to /usr/bin/,
 do:
 
 ```bash
-$make prefix=/usr install
+# make prefix=/usr install
 ```
 
 Dependencies
@@ -54,7 +54,7 @@ Getting started
 To get started, use the `jgmenu_run` wrapper. Try:
 
 ```bash
-$ jgmenu_run xdg
+$ jgmenu_run pmenu
 ```
 
 Some icons themes are slow to load on start-up. Icon load-times can be  

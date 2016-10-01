@@ -60,6 +60,7 @@ $(PROGS): % : $(OBJS) %.o
 install: $(PROGS) $(SCRIPTS)
 	@install -d $(DESTDIR)$(bindir)
 	@install -m755 $(PROGS) $(SCRIPTS) $(DESTDIR)$(bindir)
+	@$(MAKE) --no-print-directory -C docs/manual/ install
 
 clean:
 	@$(RM) $(PROGS) *.o
