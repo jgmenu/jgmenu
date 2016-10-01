@@ -820,7 +820,7 @@ void set_theme_and_font(void)
 	if (!config.font && !config.ignore_xsettings)
 		config_xs_get_font(&config.font);
 	if (!config.font)
-		config.font = strdup("Cantarell 14px");
+		config.font = strdup(JGMENU_DEFAULT_FONT);
 }
 
 int main(int argc, char *argv[])

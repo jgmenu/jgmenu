@@ -77,6 +77,10 @@ void ui_init_cairo(int canvas_width, int canvas_height, const char *font)
 	ui->cs = cairo_xlib_surface_create(ui->dpy, ui->canvas, ui->vinfo.visual, canvas_width, canvas_height);
 	ui->c = cairo_create(ui->cs);
 
+	/*
+	 * pango-font-description-from-string() interprets the size without
+	 * a suffix as "points". If "px" is added, it will be read as pixels.
+	 */
 	ui->pangolayout = pango_cairo_create_layout(ui->c);
 	ui->pangofont = pango_font_description_from_string(font);
 

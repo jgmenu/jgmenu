@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#define JGMENU_DEFAULT_FONT "Cantarell 10"
+
 struct config {
 	int spawn;		/* 1:execute commands  0:print to stdout */
 

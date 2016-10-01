@@ -98,7 +98,6 @@ void config_xs_get_font(char **font)
 
 	sbuf_init(&s);
 	ret = xsettings_get(&s, "Gtk/FontName");
-	sbuf_addstr(&s, "px");
 	if (ret == 0)
 		*font = strdup(s.buf);
 	free(s.buf);
