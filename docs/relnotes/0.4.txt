@@ -1,0 +1,28 @@
+jgmenu v0.4 release notes
+=========================
+
+Updates since v0.3.1
+--------------------
+
+  - Added man pages
+
+  - Added support for obtaining theme and font details from the
+    xsettings-daemon.
+
+  - Re-factored jgmenu_run and added/improved the following commands:
+
+	- csv
+
+	- pmenu: Copied from https://gitlab.com/o9000/pmenu.git
+
+	- cache: Now runs without having to specify menu-file; and
+		 reads the icon-theme from xsettings or jgmenurc.
+
+	- xdg:	 Improved, but still very experimental
+
+  - Two config options were added (both are set to 0 be default)
+
+	- ignore_xsettings
+
+	- ignore_icon_cache (by default, icon-cache will be used if it
+	  exists in ~/.local/share/icons/jgmenu-cache/)

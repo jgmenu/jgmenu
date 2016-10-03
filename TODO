@@ -1,0 +1,68 @@
+ROADMAP AND IDEAS
+=================
+
+  - Add <file> option to `jgmenu_run xdg` and `jgmenu_run csv`
+
+  - Remove harded coded variables (such as 22, etc)
+
+  - Add debian checkbashism perl script
+
+  - Get rid of references to '/bin/bash'
+
+  - Check if variable is number in shell script (=isnumeric())
+    (needed in jgmenu-cache.sh)
+
+  - Add eq to ~/.config/gtk-3.0/settings.ini | grep... in theme.c
+
+  - Add rtrim, ltrim, trim, expand_tilde to sbuf.c
+
+  - jgmenu_run pmenu (and xdg?)
+	add --append-file=
+	    --prepend-file=
+	    --parent=
+
+  - jgmenu_run csv
+	add #include directive
+	e.g. #include jgmenu_run parse-pmenu
+
+  - In jgmenu.c: Change t[] for name, cmd, icon
+
+  - Tidy up checkout_submenu in jgmenu.c
+
+  - remove sandbox/cache-helper.sh
+
+  - Research alternatives to gtk+-3.0's xpm function.
+	- XpmReadFileToXpmImage
+	  XpmCreateImageFromXpmImage (=XImage)
+	  cairo_image_surface_for_data
+	  cairo_image_surface_get(XImage)
+	- OR write a quick xpm-parser directly for a cairo_surface_t
+	  (a simplistic approach would probably work well)
+
+  - Add svg2png support in jgmenu-cache
+
+  - Check padding_x for icons - is it right?
+
+  - XDG language support ([sv], etc) when reading .desktop files
+
+  - Add item_border_color, menu_border_color to config.{h,c}
+    Currently borders use the fg colour which is often a bit "strong"
+
+  - Refactor some of the large functions in jgmenu.c
+    e.g. read_stdin() and draw_menu()
+
+  - Alignment support in geometry.c (vertical and horizontal)
+
+  - Add tint2 compatibility mode (i.e. read tint2rc file)
+
+	config.h variables should be set in the following order:
+	(i.e. bottom of list has higher precedence)
+	  - default (config.c)
+	  - jgmenurc (--config-file=)
+	  - tint2rc (--tint2rc=)
+	  - cmd line args (e.g. --icon_size=)
+
+  - Use new windows for submenus
+
+  - Improve XDG menu support
+
