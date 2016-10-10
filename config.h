@@ -11,6 +11,8 @@ struct config {
 	int menu_width;
 	int menu_radius;
 	int menu_border;
+	char *menu_halign;
+	char *menu_valign;
 
 	int item_margin_x;
 	int item_margin_y;

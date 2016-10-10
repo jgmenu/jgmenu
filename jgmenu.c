@@ -339,6 +339,14 @@ int scroll_step_up(void)
 		return geo_get_nr_visible_items();
 }
 
+void move_window(void)
+{
+	XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(),
+			  geo_get_menu_y0(), geo_get_menu_width(),
+			  geo_get_menu_height());
+	draw_menu();
+}
+
 void key_event(XKeyEvent *ev)
 {
 	char buf[32];
@@ -418,19 +426,35 @@ void key_event(XKeyEvent *ev)
 			init_menuitem_coordinates();
 		}
 		break;
-	case XK_d:
-		config.color_menu_bg[3] += 0.2;
+	case XK_plus:
+		config.color_menu_bg[3] += 0.1;
 		if (config.color_menu_bg[3] > 1.0)
 			config.color_menu_bg[3] = 1.0;
 		init_menuitem_coordinates();
 		draw_menu();
 		break;
-	case XK_l:
-		config.color_menu_bg[3] -= 0.2;
+	case XK_minus:
+		config.color_menu_bg[3] -= 0.1;
 		if (config.color_menu_bg[3] < 0.0)
 			config.color_menu_bg[3] = 0.0;
 		init_menuitem_coordinates();
 		draw_menu();
+		break;
+	case XK_h:
+		geo_set_menu_halign("left");
+		move_window();
+		break;
+	case XK_j:
+		geo_set_menu_valign("bottom");
+		move_window();
+		break;
+	case XK_k:
+		geo_set_menu_valign("top");
+		move_window();
+		break;
+	case XK_l:
+		geo_set_menu_halign("right");
+		move_window();
 		break;
 	}
 }
@@ -804,6 +828,8 @@ void run(void)
 
 void init_geo_variables_from_config(void)
 {
+	geo_set_menu_halign(config.menu_halign);
+	geo_set_menu_valign(config.menu_valign);
 	geo_set_menu_margin_x(config.menu_margin_x);
 	geo_set_menu_margin_y(config.menu_margin_y);
 	geo_set_menu_width(config.menu_width);

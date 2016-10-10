@@ -4,10 +4,7 @@
 
 #include "geometry.h"
 
-enum Alignment {TOP, CENTER, BOTTOM, LEFT, RIGHT};
-
-enum Alignment menu_valign;
-enum Alignment menu_halign;
+enum alignment {TOP, CENTER, BOTTOM, LEFT, RIGHT};
 
 int menu_margin_x;	/* s  */
 int menu_margin_y;	/* s  */
@@ -15,6 +12,9 @@ int menu_height;	/* sg */
 int menu_width;		/* sg */
 int menu_x0;		/*  g */
 int menu_y0;		/*  g */
+
+enum alignment menu_valign;
+enum alignment menu_halign;
 
 int item_margin_x;	/* s  */
 int item_margin_y;	/* s  */
@@ -34,14 +34,22 @@ int item_height;	/* sg */
  */
 void geo_update(void)
 {
-	menu_x0 = menu_margin_x;
+	if (menu_halign == LEFT)
+		menu_x0 = menu_margin_x - 1;
+	else if (menu_halign == RIGHT)
+		menu_x0 = screen_width - menu_width - menu_margin_x - 1;
 
-	menu_height = nr_visible_items * (item_height + item_margin_y) + item_margin_y;
+	menu_height = nr_visible_items * (item_height + item_margin_y) +
+		      item_margin_y;
 
 	if (show_title)
 		menu_height = menu_height + item_height;
 
-	menu_y0 = screen_y0 + screen_height - menu_height - menu_margin_y;
+	if (menu_valign == BOTTOM)
+		menu_y0 = screen_y0 + screen_height - menu_height -
+			  menu_margin_y - 1;
+	else if (menu_valign == TOP)
+		menu_y0 = screen_y0 + menu_margin_y - 1;
 }
 
 void geo_init(void)
@@ -55,6 +63,8 @@ void geo_init(void)
 	menu_margin_y = 30;
 	menu_width = 200;
 	menu_height = 500;
+	menu_valign = BOTTOM;
+	menu_halign = LEFT;
 
 	item_height = 20;
 	item_margin_x = 4;
@@ -124,6 +134,28 @@ void geo_set_menu_margin_x(int x)
 void geo_set_menu_margin_y(int y)
 {
 	menu_margin_y = y;
+	geo_update();
+}
+
+void geo_set_menu_halign(const char *pos)
+{
+	if (!pos)
+		return;
+	else if (!strcasecmp(pos, "left"))
+		menu_halign = LEFT;
+	else if (!strcasecmp(pos, "right"))
+		menu_halign = RIGHT;
+	geo_update();
+}
+
+void geo_set_menu_valign(const char *pos)
+{
+	if (!pos)
+		return;
+	else if (!strcasecmp(pos, "top"))
+		menu_valign = TOP;
+	else if (!strcasecmp(pos, "bottom"))
+		menu_valign = BOTTOM;
 	geo_update();
 }
 

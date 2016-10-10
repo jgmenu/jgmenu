@@ -6,6 +6,14 @@ menu_width	  = 200
 menu_radius	  = 1
 menu_border	  = 0
 
+#
+# valid options for menu alignment are:
+#   - horizontal: left, right
+#   - vertical:   top, bottom
+#
+menu_halign	  = left
+menu_valign	  = bottom
+
 item_margin_x	  = 3
 item_margin_y	  = 3
 item_height	  = 25

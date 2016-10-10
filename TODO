@@ -1,5 +1,11 @@
-ROADMAP AND IDEAS
-=================
+TODO
+====
+
+  - Add version fix, so that `jgmenu --version` generates
+	- a more informative message
+	- the correct version if a git repo does not exist
+
+  - Add notes in jgmenurc to explain options (particularly top, bottom, etc)
 
   - Add <file> option to `jgmenu_run xdg` and `jgmenu_run csv`
 
@@ -50,8 +56,6 @@ ROADMAP AND IDEAS
 
   - Refactor some of the large functions in jgmenu.c
     e.g. read_stdin() and draw_menu()
-
-  - Alignment support in geometry.c (vertical and horizontal)
 
   - Add tint2 compatibility mode (i.e. read tint2rc file)
 
