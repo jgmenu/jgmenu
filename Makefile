@@ -4,7 +4,7 @@
 # Define VERBOSE=1 for a more verbose compilation
 #
 
-VER      = $(shell git describe 2>/dev/null)
+VER      = $(shell ./scripts/version-gen.sh)
 CC       = gcc
 MAKE     = make
 RM       = rm -f
