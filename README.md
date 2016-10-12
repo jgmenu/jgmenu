@@ -29,16 +29,18 @@ Installation
 ------------
 
 ```bash
-$ make
-$ make install
+make
+make install
 ```
 
-By default, `make install` will install files to ~/bin/. Use `prefix` to  
-specify a different target location. For example, to install to /usr/bin/,  
-do:
+By default, `make install` will install files to `~/bin/`. You will need  
+`~/bin` in your `$PATH` to run it from here.
+
+Use `prefix` to specify a different target location. For example, to  
+install to /usr/bin/, do:
 
 ```bash
-# make prefix=/usr install
+sudo make prefix=/usr install
 ```
 
 Dependencies
@@ -48,27 +50,30 @@ jgmenu requires libx11, libxinerama, cairo, pango and librsvg.
 
 jgmenu-parse-xdg requires libxml2
 
+If you're running openbox and tint2, you'll probably alread have these
+on your system.
+
 Getting started
 ---------------
 
 To get started, use the `jgmenu_run` wrapper. Try:
 
 ```bash
-$ jgmenu_run pmenu
+jgmenu_run pmenu
 ```
 
 Some icons themes are slow to load on start-up. Icon load-times can be  
 significantly improved by running:
 
 ```bash
-$ jgmenu_run cache
+jgmenu_run cache
 ```
 
 To change the menu appearance, create a jgmenurc file.
 
 ```bash
-$ mkdir -p ~/.config/jgmenu
-$ cp path_to_jgmenu_dir/jgmenu/docs/jgmenurc ~/.config/jgmenu/
+mkdir -p ~/.config/jgmenu
+cp path_to_jgmenu_dir/jgmenu/docs/jgmenurc ~/.config/jgmenu/
 ```
 
 How jgmenu works

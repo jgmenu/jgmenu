@@ -1,19 +1,14 @@
 TODO
 ====
 
-  - Add version fix, so that `jgmenu --version` generates
-	- a more informative message
-	- the correct version if a git repo does not exist
+  - Add packaging/arch/PKBUILD
+		      /gen-srcinfo.sh
 
   - Add notes in jgmenurc to explain options (particularly top, bottom, etc)
 
   - Add <file> option to `jgmenu_run xdg` and `jgmenu_run csv`
 
   - Remove harded coded variables (such as 22, etc)
-
-  - Add debian checkbashism perl script
-
-  - Get rid of references to '/bin/bash'
 
   - Check if variable is number in shell script (=isnumeric())
     (needed in jgmenu-cache.sh)
@@ -31,11 +26,12 @@ TODO
 	add #include directive
 	e.g. #include jgmenu_run parse-pmenu
 
+  - Add argvbuf.c
+	simplistic library which:
+	 - splits a string buffer into fields;
+	 - provides av **argv+argc interface for this data.
+
   - In jgmenu.c: Change t[] for name, cmd, icon
-
-  - Tidy up checkout_submenu in jgmenu.c
-
-  - remove sandbox/cache-helper.sh
 
   - Research alternatives to gtk+-3.0's xpm function.
 	- XpmReadFileToXpmImage
@@ -44,6 +40,8 @@ TODO
 	  cairo_image_surface_get(XImage)
 	- OR write a quick xpm-parser directly for a cairo_surface_t
 	  (a simplistic approach would probably work well)
+
+  - Tidy up checkout_submenu in jgmenu.c
 
   - Add svg2png support in jgmenu-cache
 

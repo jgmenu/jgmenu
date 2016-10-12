@@ -9,7 +9,7 @@ die () {
 }
 
 check_prog_exists () {
-	type "$1" &>/dev/null || die "$1 is not installed"
+	type "$1" >/dev/null 2>&1 || die "$1 is not installed"
 }
 
 usage () {
@@ -91,7 +91,7 @@ create_symlinks () {
 		die "${menu_file} does not exist"
 	fi
 
-	mkdir -pv ${1} &>/dev/null
+	mkdir -p ${1} 2>/dev/null
 	test -d ${1} || die "could not create cache directory"
 	test -w ${1} || die "you do not have write permission to the cache directory"
 
@@ -107,7 +107,7 @@ create_symlinks () {
 			test ${verbose} = "t" && echo "[ CREATE  ] ${f}"
 			ln -s "$(jgmenu-icon-find --theme=${icon_theme} \
 				 --icon-size=${icon_size} ${f})" \
-			      ${1} &>/dev/null
+			      ${1} >/dev/null 2>&1
 		fi
 	done
 }

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 menu_file="/etc/xdg/menus/gnome-applications.menu"
 

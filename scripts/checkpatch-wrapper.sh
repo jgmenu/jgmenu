@@ -3,9 +3,9 @@
 cmd_args="--file --terse --no-tree --max-line-length=120"
 cmd_args="${cmd_args} --strict"
 
-if [[ $# -lt 1 ]]
+if test $# -lt 1
 then
-	echo -e "Fatal: no file specified"
+	printf "%s\n" "Fatal: no file specified"
 	exit 1
 fi
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 tmp_file=$(mktemp)
 N_ITEMS=1000

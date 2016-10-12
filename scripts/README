@@ -1,4 +1,19 @@
-checkpatch.pl is copied directly from the linux kernel tree:
-https://github.com/torvalds/linux/blob/master/scripts/checkpatch.pl
+Check C code
+------------
 
-Use the wrapper to check code.
+	checkpatch.pl is copied from the linux kernel tree:
+	https://github.com/torvalds/linux/blob/master/scripts/checkpatch.pl
+
+	Use checkpatch-wrapper.sh to check files, for example:
+
+		./scripts/checkpatch-wrapper.sh *.c
+
+Check shell scripts
+-------------------
+
+	checkbashisms.pl is copied from:
+	http://ftp.debian.org/debian/pool/main/d/devscripts/
+
+	Example usage:
+
+		find . -name "*.sh" | xargs ./scripts/checkbashisms.pl --force

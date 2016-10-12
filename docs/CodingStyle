@@ -80,3 +80,7 @@ Shell scripts
     For example, to re-direct both stdout and stderr to /dev/null, do:
 
 	command >/dev/null 2>&1
+
+  - Instead of echo -e "foo", use
+
+	printf "%b\n" "foo"

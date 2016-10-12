@@ -1,0 +1,68 @@
+.TH CHECKBASHISMS 1 "Debian Utilities" "DEBIAN" \" -*- nroff -*-
+.SH NAME
+checkbashisms \- check for bashisms in /bin/sh scripts
+.SH SYNOPSIS
+\fBcheckbashisms\fR \fIscript\fR ...
+.br
+\fBcheckbashisms \-\-help\fR|\fB\-\-version\fR
+.SH DESCRIPTION
+\fBcheckbashisms\fR, based on one of the checks from the \fBlintian\fR
+system, performs basic checks on \fI/bin/sh\fR shell scripts for the
+possible presence of bashisms.  It takes the names of the shell
+scripts on the command line, and outputs warnings if possible bashisms
+are detected.
+.PP
+Note that the definition of a bashism in this context roughly equates
+to "a shell feature that is not required to be supported by POSIX"; this
+means that some issues flagged may be permitted under optional sections
+of POSIX, such as XSI or User Portability.
+.PP
+In cases where POSIX and Debian Policy disagree, \fBcheckbashisms\fR by
+default allows extensions permitted by Policy but may also provide
+options for stricter checking.
+.SH OPTIONS
+.TP
+.BR \-\-help ", " \-h
+Show a summary of options.
+.TP
+.BR \-\-newline ", " \-n
+Check for "\fBecho \-n\fR" usage (non POSIX but required by Debian Policy 10.4.)
+.TP
+.BR \-\-posix ", " \-p
+Check for issues which are non POSIX but required to be supported by Debian
+Policy 10.4 (implies \fB\-n\fR).
+.TP
+.BR \-\-force ", " \-f
+Force each script to be checked, even if it would normally not be (for
+instance, it has a bash or non POSIX shell shebang or appears to be a
+shell wrapper).
+.TP
+.BR \-\-extra ", " \-x
+Highlight lines which, whilst they do not contain bashisms, may be
+useful in determining whether a particular issue is a false positive
+which may be ignored.
+For example, the use of "\fB$BASH_ENV\fR" may be preceded by checking
+whether "\fB$BASH\fR" is set.
+.TP
+.BR \-\-version ", " \-v
+Show version and copyright information.
+.SH "EXIT VALUES"
+The exit value will be 0 if no possible bashisms or other problems
+were detected.  Otherwise it will be the sum of the following error
+values:
+.TP
+1
+A possible bashism was detected.
+.TP
+2
+A file was skipped for some reason, for example, because it was
+unreadable or not found.  The warning message will give details.
+.TP
+4
+No bashisms were detected in a bash script.
+.SH "SEE ALSO"
+.BR lintian (1)
+.SH AUTHOR
+\fBcheckbashisms\fR was originally written as a shell script by Yann Dirson
+<\fIdirson@debian.org\fR> and rewritten in Perl with many more features by
+Julian Gilbey <\fIjdg@debian.org\fR>.
