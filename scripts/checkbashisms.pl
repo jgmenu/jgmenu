@@ -619,7 +619,7 @@ sub init_hashes {
 	$LEADIN . qr'shopt(\s|\Z)' =>     q<shopt>,
 	$LEADIN . qr'suspend\s' =>        q<suspend>,
 	$LEADIN . qr'time\s' =>           q<time>,
-	$LEADIN . qr'type\s' =>           q<type>,
+#	$LEADIN . qr'type\s' =>           q<type>,
 	$LEADIN . qr'typeset\s' =>        q<typeset>,
 	$LEADIN . qr'ulimit(\s|\Z)' =>    q<ulimit>,
 	$LEADIN . qr'set\s+-[BHT]+' =>    q<set -[BHT]>,

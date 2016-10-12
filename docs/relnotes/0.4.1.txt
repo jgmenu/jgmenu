@@ -1,0 +1,9 @@
+jgmenu v0.4.1 release notes
+===========================
+
+Updates since v0.4
+------------------
+
+  - Added menu alignment support
+
+  - Fixed some bugs
