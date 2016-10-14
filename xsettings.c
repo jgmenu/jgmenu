@@ -62,11 +62,10 @@ static Bool fetch_card8(XSettingsBuffer *buffer, CARD8 *result)
 static Bool fetch_card16(XSettingsBuffer *buffer, CARD16 *result)
 {
 	CARD16 x;
+
 	if (BYTES_LEFT(buffer) < 2)
 		return False;
-
 	x = *(CARD16 *)buffer->pos;
-
 	buffer->pos += 2;
 	if (buffer->byte_order == byte_order())
 		*result = x;
@@ -111,6 +110,7 @@ static XSetting *parse_settings(unsigned char *data, size_t len, size_t *count)
 	XSettingsBuffer buffer;
 	CARD32 serial;
 	CARD32 n_entries;
+	size_t i;
 
 	*count = 0;
 	buffer.pos = data;
@@ -138,7 +138,7 @@ static XSetting *parse_settings(unsigned char *data, size_t len, size_t *count)
 		goto err;
 	*count = n_entries;
 
-	for (size_t i = 0; i < n_entries; i++) {
+	for (i = 0; i < n_entries; i++) {
 		CARD16 name_len;
 		size_t pad_len;
 		XSetting *setting;
@@ -209,9 +209,11 @@ err:
 
 void free_xsettings(XSetting *settings, size_t count)
 {
+	size_t i;
+
 	if (!settings)
 		return;
-	for (size_t i = 0; i < count; i++) {
+	for (i = 0; i < count; i++) {
 		XSetting *setting = &settings[i];
 
 		if (setting->type == XSETTINGS_TYPE_STRING)
