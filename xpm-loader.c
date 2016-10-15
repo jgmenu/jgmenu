@@ -135,7 +135,7 @@ static int find_color(const char *name, XPMColor *colorPtr)
 	XPMColorEntry *found;
 
 	found = bsearch(name, xColors, G_N_ELEMENTS(xColors), sizeof(XPMColorEntry), compare_xcolor_entries);
-	if (found == NULL)
+	if (!found)
 		return 0;
 
 	colorPtr->red = (found->red * 65535) / 255;
@@ -166,9 +166,9 @@ static int parse_color(const char *spec, XPMColor *colorPtr)
 	if (spec[0] == '#') {
 		int i, red, green, blue;
 
-		if ((i = strlen(spec + 1)) % 3) {
+		i = strlen(spec + 1);
+		if (i % 3)
 			return 0;
-		}
 		i /= 3;
 
 		if (i == 4) {
@@ -224,10 +224,10 @@ static int xpm_seek_char(FILE *infile, char c)
 	while ((b = getc(infile)) != EOF) {
 		if (c != b && b == '/') {
 			b = getc(infile);
-			if (b == EOF)
+			if (b == EOF) {
 				return 0;
-
-			else if (b == '*') { /* we have a comment */
+			} else if (b == '*') {
+				/* we have a comment */
 				b = -1;
 				do {
 					oldb = b;
@@ -236,8 +236,9 @@ static int xpm_seek_char(FILE *infile, char c)
 						return 0;
 				} while (!(oldb == '*' && b == '/'));
 			}
-		} else if (c == b)
+		} else if (c == b) {
 			return 1;
+		}
 	}
 
 	return 0;
@@ -251,7 +252,7 @@ static int xpm_read_string(FILE *infile, char **buffer, uint *buffer_size)
 
 	buf = *buffer;
 	bufsiz = *buffer_size;
-	if (buf == NULL) {
+	if (!buf) {
 		bufsiz = 10 * sizeof(char);
 		buf = (char *)calloc(bufsiz, sizeof(char));
 	}
@@ -276,9 +277,9 @@ static int xpm_read_string(FILE *infile, char **buffer, uint *buffer_size)
 			buf[bufsiz - 1] = '\0';
 		}
 
-		if (c != '"')
+		if (c != '"') {
 			buf[cnt++] = c;
-		else {
+		} else {
 			buf[cnt] = 0;
 			ret = 1;
 			break;
@@ -292,11 +293,12 @@ out:
 	return ret;
 }
 
-// Unlike the standard C library isspace() function, this only recognizes standard ASCII white-space
-// and ignores the locale, returning FALSE for all non-ASCII characters.
-// Also, unlike the standard library function, this takes a char, not an int,
-// so don't call it on EOF, but no need to cast to unsigned char before passing a possibly non-ASCII character in.
-// Similar to g_ascii_isspace.
+/* Unlike the standard C library isspace() function, this only recognizes standard ASCII white-space
+ * and ignores the locale, returning FALSE for all non-ASCII characters.
+ * Also, unlike the standard library function, this takes a char, not an int,
+ * so don't call it on EOF, but no need to cast to unsigned char before passing a possibly non-ASCII character in.
+ * Similar to g_ascii_isspace.
+ */
 static int xpm_isspace(char c)
 {
 	return c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v';
@@ -318,20 +320,21 @@ static char *xpm_extract_color(const char *buffer)
 	while (1) {
 		/* skip whitespace */
 		for (; *p != '\0' && xpm_isspace(*p); p++) {
+			/* nothing to do */
 		}
 		/* copy word */
-		for (r = word; *p != '\0' && !xpm_isspace(*p) && r - word < sizeof(word) - 1; p++, r++) {
+		for (r = word; *p != '\0' && !xpm_isspace(*p) && r - word < sizeof(word) - 1; p++, r++)
 			*r = *p;
-		}
 		*r = '\0';
 		if (*word == '\0') {
 			if (color[0] == '\0') /* incomplete colormap entry */
 				return NULL;
-			else /* end of entry, still store the last color */
-				new_key = 1;
-		} else if (key > 0 && color[0] == '\0') /* next word must be a color name part */
+			/* end of entry, still store the last color */
+			new_key = 1;
+		} else if (key > 0 && color[0] == '\0') {
+			/* next word must be a color name part */
 			new_key = 0;
-		else {
+		} else {
 			if (strcmp(word, "c") == 0)
 				new_key = 5;
 			else if (strcmp(word, "g") == 0)
@@ -399,7 +402,7 @@ static const char *file_buffer(enum buf_op op, void *handle)
 		return h->buffer;
 
 	default:
-		assert(0); // should not reach this point
+		assert(0); /* should not reach this point */
 	}
 
 	return NULL;
@@ -408,8 +411,10 @@ static const char *file_buffer(enum buf_op op, void *handle)
 XPMColor *lookup_color(XPMColor *colors, int n_colors, const char *name)
 {
 	int i;
+
 	for (i = 0; i < n_colors; i++) {
 		XPMColor *color = &colors[i];
+
 		if (strcmp(name, color->color_string) == 0)
 			return color;
 	}
@@ -418,9 +423,9 @@ XPMColor *lookup_color(XPMColor *colors, int n_colors, const char *name)
 
 /* This function does all the work. */
 static u_int32_t *pixbuf_create_from_xpm(const char *(*get_buf)(enum buf_op op, void *handle),
-                                         void *handle,
-                                         int *width,
-                                         int *height)
+					 void *handle,
+					 int *width,
+					 int *height)
 {
 	int w, h, n_col, cpp, x_hot, y_hot, items;
 	int cnt, xcnt, ycnt, wbytes, n;
@@ -477,7 +482,8 @@ static u_int32_t *pixbuf_create_from_xpm(const char *(*get_buf)(enum buf_op op, 
 
 		color_name = xpm_extract_color(buffer);
 
-		if ((color_name == NULL) || (strcasecmp(color_name, "None") == 0) || (parse_color(color_name, color) == 0)) {
+		if (!color_name || (strcasecmp(color_name, "None") == 0) ||
+		    (parse_color(color_name, color) == 0)) {
 			color->transparent = 1;
 			color->red = 0;
 			color->green = 0;
@@ -507,6 +513,7 @@ static u_int32_t *pixbuf_create_from_xpm(const char *(*get_buf)(enum buf_op op, 
 
 		for (n = 0, xcnt = 0; n < wbytes; n += cpp, xcnt++) {
 			uint a, r, g, b;
+
 			strncpy(pixel_str, &buffer[n], cpp);
 			pixel_str[cpp] = 0;
 
@@ -539,6 +546,8 @@ cairo_surface_t *get_xpm_icon(const char *filename)
 	struct file_handle handle;
 	int w, h;
 	u_int32_t *data;
+	cairo_surface_t *surface;
+	unsigned char *surface_data;
 
 	memset(&h, 0, sizeof(h));
 	handle.infile = fopen(filename, "r");
@@ -556,13 +565,13 @@ cairo_surface_t *get_xpm_icon(const char *filename)
 		return NULL;
 	}
 
-	cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w, h);
+	surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w, h);
 	if (!surface) {
 		fprintf(stderr, "Failed to load XPM file: %s\n", filename);
 		free(data);
 		return NULL;
 	}
-	unsigned char *surface_data = cairo_image_surface_get_data(surface);
+	surface_data = cairo_image_surface_get_data(surface);
 	cairo_surface_flush(surface);
 	memcpy(surface_data, data, w * h * 4);
 	free(data);
