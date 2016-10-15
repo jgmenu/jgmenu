@@ -410,7 +410,7 @@ XPMColor *lookup_color(XPMColor *colors, int n_colors, const char *name)
 	int i;
 	for (i = 0; i < n_colors; i++) {
 		XPMColor *color = &colors[i];
-		if (strcasecmp(name, color->color_string) == 0)
+		if (strcmp(name, color->color_string) == 0)
 			return color;
 	}
 	return NULL;
