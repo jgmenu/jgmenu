@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 			icon_name = argv[i];
 		if (!strncmp(argv[i], "--icon-size=", 12))
 			xatoi(&icon_size, argv[i] + 12, XATOI_NONNEG,
-			      "icon_size");
+			      "config.icon_size");
 		if (!strncmp(argv[i], "--theme=", 8))
 			theme = argv[i] + 8;
 		if (!strncmp(argv[i], "--help", 6))

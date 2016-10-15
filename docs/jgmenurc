@@ -22,7 +22,7 @@ item_radius	  = 1
 item_border	  = 0
 
 max_items	  = 80
-min_items	  = 0
+min_items	  = 1
 font		  = Cantarell 10
 icon_size	  = 22
 icon_theme	  = Numix-Circle

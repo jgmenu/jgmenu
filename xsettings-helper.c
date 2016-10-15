@@ -29,7 +29,9 @@ static void print_setting(XSetting *setting)
 static void print_settings(XSetting *settings, size_t count, const char *key,
 			   struct sbuf *s)
 {
-	for (size_t i = 0; i < count; i++) {
+	size_t i;
+
+	for (i = 0; i < count; i++) {
 		if (key[0] == '*') {
 			print_setting(&settings[i]);
 		} else {

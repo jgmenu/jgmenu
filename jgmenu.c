@@ -883,10 +883,10 @@ int main(int argc, char *argv[])
 			checkout_arg = argv[i] + 11;
 		} else if (!strncmp(argv[i], "--icon-size=", 12)) {
 			xatoi(&config.icon_size, argv[i] + 12, XATOI_NONNEG,
-			      "icon_size");
+			      "config.icon_size");
 		} else if (!strncmp(argv[i], "--fixed-height=", 15)) {
 			xatoi(&config.min_items, argv[i] + 15, XATOI_NONNEG,
-			      "min_items");
+			      "config.min_items");
 			config.max_items = config.min_items;
 		}
 

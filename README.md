@@ -46,12 +46,13 @@ sudo make prefix=/usr install
 Dependencies
 ------------
 
-jgmenu requires libx11, libxinerama, cairo, pango and librsvg.
+jgmenu requires libx11, libxinerama, cairo, pango, librsvg and gtk3
 
 jgmenu-parse-xdg requires libxml2
 
-If you're running openbox and tint2, you'll probably alread have these
-on your system.
+N.B. the gtk3 dependency is only temporary until we sort an xpm-parser.
+
+For Arch Linux users, there is an AUR package named "jgmenu".
 
 Getting started
 ---------------
