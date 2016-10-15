@@ -542,10 +542,15 @@ cairo_surface_t *get_xpm_icon(const char *filename)
 
 	memset(&h, 0, sizeof(h));
 	handle.infile = fopen(filename, "r");
+	if (!handle.infile) {
+		fprintf(stderr, "Failed to load XPM file: %s\n", filename);
+		return NULL;
+	}
 	handle.buffer_size = 4096;
 	handle.buffer = calloc(4096, 1);
 	data = pixbuf_create_from_xpm(file_buffer, &handle, &w, &h);
 	free(handle.buffer);
+	fclose(handle.infile);
 	if (!data) {
 		fprintf(stderr, "Failed to load XPM file: %s\n", filename);
 		return NULL;

@@ -16,11 +16,9 @@ CFLAGS   = -g -Wall -Os
 CFLAGS  += -DVERSION='"$(VER)"'
 CFLAGS  += -DXINERAMA
 CFLAGS  += `pkg-config cairo pango pangocairo librsvg-2.0 --cflags`
-CFLAGS  += `pkg-config gtk+-3.0 --cflags`
 CFLAGS  += `xml2-config --cflags`
 
 LIBS  = `pkg-config x11 xinerama cairo pango pangocairo librsvg-2.0 --libs`
-LIBS += `pkg-config gtk+-3.0 --libs`
 LIBS += `xml2-config --libs`
 LIBS += -pthread
 
