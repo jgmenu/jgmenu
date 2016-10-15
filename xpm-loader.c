@@ -516,10 +516,9 @@ static u_int32_t *pixbuf_create_from_xpm(const char *(*get_buf)(enum buf_op op, 
 			if (!color)
 				color = fallbackcolor;
 
+			a = 0xFF;
 			if (is_trans && color->transparent)
 				a = 0;
-			else if (is_trans)
-				a = 0xFF;
 			r = color->red >> 8;
 			g = color->green >> 8;
 			b = color->blue >> 8;
