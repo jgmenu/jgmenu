@@ -14,14 +14,12 @@
 
 #include <librsvg/rsvg.h>
 
-/* for xpm icons */
-#include <gtk/gtk.h>
-
 #include "icon.h"
 #include "icon-find.h"
 #include "list.h"
 #include "util.h"
 #include "sbuf.h"
+#include "xpm-loader.h"
 
 #define DEBUG_THEMES 0
 
@@ -91,37 +89,6 @@ static cairo_surface_t *get_svg_icon(const char *filename, int size)
 	cairo_destroy(cr);
 	g_object_unref(svg);
 
-	return surface;
-}
-
-static cairo_surface_t *get_xpm_icon(const char *filename)
-{
-	GdkPixbuf *pixbuf;
-	gint width;
-	gint height;
-	cairo_format_t format;
-	cairo_surface_t *surface;
-	cairo_t *cr;
-
-	pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
-	if (!pixbuf) {
-		fprintf(stderr, "warning: error loading icon %s\n", filename);
-		return NULL;
-	}
-
-	format = gdk_pixbuf_get_has_alpha(pixbuf) ? CAIRO_FORMAT_ARGB32 : CAIRO_FORMAT_RGB24;
-	width = gdk_pixbuf_get_width(pixbuf);
-	height = gdk_pixbuf_get_height(pixbuf);
-	surface = cairo_image_surface_create(format, width, height);
-	if (!pixbuf) {
-		fprintf(stderr, "warning: error loading icon %s\n", filename);
-		return NULL;
-	}
-
-	cr = cairo_create(surface);
-	gdk_cairo_set_source_pixbuf(cr, pixbuf, 0, 0);
-	cairo_paint(cr);
-	cairo_destroy(cr);
 	return surface;
 }
 

@@ -29,7 +29,7 @@ LDFLAGS  = $(LIBS)
 ifdef ASAN
 ASAN_FLAGS = -O0 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic
 CFLAGS    += $(ASAN_FLAGS)
-LDFLAGS   += $(ASAN_FLAGS)
+LDFLAGS   += $(ASAN_FLAGS) -fuse-ld=gold
 endif
 
 ifndef VERBOSE
@@ -45,7 +45,7 @@ PROGS	 = jgmenu jgmenu-parse-xdg jgmenu-icon-find jgmenu-xsettings
 LIB_H = $(shell find . -name '*.h' -print)
 
 OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
-        icon.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o \
+        icon.o xpm-loader.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o \
 	config-xs.o
 
 
