@@ -29,6 +29,7 @@
 #include <string.h>
 
 #include "list.h"
+#include "util.h"
 
 struct sbuf {
 	char *buf;

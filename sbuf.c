@@ -2,7 +2,7 @@
 
 void sbuf_init(struct sbuf *s)
 {
-	s->buf = malloc(1);
+	s->buf = xmalloc(1);
 	s->buf[0] = 0;
 	s->bufsiz = 1;
 	s->len = 0;
@@ -85,7 +85,7 @@ void sbuf_list_append(struct list_head *sl, const char *data)
 {
 	struct sbuf *new_string;
 
-	new_string = malloc(sizeof(struct sbuf));
+	new_string = xmalloc(sizeof(struct sbuf));
 	sbuf_init(new_string);
 	sbuf_addstr(new_string, data);
 
@@ -96,7 +96,7 @@ void sbuf_list_prepend(struct list_head *sl, const char *data)
 {
 	struct sbuf *new_string;
 
-	new_string = malloc(sizeof(struct sbuf));
+	new_string = xmalloc(sizeof(struct sbuf));
 	sbuf_init(new_string);
 	sbuf_addstr(new_string, data);
 
