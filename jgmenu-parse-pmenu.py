@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # License: GPLv2
@@ -177,20 +177,20 @@ def loadApplications():
 
 # Creates and shows the menu
 def createMenu():
-  print "jgmenu,^tag(pmenu)"
+  print("jgmenu,^tag(pmenu)")
   tree, categories = loadApplications()
   for c in sorted(tree):
     category = categories[c]
     icon = category["Icon"] if "Icon" in category else "folder"
-    print category["Name"] + ",^checkout(" + category["Name"] + ")," + icon
+    print(category["Name"] + ",^checkout(" + category["Name"] + ")," + icon)
   for c in sorted(tree):
     category = categories[c]
-    print ""
-    print "submenu,^tag(" + category["Name"] + ")"
-    print "go back,^checkout(pmenu),folder"
+    print("")
+    print("submenu,^tag(" + category["Name"] + ")")
+    print("go back,^checkout(pmenu),folder")
     for app in tree[c]:
       icon = app["Icon"] if "Icon" in app else "application-x-executable"
-      print app["Name"] + "," + app["cmd"] + "," + icon
+      print(app["Name"] + "," + app["cmd"] + "," + icon)
 
 
 if __name__ == '__main__':
