@@ -46,7 +46,21 @@ sudo make prefix=/usr install
 Dependencies
 ------------
 
-jgmenu requires libx11, libxinerama, cairo, pango, librsvg and libxml2
+jgmenu has the following build requirements:
+
+  - libx11
+  - libxinerama
+  - cairo
+  - pango
+  - librsvg
+  - libxml2
+
+`jgmenu_run pmenu` and `jgmenu_run xdg` also require a menu package to work  
+correctly. For example:
+
+  - gnome-menus
+  - lxmenu-data
+  - etc
 
 For Arch Linux users, there is an AUR package named "jgmenu".
 
@@ -84,8 +98,8 @@ How jgmenu works
 
 The jgmenu binary reads menu-items from *stdin* and draws a menu. 
 
-A number of helpers (shell and C) exist to simplify the user interface and  
-extend the feature-set.
+A number of helpers (shell, python and C) exist to simplify the user  
+interface and extend the feature-set.
 
 For details, see the man pages:
 

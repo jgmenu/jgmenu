@@ -1,9 +1,6 @@
 TODO
 ====
 
-  - Add packaging/arch/PKBUILD
-		      /gen-srcinfo.sh
-
   - Add notes in jgmenurc to explain options (particularly top, bottom, etc)
 
   - Add <file> option to `jgmenu_run xdg` and `jgmenu_run csv`
@@ -23,8 +20,8 @@ TODO
 	    --parent=
 
   - jgmenu_run csv
-	add #include directive
-	e.g. #include jgmenu_run parse-pmenu
+	add --add-pmenu
+		this would enable ^checkout(pmenu)
 
   - Add argvbuf.c
 	simplistic library which:
@@ -32,14 +29,6 @@ TODO
 	 - provides av **argv+argc interface for this data.
 
   - In jgmenu.c: Change t[] for name, cmd, icon
-
-  - Research alternatives to gtk+-3.0's xpm function.
-	- XpmReadFileToXpmImage
-	  XpmCreateImageFromXpmImage (=XImage)
-	  cairo_image_surface_for_data
-	  cairo_image_surface_get(XImage)
-	- OR write a quick xpm-parser directly for a cairo_surface_t
-	  (a simplistic approach would probably work well)
 
   - Tidy up checkout_submenu in jgmenu.c
 
@@ -68,3 +57,4 @@ TODO
 
   - Improve XDG menu support
 
+  - Add search/filter support

@@ -1,0 +1,12 @@
+jgmenu v0.4.2 release notes
+===========================
+
+Updates since v0.4.1
+--------------------
+
+  - Added support for loading xpm icons without using gtk3
+
+  - Added gnome-menus (et al) to dependencies in README.md
+
+  - Made jgmenu-parse-pmenu.py compatible with python2 and 3
+    (previously just python2)
