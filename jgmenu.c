@@ -25,6 +25,7 @@
 #include "sbuf.h"
 #include "icon.h"
 #include "config-xs.h"
+#include "filter.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -144,6 +145,13 @@ void draw_menu(void)
 					  config.item_border, 0,
 					  config.color_norm_fg);
 		}
+
+
+		/* Draw x to indicate "filtered in" items */
+		if (filter_ismatch(p->t[0]))
+			ui_insert_text("x", p->area.x + p->area.w -
+				       config.item_padding_x - 6, p->area.y,
+				       p->area.h, config.color_norm_fg);
 
 		/* Draw submenu arrow */
 		if ((!strncmp(p->t[1], "^checkout(", 10) && strncmp(p->t[0], "..", 2)) ||
@@ -350,15 +358,14 @@ void move_window(void)
 void key_event(XKeyEvent *ev)
 {
 	char buf[32];
+	int len;
 	KeySym ksym = NoSymbol;
 	Status status;
 
-	XmbLookupString(ui->xic, ev, buf, sizeof(buf), &ksym, &status);
+	len = XmbLookupString(ui->xic, ev, buf, sizeof(buf), &ksym, &status);
 	if (status == XBufferOverflow)
 		return;
 	switch (ksym) {
-	default:
-		break;
 	case XK_End:
 		if (menu.nr_items_in_submenu > geo_get_nr_visible_items()) {
 			menu.first = menu.subtail - geo_get_nr_visible_items() + 1;
@@ -440,21 +447,27 @@ void key_event(XKeyEvent *ev)
 		init_menuitem_coordinates();
 		draw_menu();
 		break;
-	case XK_h:
+	case XK_F5:
 		geo_set_menu_halign("left");
 		move_window();
 		break;
-	case XK_j:
+	case XK_F6:
 		geo_set_menu_valign("bottom");
 		move_window();
 		break;
-	case XK_k:
+	case XK_F7:
 		geo_set_menu_valign("top");
 		move_window();
 		break;
-	case XK_l:
+	case XK_F8:
 		geo_set_menu_halign("right");
 		move_window();
+		break;
+	case XK_BackSpace:
+		filter_backspace();
+		break;
+	default:
+		filter_addstr(buf, len);
 		break;
 	}
 }
@@ -895,6 +908,7 @@ int main(int argc, char *argv[])
 	ui_init();
 	geo_init();
 	init_geo_variables_from_config();
+	filter_init();
 
 	read_stdin();
 
