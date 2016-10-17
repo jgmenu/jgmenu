@@ -35,8 +35,13 @@ QUIET_CC   = @echo '     CC    '$@;
 QUIET_LINK = @echo '     LINK  '$@;
 endif
 
-SCRIPTS  = jgmenu_run jgmenu-cache.sh jgmenu-pmenu.sh jgmenu-parse-pmenu.py \
-	   jgmenu-csv.sh jgmenu-xdg.sh jgmenu-config.sh
+SCRIPTS_SHELL  = jgmenu_run jgmenu-cache.sh jgmenu-pmenu.sh \
+		 jgmenu-csv.sh jgmenu-xdg.sh jgmenu-config.sh
+
+SCRIPTS_PYTHON = jgmenu-parse-pmenu.py
+
+# Python scripts with No file-Extension
+SCRIPTS_PYTHON_NE = $(patsubst %.py,%,$(SCRIPTS_PYTHON))
 
 PROGS	 = jgmenu jgmenu-parse-xdg jgmenu-icon-find jgmenu-xsettings
 
@@ -46,7 +51,6 @@ OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
         icon.o xpm-loader.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o \
 	config-xs.o
 
-
 all: $(PROGS)
 
 $(PROGS): % : $(OBJS) %.o
@@ -55,13 +59,17 @@ $(PROGS): % : $(OBJS) %.o
 %.o: %.c $(LIB_H)
 	$(QUIET_CC)$(CC) $(CFLAGS) -c $*.c
 
-install: $(PROGS) $(SCRIPTS)
+$(SCRIPTS_PYTHON_NE): % : %.py
+	$(shell ./scripts/set-python-path.sh $@)
+
+install: $(PROGS) $(SCRIPTS_SHELL) $(SCRIPTS_PYTHON_NE)
 	@install -d $(DESTDIR)$(bindir)
-	@install -m755 $(PROGS) $(SCRIPTS) $(DESTDIR)$(bindir)
+	@install -m755 $(PROGS) $(SCRIPTS_SHELL) $(DESTDIR)$(bindir)
+	@install -m755 $(SCRIPTS_PYTHON_NE) $(DESTDIR)$(bindir)
 	@$(MAKE) --no-print-directory -C docs/manual/ install
 
 clean:
-	@$(RM) $(PROGS) *.o
+	@$(RM) $(PROGS) $(SCRIPTS_PYTHON_NE) *.o
 
 test:
 	@$(MAKE) --no-print-directory -C tests/ all
