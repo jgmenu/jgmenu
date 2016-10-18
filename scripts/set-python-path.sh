@@ -31,5 +31,6 @@ do
 	fi
 done
 
-sed -e "1s/#!.*python/#!${shebang_string}/" "${file_name}.py" >"${file_name}"
+# use | as separator as ${shebang_string} contains /
+sed "1s|#!.*python|#!${shebang_string}|" "${file_name}.py" >"${file_name}"
 chmod +x ${file_name}

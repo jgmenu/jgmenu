@@ -56,4 +56,6 @@ int main(int argc, char **argv)
 		printf("%s\n", s.buf);
 	else
 		fprintf(stderr, "warning: could not find icon '%s'\n", icon_name);
+
+	return 0;
 }
