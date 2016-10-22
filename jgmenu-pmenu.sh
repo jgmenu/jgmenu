@@ -1,3 +1,3 @@
 #!/bin/sh
 
-jgmenu-parse-pmenu | jgmenu $@
+jgmenu_run parse-pmenu | jgmenu $@

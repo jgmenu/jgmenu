@@ -3,6 +3,9 @@
 #
 # Define VERBOSE=1 for a more verbose compilation
 #
+# Define PYTHON3_POLYGLOT=1 if '#!/usr/bin/env python3' is not going to work
+# on your system.
+#
 
 VER      = $(shell ./scripts/version-gen.sh)
 CC       = gcc
@@ -40,9 +43,6 @@ SCRIPTS_SHELL  = jgmenu_run jgmenu-cache.sh jgmenu-pmenu.sh \
 
 SCRIPTS_PYTHON = jgmenu-parse-pmenu.py
 
-# Python scripts with No file-Extension
-SCRIPTS_PYTHON_NE = $(patsubst %.py,%,$(SCRIPTS_PYTHON))
-
 PROGS	 = jgmenu jgmenu-parse-xdg jgmenu-icon-find jgmenu-xsettings
 
 LIB_H = $(shell find . -name '*.h' -print)
@@ -59,17 +59,21 @@ $(PROGS): % : $(OBJS) %.o
 %.o: %.c $(LIB_H)
 	$(QUIET_CC)$(CC) $(CFLAGS) -c $*.c
 
-$(SCRIPTS_PYTHON_NE): % : %.py
-	$(shell ./scripts/set-python-path.sh $@)
 
-install: $(PROGS) $(SCRIPTS_SHELL) $(SCRIPTS_PYTHON_NE)
+install: $(PROGS) $(SCRIPTS_SHELL) $(SCRIPTS_PYTHON)
 	@install -d $(DESTDIR)$(bindir)
 	@install -m755 $(PROGS) $(SCRIPTS_SHELL) $(DESTDIR)$(bindir)
-	@install -m755 $(SCRIPTS_PYTHON_NE) $(DESTDIR)$(bindir)
+	@install -m755 $(SCRIPTS_PYTHON) $(DESTDIR)$(bindir)
+ifdef PYTHON3_POLYGLOT
+	@./scripts/python3-polyglot.sh $(DESTDIR)$(bindir) $(SCRIPTS_PYTHON)
+else
+	@type python3 >/dev/null 2>&1 || printf "%s\n" "warning: python3 not \
+	found. Suggest defining PYTHON3_POLYGLOT"
+endif
 	@$(MAKE) --no-print-directory -C docs/manual/ install
 
 clean:
-	@$(RM) $(PROGS) $(SCRIPTS_PYTHON_NE) *.o
+	@$(RM) $(PROGS) $(SCRIPTS_PYTHON) *.o
 
 test:
 	@$(MAKE) --no-print-directory -C tests/ all
