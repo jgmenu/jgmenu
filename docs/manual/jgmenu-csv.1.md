@@ -8,7 +8,7 @@ jgmenu-csv.sh - generates a menu based on CSV file
 
 # SYNOPSIS
 
-`jgmenu_run csv`
+jgmenu_run csv \[<*options*>] \[<*file*>]
 
 # DESCRIPTION
 
@@ -21,8 +21,14 @@ config file settings.
 
 # OPTIONS
 
-NIL
+\--add-pmenu  
+:   enables ^checkout(pmenu)
+
+\--add-xdg
+:   enables ^checkout(Applications)
 
 # EXAMPLES
 
-`$ jgmenu_run csv`
+`jgmenu_run csv`
+
+`jgmenu_run csv --add-pmenu ./docs/default.csv`

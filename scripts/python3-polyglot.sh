@@ -3,7 +3,7 @@
 #
 # This script is used by 'make'
 #
-# Usage: set-python-shebang.sh <path> <files>...
+# Usage: python3-polyglot.sh <path> <files>...
 #
 
 polyglot="#!/bin/sh\n\

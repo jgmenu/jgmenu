@@ -1,0 +1,34 @@
+#
+# This menu is specifically designed for my particular setup on Arch Linux
+# It is only an example and is not designed to work on other OSs/WMs/setups.
+#
+# Suggested usage: jgmenu_run csv --add-pmenu default.csv
+#
+
+/,^tag(root)
+Browser,firefox,firefox
+File manager,pcmanfm,system-file-manager
+Terminal,xterm,utilities-terminal
+Music Player,pgrep mpd || mpd; xterm -e 'ncmpcpp',multimedia-player
+Apps,^checkout(pmenu),folder
+Settings and Admin,^checkout(settings),folder
+Personal,^sub(cat ~/.config/jgmenu/personal.csv | jgmenu),folder
+Lock,i3lock -c 000000,system-lock-screen
+Run,dmenu_run -fn "-*-dejavu sans-medium-r-*-*-*-*-*-*-*-*-*-*",system-run
+Exit,^checkout(exit),system-shutdown
+
+/Settings and Admin,^tag(settings)
+Go back,^checkout(root),folder
+Wifi,xterm -e 'sudo wifi-menu',network-wireless
+Sound,pavucontrol,multimedia-volume-control
+Printers,firefox http://localhost:631/admin,printer
+Background image,nitrogen ~/bg/,preferences-desktop-wallpaper
+Update system,xterm -e 'sudo pacman -Syyu; bash',system-software-update
+
+/exit,^tag(exit)
+Go back,^checkout(root),folder
+Exit to prompt,openbox --exit,system-log-out
+Suspend,systemctl -i suspend,system-log-out
+Reboot,systemctl -i reboot,system-reboot
+Poweroff,systemctl -i poweroff,system-shutdown
+

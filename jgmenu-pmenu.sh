@@ -1,3 +1,3 @@
 #!/bin/sh
 
-jgmenu_run parse-pmenu | jgmenu $@
+jgmenu-parse-pmenu.py | jgmenu $@

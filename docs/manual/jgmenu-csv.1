@@ -7,7 +7,7 @@
 jgmenu\-csv.sh \- generates a menu based on CSV file
 .SH SYNOPSIS
 .PP
-\f[C]jgmenu_run\ csv\f[]
+jgmenu_run csv [<\f[I]options\f[]>] [<\f[I]file\f[]>]
 .SH DESCRIPTION
 .PP
 \f[C]jgmenu_run\ csv\f[] generates a menu based on a CSV file.
@@ -20,10 +20,20 @@ See jgmenu(1) for further details for the CSV file syntax and
 .PD
 config file settings.
 .SH OPTIONS
-.PP
-NIL
+.TP
+.B \-\-add\-pmenu
+enables ^checkout(pmenu)
+.RS
+.RE
+.TP
+.B \-\-add\-xdg
+enables ^checkout(Applications)
+.RS
+.RE
 .SH EXAMPLES
 .PP
-\f[C]$\ jgmenu_run\ csv\f[]
+\f[C]jgmenu_run\ csv\f[]
+.PP
+\f[C]jgmenu_run\ csv\ \-\-add\-pmenu\ ./docs/default.csv\f[]
 .SH AUTHORS
 Johan Malm.

@@ -20,10 +20,9 @@ Jgmenu is written with the following aims:
 Screenshots
 -----------
 
-<img src="http://i.imgur.com/4oprqYZ.png" \>
+<img src="http://i.imgur.com/4oprqYZ.png" \>  <img src="http://i.imgur.com/QvBqI2L.png" \>
 
-jgmenu v0.3.1 using Numix-Circle icon theme and
-[pmenu-jgmenu.py](https://gitlab.com/o9000/pmenu/blob/master/pmenu-jgmenu.py)
+jgmenu and tint2 using Numix-Circle and Papirus icon themes
 
 Installation
 ------------

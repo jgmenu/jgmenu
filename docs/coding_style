@@ -84,3 +84,5 @@ Shell scripts
   - Instead of echo -e "foo", use
 
 	printf "%b\n" "foo"
+
+  - Don't use sed -i, it is not POSIX
