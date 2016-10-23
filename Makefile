@@ -60,7 +60,7 @@ $(PROGS): % : $(OBJS) %.o
 	$(QUIET_CC)$(CC) $(CFLAGS) -c $*.c
 
 
-install: $(PROGS) $(SCRIPTS_SHELL) $(SCRIPTS_PYTHON)
+install: $(PROGS)
 	@install -d $(DESTDIR)$(bindir)
 	@install -m755 $(PROGS) $(SCRIPTS_SHELL) $(DESTDIR)$(bindir)
 	@install -m755 $(SCRIPTS_PYTHON) $(DESTDIR)$(bindir)
@@ -73,7 +73,7 @@ endif
 	@$(MAKE) --no-print-directory -C docs/manual/ install
 
 clean:
-	@$(RM) $(PROGS) $(SCRIPTS_PYTHON) *.o
+	@$(RM) $(PROGS) *.o
 
 test:
 	@$(MAKE) --no-print-directory -C tests/ all
