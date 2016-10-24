@@ -154,9 +154,9 @@ void draw_menu(void)
 				       p->area.h, config.color_norm_fg);
 
 		/* Draw submenu arrow */
-		if ((!strncmp(p->t[1], "^checkout(", 10) && strncmp(p->t[0], "..", 2)) ||
-		    !strncmp(p->t[1], "^sub(", 5))
-			ui_insert_text("▸", p->area.x + p->area.w -
+		if (config.arrow_show && ((!strncmp(p->t[1], "^checkout(", 10) &&
+		    strncmp(p->t[0], "..", 2)) || !strncmp(p->t[1], "^sub(", 5)))
+			ui_insert_text(config.arrow_string, p->area.x + p->area.w -
 				       config.item_padding_x - (p->area.h / 3), p->area.y,
 				       p->area.h, config.color_norm_fg);
 

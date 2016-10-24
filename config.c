@@ -36,6 +36,9 @@ void config_set_defaults(void)
 	config.ignore_icon_cache = 0;
 	config.show_title	 = 0;
 
+	config.arrow_string	 = strdup("▸");
+	config.arrow_show	 = 1;
+
 	parse_hexstr("#000000 70", config.color_menu_bg);
 	parse_hexstr("#eeeeee 20", config.color_menu_fg);
 	parse_hexstr("#000000 00", config.color_norm_bg);
@@ -97,6 +100,11 @@ static void process_line(char *line)
 		xatoi(&config.ignore_icon_cache, value, XATOI_NONNEG, "config.ignore_icon_cache");
 	else if (!strncmp(option, "show_title", 10))
 		xatoi(&config.show_title, value, XATOI_NONNEG, "config.show_title");
+
+	else if (!strncmp(option, "arrow_string", 11))
+		config.arrow_string = strdup(value);
+	else if (!strncmp(option, "arrow_show", 10))
+		xatoi(&config.arrow_show, value, XATOI_NONNEG, "config.arrow_show");
 
 	else if (!strncmp(option, "color_menu_bg", 13))
 		parse_hexstr(value, config.color_menu_bg);

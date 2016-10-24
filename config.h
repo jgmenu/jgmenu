@@ -31,6 +31,9 @@ struct config {
 	int ignore_icon_cache;
 	int show_title;		/* will only show if ^tag() is set */
 
+	char *arrow_string;
+	int arrow_show;
+
 	double color_menu_bg[4];
 	double color_menu_fg[4];
 	double color_norm_bg[4];

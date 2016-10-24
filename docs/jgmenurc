@@ -24,11 +24,18 @@ item_border	  = 0
 max_items	  = 80
 min_items	  = 1
 font		  = Cantarell 10
+
+# If icon_size is set to 0, icons will not be searched for and loaded.
 icon_size	  = 22
 icon_theme	  = Numix-Circle
 ignore_xsettings  = 0
 ignore_icon_cache = 0
 show_title	  = 0
+
+# The "arrow" indicates that a menu item points a submenu
+# → ▶ ➔ ➙ ➛ ➜ ➝ ➞ ➟ ➠ ➡ ➢ ➣ ➤ ➥ ➦ ↦ ⇒ ⇝ ⇢ ⇥ ⇨ ⇾ ➭ ➮ ➯ ➱ ➲ ➺ ➼ ➽ ➾
+arrow_string	  = ▸
+arrow_show	  = 1
 
 color_menu_bg	  = #000000 70
 color_menu_fg	  = #eeeeee 20
