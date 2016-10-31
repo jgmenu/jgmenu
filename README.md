@@ -61,6 +61,15 @@ correctly. For example:
   - lxmenu-data
   - etc
 
+`jgmenu_run pmenu` requires python3 to run.
+
+To build the man pages, you need to have `pandoc` installed. As many users  
+do not have this package, the man pages are built when changed committed in  
+the git repo.
+
+To enable menu transparency, you need to have a Composite Manager such as  
+`compton`.
+
 For Arch Linux users, there is an AUR package named "jgmenu".
 
 On Debian/Ubuntu, I believe you need to do:

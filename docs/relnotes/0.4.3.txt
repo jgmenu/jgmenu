@@ -1,0 +1,14 @@
+jgmenu v0.4.3 release notes
+===========================
+
+Updates since v0.4.2
+--------------------
+
+  - Added config options "arrow_show" and "arrow_string" for manipulating
+    submenu arrows.
+
+  - Changed "jgmenu_run csv" usage to
+
+        jgmenu_run csv [<options>] [<file>]
+
+    and added options --add-pmenu and --add-xdg.

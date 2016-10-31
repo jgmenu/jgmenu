@@ -15,7 +15,7 @@ RM       = rm -f
 prefix   = $(HOME)
 bindir   = $(prefix)/bin
 
-CFLAGS   = -g -Wall -Os
+CFLAGS   = -g -Wall -Os -std=gnu89
 CFLAGS  += -DVERSION='"$(VER)"'
 CFLAGS  += -DXINERAMA
 CFLAGS  += `pkg-config cairo pango pangocairo librsvg-2.0 --cflags`
