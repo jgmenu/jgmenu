@@ -52,6 +52,10 @@ OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
 	config-xs.o filter.o
 
 all: $(PROGS)
+	@echo ""
+	@echo "Note: jgmenu.c is being re-factored."
+	@echo "For a stable version, checkout v0.4.3"
+	@echo ""
 
 $(PROGS): % : $(OBJS) %.o
 	$(QUIET_LINK)$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)

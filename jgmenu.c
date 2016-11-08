@@ -26,6 +26,7 @@
 #include "icon.h"
 #include "config-xs.h"
 #include "filter.h"
+#include "list.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -43,7 +44,11 @@ struct Item {
 	struct Area area;
 	cairo_surface_t *icon;
 	struct Item *next, *prev;
+	struct list_head master;
+	struct list_head filter;
 };
+
+static struct Item empty_item;
 
 /*
  * All menu items in the input file are stored in a dynamic array (=vector).
@@ -69,10 +74,25 @@ struct Menu {
 	struct Item *last;	/* last visible item			  */
 	struct Item *sel;	/* currently selected item		  */
 
+	struct Item *filter_head;
+	struct Item *filter_tail;
+
 	char *title;
+
+	struct list_head master;
+	struct list_head filter;
 };
 
 struct Menu menu;
+
+void init_empty_item(void)
+{
+	empty_item.t[0] = strdup("<empty>");
+	empty_item.t[1] = strdup(":");
+	empty_item.t[2] = NULL;
+	empty_item.tag = NULL;
+	empty_item.icon = NULL;
+}
 
 void usage(void)
 {
@@ -84,18 +104,103 @@ void usage(void)
 	exit(0);
 }
 
+int get_nr_items(void)
+{
+	int i = 0;
+	struct Item *item;
+
+	list_for_each_entry(item, &menu.filter, filter)
+		++i;
+
+	return i;
+}
+
+void step_back(struct Item **ptr, int nr)
+{
+	int i;
+
+	for (i = 0; i < nr; i++)
+		*ptr = container_of((*ptr)->filter.prev, struct Item, filter);
+}
+
+void step_fwd(struct Item **ptr, int nr)
+{
+	int i;
+
+	for (i = 0; i < nr; i++)
+		*ptr = container_of((*ptr)->filter.next, struct Item, filter);
+}
+
+void update_filtered_list(void)
+{
+	struct Item *item;
+
+	INIT_LIST_HEAD(&menu.filter);
+
+	/* APPLY FILTER ON CURRENT SUBMENU */
+	list_for_each_entry(item, &menu.master, master) {
+		if (item == menu.subhead) {
+			break;
+		}
+	}
+
+	list_for_each_entry_from(item, &menu.master, master) {
+		if (filter_ismatch(item->t[0]))
+			list_add_tail(&item->filter, &menu.filter);
+		if (item == menu.subtail)
+			break;
+	}
+
+	/* APPLY FILTER ON WHOLE LIST (DISREGARDING MENU TREE) */
+/*		list_for_each_entry(item, &menu.master, master)
+ *		if (filter_ismatch(item->t[0]))
+ *			list_add_tail(&item->filter, &menu.filter);
+ */
+
+	menu.filter_head = list_first_entry_or_null(&menu.filter, struct Item, filter);
+	if (!menu.filter_head) {
+		list_add_tail(&empty_item.filter, &menu.filter);
+		menu.filter_tail = &empty_item;
+		menu.filter_head = &empty_item;
+		menu.first = &empty_item;
+		menu.last = &empty_item;
+		menu.sel = &empty_item;
+		return;
+	}
+
+	menu.filter_tail = list_last_entry(&menu.filter, struct Item, filter);
+	menu.first = menu.filter_head;
+
+	if (geo_get_nr_visible_items() < get_nr_items()) {
+		menu.last = menu.first;
+		step_fwd(&menu.last, geo_get_nr_visible_items() - 1);
+	} else {
+		menu.last = menu.filter_tail;
+	}
+
+	/* FIXME: change this to something more sophisticated */
+	menu.sel = menu.first;
+}
+
 void init_menuitem_coordinates(void)
 {
 	struct Item *p;
 	int i = 0;
 
+	if (list_empty(&menu.filter))
+		return;
+
 	if (menu.title && config.show_title)
 		++i;
 
-	for (p = menu.first; p && p->t[0] && p->prev != menu.last; p++) {
+	p = menu.first;
+	list_for_each_entry_from(p, &menu.filter, filter) {
 		p->area = geo_get_item_coordinates(i);
 		++i;
+		if (p == menu.last)
+			break;
 	}
+
 }
 
 void draw_menu(void)
@@ -126,7 +231,8 @@ void draw_menu(void)
 			  config.menu_border, 0, config.color_menu_fg);
 
 	/* Draw menu items */
-	for (p = menu.first; p && p->t[0] && p->prev != menu.last; p++) {
+	p = menu.first;
+	list_for_each_entry_from(p, &menu.filter, filter) {
 		/* Draw Item background */
 		if (p == menu.sel) {
 			ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
@@ -147,12 +253,12 @@ void draw_menu(void)
 		}
 
 
-		/* Draw x to indicate "filtered in" items */
-		if (filter_ismatch(p->t[0]))
-			ui_insert_text("x", p->area.x + p->area.w -
-				       config.item_padding_x - 6, p->area.y,
-				       p->area.h, config.color_norm_fg);
-
+		/* Draw : to indicate "filtered in" items */
+/*		if (filter_ismatch(p->t[0]))
+ *			ui_insert_text(":", p->area.x + p->area.w -
+ *				       config.item_padding_x - 6, p->area.y,
+ *				       p->area.h, config.color_norm_fg);
+ */
 		/* Draw submenu arrow */
 		if (config.arrow_show && ((!strncmp(p->t[1], "^checkout(", 10) &&
 		    strncmp(p->t[0], "..", 2)) || !strncmp(p->t[1], "^sub(", 5)))
@@ -184,6 +290,9 @@ void draw_menu(void)
 			icon_y_coord = p->area.y + 1 + (config.item_height - config.icon_size) / 2;
 			ui_insert_image(p->icon, p->area.x, icon_y_coord, config.icon_size);
 		}
+
+		if (p == menu.last)
+			break;
 	}
 
 	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
@@ -204,7 +313,7 @@ void checkout_submenu(char *tag)
 	if (!tag) {
 		menu.first = menu.head;
 	} else {
-		for (item = menu.head; item && item->t[0]; item++) {
+		list_for_each_entry(item, &menu.master, master) {
 			if (item->tag && !strncmp(item->tag, tag, strlen(tag))) {
 				menu.title = item->t[0];
 				if (item->next)
@@ -316,6 +425,7 @@ void action_cmd(char *cmd)
 			XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
 					  geo_get_menu_width(), geo_get_menu_height());
 
+			update_filtered_list();
 			init_menuitem_coordinates();
 			draw_menu();
 		}
@@ -333,16 +443,34 @@ void action_cmd(char *cmd)
 
 int scroll_step_down(void)
 {
-	if (menu.subtail - menu.last < geo_get_nr_visible_items())
-		return (menu.subtail - menu.last);
+	int i = 0;
+	struct Item *item;
+
+	list_for_each_entry_reverse(item, &menu.filter, filter) {
+		if (item == menu.last)
+			break;
+		++i;
+	}
+
+	if (i <= geo_get_nr_visible_items())
+		return i;
 	else
 		return geo_get_nr_visible_items();
 }
 
 int scroll_step_up(void)
 {
-	if (menu.first - menu.subhead < geo_get_nr_visible_items())
-		return (menu.first - menu.subhead);
+	int i = 0;
+	struct Item *item;
+
+	list_for_each_entry(item, &menu.filter, filter) {
+		if (item == menu.first)
+			break;
+		++i;
+	}
+
+	if (i <= geo_get_nr_visible_items())
+		return i;
 	else
 		return geo_get_nr_visible_items();
 }
@@ -361,15 +489,17 @@ void key_event(XKeyEvent *ev)
 	int len;
 	KeySym ksym = NoSymbol;
 	Status status;
+	int nr_steps;
 
 	len = XmbLookupString(ui->xic, ev, buf, sizeof(buf), &ksym, &status);
 	if (status == XBufferOverflow)
 		return;
 	switch (ksym) {
 	case XK_End:
-		if (menu.nr_items_in_submenu > geo_get_nr_visible_items()) {
-			menu.first = menu.subtail - geo_get_nr_visible_items() + 1;
-			menu.last = menu.subtail;
+		if (get_nr_items() > geo_get_nr_visible_items()) {
+			menu.last = menu.filter_tail;
+			menu.first = menu.filter_tail;
+			step_back(&menu.first, geo_get_nr_visible_items() - 1);
 			init_menuitem_coordinates();
 		}
 		menu.sel = menu.last;
@@ -377,37 +507,40 @@ void key_event(XKeyEvent *ev)
 	case XK_Escape:
 		exit(0);
 	case XK_Home:
-		if (menu.nr_items_in_submenu > geo_get_nr_visible_items()) {
-			menu.first = menu.subhead;
-			menu.last = menu.subhead + geo_get_nr_visible_items() - 1;
+		if (get_nr_items() > geo_get_nr_visible_items()) {
+			menu.first = menu.filter_head;
+			menu.last = menu.filter_head;
+			step_fwd(&menu.last, geo_get_nr_visible_items() - 1);
 			init_menuitem_coordinates();
 		}
 		menu.sel = menu.first;
 		break;
 	case XK_Up:
-		if (!menu.sel || !menu.sel->prev)
+		if (menu.sel == menu.filter_head)
 			break;
 		if (menu.sel != menu.first) {
-			menu.sel = menu.sel->prev;
-		} else if (menu.sel == menu.first && menu.first != menu.subhead) {
-			menu.first = menu.first->prev;
-			menu.last = menu.last->prev;
+			step_back(&menu.sel, 1);
+		} else {
+			step_back(&menu.first, 1);
+			step_back(&menu.last, 1);
 			menu.sel = menu.first;
 			init_menuitem_coordinates();
 		}
 		break;
 	case XK_Next:	/* PageDown */
-		if (menu.nr_items_in_submenu > geo_get_nr_visible_items()) {
-			menu.first += scroll_step_down();
-			menu.last = menu.first + geo_get_nr_visible_items() - 1;
+		if (get_nr_items() > geo_get_nr_visible_items()) {
+			nr_steps = scroll_step_down();
+			step_fwd(&menu.first, nr_steps);
+			step_fwd(&menu.last, nr_steps);
 			init_menuitem_coordinates();
 		}
 		menu.sel = menu.last;
 		break;
 	case XK_Prior:	/* PageUp */
-		if (menu.nr_items_in_submenu > geo_get_nr_visible_items()) {
-			menu.first -= scroll_step_up();
-			menu.last = menu.first + geo_get_nr_visible_items() - 1;
+		if (get_nr_items() > geo_get_nr_visible_items()) {
+			nr_steps = scroll_step_up();
+			step_back(&menu.first, nr_steps);
+			step_back(&menu.last, nr_steps);
 			init_menuitem_coordinates();
 		}
 		menu.sel = menu.first;
@@ -417,33 +550,33 @@ void key_event(XKeyEvent *ev)
 		if (config.spawn) {
 			action_cmd(menu.sel->t[1]);
 		} else {
-			puts(menu.sel->t[1]);
+			printf("%s", menu.sel->t[1]);
 			exit(0);
 		}
 		break;
 	case XK_Down:
-		if (!menu.sel || !menu.sel->next)
+		if (menu.sel == menu.filter_tail)
 			break;
 		if (menu.sel != menu.last) {
-			menu.sel = menu.sel->next;
-		} else if (menu.sel == menu.last && menu.last != menu.subtail) {
-			menu.first = menu.first->next;
-			menu.last = menu.last->next;
+			step_fwd(&menu.sel, 1);
+		} else {
+			step_fwd(&menu.first, 1);
+			step_fwd(&menu.last, 1);
 			menu.sel = menu.last;
 			init_menuitem_coordinates();
 		}
 		break;
-	case XK_plus:
-		config.color_menu_bg[3] += 0.1;
-		if (config.color_menu_bg[3] > 1.0)
-			config.color_menu_bg[3] = 1.0;
-		init_menuitem_coordinates();
-		draw_menu();
-		break;
-	case XK_minus:
+	case XK_F3:
 		config.color_menu_bg[3] -= 0.1;
 		if (config.color_menu_bg[3] < 0.0)
 			config.color_menu_bg[3] = 0.0;
+		init_menuitem_coordinates();
+		draw_menu();
+		break;
+	case XK_F4:
+		config.color_menu_bg[3] += 0.1;
+		if (config.color_menu_bg[3] > 1.0)
+			config.color_menu_bg[3] = 1.0;
 		init_menuitem_coordinates();
 		draw_menu();
 		break;
@@ -465,9 +598,15 @@ void key_event(XKeyEvent *ev)
 		break;
 	case XK_BackSpace:
 		filter_backspace();
+		update_filtered_list();
+		init_menuitem_coordinates();
+		draw_menu();
 		break;
 	default:
 		filter_addstr(buf, len);
+		update_filtered_list();
+		init_menuitem_coordinates();
+		draw_menu();
 		break;
 	}
 }
@@ -508,20 +647,20 @@ void mouse_event(XEvent *e)
 		die("Right clicked.");
 
 	/* scroll up */
-	if (ev->button == Button4 && menu.first != menu.subhead) {
-		menu.first = menu.first->prev;
-		menu.last = menu.last->prev;
-		menu.sel = menu.sel->prev;
+	if (ev->button == Button4 && menu.first != menu.filter_head) {
+		step_back(&menu.first, 1);
+		step_back(&menu.last, 1);
+		step_back(&menu.sel, 1);
 		init_menuitem_coordinates();
 		draw_menu();
 		return;
 	}
 
 	/* scroll down */
-	if (ev->button == Button5 && menu.last != menu.subtail) {
-		menu.first = menu.first->next;
-		menu.last = menu.last->next;
-		menu.sel = menu.sel->next;
+	if (ev->button == Button5 && menu.last != menu.filter_tail) {
+		step_fwd(&menu.first, 1);
+		step_fwd(&menu.last, 1);
+		step_fwd(&menu.sel, 1);
 		init_menuitem_coordinates();
 		draw_menu();
 		return;
@@ -598,6 +737,14 @@ void *load_icons(void *arg)
 	return NULL;
 }
 
+void create_master_list(void)
+{
+	struct Item *item;
+
+	for (item = menu.head; item && item->t[0]; item++)
+		list_add_tail(&item->master, &menu.master);
+}
+
 void read_stdin(void)
 {
 	char buf[BUFSIZ], *p;
@@ -648,6 +795,9 @@ void read_stdin(void)
 	for (item = menu.head; item && item->t[0]; item++)
 		dlist_append(item, &menu.head, &menu.tail);
 
+	/* NEW */
+	create_master_list();
+
 	/* Populate tag field */
 	for (item = menu.head; item && item->t[0]; item++)
 		item->tag = parse_caret_action(item->t[1], "^tag(");
@@ -695,7 +845,8 @@ void process_pointer_position(void)
 	if ((mouse_coords.x == oldx) && (mouse_coords.y == oldy))
 		return;
 
-	for (item = menu.first; item && item->t[0] && item->prev != menu.last; item++) {
+	item = menu.first;
+	list_for_each_entry_from(item, &menu.filter, filter) {
 		if (ui_is_point_in_area(mouse_coords, item->area)) {
 			if (menu.sel != item) {
 				menu.sel = item;
@@ -703,6 +854,8 @@ void process_pointer_position(void)
 				break;
 			}
 		}
+		if (item == menu.last)
+			break;
 	}
 
 	oldx = mouse_coords.x;
@@ -870,6 +1023,8 @@ int main(int argc, char *argv[])
 
 	config_set_defaults();
 	menu.title = NULL;
+	INIT_LIST_HEAD(&menu.master);
+	INIT_LIST_HEAD(&menu.filter);
 
 	for (i = 1; i < argc; i++)
 		if (!strncmp(argv[i], "--config-file=", 14))
@@ -908,7 +1063,6 @@ int main(int argc, char *argv[])
 	ui_init();
 	geo_init();
 	init_geo_variables_from_config();
-	filter_init();
 
 	read_stdin();
 
@@ -927,10 +1081,11 @@ int main(int argc, char *argv[])
 	ui_init_canvas(geo_get_menu_width(), geo_get_screen_height());
 	ui_init_cairo(geo_get_menu_width(), geo_get_screen_height(), config.font);
 
+	init_empty_item();
+	filter_init();
+	update_filtered_list();
 	init_menuitem_coordinates();
 	draw_menu();
-
-	fprintf(stderr, "FONT: %s\n", config.font);
 
 	run();
 

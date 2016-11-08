@@ -43,7 +43,7 @@ int filter_ismatch(const char *haystack)
 {
 	int ret = 0;
 
-	if ((needle.len) && strstr(haystack, needle.buf))
+	if (!needle.len || strstr(haystack, needle.buf))
 		ret = 1;
 
 	return ret;

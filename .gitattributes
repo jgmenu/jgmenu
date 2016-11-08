@@ -1,0 +1,2 @@
+scripts/checkpatch.pl linguist-vendored
+scripts/checkbashisms.pl linguist-vendored
