@@ -43,6 +43,7 @@ struct Item {
 	char *tag;		/* used to tag the start of a submenu	  */
 	struct Area area;
 	cairo_surface_t *icon;
+	struct Item *parent;
 	struct Item *next, *prev;
 	struct list_head master;
 	struct list_head filter;
@@ -420,11 +421,9 @@ void action_cmd(char *cmd)
 		p = parse_caret_action(cmd, "^checkout(");
 		if (p) {
 			checkout_submenu(p);
-
 			/* menu height has changed - need to redraw window */
 			XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
 					  geo_get_menu_width(), geo_get_menu_height());
-
 			update_filtered_list();
 			init_menuitem_coordinates();
 			draw_menu();
@@ -565,6 +564,14 @@ void key_event(XKeyEvent *ev)
 			menu.sel = menu.last;
 			init_menuitem_coordinates();
 		}
+		break;
+	case XK_F2:
+		checkout_submenu("root");
+		XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
+				  geo_get_menu_width(), geo_get_menu_height());
+		update_filtered_list();
+		init_menuitem_coordinates();
+		draw_menu();
 		break;
 	case XK_F3:
 		config.color_menu_bg[3] -= 0.1;
@@ -745,6 +752,75 @@ void create_master_list(void)
 		list_add_tail(&item->master, &menu.master);
 }
 
+struct Item *get_item_from_tag(const char *tag)
+{
+	struct Item *item;
+
+	if (!tag)
+		die("tag=(null) in get_item_from_tag()");
+
+	list_for_each_entry(item, &menu.master, master)
+		if (item->tag && !strcmp(tag, item->tag))
+			return item;
+
+	fprintf(stderr, "warning: could not find tag '%s'\n", tag);
+	return NULL;
+}
+
+void walk_children(struct Item *this, struct Item *parent)
+{
+	static struct Item *root;
+	struct sbuf s;
+	struct Item *child, *p;
+
+	sbuf_init(&s);
+
+	if (this) {
+		this->parent = parent;
+		/* move to next item, as this points to a ^tag() item */
+		p = container_of((this)->master.next, struct Item, master);
+	} else {
+		p = list_first_entry_or_null(&menu.master, struct Item,
+						master);
+	}
+
+	if (!root && this)
+		root = this;
+	else if (!root)
+		root = p;
+
+	if (p == list_last_entry(&menu.master, struct Item, master))
+		return;
+
+	list_for_each_entry_from(p, &menu.master, master) {
+		if (!strncmp("^checkout(", p->t[1], 10)) {
+			sbuf_cpy(&s, parse_caret_action(p->t[1], "^checkout("));
+			child = get_item_from_tag(s.buf);
+			if (child->parent || child == root)
+				continue;
+			walk_children(child, this);
+		} else if (!strncmp("^tag(", p->t[1], 5)) {
+			break;
+		}
+	}
+}
+
+
+void build_tree(void)
+{
+	struct Item *item;
+
+	if (list_empty(&menu.master))
+		die("cannot build tree on empty menu.master list");
+	item = list_first_entry_or_null(&menu.master, struct Item, master);
+	if (item->tag && list_is_singular(&menu.master))
+		die("cannot build a menu on a single tag item");
+	if (item->tag)
+		walk_children(get_item_from_tag(item->tag), NULL);
+	else
+		walk_children(NULL, NULL);
+}
+
 void read_stdin(void)
 {
 	char buf[BUFSIZ], *p;
@@ -795,15 +871,21 @@ void read_stdin(void)
 	for (item = menu.head; item && item->t[0]; item++)
 		dlist_append(item, &menu.head, &menu.tail);
 
-	/* NEW */
 	create_master_list();
 
 	/* Populate tag field */
 	for (item = menu.head; item && item->t[0]; item++)
 		item->tag = parse_caret_action(item->t[1], "^tag(");
 
-	for (item = menu.head; item && item->t[0]; item++)
+	for (item = menu.head; item && item->t[0]; item++) {
 		item->icon = NULL;
+		item->parent = NULL;
+	}
+
+	build_tree();
+	list_for_each_entry(item, &menu.master, master)
+		if (item->parent)
+			fprintf(stderr, "name:%s; parent:%s\n", item->t[0], item->parent->tag);
 }
 
 void init_pipe_flags(void)
