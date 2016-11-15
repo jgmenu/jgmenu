@@ -22,7 +22,7 @@ readme: ../../README.md
 	@echo "    PANDOC    ../../README.md" 
 	@pandoc -s $(variant) --css=$(css) -o ../../README.html ../../README.md
 
-install: $(man_pages)
+install:
 	@$(INSTALL) -d -m 755 $(DESTDIR)$(man1dir)
 	@$(INSTALL) -m 644 $(man_pages) $(DESTDIR)$(man1dir)
 
