@@ -1,5 +1,7 @@
 #!/bin/sh
 
+test -z ${JGMENU_UNITY} || jgmenu_run unity-hack &
+
 default_menu_file="${HOME}/.config/jgmenu/default.csv"
 menu_file=""
 
@@ -24,7 +26,6 @@ add_xdg=f
 
 while test $# != 0
 do
-	
 	case "$1" in
 	--add-pmenu)
 		add_pmenu=t ;;
@@ -63,7 +64,6 @@ then
 	test ${add_xdg} = "t" &&  ${xdg_cmd} >> ${tmp_file}
 
 	cat ${tmp_file} | jgmenu
-else	
+else
 	cat ${menu_file} | jgmenu
 fi
-

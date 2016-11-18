@@ -41,7 +41,7 @@ endif
 SCRIPTS_SHELL  = jgmenu_run jgmenu-cache.sh jgmenu-pmenu.sh \
 		 jgmenu-csv.sh jgmenu-xdg.sh jgmenu-config.sh
 
-SCRIPTS_PYTHON = jgmenu-parse-pmenu.py
+SCRIPTS_PYTHON = jgmenu-parse-pmenu.py jgmenu-unity-hack.py
 
 PROGS	 = jgmenu jgmenu-parse-xdg jgmenu-icon-find jgmenu-xsettings
 
