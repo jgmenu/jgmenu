@@ -50,6 +50,6 @@ then
 	jgmenu_run parse-xdg ${menu_file} | jgmenu
 	exit 0
 else
-	printf "fatal: cannot find .menu file"
+	printf "%s\n" "fatal: cannot find .menu file"
 	exit 1
 fi

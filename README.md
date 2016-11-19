@@ -42,6 +42,22 @@ install to /usr/bin/, do:
 sudo make prefix=/usr install
 ```
 
+`make install` creates a .desktop-file in ~/.local/share/applications.  
+This file can be used in panels such as tint2, plank and unity. To specify  
+an alternative command, use the command below replacing `jgmenu_run csv`  
+with your preferred command.
+
+```bash
+make JGMENU_DESKTOP_EXEC="jgmenu_run csv" install
+```
+
+If you are using Ubuntu's Unity, prepend with `env JGMENU_UNITY=1`.  
+For example:
+
+```bash
+make JGMENU_DESKTOP_EXEC="env JGMENU_UNITY=1 jgmenu_run pmenu" install
+```
+
 Dependencies
 ------------
 
@@ -72,7 +88,7 @@ To enable menu transparency, you need to have a Composite Manager such as
 
 For Arch Linux users, there is an AUR package named "jgmenu".
 
-On Debian/Ubuntu, I believe you need to do:
+On Debian based systems such as Bunsenlabs and Ubuntu, do:
 
 ```bash
 sudo apt-get install libx11-dev libxinerama-dev libcairo2-dev libpango1.0-dev librsvg2-dev libxml2-dev
