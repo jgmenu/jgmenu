@@ -39,6 +39,11 @@ void filter_backspace(void)
 	}
 }
 
+int filter_needle_length(void)
+{
+	return needle.len;
+}
+
 int filter_ismatch(const char *haystack)
 {
 	int ret = 0;

@@ -15,7 +15,7 @@ leafpad,leafpad,leafpad
 gparted,gparted,gparted
 
 submenu,^tag(submenu)
-go back,^checkout(root),folder
+#go back,^checkout(root),folder
 Image Viewer,gpicview ,gpicview
 Widget Factory,gtk3-widget-factory,gtk3-widget-factory
 Qt V4L2 test Utility,qv4l2,qv4l2

@@ -1,5 +1,5 @@
-menu_margin_x	= 0
-menu_margin_y	= 31
+menu_margin_x	= 2
+menu_margin_y	= 32
 menu_width	= 300
 menu_radius	= 2
 menu_border	= 0
