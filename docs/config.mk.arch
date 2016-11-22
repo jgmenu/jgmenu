@@ -1,0 +1,4 @@
+JGMENU_DESKTOP_EXEC="jgmenu_run csv --add-pmenu"
+JGMENU_DESKTOP_ICON="distributor-logo-arch"
+#JGMENU_DESKTOP_ICON="mate-panel-window-menu"
+HAVE_STRCASESTR=1

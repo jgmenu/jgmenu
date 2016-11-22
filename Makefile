@@ -30,6 +30,9 @@ LIBS += -pthread
 
 LDFLAGS  = $(LIBS)
 
+# Allow user to override build settings without making tree dirty
+-include config.mk
+
 ifdef ASAN
 ASAN_FLAGS = -O0 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic
 CFLAGS    += $(ASAN_FLAGS)
@@ -78,7 +81,9 @@ else
 	found. Suggest defining PYTHON3_POLYGLOT"
 endif
 	@$(MAKE) --no-print-directory -C docs/manual/ install
-	@./scripts/create_desktop_file.sh
+	@env JGMENU_DESKTOP_EXEC=$(JGMENU_DESKTOP_EXEC) \
+	     JGMENU_DESKTOP_ICON=$(JGMENU_DESKTOP_ICON) \
+	     ./scripts/create_desktop_file.sh
 
 clean:
 	@$(RM) $(PROGS) *.o

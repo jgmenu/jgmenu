@@ -24,8 +24,8 @@ Screenshots
 
 jgmenu and tint2 using Numix-Circle and Papirus icon themes
 
-Installation
-------------
+Build and Install
+-----------------
 
 ```bash
 make
@@ -42,6 +42,15 @@ install to /usr/bin/, do:
 sudo make prefix=/usr install
 ```
 
+There are a number of build variables which can be defined. These are  
+described in the Makefile.
+
+Create a config.mk to override build settings without making your tree  
+dirty. For example: [config.mk.arch](./docs/config.mk.arch)
+
+Desktop File
+------------
+
 `make install` creates a .desktop-file in ~/.local/share/applications.  
 This file can be used in panels such as tint2, plank and unity. To specify  
 an alternative command, use the command below replacing `jgmenu_run csv`  
@@ -56,6 +65,13 @@ For example:
 
 ```bash
 make JGMENU_DESKTOP_EXEC="env JGMENU_UNITY=1 jgmenu_run pmenu" install
+```
+
+To add this desktop file to tint2, add the line below to the launcher  
+section or just drag-and-drop with tint2conf:
+
+```bash
+launcher_item_app = jgmenu.desktop
 ```
 
 Dependencies
