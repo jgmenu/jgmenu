@@ -871,6 +871,8 @@ void walk_tagged_items(struct item *this, struct node *parent)
 	list_for_each_entry_from(p, &menu.master, master) {
 		if (!strncmp("^checkout(", p->t[1], 10)) {
 			child = get_item_from_tag(parse_caret_action(p->t[1], "^checkout("));
+			if (!child)
+				continue;
 			if (child->tag && node_exists(child->tag))
 				continue;
 			walk_tagged_items(child, current_node);

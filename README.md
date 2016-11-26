@@ -51,24 +51,27 @@ dirty. For example: [config.mk.arch](./docs/config.mk.arch)
 Desktop File
 ------------
 
-`make install` creates a .desktop-file in ~/.local/share/applications.  
-This file can be used in panels such as tint2, plank and unity. To specify  
-an alternative command, use the command below replacing `jgmenu_run csv`  
-with your preferred command.
+`make install` creates a desktop-file in ~/.local/share/applications.  
+This file can be used in panels such as tint2, plank and unity. By default,  
+`Exec=jgmenu_run pmenu` and `Icon=start-here`.
+
+To specify a different command and icon, define `JGMENU_DESKTOP_EXEC` and  
+`JGMENU_DESKTOP_ICON` in your config.mk. For example:  
 
 ```bash
-make JGMENU_DESKTOP_EXEC="jgmenu_run csv" install
+JGMENU_DESKTOP_EXEC="jgmenu_run csv \"--add-pmenu\""
+JGMENU_DESKTOP_ICON="distributor-logo-archlinux"
 ```
 
 If you are using Ubuntu's Unity, prepend with `env JGMENU_UNITY=1`.  
 For example:
 
 ```bash
-make JGMENU_DESKTOP_EXEC="env JGMENU_UNITY=1 jgmenu_run pmenu" install
+JGMENU_DESKTOP_EXEC="env JGMENU_UNITY=1 jgmenu_run csv"
 ```
 
-To add this desktop file to tint2, add the line below to the launcher  
-section or just drag-and-drop with tint2conf:
+To add the desktop file to tint2, add the line below to the launcher  
+section or just drag-and-drop in tint2conf:
 
 ```bash
 launcher_item_app = jgmenu.desktop

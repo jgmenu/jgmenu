@@ -5,11 +5,12 @@
 # If you are going to use the .desktop file on Ubuntu's Unity launcher, set
 # JGMENU_DESKTOP_EXEC="env JGMENU_UNITY=1 jgmenu_run <command>"
 
+test -e ./config.mk && . ./config.mk
+
 : ${desktop_dir=~/.local/share/applications}
 : ${desktop_file="jgmenu.desktop"}
-
-test -z "${JGMENU_DESKTOP_EXEC}" && JGMENU_DESKTOP_EXEC="jgmenu_run pmenu"
-test -z "${JGMENU_DESKTOP_ICON}" && JGMENU_DESKTOP_ICON="start-here"
+: ${JGMENU_DESKTOP_EXEC="jgmenu_run pmenu"}
+: ${JGMENU_DESKTOP_ICON="start-here"}
 
 dest=${desktop_dir}/${desktop_file}
 

@@ -6,9 +6,6 @@
 # Define PYTHON3_POLYGLOT=1 if '#!/usr/bin/env python3' is not going to work
 # on your system.
 #
-# Set JGMENU_DESKTOP_EXEC and JGMENU_DESKTOP_ICON to change the respective
-# values in the .desktop-file
-#
 
 VER      = $(shell ./scripts/version-gen.sh)
 CC       = gcc
@@ -81,9 +78,7 @@ else
 	found. Suggest defining PYTHON3_POLYGLOT"
 endif
 	@$(MAKE) --no-print-directory -C docs/manual/ install
-	@env JGMENU_DESKTOP_EXEC=$(JGMENU_DESKTOP_EXEC) \
-	     JGMENU_DESKTOP_ICON=$(JGMENU_DESKTOP_ICON) \
-	     ./scripts/create_desktop_file.sh
+	@./scripts/create_desktop_file.sh
 
 clean:
 	@$(RM) $(PROGS) *.o
