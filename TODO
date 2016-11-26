@@ -1,8 +1,6 @@
 TODO
 ====
 
-  - Add notes in jgmenurc to explain options (particularly top, bottom, etc)
-
   - Add <file> option to `jgmenu_run xdg` and `jgmenu_run csv`
 
   - Remove harded coded variables (such as 22, etc)
@@ -18,10 +16,6 @@ TODO
 	add --append-file=
 	    --prepend-file=
 	    --parent=
-
-  - jgmenu_run csv
-	add --add-pmenu
-		this would enable ^checkout(pmenu)
 
   - Add argvbuf.c
 	simplistic library which:
@@ -56,5 +50,3 @@ TODO
   - Use new windows for submenus
 
   - Improve XDG menu support
-
-  - Add search/filter support

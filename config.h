@@ -33,6 +33,7 @@ struct config {
 
 	char *arrow_string;
 	int arrow_show;
+	int search_all_items;
 
 	double color_menu_bg[4];
 	double color_menu_fg[4];

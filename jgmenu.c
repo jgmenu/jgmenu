@@ -149,23 +149,27 @@ void update_filtered_list(void)
 
 	INIT_LIST_HEAD(&menu.filter);
 
-	/* APPLY FILTER ON CURRENT SUBMENU */
-	list_for_each_entry(item, &menu.master, master)
-		if (item == menu.subhead)
-			break;
-
-	list_for_each_entry_from(item, &menu.master, master) {
-		if (filter_ismatch(item->t[0]))
-			list_add_tail(&item->filter, &menu.filter);
-		if (item == menu.subtail)
-			break;
+	if (config.search_all_items && filter_needle_length()) {
+		list_for_each_entry(item, &menu.master, master) {
+			if (!strncmp("^checkout(", item->t[1], 10) ||
+			    !strncmp("^tag(", item->t[1], 5))
+				continue;
+			if (filter_ismatch(item->t[0]) ||
+			    filter_ismatch(item->t[1]))
+				list_add_tail(&item->filter, &menu.filter);
+		}
+	} else {
+		list_for_each_entry(item, &menu.master, master)
+			if (item == menu.subhead)
+				break;
+		list_for_each_entry_from(item, &menu.master, master) {
+			if (filter_ismatch(item->t[0]) ||
+			    filter_ismatch(item->t[0]))
+				list_add_tail(&item->filter, &menu.filter);
+			if (item == menu.subtail)
+				break;
+		}
 	}
-
-	/* APPLY FILTER ON WHOLE LIST (DISREGARDING MENU TREE) */
-/*		list_for_each_entry(item, &menu.master, master)
- *		if (filter_ismatch(item->t[0]))
- *			list_add_tail(&item->filter, &menu.filter);
- */
 
 	menu.filter_head = list_first_entry_or_null(&menu.filter, struct item, filter);
 	if (!menu.filter_head) {
@@ -356,7 +360,7 @@ void checkout_submenu(char *tag)
 			die("menu.first not set. Menu has no content");
 	}
 
-	fprintf(stderr, "[checkout_submenu] current_node=%s\n", menu.current_node->tag);
+	//fprintf(stderr, "[checkout_submenu] current_node=%s\n", menu.current_node->tag);
 
 	menu.last = NULL;
 

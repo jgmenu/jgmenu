@@ -20,9 +20,13 @@ Jgmenu is written with the following aims:
 Screenshots
 -----------
 
-<img src="http://i.imgur.com/4oprqYZ.png" \>  <img src="http://i.imgur.com/QvBqI2L.png" \>
+<img src="http://i.imgur.com/4oprqYZ.png" \>
 
-jgmenu and tint2 using Numix-Circle and Papirus icon themes
+jgmenu and tint2 using Numix-Circle icon theme
+
+<img src="http://i.imgur.com/QvBqI2L.png" \>
+
+jgmenu and tint2 using Papirus icon theme
 
 Build and Install
 -----------------
@@ -77,6 +81,10 @@ section or just drag-and-drop in tint2conf:
 launcher_item_app = jgmenu.desktop
 ```
 
+If you are using plank, `JGMENU_DESKTOP_ICON` needs to contain the full  
+path to the icon.
+
+
 Dependencies
 ------------
 
@@ -110,7 +118,8 @@ For Arch Linux users, there is an AUR package named "jgmenu".
 On Debian based systems such as Bunsenlabs and Ubuntu, do:
 
 ```bash
-sudo apt-get install libx11-dev libxinerama-dev libcairo2-dev libpango1.0-dev librsvg2-dev libxml2-dev
+sudo apt-get install libx11-dev libxinerama-dev libcairo2-dev \
+libpango1.0-dev librsvg2-dev libxml2-dev
 ```
 
 Getting started
@@ -129,11 +138,14 @@ significantly improved by running:
 jgmenu_run cache
 ```
 
-To change the menu appearance, create a jgmenurc file.
+To change the menu appearance, create a jgmenurc file and edit it to suit  
+your taste. The git repo contains a documented example [jgmenurc](docs/jgmenurc)  
+with default values. To copy this file, do the following (replacing "src"  
+as appropriate):
 
 ```bash
 mkdir -p ~/.config/jgmenu
-cp path_to_jgmenu_dir/jgmenu/docs/jgmenurc ~/.config/jgmenu/
+cp ~/src/jgmenu/docs/jgmenurc ~/.config/jgmenu/
 ```
 
 How jgmenu works
