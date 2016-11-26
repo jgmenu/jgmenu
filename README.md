@@ -33,7 +33,7 @@ make install
 ```
 
 By default, `make install` will install files to `~/bin/`. You will need  
-`~/bin` in your `$PATH` to run it from here.
+`$HOME/bin` in your `$PATH` to run it from here.
 
 Use `prefix` to specify a different target location. For example, to  
 install to /usr/bin/, do:
@@ -113,7 +113,7 @@ sudo apt-get install libx11-dev libxinerama-dev libcairo2-dev libpango1.0-dev li
 Getting started
 ---------------
 
-To get started, use the `jgmenu_run` wrapper. Try:
+To get started, use `jgmenu_run`. For example, try:
 
 ```bash
 jgmenu_run pmenu

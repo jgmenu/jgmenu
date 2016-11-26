@@ -7,8 +7,9 @@
 
 : ${desktop_dir=~/.local/share/applications}
 : ${desktop_file="jgmenu.desktop"}
-: ${JGMENU_DESKTOP_EXEC="jgmenu_run pmenu"}
-: ${JGMENU_DESKTOP_ICON="start-here"}
+
+test -z "${JGMENU_DESKTOP_EXEC}" && JGMENU_DESKTOP_EXEC="jgmenu_run pmenu"
+test -z "${JGMENU_DESKTOP_ICON}" && JGMENU_DESKTOP_ICON="start-here"
 
 dest=${desktop_dir}/${desktop_file}
 
