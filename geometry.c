@@ -227,6 +227,11 @@ int geo_get_screen_height(void)
 	return screen_height;
 }
 
+int geo_get_screen_width(void)
+{
+	return screen_width;
+}
+
 int geo_get_nr_visible_items(void)
 {
 	return nr_visible_items;

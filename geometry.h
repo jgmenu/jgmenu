@@ -69,6 +69,7 @@ int geo_get_menu_height(void);
 int geo_get_menu_width(void);
 int geo_get_item_height(void);
 int geo_get_screen_height(void);
+int geo_get_screen_width(void);
 int geo_get_nr_visible_items(void);
 
 #endif  /* GEOMETRY_H */

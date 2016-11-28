@@ -19,6 +19,7 @@ void config_set_defaults(void)
 	config.menu_border	 = 0;
 	config.menu_halign	 = NULL;
 	config.menu_valign	 = NULL;
+	config.at_pointer	 = 0;
 
 	config.item_margin_x	 = 3;
 	config.item_margin_y	 = 3;
@@ -71,6 +72,8 @@ static void process_line(char *line)
 		config.menu_halign = strdup(value);
 	else if (!strncmp(option, "menu_valign", 11))
 		config.menu_valign = strdup(value);
+	else if (!strncmp(option, "at_pointer", 10))
+		xatoi(&config.at_pointer, value, XATOI_NONNEG, "config.at_pointer");
 
 	else if (!strncmp(option, "item_margin_x", 13))
 		xatoi(&config.item_margin_x, value, XATOI_NONNEG, "config.item_margin_x");

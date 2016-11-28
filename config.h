@@ -13,6 +13,7 @@ struct config {
 	int menu_border;
 	char *menu_halign;
 	char *menu_valign;
+	int at_pointer;
 
 	int item_margin_x;
 	int item_margin_y;

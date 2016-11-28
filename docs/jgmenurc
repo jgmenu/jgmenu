@@ -19,6 +19,10 @@ menu_border	  = 0
 menu_halign	  = left
 menu_valign	  = bottom
 
+# "at_pointer" will launch the menu at the pointer position
+# This option overrides menu_margin_? and menu_?align settings
+at_pointer	  = 0
+
 item_margin_x	  = 3
 item_margin_y	  = 3
 item_height	  = 25

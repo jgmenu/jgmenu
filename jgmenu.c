@@ -1191,6 +1191,36 @@ void init_geo_variables_from_config(void)
 	geo_set_item_height(config.item_height);
 }
 
+void launch_menu_at_pointer(void)
+{
+	Window dw;
+	int di;
+	unsigned int du;
+	struct Point pos;
+
+	XQueryPointer(ui->dpy, DefaultRootWindow(ui->dpy), &dw, &dw, &di, &di,
+		      &pos.x, &pos.y, &du);
+
+	if (pos.x < geo_get_screen_width() - geo_get_menu_width()) {
+		geo_set_menu_halign("left");
+		geo_set_menu_margin_x(pos.x);
+	} else {
+		geo_set_menu_halign("right");
+		geo_set_menu_margin_x(geo_get_screen_width() - pos.x);
+	}
+
+	if (pos.y < geo_get_screen_height() - geo_get_menu_height()) {
+		geo_set_menu_valign("top");
+		geo_set_menu_margin_y(pos.y);
+	} else if (geo_get_menu_height() < pos.y) {
+		geo_set_menu_valign("bottom");
+		geo_set_menu_margin_y(geo_get_screen_height() - pos.y);
+	} else {
+		geo_set_menu_valign("bottom");
+		geo_set_menu_margin_y(0);
+	}
+}
+
 void set_theme_and_font(void)
 {
 	config_xs_get_theme(&config.icon_theme, config.ignore_xsettings,
@@ -1245,6 +1275,8 @@ int main(int argc, char *argv[])
 			xatoi(&config.min_items, argv[i] + 15, XATOI_NONNEG,
 			      "config.min_items");
 			config.max_items = config.min_items;
+		} else if (!strncmp(argv[i], "--at-pointer", 12)) {
+			config.at_pointer = 1;
 		}
 
 	set_theme_and_font();
@@ -1264,6 +1296,9 @@ int main(int argc, char *argv[])
 
 	grabkeyboard();
 	grabpointer();
+
+	if (config.at_pointer)
+		launch_menu_at_pointer();
 
 	ui_create_window(geo_get_menu_x0(), geo_get_menu_y0(),
 			 geo_get_menu_width(), geo_get_menu_height());
