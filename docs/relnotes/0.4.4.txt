@@ -1,0 +1,13 @@
+jgmenu v0.4.4 release notes
+===========================
+
+Updates since v0.4.3
+--------------------
+
+  - Added option to launch menu at pointer
+
+  - Added search support (just start typing when in menu)
+
+  - Added script to create .desktop file
+
+  - Added support for "backspace" to go back to parent menu

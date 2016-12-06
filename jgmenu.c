@@ -97,6 +97,14 @@ struct menu {
 
 struct menu menu;
 
+static const char jgmenu_usage[] =
+"Usage: jgmenu [OPTIONS]\n"
+"    --version             show version\n"
+"    --no-spawn            redirect command to stdout rather than executing it\n"
+"    --checkout=<tag>      checkout submenu <tag> on startup\n"
+"    --config-file=<file>  read config file\n"
+"    --at-pointer          launch menu at mouse pointer\n";
+
 void init_empty_item(void)
 {
 	empty_item.t[0] = strdup("<empty>");
@@ -108,11 +116,7 @@ void init_empty_item(void)
 
 void usage(void)
 {
-	printf("Usage: jgmenu [OPTIONS]\n"
-	       "    --version             show version\n"
-	       "    --no-spawn            redirect command to stdout rather than executing it\n"
-	       "    --checkout=<tag>      checkout submenu <tag> on startup\n"
-	       "    --config-file=<file>  read config file\n");
+	printf("%s", jgmenu_usage);
 	exit(0);
 }
 
@@ -359,8 +363,6 @@ void checkout_submenu(char *tag)
 		if (!menu.first)
 			die("menu.first not set. Menu has no content");
 	}
-
-	//fprintf(stderr, "[checkout_submenu] current_node=%s\n", menu.current_node->tag);
 
 	menu.last = NULL;
 
