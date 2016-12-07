@@ -319,9 +319,8 @@ static char *xpm_extract_color(const char *buffer)
 	current_color[0] = '\0';
 	while (1) {
 		/* skip whitespace */
-		for (; *p != '\0' && xpm_isspace(*p); p++) {
-			/* nothing to do */
-		}
+		for (; *p != '\0' && xpm_isspace(*p); p++)
+			; /* nothing to do */
 		/* copy word */
 		for (r = word; *p != '\0' && !xpm_isspace(*p) && r - word < sizeof(word) - 1; p++, r++)
 			*r = *p;

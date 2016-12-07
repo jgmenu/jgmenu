@@ -41,7 +41,7 @@ static int pipe_fds[2];		/* pipe to communicate between threads	  */
 struct item {
 	char *t[MAX_FIELDS];
 	char *tag;			/* MOVED TO node */
-	struct Area area;
+	struct area area;
 	cairo_surface_t *icon;
 	struct item *next, *prev;	/* DELETE? */
 	struct list_head master;
@@ -654,12 +654,12 @@ void key_event(XKeyEvent *ev)
 	}
 }
 
-struct Point mousexy(void)
+struct point mousexy(void)
 {
 	Window dw;
 	int di;
 	unsigned int du;
-	struct Point coords;
+	struct point coords;
 
 	XQueryPointer(ui->dpy, ui->win, &dw, &dw, &di, &di, &coords.x,
 		      &coords.y, &du);
@@ -671,7 +671,7 @@ void mouse_event(XEvent *e)
 {
 	struct item *item;
 	XButtonPressedEvent *ev = &e->xbutton;
-	struct Point mouse_coords;
+	struct point mouse_coords;
 
 	mouse_coords = mousexy();
 	mouse_coords.y -= MOUSE_FUDGE;
@@ -1024,7 +1024,7 @@ void init_pipe_flags(void)
 void process_pointer_position(void)
 {
 	struct item *item;
-	struct Point mouse_coords;
+	struct point mouse_coords;
 	static int oldy;
 	static int oldx;
 
@@ -1198,7 +1198,7 @@ void launch_menu_at_pointer(void)
 	Window dw;
 	int di;
 	unsigned int du;
-	struct Point pos;
+	struct point pos;
 
 	XQueryPointer(ui->dpy, DefaultRootWindow(ui->dpy), &dw, &dw, &di, &di,
 		      &pos.x, &pos.y, &du);

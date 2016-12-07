@@ -23,7 +23,7 @@
 
 #define DEBUG_THEMES 0
 
-struct Icon {
+struct icon {
 	char *name;
 	cairo_surface_t *surface;
 	struct list_head list;
@@ -94,14 +94,14 @@ static cairo_surface_t *get_svg_icon(const char *filename, int size)
 
 void icon_set_name(const char *name)
 {
-	struct Icon *icon;
+	struct icon *icon;
 
 	/* Don't add if already exists in list */
 	list_for_each_entry(icon, &icon_cache, list)
 		if (!strcmp(name, icon->name))
 			return;
 
-	icon = xmalloc(sizeof(struct Icon));
+	icon = xmalloc(sizeof(struct icon));
 
 	icon->name = strdup(name);
 	icon->surface = NULL;
@@ -110,7 +110,7 @@ void icon_set_name(const char *name)
 
 void icon_load(void)
 {
-	struct Icon *icon;
+	struct icon *icon;
 	struct sbuf s;
 	static int first_load = 1;
 
@@ -145,7 +145,7 @@ void icon_load(void)
 
 cairo_surface_t *icon_get_surface(const char *name)
 {
-	struct Icon *icon;
+	struct icon *icon;
 
 	if (!name)
 		return NULL;

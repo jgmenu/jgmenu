@@ -326,7 +326,7 @@ int ui_get_text_height(const char *fontdesc)
 	return (logical.height / 1000 + 1);
 }
 
-int ui_is_point_in_area(struct Point p, struct Area a)
+int ui_is_point_in_area(struct point p, struct area a)
 {
 	if ((p.x >= a.x) &&
 	    (p.x <= a.x + a.w - 1) &&

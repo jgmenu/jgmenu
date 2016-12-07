@@ -7,7 +7,7 @@
 
 #include "list.h"
 
-struct Path_segment {
+struct path_segment {
 	char *path;
 	struct list_head list;
 };
@@ -16,7 +16,7 @@ struct list_head head;
 
 void parse_path(void)
 {
-	struct Path_segment *tmp;
+	struct path_segment *tmp;
 	char *path, *p;
 
 	path = strdup(getenv("PATH"));
@@ -25,7 +25,7 @@ void parse_path(void)
 
 	p = path;
 	for (;;) {
-		tmp = malloc(sizeof(struct Path_segment));
+		tmp = malloc(sizeof(struct path_segment));
 		tmp->path = p;
 		list_add_tail(&tmp->list, &head);
 		p = strchr(p, ':');
@@ -47,7 +47,7 @@ int is_ixoth(char *filename)
 int is_prog(char *filename)
 {
 	char prog[4096], *p;
-	struct Path_segment *tmp;
+	struct path_segment *tmp;
 	int pos, cmd_length;
 	static int is_path_parsed;
 

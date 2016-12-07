@@ -48,7 +48,7 @@
 
 void geo_update(void);
 void geo_init(void);
-struct Area geo_get_item_coordinates(int item_number);
+struct area geo_get_item_coordinates(int item_number);
 int geo_get_nr_items_that_fit_on_screen(void);
 
 void geo_set_menu_width(int w);

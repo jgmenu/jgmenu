@@ -48,38 +48,38 @@ get_gtk3_theme () {
 get_icon_theme () {
 	if icon_theme=$(jgmenu_run xsettings --icon-theme)
 	then
-		printf "info: obtained '${icon_theme}' from xsettings\n"
+		printf "info: obtained icon-theme '${icon_theme}' from xsettings\n"
 		return
 	fi
 
 	icon_theme=$(jgmenu_run config --get icon_theme)
 	if ! test -z ${icon_theme}
 	then
-		printf "info: obtained '${icon_theme}' from jgmenurc\n"
+		printf "info: obtained icon-theme '${icon_theme}' from jgmenurc\n"
 		return
 	fi
 
 	get_gtk3_theme
 	if ! test -z ${icon_theme}
 	then
-		printf "info: obtained '${icon_theme}' from GTK's settings.ini\n"
+		printf "info: obtained icon-theme '${icon_theme}' from GTK's settings.ini\n"
 		return
 	fi
 
 	icon_theme=Adwaita
-	printf "info: using '${icon_theme}' by default\n"
+	printf "info: using icon-theme '${icon_theme}' by default\n"
 }
 
 get_icon_size () {
 	icon_size=$(jgmenu_run config --get icon_size)
 	if ! test -z ${icon_size}
 	then
-		printf "info: obtained '${icon_size}' from jgmenurc\n"
+		printf "info: obtained icon-size '${icon_size}' from jgmenurc\n"
 		return
 	fi
 
 	icon_size=22
-	printf "info: using '${icon_size}' by default\n"
+	printf "info: using icon-size '${icon_size}' by default\n"
 }
 
 #

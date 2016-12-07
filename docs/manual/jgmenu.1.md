@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 12 September, 2016
+% 7 December, 2016
 
 # NAME
 
@@ -9,7 +9,7 @@ jgmenu - menu for X11
 # SYNOPSIS
 
 jgmenu \[\--no-spawn] \[\--checkout=<*tag*>] \[\--config-file=<*file*>]  
-       \[\--icon-size=<*size*>]
+       \[\--icon-size=<*size*>] \[\--at-pointer]
 
 # DESCRIPTION
 
@@ -57,10 +57,14 @@ start-up times:
 
 \--config-file=<*file*>  
 :   read config file. If not specified, the default file  
-    ~/.config/jgmenu/jgmenurc will be read
+       ~/.config/jgmenu/jgmenurc will be read.
 
 \--icon-size=<*size*>  
-:   specify icon size (22 by default)
+:   specify icon size (22 by default)  
+       If set to 0, icons will not be loaded.
+
+\--at-pointer  
+:   launch menu at mouse pointer
 
 # CONFIGURATION SETTINGS
 The default configuration file location is ~/.config/jgmenu/jgmenurc

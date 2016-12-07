@@ -82,9 +82,9 @@ void geo_init(void)
 /*
  * item_number is the sequential number of the item starting with zero
  */
-struct Area geo_get_item_coordinates(int item_number)
+struct area geo_get_item_coordinates(int item_number)
 {
-	struct Area a;
+	struct area a;
 
 	a.x = 0 + item_margin_x;
 	a.y = item_number * (item_height + item_margin_y) + item_margin_y;
