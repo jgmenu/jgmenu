@@ -4,8 +4,8 @@ css     = jg.css
 
 man_pages  = jgmenu.1 jgmenu_run.1
 
-# High level commands
-man_pages += jgmenu-cache.1 jgmenu-pmenu.1 jgmenu-xdg.1 jgmenu-csv.1
+man_pages += jgmenu-cache.1 jgmenu-pmenu.1 jgmenu-xdg.1 jgmenu-csv.1 \
+	     jgmenu-config.1
 
 prefix ?= $(HOME)
 mandir ?= $(prefix)/share/man

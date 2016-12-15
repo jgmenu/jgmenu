@@ -1,28 +1,14 @@
 # .jgmenurc example
-
-# "margin" refers to space outside an object
-# "padding" refers to space inside an object (between border and content)
-# "radius" refers to the size of rounded corners
-# "border" refers to the border-thickness (in pixels)
-
-# The menu_margin_* variables refer to the distance between the menu
-# (=X11 window) and the edge of the screen.
+#
+# See JGMENU-CONFIG(1) for further details.
 
 menu_margin_x	  = 0
 menu_margin_y	  = 32
 menu_width	  = 200
 menu_radius	  = 1
 menu_border	  = 0
-
-# Valid options for menu alignment are:
-#   - horizontal: left, right
-#   - vertical:   top, bottom
-
 menu_halign	  = left
 menu_valign	  = bottom
-
-# "at_pointer" will launch the menu at the pointer position
-# This option overrides menu_margin_? and menu_?align settings
 
 at_pointer	  = 0
 
@@ -33,60 +19,23 @@ item_padding_x	  = 4
 item_radius	  = 1
 item_border	  = 0
 
-# max_items and min_items are used to determine the height of the menu.
-# For example if both are set to 10, the menu will always have the height
-# of 10 items (incl padding and margin).
-
 max_items	  = 80
 min_items	  = 1
 
-# The font description without a specified size unit is interpreted as
-# "points". If "px" is added, it will be read as pixels.
-# Using "points" enables consistency with other applications.
-
 font		  = Cantarell 10
-
-# If icon_size is set to 0, icons will not be searched for and loaded.
-#
-# If an xsettings-daemon is running, the icon theme will be obtain from that
-# daemon. Otherwise, the settings below will be read.
-#
-# It is recommended to create icon cache before running jgmenu, using
-# `jgmenu_run cache`. Please note:
-#   - If no cache exists, jgmenu will search xsettings and jgmenurc in real
-#     time.
-#   - If cache already exists, changing the xsettings values or the jgmenurc
-#     values below will have no effect until `jgmenu_run cache` is run again
-#     or the cache is deleted (using `jgmenu_run cache --delete`)
 
 icon_size	  = 22
 icon_theme	  = Adwaita
-
-# The behaviour defined above can be over-ruled by defining the following two:
 
 ignore_xsettings  = 0
 ignore_icon_cache = 0
 
 show_title	  = 0
 
-# The "arrow" indicates that a menu item points a submenu
-# → ▶ ➔ ➙ ➛ ➜ ➝ ➞ ➟ ➠ ➡ ➢ ➣ ➤ ➥ ➦ ↦ ⇒ ⇝ ⇢ ⇥ ⇨ ⇾ ➭ ➮ ➯ ➱ ➲ ➺ ➼ ➽ ➾
-
 arrow_string	  = ▸
 arrow_show	  = 1
 
-# "search_all_items" means that all submenus will be included when searching.
-# If set to 0 (false), only the checked out submenu (or root-menu) will be
-# searched.
-
 search_all_items  = 1
-
-# colors in the format #rrggbb aaa
-# rr=red; gg=green; bb=blue; aa=alpha
-# The colors take a hexadecimal value from 00 to ff
-# Alpha takes a decimal value from 0 to 100 where
-#   - 100 means no transparency
-#   - 0 means fully transparent
 
 color_menu_bg	  = #000000 70
 color_menu_fg	  = #eeeeee 20

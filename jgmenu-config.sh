@@ -4,6 +4,7 @@ config_file=~/.config/jgmenu/jgmenurc
 
 usage () {
 	printf "usage: jgmenu_run config --get <key>\n"
+	printf "       jgmenu_run config --set <key> <value>\n"
 }
 
 # $1 - key
@@ -13,9 +14,24 @@ get_variable () {
 	printf "\n"
 }
 
+# $1 - key
+# $2 - value
+set_variable () {
+	if grep "^$1" ${config_file} >/dev/null
+	then
+		sed "s|^$1.*|$1 = $2|" "${config_file}" >"${config_file}.tmp"
+		cp -p ${config_file}.tmp ${config_file}
+		rm -f ${config_file}.tmp
+	else
+		printf "%b\n" "$1 = $2" >> ${config_file}
+	fi
+}
+
 case "$1" in
 --get)
 	get_variable "^$2" ;;
+--set)
+	set_variable "$2" "$3" ;;
 --help)
 	usage
 	exit 0
