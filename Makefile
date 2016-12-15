@@ -57,6 +57,10 @@ OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
 	config-xs.o filter.o compat.o
 
 all: $(PROGS)
+	@echo 'WARNING: The Makefile has been refactored since v0.4.4'
+	@echo 'Please remove all files in $$prefix/bin before doing a'
+	@echo "'make install'"
+	@echo ""
 
 $(PROGS): % : $(OBJS) %.o
 	$(QUIET_LINK)$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
