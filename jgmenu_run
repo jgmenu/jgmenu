@@ -1,7 +1,8 @@
 #!/bin/sh
-#
-# Convenience wrapper for jgmenu-*
-#
+
+: ${JGMENU_EXEC_DIR=~/src/jgmenu}
+
+export PATH=$JGMENU_EXEC_DIR:$PATH
 
 die () {
 	printf "fatal: %s\n" "$1"

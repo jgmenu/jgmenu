@@ -12,8 +12,9 @@ CC       = gcc
 MAKE     = make
 RM       = rm -f
 
-prefix   = $(HOME)
-bindir   = $(prefix)/bin
+prefix     = $(HOME)
+bindir     = $(prefix)/bin
+libexecdir = $(prefix)/lib/jgmenu
 
 CFLAGS   = -g -Wall -Os -std=gnu89
 CFLAGS  += -DVERSION='"$(VER)"'
@@ -66,10 +67,14 @@ $(PROGS): % : $(OBJS) %.o
 
 install: $(PROGS)
 	@install -d $(DESTDIR)$(bindir)
-	@install -m755 $(PROGS) $(SCRIPTS_SHELL) $(DESTDIR)$(bindir)
-	@install -m755 $(SCRIPTS_PYTHON) $(DESTDIR)$(bindir)
+	@install -m755 jgmenu jgmenu_run $(DESTDIR)$(bindir)
+	@install -d $(DESTDIR)$(libexecdir)
+	@install -m755 $(PROGS) $(SCRIPTS_SHELL) $(DESTDIR)$(libexecdir)
+	@install -m755 $(SCRIPTS_PYTHON) $(DESTDIR)$(libexecdir)
+	@./scripts/set-exec-path.sh $(DESTDIR)$(bindir)/jgmenu_run $(libexecdir)
+	@./scripts/set-exec-path.sh $(DESTDIR)$(libexecdir)/jgmenu_run $(libexecdir)
 ifdef PYTHON3_POLYGLOT
-	@./scripts/python3-polyglot.sh $(DESTDIR)$(bindir) $(SCRIPTS_PYTHON)
+	@./scripts/python3-polyglot.sh $(DESTDIR)$(libexecdir) $(SCRIPTS_PYTHON)
 else
 	@type python3 >/dev/null 2>&1 || printf "%s\n" "warning: python3 not \
 	found. Suggest defining PYTHON3_POLYGLOT"
