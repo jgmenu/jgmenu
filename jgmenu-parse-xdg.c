@@ -23,8 +23,9 @@
 #define DEBUG_PRINT_XML_NODES 0
 
 static const char jgmenu_xdg_usage[] =
-"Usage: jgmenu-xdg [options] <file>\n"
-"    --data-dir=<dir>      specify directory containing .menu file\n";
+"Usage: jgmenu_run parse-xdg <.menu file>\n"
+"       jgmenu_run parse-xdg --no-dirs\n\n"
+"    --no-dirs             ignore .menu and .directory files\n";
 
 /*
  * In jgmenu-speak:
@@ -356,10 +357,21 @@ static void parse_xml(const char *filename)
 	xmlCleanupParser();
 }
 
+static void print_desktop_files(void)
+{
+	struct desktop_file_data *f;
+
+	list_for_each_entry(f, &desktop_files_all, full_list)
+		if (f->name)
+			printf("%s,%s,%s\n", f->name, f->exec, f->icon);
+
+}
+
 int main(int argc, char **argv)
 {
 	char *file_name = NULL;
 	int i;
+	int no_dirs = 0;
 
 	if (argc < 2)
 		usage();
@@ -378,12 +390,19 @@ int main(int argc, char **argv)
 
 		if (!strncmp(argv[i], "--data-dir=", 11))
 			data_dir = argv[i] + 11;
+		else if (!strncmp(argv[i], "--no-dirs", 9))
+			no_dirs = 1;
 		else if (!strncmp(argv[i], "--help", 6))
 			usage();
 		else
 			die("unknown option '%s'", argv[i]);
 
 		i++;
+	}
+
+	if (no_dirs) {
+		print_desktop_files();
+		goto out;
 	}
 
 	if (!file_name) {
@@ -396,5 +415,6 @@ int main(int argc, char **argv)
 	process_directory_files();
 	print_csv_menu();
 
+out:
 	return 0;
 }
