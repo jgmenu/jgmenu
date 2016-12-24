@@ -6,6 +6,7 @@ tmp_jgmenurc=$(mktemp)
 jgmenurc=~/.config/jgmenu/jgmenurc
 jgmenurc_bak=${jgmenurc}.$(date +%Y%m%d%H%M)
 
+mkdir -p ~/.config/jgmenu
 
 populate_tmp_file () {
 cat <<'EOF' >>"${tmp_jgmenurc}"
