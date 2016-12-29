@@ -12,7 +12,7 @@ void sbuf_addch(struct sbuf *s, char ch)
 {
 	if (s->bufsiz <= s->len + 1) {
 		s->bufsiz = s->bufsiz * 2 + 16;
-		s->buf = realloc(s->buf, s->bufsiz);
+		s->buf = xrealloc(s->buf, s->bufsiz);
 	}
 	s->buf[s->len++] = ch;
 	s->buf[s->len] = 0;
@@ -24,7 +24,7 @@ void sbuf_addstr(struct sbuf *s, const char *data)
 
 	if (s->bufsiz <= s->len + len + 1) {
 		s->bufsiz = s->bufsiz + len;
-		s->buf = realloc(s->buf, s->bufsiz);
+		s->buf = xrealloc(s->buf, s->bufsiz);
 	}
 	memcpy(s->buf + s->len, data, len);
 	s->len += len;

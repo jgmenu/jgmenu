@@ -32,6 +32,8 @@ test -e ./config.mk && . ./config.mk
 : ${JGMENU_DESKTOP_EXEC="jgmenu_run pmenu"}
 : ${JGMENU_DESKTOP_ICON="start-here"}
 
+mkdir -p ${desktop_dir}
+
 dest=${desktop_dir}/${desktop_file}
 
 printf "%b\n" "[Desktop Entry]" >${dest}

@@ -1,5 +1,5 @@
 /*
- * icon-cache.c: Loads icons in background
+ * icon.c: Loads icons in background
  *
  * This library is designed to
  *	- ensure the core menu (without icons) runs fast
