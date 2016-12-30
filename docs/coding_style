@@ -11,7 +11,7 @@ C programs
 
 	- Points which are kernel specific (e.g. kmalloc)
 
- 	- Lines can be up to 120 characters (although 80 is better)
+	- Lines can be up to 120 characters (although 80 is better)
 
   - Use scripts/checkpatch-wrapper.sh to check code.
 
@@ -32,7 +32,7 @@ Shell scripts
   - Use 'type <command>' to check if command is installed
 
   - Write "if", "for" and "while" structures with "then"/"do" on the next line
-    (not with semicolon on the same line). E.g. 
+    (not with semicolon on the same line). E.g.
 
 	if test -f foo.sh
 	then
@@ -49,7 +49,7 @@ Shell scripts
 
 	test -e foo || die "cannot find foo"
 
-	type special_command || die "cannot find program `%s`"
+	type special_command || die "cannot find program `special_command`"
 
   - Use ./* rather than ls/$(ls) for lor loops
 
@@ -74,6 +74,8 @@ Shell scripts
 
   - Quote variables except in for-loops and in $(( ))
 
+### Stay POSIX friendly:
+
   - Don't use bash specific features such as arrays and [[ ]]
 
   - Avoid non-POSIX re-directions such as '&>', '>&-', '|&', etc
@@ -81,8 +83,10 @@ Shell scripts
 
 	command >/dev/null 2>&1
 
-  - Instead of echo -e "foo", use
+  - Don't use echo -e "foo", instead use
 
 	printf "%b\n" "foo"
 
   - Don't use sed -i, it is not POSIX
+
+  - Don't use curly brace globbing such as "ls *.{c,h}"
