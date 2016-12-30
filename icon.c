@@ -129,6 +129,10 @@ void icon_load(void)
 		if (!icon->name)
 			die("no icon name set\n");
 
+		/* icon_load is run twice, so let's not duplicate effort */
+		if (icon->surface)
+			continue;
+
 		sbuf_cpy(&s, icon->name);
 		icon_find(&s, icon_size);
 
