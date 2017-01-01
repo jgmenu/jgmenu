@@ -3,9 +3,6 @@ HIGH-LEVEL ROADMAP
 
   - Create multi-window mode where submenus open in separate windows
 
-  - Move jgmenu-* executables to a libexec type directory (possibly
-    /usr/lib/jgmenu). Leave jgmenu and jgmenu_run in /usr/bin
-
   - Write XDG menu parser based on libmenu-cache (probably "jgmenu_run xdg2")
 
   - Add support for Openbox menus ("jgmenu_run ob")

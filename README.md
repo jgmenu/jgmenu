@@ -4,7 +4,9 @@ jgmenu
 Introduction
 ------------
 
-Jgmenu is written with the following aims:
+Jgmenu is a simple X11 menu application.
+
+It is written with the following (original) aims:
 
   - Be a stand-alone, simple and contemporary-looking menu  
   - Be hackable with a clean, small code base  
@@ -28,8 +30,10 @@ The build process currently requires these, but it would be easy to #ifdef
 them out if anyone wants that.
 
 It's also worth noting that it has been compiled and runs fine on various  
-Linux distributions as well as OpenBSD. It also seems to run fine on other  
-Window Managers and across Desktop Environments.
+Linux distributions as well as OpenBSD.
+
+Jgmenu is written with an uppercase "J" when referring to the entire  
+application, and lowercase (jgmenu) when referring to the binary file.
 
 Screenshots
 -----------
@@ -45,7 +49,7 @@ From the left:
 Dependencies
 ------------
 
-Jgmenu has the following build requirements:
+### Build dependencies
 
   - libx11
   - libxinerama
@@ -54,23 +58,8 @@ Jgmenu has the following build requirements:
   - librsvg
   - libxml2
 
-`jgmenu_run pmenu` and `jgmenu_run xdg` also require a menu package to work  
-correctly. For example:
-
-  - gnome-menus
-  - lxmenu-data
-  - etc
-
-`jgmenu_run pmenu` requires python3 to run.
-
-To build the man pages, you need to have `pandoc` installed. However, as many  
-users do not have this package, the man pages are commited in the git repo.
-
-To enable menu transparency, you need to have a Composite Manager such as  
-`compton`.
-
 For Arch Linux users, there is an AUR package named "jgmenu" which installs  
-the correct dependencies.
+the correct build dependencies.
 
 On Debian based systems such as Bunsenlabs and Ubuntu, do:
 
@@ -78,6 +67,24 @@ On Debian based systems such as Bunsenlabs and Ubuntu, do:
 sudo apt-get install libx11-dev libxinerama-dev libcairo2-dev \
 libpango1.0-dev librsvg2-dev libxml2-dev
 ```
+
+### Run-time dependencies:
+
+  - A *menu* package (for example gnome-menus or lxmenu-data)  
+    Required for "`jgmenu_run pmenu`" and "`jgmenu_run xdg`"  
+
+  - python3  
+    Required by "`jgmenu_run pmenu`"
+
+To enable menu transparency, you need to have a Composite Manager such as  
+`compton`. Most Desktop Environments already have one installed.
+
+### Development dependencies
+
+To build the man pages, you need to have `pandoc` installed. However, as many  
+users do not have this package, the man pages are commited in the git repo.  
+(i.e. you only need pandoc if you want to contribute to or change the man  
+pages.)
 
 Build and Install
 -----------------
@@ -144,14 +151,11 @@ Typically you will need to review the following as a minimum:
   - alignment
   - margins
 
-Read JGMENU-CONFIG(1) for further information.
+Read [JGMENU-CONFIG (1)](docs/manual/jgmenu-config.1.md) and the example
+[jgmenurc](docs/jgmenurc) for further  
+information.  
 
-```bash
-man 1 jgmenu-config
-```
-
-Although not necessary, it is recommended to create icon-cache to  
-improve performance:
+Create icon-cache:
 
 ```bash
 jgmenu_run cache
@@ -165,30 +169,12 @@ jgmenu_run pmenu
 
 For further details, see the man pages:
 
-  - [jgmenututorial](docs/manual/jgmenututorial.7.md) (coming soon...)
-  - [jgmenu_run](docs/manual/jgmenu_run.1.md)
-  - [jgmenu](docs/manual/jgmenu.1.md)
+  - [JGMENUTUTORIAL (7)](docs/manual/jgmenututorial.7.md)
+  - [JGMENU_RUN (1)](docs/manual/jgmenu_run.1.md)
+  - [JGMENU (1)](docs/manual/jgmenu.1.md)
 
-### High-level commands
-
-  - `jgmenu_run` [pmenu](docs/manual/jgmenu-pmenu.1.md)
-  - `jgmenu_run` [xdg](docs/manual/jgmenu-xdg.1.md)
-  - `jgmenu_run` [csv](docs/manual/jgmenu-csv.1.md)
-  - `jgmenu_run` [cache](docs/manual/jgmenu-cache.1.md)
-
-### Low-level commands
-
-These are designed to be used by the high-level commands.  Use the `--help`  
-option for further details on how these work.
-
-  - `jgmenu_run` config  
-  - `jgmenu_run` icon-find  
-  - `jgmenu_run` parse-xdg  
-  - `jgmenu_run` parse-pmenu  
-  - `jgmenu_run` xsettings  
-
-Desktop File
-------------
+Desktop File and Panel Integration
+----------------------------------
 
 `make install` creates a desktop-file in `~/.local/share/applications` or  
 `$prefix/share/applications` if $prefix is specified.
@@ -201,6 +187,9 @@ section in `~/.config/tint2/tint2rc`:
 ```bash
 launcher_item_app = jgmenu.desktop
 ```
+
+N.B. On some older versions of tint2, the full path to the desktop file  
+is required.
 
 If you are using plank, just drag the icon onto the panel. Note that in  
 plank, `JGMENU_DESKTOP_ICON` needs to contain the full path to the icon.
@@ -220,8 +209,25 @@ JGMENU_DESKTOP_ICON="distributor-logo-archlinux"
 ```
 
 If you are using Ubuntu's Unity, prepend the `Exec` command with  
-`env JGMENU_UNITY=1`. For example:
+`env JGMENU_UNITY=1`. This prevents the Unity Launcher from flashing  
+for 5+ seconds after the menu has been opened. For example:
 
 ```bash
 JGMENU_DESKTOP_EXEC="env JGMENU_UNITY=1 jgmenu_run csv"
 ```
+
+See also
+--------
+
+### Other files in repo
+
+  - [Road Map](TODO)
+
+### Other man pages
+
+  - `jgmenu_run` [pmenu](docs/manual/jgmenu-pmenu.1.md)
+  - `jgmenu_run` [xdg](docs/manual/jgmenu-xdg.1.md)
+  - `jgmenu_run` [csv](docs/manual/jgmenu-csv.1.md)
+  - `jgmenu_run` [cache](docs/manual/jgmenu-cache.1.md)
+
+
