@@ -3,6 +3,7 @@
 # License: GPLv2
 #
 # Copyright (C) 2016 Ovidiu M <mrovi9000@gmail.com>
+# Modified by Johan Malm <jgm323@gmail.com>
 #
 
 import os
@@ -173,15 +174,21 @@ def loadApplications():
     menu[c] = sorted(menu[c], key=lambda item: item["Name"])
   return menu, categories
 
+def cat_file(f):
+  if os.path.isfile(f):
+    with open(f, encoding='utf-8') as data_file:
+      print(data_file.read())
 
 # Creates and shows the menu
-def createMenu():
+def createMenu(arg_append_file, arg_prepend_file):
   print("jgmenu,^tag(pmenu)")
+  cat_file(arg_prepend_file)
   tree, categories = loadApplications()
   for c in sorted(tree):
     category = categories[c]
     icon = category["Icon"] if "Icon" in category else "folder"
     print(category["Name"] + ",^checkout(" + category["Name"] + ")," + icon)
+  cat_file(arg_append_file)
   for c in sorted(tree):
     category = categories[c]
     print("")
@@ -191,6 +198,25 @@ def createMenu():
       icon = app["Icon"] if "Icon" in app else "application-x-executable"
       print(app["Name"] + "," + app["cmd"] + "," + icon)
 
+def usage():
+  print ("usage: jgmenu_run parse-pmenu [<option>]")
+  print ("      --append-file=<file>  menu items to append to root menu")
+  print ("      --prepend-file=<file> menu items to prepend to root menu")
+
+def main():
+  arg_append_file=''
+  arg_prepend_file=''
+
+  for item in sys.argv:
+    if '--append-file=' in item:
+      arg_append_file = item[14:]
+    elif '--prepend-file=' in item:
+      arg_prepend_file = item[15:]
+    elif '--help' in item:
+      usage()
+      sys.exit(1)
+
+  createMenu(arg_append_file, arg_prepend_file)
 
 if __name__ == '__main__':
-  createMenu()
+  main()

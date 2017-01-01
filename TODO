@@ -7,11 +7,6 @@ HIGH-LEVEL ROADMAP
 
   - Add support for Openbox menus ("jgmenu_run ob")
 
-  - jgmenu_run pmenu
-	add --append-file=
-	    --prepend-file=
-	    --parent=
-
   - Add separator support
 
   - XDG language support ([sv], etc) when reading .desktop files
@@ -26,3 +21,8 @@ HIGH-LEVEL ROADMAP
 	  - jgmenurc (--config-file=)
 	  - tint2rc (--tint2rc=)
 	  - cmd line args (e.g. --icon_size=)
+
+  - Pipemenus
+
+  - Support for adding favourites in real-time (e.g. keyboard shortcut for
+    locking menu-item onto the root menu - or similar)
