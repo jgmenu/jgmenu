@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 31 December, 2016
+% 1 January, 2016
 
 # NAME
 
@@ -88,9 +88,15 @@ system menu:
     (e.g. "Name", "Exec command", "Icon", "Category")
 
 `jgmenu_run pmenu` is written in python by o9000. It uses .directory  
-and .desktop files to build a menu, but ignores any .menu files. It  
-uses pre-defined XDG categories. It is a simple but sensible way of  
-building a menu.
+and .desktop files to build a menu, but ignores any .menu files.  
+Instead of the structure specified in the .menu file, it simply maps  
+each ".desktop" application onto one of the ".directory" categories.  
+If a matching ".directory" category does not exist, it tries to  
+cross-reference "additional categories" to "related categories" in  
+accordance with the XDG menu-spec.  
+This is a generic approach which avoids Desktop Environment specific  
+rules defined in the .menu file. It ensures that all .desktop files  
+are included in the menu.
 
 `jgmenu_run xdg` is written in C by myself. It uses libxml2 to parse  
 the .menu file, but is otherwise written from scratch. It adheres  

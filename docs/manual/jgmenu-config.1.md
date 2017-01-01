@@ -13,7 +13,7 @@ jgmenu_run config \--set <*key*> \<*value*>
 
 # DESCRIPTION
 
-Config optionsn can be queried/set using this command.
+Config options can be queried and set using this command.
 
 # OPTIONS
 
