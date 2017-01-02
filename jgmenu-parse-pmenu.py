@@ -7,8 +7,50 @@
 #
 
 import argparse
+import locale
 import os
 import sys
+
+# Computes a list of the current locale names, in most specific to least specific order.
+# The empty string is always the last element.
+def get_current_locale_names():
+  # E.g. "en_US"
+  lang = locale.getlocale()[0]
+  # ["en", "US"]
+  lang_parts = lang.split("_")
+  locale_names = [""]
+  for i in range(len(lang_parts)):
+    locale_names.append("_".join(lang_parts[:i+1]))
+  # ["en_US", "en", ""]
+  locale_names = list(reversed(locale_names))
+  return locale_names
+
+def internationalized(entry):
+  # Now entry is a dict of tag -> value, with tag like "Name", "Name[en]", "Name[en_US]"
+  # We modify it so that the value of "Name" is replaced with the value of the most specific tag
+  # that matches the current locale.
+  # We create a two-level tree:
+  # tag => name, suffix => value
+  # Where name is the tag name (e.g. "Name") and suffix is the tag's locale (e.g. "en_US" or "").
+  tree = {}
+  for tag in entry:
+    if "[" in tag:
+      name, suffix = tag.replace("]", "").split("[", 1)
+    else:
+      name = tag
+      suffix = ""
+    if name not in tree:
+      tree[name] = {}
+    tree[name][suffix] = entry[tag]
+  # Collapse into a tag => value dict, using the most specific matching suffix.
+  locale_names = get_current_locale_names()
+  entry = {}
+  for name in tree:
+    for suffix in locale_names:
+      if suffix in tree[name]:
+        entry[name] = tree[name][suffix]
+        break
+  return entry
 
 # Reference: http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-1.1.html
 # Loads a Desktop Entry file into a dictionary key -> value
@@ -27,8 +69,7 @@ def read_desktop_entry(path):
           k, v = line.split("=", 1)
           entry[k] = v
   entry["_path"] = path
-  return entry
-
+  return internationalized(entry)
 
 # Reference: http://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html
 # Reference: http://standards.freedesktop.org/basedir-spec/basedir-spec-0.8.html
@@ -203,7 +244,13 @@ def main():
   parser = argparse.ArgumentParser(prog="jgmenu_run parse-pmenu")
   parser.add_argument("--append-file", help="Path to menu file to append to the root menu", metavar="FILE")
   parser.add_argument("--prepend-file", help="Path to menu file to prepend to the root menu", metavar="FILE")
+  parser.add_argument("--locale", help="Use a custom locale (e.g. 'en_US.UTF-8'; available locales can be shown " +
+                                       "by running 'locale -a')", default="")
   args = parser.parse_args()
+  try:
+    locale.setlocale(locale.LC_ALL, args.locale)
+  except:
+    print("Warning: setting locale failed! Use an available locale as listed by 'locale -a'.", file=sys.stderr)
   create_menu(args.append_file, args.prepend_file)
 
 if __name__ == '__main__':
