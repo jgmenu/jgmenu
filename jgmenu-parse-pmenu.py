@@ -101,9 +101,6 @@ def load_categories():
     d = d + "/desktop-directories/"
     for (dirpath, dirnames, filenames) in os.walk(d):
       for filename in filenames:
-        if filename.startswith("xfce") or filename.startswith("lxde"):
-          continue
-        #print(filename, file=sys.stderr)
         entry = read_desktop_entry(os.path.join(dirpath, filename))
         if "_pmenu_raw_Name" in entry and "Type" in entry and entry["Type"] == "Directory":
           categories[entry["_pmenu_raw_Name"]] = entry
