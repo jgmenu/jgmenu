@@ -13,7 +13,7 @@ import sys
 # Reference: http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-1.1.html
 # Loads a Desktop Entry file into a dictionary key -> value
 # A special key "_path" stores the path of the file
-def readDesktopEntry(path):
+def read_desktop_entry(path):
   entry = {}
   with open(path, "r") as f:
     lines = f.read().split("\n")
@@ -32,7 +32,7 @@ def readDesktopEntry(path):
 
 # Reference: http://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html
 # Reference: http://standards.freedesktop.org/basedir-spec/basedir-spec-0.8.html
-def getSettingLocations():
+def get_setting_locations():
   locations = ["/usr/share", "/usr/local/share", os.path.expanduser("~/.local/share")]
   if "XDG_DATA_DIRS" in os.environ:
     dirs = os.environ["XDG_DATA_DIRS"]
@@ -48,13 +48,13 @@ def getSettingLocations():
 
 # Loads all Desktop Entry files with type "Directory" into a dictionary name -> entry
 # Reference: http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-1.1.html
-def loadCategories():
+def load_categories():
   categories = {}
-  for d in getSettingLocations():
+  for d in get_setting_locations():
     d = d + "/desktop-directories/"
     for (dirpath, dirnames, filenames) in os.walk(d):
       for filename in filenames:
-        entry = readDesktopEntry(os.path.join(dirpath, filename))
+        entry = read_desktop_entry(os.path.join(dirpath, filename))
         if "Name" in entry and "Type" in entry and entry["Type"] == "Directory":
           categories[entry["Name"]] = entry
   if "Other" not in categories:
@@ -64,7 +64,7 @@ def loadCategories():
 
 # Returns a list of alternate, more generic categories for a given category name
 # Reference: http://standards.freedesktop.org/menu-spec/latest/apas02.html
-def normalizeCategory(c):
+def normalize_category(c):
   if c in ["Network", "Email", "Dialup", "InstantMessaging", "Chat", "IRCClient", "Feed", "FileTransfer", "HamRadio",
            "News", "P2P", "RemoteAccess", "Telephony", "TelephonyTools", "VideoConference", "WebBrowser"]:
     return [c, "Internet"]
@@ -100,10 +100,10 @@ def normalizeCategory(c):
 
 
 # Returns a list of suggested categories for a given application name (useful if no category is specified or found)
-def suggestCategories(appName):
-  appName = appName.lower()
-  if "network" in appName or "google" in appName or "cisco" in appName or "mail" in appName or "youtube" in appName:
-    return normalizeCategory("Network")
+def suggest_categories(app_name):
+  app_name = app_name.lower()
+  if "network" in app_name or "google" in app_name or "cisco" in app_name or "mail" in app_name or "youtube" in app_name:
+    return normalize_category("Network")
   return ["Other"]
 
 
@@ -133,35 +133,35 @@ def get_cmd(app):
 
 # Returns the start menu hierarchy and the main application categories
 # The menu is a dictionary category-name -> list of application entries
-# The categories are in the same form as returned by loadCategories()
-def loadApplications():
-  categories = loadCategories()
+# The categories are in the same form as returned by load_categories()
+def load_applications():
+  categories = load_categories()
   menu = {}
-  for d in getSettingLocations():
+  for d in get_setting_locations():
     d = d + "/applications/"
     for (dirpath, dirnames, filenames) in os.walk(d):
       for filename in filenames:
-        entry = readDesktopEntry(os.path.join(dirpath, filename))
+        entry = read_desktop_entry(os.path.join(dirpath, filename))
         cmd = get_cmd(entry)
         if "Type" in entry and entry["Type"] == "Application" and cmd:
           entry["cmd"] = cmd
           if "Name" not in entry:
             entry["Name"] = filename.replace(".desktop", "")
             entry["Name"] = entry["Name"][:1].upper() + entry["Name"][1:]
-          appCategories = []
+          app_categories = []
           if "Categories" in entry:
-            appCategories = [s.strip() for s in entry["Categories"].split(";") if s.strip()]
-          appCategories.append("")
+            app_categories = [s.strip() for s in entry["Categories"].split(";") if s.strip()]
+          app_categories.append("")
           added = False
-          for c in appCategories:
+          for c in app_categories:
             options = []
             if c:
               if c not in categories:
-                options = normalizeCategory(c)
+                options = normalize_category(c)
               else:
                 options = [c]
             else:
-              options = suggestCategories(entry["Name"])
+              options = suggest_categories(entry["Name"])
             for o in options:
               if o in categories:
                 if o not in menu:
@@ -181,10 +181,10 @@ def cat_file(path):
       print(data_file.read())
 
 # Creates and shows the menu
-def createMenu(arg_append_file, arg_prepend_file):
+def create_menu(arg_append_file, arg_prepend_file):
   print("jgmenu,^tag(pmenu)")
   cat_file(arg_prepend_file)
-  tree, categories = loadApplications()
+  tree, categories = load_applications()
   for c in sorted(tree):
     category = categories[c]
     icon = category["Icon"] if "Icon" in category else "folder"
@@ -204,7 +204,7 @@ def main():
   parser.add_argument("--append-file", help="Path to menu file to append to the root menu", metavar="FILE")
   parser.add_argument("--prepend-file", help="Path to menu file to prepend to the root menu", metavar="FILE")
   args = parser.parse_args()
-  createMenu(args.append_file, args.prepend_file)
+  create_menu(args.append_file, args.prepend_file)
 
 if __name__ == '__main__':
   main()
