@@ -7,6 +7,7 @@
 #
 
 import argparse
+import gettext
 import locale
 import os
 import sys
@@ -43,12 +44,16 @@ def internationalized(entry):
       tree[name] = {}
     tree[name][suffix] = entry[tag]
   # Collapse into a tag => value dict, using the most specific matching suffix.
+  # Keep the old names in keys with the value "_pmenu_raw_" + tag
   locale_names = get_current_locale_names()
   entry = {}
   for name in tree:
+    entry["_pmenu_raw_" + name] = tree[name][""]
     for suffix in locale_names:
       if suffix in tree[name]:
         entry[name] = tree[name][suffix]
+        if not suffix:
+          entry[name] = _(entry[name])
         break
   return entry
 
@@ -95,9 +100,12 @@ def load_categories():
     d = d + "/desktop-directories/"
     for (dirpath, dirnames, filenames) in os.walk(d):
       for filename in filenames:
+        if filename.startswith("xfce") or filename.startswith("lxde"):
+          continue
+        #print(filename, file=sys.stderr)
         entry = read_desktop_entry(os.path.join(dirpath, filename))
         if "Name" in entry and "Type" in entry and entry["Type"] == "Directory":
-          categories[entry["Name"]] = entry
+          categories[entry["_pmenu_raw_Name"]] = entry
   if "Other" not in categories:
     categories["Other"] = {"Name": "Other", "Icon": "applications-other", "_path": "auto-generated"}
   return categories
@@ -240,6 +248,18 @@ def create_menu(arg_append_file, arg_prepend_file):
       icon = app["Icon"] if "Icon" in app else "application-x-executable"
       print(app["Name"] + "," + app["cmd"] + "," + icon)
 
+def setup_gettext():
+  global _
+  try:
+    gettext.translation("gnome-menus", languages=get_current_locale_names()).install()
+  except:
+    pass
+  try:
+    _("")
+  except:
+    def _(s):
+      return s
+
 def main():
   parser = argparse.ArgumentParser(prog="jgmenu_run parse-pmenu")
   parser.add_argument("--append-file", help="Path to menu file to append to the root menu", metavar="FILE")
@@ -251,6 +271,7 @@ def main():
     locale.setlocale(locale.LC_ALL, args.locale)
   except:
     print("Warning: setting locale failed! Use an available locale as listed by 'locale -a'.", file=sys.stderr)
+  setup_gettext()
   create_menu(args.append_file, args.prepend_file)
 
 if __name__ == '__main__':
