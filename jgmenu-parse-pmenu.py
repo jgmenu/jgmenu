@@ -252,9 +252,12 @@ def create_menu(arg_append_file, arg_prepend_file):
 def setup_gettext():
   global _
   try:
-    gettext.translation("gnome-menus", languages=get_current_locale_names()).install()
+    gettext.translation("gnome-menus-3.0", languages=get_current_locale_names()).install()
   except:
-    pass
+    try:
+      gettext.translation("gnome-menus", languages=get_current_locale_names()).install()
+    except:
+      pass
   try:
     _("")
   except:
