@@ -6,6 +6,7 @@
 # Modified by Johan Malm <jgm323@gmail.com>
 #
 
+import argparse
 import os
 import sys
 
@@ -174,9 +175,9 @@ def loadApplications():
     menu[c] = sorted(menu[c], key=lambda item: item["Name"])
   return menu, categories
 
-def cat_file(f):
-  if os.path.isfile(f):
-    with open(f, encoding='utf-8') as data_file:
+def cat_file(path):
+  if path and os.path.isfile(path):
+    with open(path, encoding='utf-8') as data_file:
       print(data_file.read())
 
 # Creates and shows the menu
@@ -198,25 +199,12 @@ def createMenu(arg_append_file, arg_prepend_file):
       icon = app["Icon"] if "Icon" in app else "application-x-executable"
       print(app["Name"] + "," + app["cmd"] + "," + icon)
 
-def usage():
-  print ("usage: jgmenu_run parse-pmenu [<option>]")
-  print ("      --append-file=<file>  menu items to append to root menu")
-  print ("      --prepend-file=<file> menu items to prepend to root menu")
-
 def main():
-  arg_append_file=''
-  arg_prepend_file=''
-
-  for item in sys.argv:
-    if '--append-file=' in item:
-      arg_append_file = item[14:]
-    elif '--prepend-file=' in item:
-      arg_prepend_file = item[15:]
-    elif '--help' in item:
-      usage()
-      sys.exit(1)
-
-  createMenu(arg_append_file, arg_prepend_file)
+  parser = argparse.ArgumentParser(prog="jgmenu_run parse-pmenu")
+  parser.add_argument("--append-file", help="Path to menu file to append to the root menu", metavar="FILE")
+  parser.add_argument("--prepend-file", help="Path to menu file to prepend to the root menu", metavar="FILE")
+  args = parser.parse_args()
+  createMenu(args.append_file, args.prepend_file)
 
 if __name__ == '__main__':
   main()
