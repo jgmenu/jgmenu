@@ -211,7 +211,7 @@ def load_applications():
               else:
                 options = [c]
             else:
-              options = suggest_categories(entry["Name"])
+              options = suggest_categories(entry["_pmenu_raw_Name"])
             for o in options:
               if o in categories:
                 if o not in menu:
