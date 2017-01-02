@@ -48,7 +48,8 @@ def internationalized(entry):
   locale_names = get_current_locale_names()
   entry = {}
   for name in tree:
-    entry["_pmenu_raw_" + name] = tree[name][""]
+    if "" in tree[name]:
+      entry["_pmenu_raw_" + name] = tree[name][""]
     for suffix in locale_names:
       if suffix in tree[name]:
         entry[name] = tree[name][suffix]
@@ -104,7 +105,7 @@ def load_categories():
           continue
         #print(filename, file=sys.stderr)
         entry = read_desktop_entry(os.path.join(dirpath, filename))
-        if "Name" in entry and "Type" in entry and entry["Type"] == "Directory":
+        if "_pmenu_raw_Name" in entry and "Type" in entry and entry["Type"] == "Directory":
           categories[entry["_pmenu_raw_Name"]] = entry
   if "Other" not in categories:
     categories["Other"] = {"Name": "Other", "Icon": "applications-other", "_path": "auto-generated"}
