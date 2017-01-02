@@ -53,7 +53,7 @@ def internationalized(entry):
     for suffix in locale_names:
       if suffix in tree[name]:
         entry[name] = tree[name][suffix]
-        if not suffix:
+        if not suffix and entry[name]:
           entry[name] = _(entry[name])
         break
   return entry
