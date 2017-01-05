@@ -8,39 +8,11 @@
 #
 
 VER      = $(shell ./scripts/version-gen.sh)
-CC       = gcc
-MAKE     = make
-RM       = rm -f
-
-prefix     = $(HOME)
-bindir     = $(prefix)/bin
-libexecdir = $(prefix)/lib/jgmenu
-
-CFLAGS   = -g -Wall -Os -std=gnu89
-CFLAGS  += -DVERSION='"$(VER)"'
-CFLAGS  += -DXINERAMA
-CFLAGS  += `pkg-config cairo pango pangocairo librsvg-2.0 --cflags`
-CFLAGS  += `xml2-config --cflags`
-
-LIBS  = `pkg-config x11 xinerama cairo pango pangocairo librsvg-2.0 --libs`
-LIBS += `xml2-config --libs`
-LIBS += -pthread
-
-LDFLAGS  = $(LIBS)
 
 # Allow user to override build settings without making tree dirty
 -include config.mk
 
-ifdef ASAN
-ASAN_FLAGS = -O0 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic
-CFLAGS    += $(ASAN_FLAGS)
-LDFLAGS   += $(ASAN_FLAGS) -fuse-ld=gold
-endif
-
-ifndef VERBOSE
-QUIET_CC   = @echo '     CC    '$@;
-QUIET_LINK = @echo '     LINK  '$@;
-endif
+include ./Makefile.inc
 
 SCRIPTS_SHELL  = jgmenu_run jgmenu-cache.sh jgmenu-pmenu.sh \
 		 jgmenu-csv.sh jgmenu-xdg.sh jgmenu-config.sh \
@@ -50,11 +22,13 @@ SCRIPTS_PYTHON = jgmenu-parse-pmenu.py jgmenu-unity-hack.py
 
 PROGS	 = jgmenu jgmenu-parse-xdg jgmenu-icon-find jgmenu-xsettings
 
-LIB_H = $(shell find . -name '*.h' -print)
-
 OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
         icon.o xpm-loader.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o \
-	config-xs.o filter.o compat.o
+	config-xs.o filter.o compat.o hashmap.o
+
+LIB_H = $(shell find . -name '*.h' -print)
+
+JGMENU_LIB = libjgmenu.a
 
 all: $(PROGS)
 	@echo""
@@ -88,9 +62,14 @@ endif
 	@./scripts/create_desktop_file.sh $(DESTDIR)$(prefix)
 
 clean:
-	@$(RM) $(PROGS) *.o
+	@$(RM) $(PROGS) *.o *.a
+	@$(MAKE) --no-print-directory -C tests/ clean
+	@$(MAKE) --no-print-directory -C tests/helper/ clean
 
-test:
+test: $(OBJS)
+	@$(RM) $(JGMENU_LIB)
+	@echo '     AR    libjgmenu.a';$(AR) rcs $(JGMENU_LIB) $(OBJS)
+	@$(MAKE) --no-print-directory -C tests/helper/ all
 	@$(MAKE) --no-print-directory -C tests/ all
 
 ex:

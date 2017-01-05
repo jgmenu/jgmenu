@@ -2,3 +2,5 @@ t0002-sbuf
 t0003-icon-find
 t0005-xdgdirs
 t0007-xdgapps
+expect
+actual

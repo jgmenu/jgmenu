@@ -1,4 +1,5 @@
 *.o
+*.a
 jgmenu
 jgmenu-parse-xdg
 jgmenu-icon-find
