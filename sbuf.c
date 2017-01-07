@@ -20,8 +20,13 @@ void sbuf_addch(struct sbuf *s, char ch)
 
 void sbuf_addstr(struct sbuf *s, const char *data)
 {
-	size_t len = strlen(data);
+	size_t len;
 
+	if (!data) {
+		fprintf(stderr, "warn: NULL passed to sbuf_addstr");
+		return;
+	}
+	len = strlen(data);
 	if (s->bufsiz <= s->len + len + 1) {
 		s->bufsiz = s->bufsiz + len;
 		s->buf = xrealloc(s->buf, s->bufsiz);
