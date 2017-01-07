@@ -10,8 +10,6 @@
 #include "flex-array.h"
 #include "util.h"
 
-typedef unsigned long long   uint64_t;
-
 /*
  * Generic implementation of hash-based key-value mappings.
  * See Documentation/technical/api-hashmap.txt.
