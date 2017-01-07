@@ -43,12 +43,12 @@ test_cmp() {
 }
 
 test_ok_ () {
-	: $(( test_count++ ))
+	: $(( test_count = test_count + 1 ))
 	say "    ok ${test_count}: $@"
 }
 
 test_failure_ () {
-	: $(( test_count++ ))
+	: $(( test_count = test_count + 1 ))
 	say "not ok $test_count: $1"
 	shift
 	echo "$@" | sed -e 's/^/	/'
