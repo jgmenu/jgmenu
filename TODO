@@ -1,15 +1,13 @@
 HIGH-LEVEL ROADMAP
 ==================
 
+  - Improve performance of icon cache
+
   - Create multi-window mode where submenus open in separate windows
 
   - Write XDG menu parser based on libmenu-cache (probably "jgmenu_run xdg2")
 
-  - Add support for Openbox menus ("jgmenu_run ob")
-
   - Add separator support
-
-  - XDG language support ([sv], etc) when reading .desktop files
 
   - Add item_border_color, menu_border_color to config.{h,c}
     Currently borders use the fg colour which is often a bit "strong"
@@ -26,3 +24,5 @@ HIGH-LEVEL ROADMAP
 
   - Support for adding favourites in real-time (e.g. keyboard shortcut for
     locking menu-item onto the root menu - or similar)
+
+  - Add support for "fixed-position" items such as icons/images and shapes
