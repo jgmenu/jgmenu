@@ -97,13 +97,20 @@ static struct tag *get_parent_tag(xmlNode *n)
 	struct tag *tag;
 	char *id = NULL;
 
-	if (n && n->parent)
+	if (!n || !n->parent)
+		goto out;
+
+	/* ob pipe-menus don't wrap first level in <menu></menu> */
+	if (!strcmp((char *)n->parent->name, "openbox_pipe_menu"))
+		id = strdup(root_menu);
+	else
 		id = (char *)xmlGetProp(n->parent, (const xmlChar *)"id");
 	if (!id)
-		return NULL;
+		goto out;
 	list_for_each_entry(tag, &tags, list)
 		if (tag->id && !strcmp(tag->id, id))
 			return tag;
+out:
 	return NULL;
 }
 
@@ -134,16 +141,21 @@ static void new_tag(xmlNode *n)
 	char *label = (char *)xmlGetProp(n, (const xmlChar *)"label");
 	char *id = (char *)xmlGetProp(n, (const xmlChar *)"id");
 
-	if (!id && !label)
-		die("cannot create new tag without ID and LABEL");
+	/*
+	 * The pipe-menu "root" has no <menu> element and therefore no LABEL
+	 * or ID.
+	 */
+	if (id)
+		t->id = id;
+	else
+		t->id = strdup(root_menu);
 	t->label = label;
-	t->id = id;
 	t->parent = parent;
 	INIT_LIST_HEAD(&t->items);
 	list_add_tail(&t->list, &tags);
 	curtag = t;
 
-	if (parent && strcmp(id, root_menu)) {
+	if (parent && strcmp(id, root_menu) != 0) {
 		new_item(n);
 		curitem->label = label;
 		curitem->cmd = id;
