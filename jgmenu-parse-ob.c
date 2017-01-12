@@ -14,75 +14,160 @@
 #include "sbuf.h"
 #include "list.h"
 
-static const char jgmenu_xdg_usage[] =
+static const char jgmenu_parse_ob_usage[] =
 "Usage: jgmenu_run parse-ob\n";
 
-struct ob_item {
-	struct sbuf label;	/* <item label=""> */
-	struct sbuf cmd;	/* <command></command> */
-	int execute;		/* <action name="execute"> */
-};
+static const char *root_menu = "root-menu";
 
-static struct ob_item *ob_item;
-
-/*
- * List to keep track of the "labels" associated with each "id".
- * This is needed for ^checkout() items
- */
-struct menu_labels {
+struct tag {
 	char *label;
 	char *id;
+	struct tag *parent;
+	struct list_head items;
 	struct list_head list;
 };
 
-static struct list_head menu_labels;
+struct item {
+	char *label;
+	char *cmd;
+	int pipe;
+	int checkout;
+	struct list_head list;
+};
 
-static struct sbuf rootmenu;
-static struct sbuf submenus;
-static struct sbuf *buf;
+static struct list_head tags;
+static struct tag *curtag;
+static struct item *curitem;
 
 static void usage(void)
 {
-	printf("%s", jgmenu_xdg_usage);
+	printf("%s", jgmenu_parse_ob_usage);
 	exit(0);
 }
 
-static void ob_item_init(void)
+static void print_it(struct tag *tag)
 {
-	ob_item = xmalloc(sizeof(struct ob_item));
-	sbuf_init(&ob_item->label);
-	sbuf_init(&ob_item->cmd);
-	ob_item->execute = 0;
-}
+	struct item *item;
 
-static void ob_item_reset(void)
-{
-	sbuf_cpy(&ob_item->label, "");
-	sbuf_cpy(&ob_item->cmd, "");
-	ob_item->execute = 0;
-}
-
-static void ob_item_print(void)
-{
-	if (!ob_item->label.len)
+	if (list_empty(&tag->items))
 		return;
-	sbuf_addstr(buf, ob_item->label.buf);
-	sbuf_addstr(buf, ",");
-	sbuf_addstr(buf, ob_item->cmd.buf);
-	sbuf_addstr(buf, "\n");
+	printf("%s,^tag(%s)\n", tag->label, tag->id);
+	if (tag->parent)
+		printf("Go back,^checkout(%s)\n", tag->parent->id);
+	list_for_each_entry(item, &tag->items, list) {
+		if (item->pipe)
+			printf("%s,^sub(f=/tmp/jgmenu-pipe; %s >$f; "
+			       "jgmenu_run ob $f; rm -f $f)\n",
+			       item->label, item->cmd);
+		else if (item->checkout)
+			printf("%s,^checkout(%s)\n", item->label, item->cmd);
+		else
+			printf("%s,%s\n", item->label, item->cmd);
+	}
+	printf("\n");
 }
 
-static void init_globals(void)
+static void print_menu(void)
 {
-	ob_item_init();
-	sbuf_init(&rootmenu);
-	sbuf_init(&submenus);
-	buf = &submenus;
-	INIT_LIST_HEAD(&menu_labels);
+	struct tag *tag;
+
+	list_for_each_entry(tag, &tags, list)
+		if (tag->id && !strcmp(tag->id, root_menu))
+			print_it(tag);
+
+	list_for_each_entry(tag, &tags, list)
+		if (tag->id && strcmp(tag->id, root_menu))
+			print_it(tag);
+}
+
+static char *get_tag_label(const char *id)
+{
+	struct tag *tag;
+
+	if (!id)
+		return NULL;
+	list_for_each_entry(tag, &tags, list)
+		if (tag->id && !strcmp(tag->id, id))
+			return tag->label;
+	return NULL;
+}
+
+static struct tag *get_parent_tag(xmlNode *n)
+{
+	struct tag *tag;
+	char *id = NULL;
+
+	if (n && n->parent)
+		id = (char *)xmlGetProp(n->parent, (const xmlChar *)"id");
+	if (!id)
+		return NULL;
+	list_for_each_entry(tag, &tags, list)
+		if (tag->id && !strcmp(tag->id, id))
+			return tag;
+	return NULL;
+}
+
+static void new_tag(xmlNode *n);
+
+static void new_item(xmlNode *n)
+{
+	struct item *item;
+	char *label = (char *)xmlGetProp(n, (const xmlChar *)"label");
+
+	if (!curtag)
+		new_tag(NULL);
+
+	item = xmalloc(sizeof(struct item));
+	item->label = NULL;
+	if (label)
+		item->label = label;
+	item->cmd = NULL;
+	item->pipe = 0;
+	item->checkout = 0;
+	curitem = item;
+}
+
+static void new_tag(xmlNode *n)
+{
+	struct tag *t = xcalloc(1, sizeof(struct tag));
+	struct tag *parent = get_parent_tag(n);
+	char *label = (char *)xmlGetProp(n, (const xmlChar *)"label");
+	char *id = (char *)xmlGetProp(n, (const xmlChar *)"id");
+
+	if (!id && !label)
+		die("cannot create new tag without ID and LABEL");
+	t->label = label;
+	t->id = id;
+	t->parent = parent;
+	INIT_LIST_HEAD(&t->items);
+	list_add_tail(&t->list, &tags);
+	curtag = t;
+
+	if (parent && strcmp(id, root_menu)) {
+		new_item(n);
+		curitem->label = label;
+		curitem->cmd = id;
+		curitem->checkout = 1;
+		list_add_tail(&curitem->list, &curtag->parent->items);
+	}
+}
+
+static void revert_to_parent(void)
+{
+	if (curtag && curtag->parent)
+		curtag = curtag->parent;
+}
+
+static int node_filter(const xmlChar *name)
+{
+	return strcasecmp((char *)name, "menu") &&
+	       strcasecmp((char *)name, "openbox_menu");
 }
 
 static void get_full_node_name(struct sbuf *node_name, xmlNode *node)
 {
+	int incl;
+
 	if (!strcmp((char *)node->name, "text")) {
 		node = node->parent;
 		if (!node || !node->name) {
@@ -91,56 +176,26 @@ static void get_full_node_name(struct sbuf *node_name, xmlNode *node)
 		}
 	}
 
+	incl = node_filter(node->name);
 	for (;;) {
-		sbuf_prepend(node_name, (char *)node->name);
+		if (incl)
+			sbuf_prepend(node_name, (char *)node->name);
 		node = node->parent;
 		if (!node || !node->name)
 			return;
-		sbuf_prepend(node_name, ".");
+		incl = node_filter(node->name);
+		if (incl)
+			sbuf_prepend(node_name, ".");
 	}
 }
 
-static void add_label(char *label, char *id)
-{
-	struct menu_labels *ml;
-
-	ml = xcalloc(1, sizeof(struct menu_labels));
-	if (label)
-		ml->label = strdup(label);
-	if (id)
-		ml->id = strdup(id);
-	list_add_tail(&ml->list, &menu_labels);
-}
-
-static char *get_label(char *id)
-{
-	struct menu_labels *iter;
-	char *ret = NULL;
-
-	if (!id)
-		goto out;
-	list_for_each_entry(iter, &menu_labels, list) {
-		if (!strcmp(id, iter->id)) {
-			ret = iter->label;
-			break;
-		}
-	}
-out:
-	return ret;
-}
-
-/*
- * This is where we do most of the work.
- */
 static void process_node(xmlNode *node)
 {
+	struct sbuf buf;
 	struct sbuf node_name;
 	char *content = NULL;
-	xmlChar *id = NULL;
-	xmlChar *label = NULL;
-	xmlChar *name = NULL;
-	xmlChar *execute = NULL;
 
+	sbuf_init(&buf);
 	sbuf_init(&node_name);
 	get_full_node_name(&node_name, node);
 	if (!node_name.len)
@@ -149,69 +204,73 @@ static void process_node(xmlNode *node)
 	if (node->content)
 		content = strdup(strstrip((char *)node->content));
 
-	id = xmlGetProp(node, (const xmlChar *)"id");
-	label = xmlGetProp(node, (const xmlChar *)"label");
-	name = xmlGetProp(node, (const xmlChar *)"name");
-	execute = xmlGetProp(node, (const xmlChar *)"execute");
+	/* <command></command> */
+	if (!strcmp(node_name.buf, "item.action.command") && content)
+		curitem->cmd = content;
+}
 
-	if (id && strstr((char *)node->name, "menu")) {
-		if (!strcmp(node_name.buf, "openbox_menu.menu")) {
-			/* tagged menus */
-			ob_item_print();
-			if (strstr((char *)id, "root-menu"))
-				buf = &rootmenu;
-			else
-				buf = &submenus;
-			add_label((char *)label, (char *)id);
-			sbuf_addstr(buf, "\n");
-			sbuf_addstr(buf, (char *)label);
-			sbuf_addstr(buf, ",^tag(");
-			sbuf_addstr(buf, (char *)id);
-			sbuf_addstr(buf, ")\n");
-		} else if (execute) {
-			/* pipemenus */
-			sbuf_addstr(buf, (char *)label);
-			sbuf_addstr(buf, ",f=$(mktemp); ");
-			sbuf_addstr(buf, (char *)execute);
-			sbuf_addstr(buf, " >$f; jgmenu_run ob $f; rm -f $f\n");
-		} else {
-			/* item checking out a menu */
-			sbuf_addstr(buf, (char *)get_label((char *)id));
-			sbuf_addstr(buf, ",^checkout(");
-			sbuf_addstr(buf, (char *)id);
-			sbuf_addstr(buf, ")\n");
-		}
+/*
+ * <menu> elements can be three things:
+ *
+ *  - "normal" menu (gets tag). Has ID, LABEL and CONTENT
+ *  - "pipe" menu. Has EXECUTE and LABEL
+ *  - Link to a menu defined else where. Has ID only.
+ */
+static int menu_start(xmlNode *n)
+{
+	int ret = 0;
+	char *label;
+	char *execute;
+	char *id = NULL;
+
+	label = (char *)xmlGetProp(n, (const xmlChar *)"label");
+	execute = (char *)xmlGetProp(n, (const xmlChar *)"execute");
+	id = (char *)xmlGetProp(n, (const xmlChar *)"id");
+
+	if (label && !execute) {
+		/* new ^tag() */
+		new_tag(n);
+		ret = 1;
+	} else if (execute) {
+		/* pipe-menu */
+		new_item(n);
+		curitem->pipe = 1;
+		curitem->cmd = execute;
+		list_add_tail(&curitem->list, &curtag->items);
+	} else if (id) {
+		/* checkout a menu defined elsewhere */
+		new_item(n);
+		curitem->checkout = 1;
+		curitem->cmd = id;
+		curitem->label = get_tag_label(id);
+		list_add_tail(&curitem->list, &curtag->items);
 	}
 
-	/* <action name="execute"> */
-	if (!strstr(node_name.buf, "action") && name &&
-	    !strcasecmp((const char *)name, "execute"))
-		ob_item->execute = 1;
-
-	/* <command></command> */
-	if (strstr(node_name.buf, "command") && content)
-		sbuf_cpy(&ob_item->cmd, content);
-
-	free(node_name.buf);
+	return ret;
 }
 
 static void xml_tree_walk(xmlNode *node)
 {
 	xmlNode *n;
-	xmlChar *label;
+	int ret;
 
 	for (n = node; n; n = n->next) {
-		/* <item label="foo"> */
-		label = xmlGetProp(n, (const xmlChar *)"label");
-		if (!strcasecmp((char *)n->name, "item") && label) {
-			sbuf_cpy(&ob_item->label, (char *)xmlGetProp(n, (const xmlChar *)"label"));
+		if (!strcasecmp((char *)n->name, "menu")) {
+			ret = menu_start(n);
 			xml_tree_walk(n->children);
-			ob_item_print();
-			ob_item_reset();
+			if (ret)
+				revert_to_parent();
+			continue;
+		}
+		if (!strcasecmp((char *)n->name, "item")) {
+			new_item(n);
+			list_add_tail(&curitem->list, &curtag->items);
+			xml_tree_walk(n->children);
 			continue;
 		}
 		if (!strcasecmp((char *)n->name, "Comment"))
 			continue;
+
 		process_node(n);
 		xml_tree_walk(n->children);
 	}
@@ -243,13 +302,11 @@ int main(int argc, char **argv)
 		if (argv[i][0] != '-') {
 			file_name = argv[i];
 			break;
-		}
-
-		else if (!strncmp(argv[i], "--help", 6))
+		} else if (!strncmp(argv[i], "--help", 6)) {
 			usage();
-		else
+		} else {
 			die("unknown option '%s'", argv[i]);
-
+		}
 		i++;
 	}
 
@@ -263,10 +320,10 @@ int main(int argc, char **argv)
 	if (!exists)
 		die("file '%s' does not exist", file_name);
 
-	init_globals();
+	INIT_LIST_HEAD(&tags);
 	parse_xml(file_name);
-	printf("%s\n", rootmenu.buf);
-	printf("%s\n", submenus.buf);
+
+	print_menu();
 
 	return 0;
 }

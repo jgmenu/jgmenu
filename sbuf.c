@@ -23,7 +23,7 @@ void sbuf_addstr(struct sbuf *s, const char *data)
 	size_t len;
 
 	if (!data) {
-		fprintf(stderr, "warn: NULL passed to sbuf_addstr");
+		fprintf(stderr, "warn: NULL passed to sbuf_addstr\n");
 		return;
 	}
 	len = strlen(data);
