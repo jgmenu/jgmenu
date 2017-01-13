@@ -18,6 +18,7 @@ static const char jgmenu_parse_ob_usage[] =
 "Usage: jgmenu_run parse-ob\n";
 
 static const char *root_menu = "root-menu";
+static char *return_cmd;
 
 struct tag {
 	char *label;
@@ -54,10 +55,12 @@ static void print_it(struct tag *tag)
 	printf("%s,^tag(%s)\n", tag->label, tag->id);
 	if (tag->parent)
 		printf("Go back,^checkout(%s)\n", tag->parent->id);
+	else if (return_cmd)
+		printf("Go back,jgmenu_run ob --return-cmd='%s'\n", return_cmd);
 	list_for_each_entry(item, &tag->items, list) {
 		if (item->pipe)
 			printf("%s,^sub(f=/tmp/jgmenu-pipe; %s >$f; "
-			       "jgmenu_run ob $f; rm -f $f)\n",
+			       "jgmenu_run ob --return-cmd='jgmenu_run ob' $f; rm -f $f)\n",
 			       item->label, item->cmd);
 		else if (item->checkout)
 			printf("%s,^checkout(%s)\n", item->label, item->cmd);
@@ -316,8 +319,8 @@ int main(int argc, char **argv)
 			break;
 		} else if (!strncmp(argv[i], "--help", 6)) {
 			usage();
-		} else {
-			die("unknown option '%s'", argv[i]);
+		} else if (!strncmp(argv[i], "--return-cmd=", 13)) {
+			return_cmd = strdup(argv[i] + 13);
 		}
 		i++;
 	}

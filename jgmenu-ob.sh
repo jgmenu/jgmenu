@@ -1,3 +1,3 @@
 #!/bin/sh
 
-jgmenu_run parse-ob "$@" | jgmenu
+jgmenu_run parse-ob "$@" | jgmenu "$@"
