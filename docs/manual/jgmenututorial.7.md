@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 1 January, 2016
+% 13 January, 2016
 
 # NAME
 
@@ -236,4 +236,46 @@ If you have dmenu installed, the following should be the same:
 ```
 dmenu_path | jgmenu
 ```
+
+Lesson 9
+--------
+
+Let's go back to pmenu.
+
+If you create the files append.csv and/or prepend.csv in  
+$HOME/.config/jgmenu, these will be added to your root menu.  
+
+For example, you could do:  
+
+    cat >$HOME/.config/jgmenu/prepend.csv <<EOF
+    Browser,firefox,firefox
+    File manager,pcmanfm,system-file-manager
+    Terminal,xterm,utilities-terminal
+    EOF
+    
+    cat >$HOME/.config/jgmenu/append.csv <<EOF
+    Exit to prompt,openbox --exit,system-log-out
+    Suspend,systemctl -i suspend,system-log-out
+    Reboot,systemctl -i reboot,system-reboot
+    Poweroff,systemctl -i poweroff,system-shutdown
+    EOF
+    
+    jgmenu_run pmenu
+
+Lesson 10
+---------
+
+If you run on a slow computer, you could speed up the start-up time  
+by "caching" the menu data. For example:
+
+    jgmenu_run parse-pmenu >foo.csv
+    jgmenu <foo.csv
+
+Or if you do
+
+    jgmenu_run parse-pmenu >$HOME/.config/jgmenu/default.csv
+
+you could simply invoke this menu by:
+
+    jgmenu_run csv
 
