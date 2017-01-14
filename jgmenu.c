@@ -43,6 +43,7 @@ struct item {
 	char *tag;			/* MOVED TO node */
 	struct area area;
 	cairo_surface_t *icon;
+	int selectable;
 	struct item *next, *prev;	/* DELETE? */
 	struct list_head master;
 	struct list_head filter;
@@ -220,11 +221,70 @@ void init_menuitem_coordinates(void)
 	}
 }
 
+
+void draw_item_sep(struct item *p, double *rgba)
+{
+	ui_draw_line(p->area.x + config.icon_size + 5,
+		     p->area.y + p->area.h / 2,
+		     p->area.x + p->area.w - 5,
+		     p->area.y + p->area.h / 2,
+		     0.1, rgba);
+}
+
+void draw_item_bg_norm(struct item *p)
+{
+	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
+			  p->area.h, config.item_radius, 0.0, 1,
+			  config.color_norm_bg);
+	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
+			  p->area.h, config.item_radius,
+			  config.item_border, 0,
+			  config.color_norm_fg);
+}
+
+void draw_item_bg_sel(struct item *p)
+{
+	if (!p->selectable) {
+		draw_item_sep(p, config.color_sel_fg);
+		return;
+	}
+
+	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
+			  p->area.h, config.item_radius, 0.0, 1,
+			  config.color_sel_bg);
+	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
+			  p->area.h, config.item_radius,
+			  config.item_border, 0,
+			  config.color_sel_fg);
+}
+
+void draw_item_text(struct item *p)
+{
+	int text_x_coord;
+
+	text_x_coord = p->area.x + config.item_padding_x;
+	if (config.icon_size)
+		text_x_coord += config.icon_size + config.item_padding_x;
+
+	if (strncmp(p->t[1], "^checkout(", 10) &&
+	    strncmp(p->t[1], "^sub(", 5) &&
+	    strncmp(p->t[0], "..", 2) &&
+	    !is_prog(p->t[1]))
+		/* Set color for programs not available in $PATH */
+		ui_insert_text(p->t[0], text_x_coord, p->area.y,
+			       p->area.h, config.color_noprog_fg);
+	else if (p == menu.sel)
+		ui_insert_text(p->t[0], text_x_coord, p->area.y,
+			       p->area.h, config.color_sel_fg);
+	else
+		ui_insert_text(p->t[0], text_x_coord, p->area.y,
+			       p->area.h, config.color_norm_fg);
+}
+
 void draw_menu(void)
 {
 	struct item *p;
 	int w, h;
-	int text_x_coord;
 	int icon_y_coord;
 
 	h = geo_get_item_height();
@@ -251,30 +311,11 @@ void draw_menu(void)
 	p = menu.first;
 	list_for_each_entry_from(p, &menu.filter, filter) {
 		/* Draw item background */
-		if (p == menu.sel) {
-			ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
-					  p->area.h, config.item_radius, 0.0, 1,
-					  config.color_sel_bg);
-			ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
-					  p->area.h, config.item_radius,
-					  config.item_border, 0,
-					  config.color_sel_fg);
-		} else {
-			ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
-					  p->area.h, config.item_radius, 0.0, 1,
-					  config.color_norm_bg);
-			ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
-					  p->area.h, config.item_radius,
-					  config.item_border, 0,
-					  config.color_norm_fg);
-		}
+		if (p == menu.sel)
+			draw_item_bg_sel(p);
+		else
+			draw_item_bg_norm(p);
 
-		/* Draw : to indicate "filtered in" items */
-/*		if (filter_ismatch(p->t[0]))
- *			ui_insert_text(":", p->area.x + p->area.w -
- *				       config.item_padding_x - 6, p->area.y,
- *				       p->area.h, config.color_norm_fg);
- */
 		/* Draw submenu arrow */
 		if (config.arrow_show && ((!strncmp(p->t[1], "^checkout(", 10) &&
 		    strncmp(p->t[0], "..", 2)) || !strncmp(p->t[1], "^sub(", 5)))
@@ -283,23 +324,11 @@ void draw_menu(void)
 				       p->area.h, config.color_norm_fg);
 
 		/* Draw menu items text */
-		text_x_coord = p->area.x + config.item_padding_x;
-		if (config.icon_size)
-			text_x_coord += config.icon_size + config.item_padding_x;
-
-		if (strncmp(p->t[1], "^checkout(", 10) &&
-		    strncmp(p->t[1], "^sub(", 5) &&
-		    strncmp(p->t[0], "..", 2) &&
-		    !is_prog(p->t[1]))
-			/* Set color for programs not available in $PATH */
-			ui_insert_text(p->t[0], text_x_coord, p->area.y,
-				       p->area.h, config.color_noprog_fg);
-		else if (p == menu.sel)
-			ui_insert_text(p->t[0], text_x_coord, p->area.y,
-				       p->area.h, config.color_sel_fg);
+		if (p->selectable)
+			draw_item_text(p);
 		else
-			ui_insert_text(p->t[0], text_x_coord, p->area.y,
-				       p->area.h, config.color_norm_fg);
+			if (!strncmp(p->t[0], "^sep(", 5))
+				draw_item_sep(p, config.color_norm_fg);
 
 		/* Draw Icons */
 		if (config.icon_size && p->icon) {
@@ -587,6 +616,8 @@ void key_event(XKeyEvent *ev)
 		break;
 	case XK_Return:
 	case XK_KP_Enter:
+		if (!menu.sel->selectable)
+			break;
 		if (config.spawn) {
 			action_cmd(menu.sel->t[1]);
 		} else {
@@ -713,6 +744,8 @@ void mouse_event(XEvent *e)
 	if (ev->button == Button1) {
 		for (item = menu.first; item && item->t[0] && item->prev != menu.last ; item++) {
 			if (ui_is_point_in_area(mouse_coords, item->area)) {
+				if (!item->selectable)
+					break;
 				if (config.spawn) {
 					action_cmd(item->t[1]);
 					break;
@@ -978,9 +1011,13 @@ void read_stdin(void)
 
 	create_master_list();
 
+	/* Init items */
 	list_for_each_entry(item, &menu.master, master) {
 		item->icon = NULL;
 		item->tag = NULL;
+		item->selectable = 1;
+		if (!strncmp(item->t[0], "^sep(", 5))
+			item->selectable = 0;
 	}
 
 	/* Populate tag field */
@@ -1036,6 +1073,8 @@ void process_pointer_position(void)
 
 	item = menu.first;
 	list_for_each_entry_from(item, &menu.filter, filter) {
+		if (!item->selectable)
+			continue;
 		if (ui_is_point_in_area(mouse_coords, item->area)) {
 			if (menu.sel != item) {
 				menu.sel = item;
