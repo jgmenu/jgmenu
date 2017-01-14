@@ -16,6 +16,7 @@
 #include <sys/select.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <math.h>
 
 #include "x11-ui.h"
 #include "config.h"
@@ -224,11 +225,11 @@ void init_menuitem_coordinates(void)
 
 void draw_item_sep(struct item *p, double *rgba)
 {
-	ui_draw_line(p->area.x + config.icon_size + 5,
-		     p->area.y + p->area.h / 2,
-		     p->area.x + p->area.w - 5,
-		     p->area.y + p->area.h / 2,
-		     0.1, rgba);
+	double y;
+
+	y = round(p->area.y + p->area.h / 2) + 0.5;
+	ui_draw_line(p->area.x + config.icon_size + 5, y,
+		     p->area.x + p->area.w - 5, y, 1.0, rgba);
 }
 
 void draw_item_bg_norm(struct item *p)

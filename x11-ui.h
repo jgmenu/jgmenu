@@ -48,7 +48,7 @@ void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h, do
 				      double line_width, int fill, double *rgba);
 void ui_draw_rectangle(double x, double y, double w, double h, double radius, double line_width,
 		       int fill, double *rgba);
-void ui_draw_line(int x0, int y0, int x1, int y1, double line_width, double *rgba);
+void ui_draw_line(double x0, double y0, double x1, double y1, double line_width, double *rgba);
 void ui_insert_text(char *s, int x, int y, int h, double *rgba);
 int ui_get_text_height(const char *fontdesc);
 int ui_is_point_in_area(struct point p, struct area a);

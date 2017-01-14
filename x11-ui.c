@@ -271,7 +271,7 @@ void ui_draw_rectangle(double x, double y, double w, double h, double radius, do
 	}
 }
 
-void ui_draw_line(int x0, int y0, int x1, int y1, double line_width, double *rgba)
+void ui_draw_line(double x0, double y0, double x1, double y1, double line_width, double *rgba)
 {
 	cairo_set_source_rgba(ui->c, rgba[0], rgba[1], rgba[2], rgba[3]);
 	cairo_set_line_width(ui->c, line_width);
