@@ -65,7 +65,16 @@ int main(void)
 	/* Testing sbuf_shift_left */
 	sbuf_cpy(&s, "abcdefghijkl");
 	sbuf_shift_left(&s, 3);
-	printf("%s\n", s.buf);
+	printf("shift_left by 3: %s\n", s.buf);
+	sbuf_cpy(&s, "abcdefghijkl");
+	sbuf_shift_left(&s, 1);
+	printf("shift_left by 1: %s\n", s.buf);
+	printf("\n");
+
+	/* Testing expand_tilde */
+	sbuf_cpy(&s, "~/.config/jgmenu/jgmenurc");
+	sbuf_expand_tilde(&s);
+	printf("tilde expanded: %s\n", s.buf);
 	printf("\n");
 
 	/* Testing sbuf_split */

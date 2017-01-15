@@ -44,6 +44,7 @@ extern void sbuf_addstr(struct sbuf *s, const char *data);
 extern void sbuf_cpy(struct sbuf *s, const char *data);
 extern void sbuf_prepend(struct sbuf *s, const char *data);
 extern void sbuf_shift_left(struct sbuf *s, int n_bytes);
+extern void sbuf_expand_tilde(struct sbuf *s);
 extern void sbuf_split(struct list_head *sl, const char *data, char field_separator);
 extern void sbuf_list_append(struct list_head *sl, const char *data);
 extern void sbuf_list_prepend(struct list_head *sl, const char *data);

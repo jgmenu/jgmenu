@@ -66,6 +66,15 @@ void sbuf_shift_left(struct sbuf *s, int n_bytes)
 	free(data);
 }
 
+void sbuf_expand_tilde(struct sbuf *s)
+{
+	if (s->buf[0] != '~')
+		return;
+
+	sbuf_shift_left(s, 1);
+	sbuf_prepend(s, getenv("HOME"));
+}
+
 void sbuf_split(struct list_head *sl, const char *data, char field_separator)
 {
 	char *p, *str;
