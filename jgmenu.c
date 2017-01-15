@@ -17,6 +17,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <math.h>
+#include <sys/stat.h>
 
 #include "x11-ui.h"
 #include "config.h"
@@ -221,7 +222,6 @@ void init_menuitem_coordinates(void)
 			break;
 	}
 }
-
 
 void draw_item_sep(struct item *p, double *rgba)
 {
@@ -833,7 +833,8 @@ struct item *get_item_from_tag(const char *tag)
 		if (item->tag && !strcmp(tag, item->tag))
 			return item;
 
-	fprintf(stderr, "warning: could not find tag '%s'\n", tag);
+	if (tag && strncmp(tag, "root", 4))
+		fprintf(stderr, "warning: could not find tag '%s'\n", tag);
 	return NULL;
 }
 
@@ -1277,7 +1278,8 @@ void set_theme_and_font(void)
 int main(int argc, char *argv[])
 {
 	int i;
-	char *config_file = NULL;
+	struct sbuf config_file;
+	struct stat sb;
 	char *checkout_arg = NULL;
 
 	config_set_defaults();
@@ -1286,18 +1288,27 @@ int main(int argc, char *argv[])
 	INIT_LIST_HEAD(&menu.master);
 	INIT_LIST_HEAD(&menu.filter);
 	INIT_LIST_HEAD(&menu.nodes);
+	sbuf_init(&config_file);
 
-	for (i = 1; i < argc; i++)
-		if (!strncmp(argv[i], "--config-file=", 14))
-			config_file = strdup(argv[i] + 14);
-	if (!config_file)
-		config_file = strdup("~/.config/jgmenu/jgmenurc");
-
-	if (config_file && config_file[0] != '\0') {
-		if (config_file[0] == '~')
-			config_file = expand_tilde(config_file);
-		config_parse_file(config_file);
+	for (i = 1; i < argc; i++) {
+		if (!strncmp(argv[i], "--config-file=", 14)) {
+			if (stat(argv[i] + 14, &sb) != 0)
+				fprintf(stderr,
+					"warning: file '%s' does not exist\n",
+					argv[i] + 14);
+			else
+				sbuf_cpy(&config_file, argv[i] + 14);
+			break;
+		}
 	}
+	if (!config_file.len) {
+		sbuf_cpy(&config_file, "~/.config/jgmenu/jgmenurc");
+		sbuf_expand_tilde(&config_file);
+		if (stat(config_file.buf, &sb) != 0)
+			sbuf_cpy(&config_file, "");
+	}
+	if (config_file.len)
+		config_parse_file(config_file.buf);
 
 	for (i = 1; i < argc; i++)
 		if (!strncmp(argv[i], "--version", 9)) {
