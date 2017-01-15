@@ -293,10 +293,10 @@ XSetting *get_xsettings(Display *display, size_t *count)
 	unsigned char *buffer;
 	XSetting *result;
 
-	if (!manager) {
-		fprintf(stderr, "warning: no xsettings daemon found\n");
+	/* no xsettings daemon found */
+	if (!manager)
 		return NULL;
-	}
+
 	buffer = read_xsettings(display, manager, &size);
 	if (!buffer || !size) {
 		fprintf(stderr, "warning: could not read xsettings\n");

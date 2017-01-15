@@ -1,0 +1,39 @@
+jgmenu v0.4.5 release notes
+===========================
+
+Updates since v0.4.4
+--------------------
+
+  - Updated documentation, particularly README.md
+    Added JGMENUTUTORIAL(7) and JGMENU-CONFIG(1)
+    
+  - Added support for openbox menus (`jgmenu_run ob`)
+    Pipe-menus are faked (by spawning a new menu), but work
+    reasonably well.
+
+  - pmenu: Added internationalization support. The menu should now
+    appear in your language. (Thanks o9000)
+
+  - Added append and prepend support to pmenu (to add items to the
+    root-menu)
+    `jgmenu_run parse-pmenu` now understands
+        --append-file=<file> and --prepend-file=<file>
+    `jgmenu_run pmenu` passes on the following if they exist:
+    $HOME/.config/jgmenu/{append.csv,prepend.csv}
+
+  - Added --no-dirs options to `jgmenu_run parse-xdg`. 
+    With --no-dirs, the .menu and .directory files are ignored.
+    The output will be a plain list of all applications (derived from
+    .desktop files) without any ^tag() and ^checkout() markup.
+
+  - Changed installation paths in the Makefile. "jgmenu" and "jgmenu_run"
+    remain in $(bindir). All other executable programmes are installed in
+    $(libexecdir) as they are run by other programs rather than the user.
+
+  - Added 'jgmenu_run init'
+    This command creates a ~/.config/jgmenu/jgmenurc if one does not
+    exist. If a jgmenurc already exists, the `init` command updates it
+    with any missing variables.
+
+  - Added separator support (although it's still a bit experimental)
+    Use ^sep() in first field of jgmenu-CSV

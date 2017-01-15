@@ -7,8 +7,6 @@ HIGH-LEVEL ROADMAP
 
   - Write XDG menu parser based on libmenu-cache (probably "jgmenu_run xdg2")
 
-  - Add separator support
-
   - Add item_border_color, menu_border_color to config.{h,c}
     Currently borders use the fg colour which is often a bit "strong"
 
@@ -26,3 +24,5 @@ HIGH-LEVEL ROADMAP
     locking menu-item onto the root menu - or similar)
 
   - Add support for "fixed-position" items such as icons/images and shapes
+
+  - Add search box
