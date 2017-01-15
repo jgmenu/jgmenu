@@ -137,6 +137,20 @@ static void new_item(xmlNode *n)
 	curitem = item;
 }
 
+static void new_sep(xmlNode *n)
+{
+	struct sbuf s;
+	char *label = (char *)xmlGetProp(n, (const xmlChar *)"label");
+
+	sbuf_init(&s);
+	new_item(n);
+	sbuf_cpy(&s, "^sep(");
+	if (label)
+		sbuf_addstr(&s, label);
+	sbuf_addstr(&s, ")");
+	curitem->label = strdup(s.buf);
+}
+
 static void new_tag(xmlNode *n)
 {
 	struct tag *t = xcalloc(1, sizeof(struct tag));
@@ -279,6 +293,12 @@ static void xml_tree_walk(xmlNode *node)
 		}
 		if (!strcasecmp((char *)n->name, "item")) {
 			new_item(n);
+			list_add_tail(&curitem->list, &curtag->items);
+			xml_tree_walk(n->children);
+			continue;
+		}
+		if (!strcasecmp((char *)n->name, "separator")) {
+			new_sep(n);
 			list_add_tail(&curitem->list, &curtag->items);
 			xml_tree_walk(n->children);
 			continue;
