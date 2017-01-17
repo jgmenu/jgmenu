@@ -190,7 +190,8 @@ static void revert_to_parent(void)
 static int node_filter(const xmlChar *name)
 {
 	return strcasecmp((char *)name, "menu") &&
-	       strcasecmp((char *)name, "openbox_menu");
+	       strcasecmp((char *)name, "openbox_menu") &&
+	       strcasecmp((char *)name, "openbox_pipe_menu");
 }
 
 static void get_full_node_name(struct sbuf *node_name, xmlNode *node)
