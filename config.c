@@ -27,6 +27,7 @@ void config_set_defaults(void)
 	config.item_padding_x	 = 4;
 	config.item_radius	 = 1;
 	config.item_border	 = 0;
+	config.sep_height	 = 5;
 
 	config.max_items	 = 80;
 	config.min_items	 = 1;
@@ -49,6 +50,7 @@ void config_set_defaults(void)
 	parse_hexstr("#eeeeee 100", config.color_sel_fg);
 	parse_hexstr("#eeeeee 100", config.color_noprog_fg);
 	parse_hexstr("#ffffff 20", config.color_title_bg);
+	parse_hexstr("#ffffff 20", config.color_sep_fg);
 }
 
 static void process_line(char *line)
@@ -87,6 +89,8 @@ static void process_line(char *line)
 		xatoi(&config.item_radius, value, XATOI_NONNEG, "config.item_radius");
 	else if (!strncmp(option, "item_border", 11))
 		xatoi(&config.item_border, value, XATOI_NONNEG, "config.item_border");
+	else if (!strncmp(option, "sep_height", 10))
+		xatoi(&config.sep_height, value, XATOI_NONNEG, "config.sep_height");
 
 	else if (!strncmp(option, "max_items", 9))
 		xatoi(&config.max_items, value, XATOI_GT_0, "config.max_items");
@@ -128,6 +132,8 @@ static void process_line(char *line)
 		parse_hexstr(value, config.color_noprog_fg);
 	else if (!strncmp(option, "color_title_bg", 14))
 		parse_hexstr(value, config.color_title_bg);
+	else if (!strncmp(option, "color_sep_fg", 12))
+		parse_hexstr(value, config.color_sep_fg);
 }
 
 static void read_file(FILE *fp)

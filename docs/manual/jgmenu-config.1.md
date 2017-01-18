@@ -87,6 +87,11 @@ item_padding_x
 item_radius  
 item_border  
 
+
+sep_height  
+
+    height of separator (defined by ^sep())
+
 max_items  
 min_items  
 
@@ -127,16 +132,16 @@ icon_theme
 ignore_xsettings  
 ignore_icon_cache  
 
-show_title
+show_title  
 
-arrow_string
-arrow_show
+arrow_string  
+arrow_show  
 
     The "arrow" indicates that a menu item points a submenu.  
     Suggested styles include:  
     → ▶ ➔ ➙ ➛ ➜ ➝ ➞ ➟ ➠ ➡ ➢ ➣ ➤ ➥ ➦ ↦ ⇒ ⇝ ⇢ ⇥ ⇨ ⇾ ➭ ➮ ➯ ➱ ➲ ➺ ➼ ➽ ➾  
 
-search_all_items
+search_all_items  
 
     Define "search_all_items" to include all submenus when searching.  
     If set to 0, only the checked out submenu (or root-menu) will be  
@@ -150,5 +155,6 @@ color_sel_bg
 color_sel_fg  
 color_noprog_fg  
 color_title_bg  
+color_sep_fg  
 
     Example colour string: #eeeeee 70  

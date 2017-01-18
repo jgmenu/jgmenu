@@ -115,6 +115,8 @@ void init_empty_item(void)
 	empty_item.t[2] = NULL;
 	empty_item.tag = NULL;
 	empty_item.icon = NULL;
+	empty_item.selectable= 1;
+	empty_item.area.h = config.item_height;
 }
 
 void usage(void)
@@ -206,30 +208,31 @@ void update_filtered_list(void)
 void init_menuitem_coordinates(void)
 {
 	struct item *p;
-	int i = 0;
 
 	if (list_empty(&menu.filter))
 		return;
 
-	if (menu.title && config.show_title)
-		++i;
+	/* reset y variable */
+	geo_get_item_coordinates(NULL);
+
+//	if (menu.title && config.show_title)
+//		geo_get_item_coordinates(config.item_height);
 
 	p = menu.first;
 	list_for_each_entry_from(p, &menu.filter, filter) {
-		p->area = geo_get_item_coordinates(i);
-		++i;
+		geo_get_item_coordinates(&p->area);
 		if (p == menu.last)
 			break;
 	}
 }
 
-void draw_item_sep(struct item *p, double *rgba)
+void draw_item_sep(struct item *p)
 {
 	double y;
 
 	y = round(p->area.y + p->area.h / 2) + 0.5;
 	ui_draw_line(p->area.x + config.icon_size + 5, y,
-		     p->area.x + p->area.w - 5, y, 1.0, rgba);
+		     p->area.x + p->area.w - 5, y, 1.0, config.color_sel_bg);
 }
 
 void draw_item_bg_norm(struct item *p)
@@ -245,11 +248,6 @@ void draw_item_bg_norm(struct item *p)
 
 void draw_item_bg_sel(struct item *p)
 {
-	if (!p->selectable) {
-		draw_item_sep(p, config.color_sel_fg);
-		return;
-	}
-
 	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
 			  p->area.h, config.item_radius, 0.0, 1,
 			  config.color_sel_bg);
@@ -329,7 +327,7 @@ void draw_menu(void)
 			draw_item_text(p);
 		else
 			if (!strncmp(p->t[0], "^sep(", 5))
-				draw_item_sep(p, config.color_norm_fg);
+				draw_item_sep(p);
 
 		/* Draw Icons */
 		if (config.icon_size && p->icon) {
@@ -433,6 +431,7 @@ void checkout_submenu(char *tag)
 	else
 		geo_set_show_title(0);
 
+	/* set height of menu */
 	if (config.max_items < menu.nr_items_in_submenu)
 		geo_set_nr_visible_items(config.max_items);
 	else if (config.min_items > menu.nr_items_in_submenu)
@@ -1018,8 +1017,11 @@ void read_stdin(void)
 		item->icon = NULL;
 		item->tag = NULL;
 		item->selectable = 1;
-		if (!strncmp(item->t[0], "^sep(", 5))
+		item->area.h = config.item_height;
+		if (!strncmp(item->t[0], "^sep(", 5)) {
 			item->selectable = 0;
+			item->area.h = config.sep_height;
+		}
 	}
 
 	/* Populate tag field */

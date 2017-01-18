@@ -21,6 +21,7 @@ struct config {
 	int item_padding_x;
 	int item_radius;
 	int item_border;
+	int sep_height;
 
 	int max_items;		/* max number of items to show in menu */
 				/* if more items present, user has to scroll */
@@ -44,6 +45,7 @@ struct config {
 	double color_sel_fg[4];
 	double color_noprog_fg[4];
 	double color_title_bg[4];
+	double color_sep_fg[4];
 };
 
 extern struct config config;

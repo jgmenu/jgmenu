@@ -79,22 +79,26 @@ void geo_init(void)
 	geo_update();
 }
 
-/*
- * item_number is the sequential number of the item starting with zero
- */
-struct area geo_get_item_coordinates(int item_number)
+int geo_get_item_coordinates(struct area *a)
 {
-	struct area a;
+	static int h;
 
-	a.x = 0 + item_margin_x;
-	a.y = item_number * (item_height + item_margin_y) + item_margin_y;
-	if (show_title)
-		a.y -= item_margin_y;
-
-	a.h = item_height;
-	a.w = menu_width - (item_margin_x * 2);
-
-	return a;
+	/* This is how we reset it */
+	if (!a) {
+		h = 0;
+		goto out;
+	}
+	if (!h) {
+		h = item_margin_y;
+		if (show_title)
+			h += item_height;
+	}
+	a->y = h;
+	a->x = item_margin_x;
+	a->w = menu_width - (item_margin_x * 2);
+	h += a->h + item_margin_y;
+out:
+	return 0;
 }
 
 int geo_get_nr_items_that_fit_on_screen(void)
