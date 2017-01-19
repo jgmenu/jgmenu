@@ -56,7 +56,7 @@ static void print_it(struct tag *tag)
 	if (tag->parent)
 		printf("Go back,^checkout(%s)\n", tag->parent->id);
 	else if (return_cmd)
-		printf("Go back,jgmenu_run ob --return-cmd='%s'\n", return_cmd);
+		printf("Go back,%s\n", return_cmd);
 	list_for_each_entry(item, &tag->items, list) {
 		if (item->pipe)
 			printf("%s,^sub(f=/tmp/jgmenu-pipe; %s >$f; "
@@ -189,9 +189,7 @@ static void revert_to_parent(void)
 
 static int node_filter(const xmlChar *name)
 {
-	return strcasecmp((char *)name, "menu") &&
-	       strcasecmp((char *)name, "openbox_menu") &&
-	       strcasecmp((char *)name, "openbox_pipe_menu");
+	return strcasecmp((char *)name, "menu");
 }
 
 static void get_full_node_name(struct sbuf *node_name, xmlNode *node)
@@ -235,7 +233,7 @@ static void process_node(xmlNode *node)
 		content = strdup(strstrip((char *)node->content));
 
 	/* <command></command> */
-	if (!strcmp(node_name.buf, "item.action.command") && content)
+	if (strstr(node_name.buf, "item.action.command") && content)
 		curitem->cmd = content;
 }
 
