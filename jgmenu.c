@@ -226,13 +226,51 @@ void init_menuitem_coordinates(void)
 	}
 }
 
+/*
+ * Returns bar from ^foo(bar)
+ * s="^foo(bar)"
+ * token="^foo("
+ */
+char *parse_caret_action(char *s, char *token)
+{
+	char *p, *q;
+
+	p = NULL;
+	q = NULL;
+
+	if (!s)
+		return NULL;
+
+	if (!strncmp(s, token, strlen(token))) {
+		p = strdup(s);
+		p += strlen(token);
+		q = strchr(p, ')');
+		if (q)
+			*q = '\0';
+	}
+
+	return p;
+}
+
 void draw_item_sep(struct item *p)
 {
 	double y;
 
 	y = round(p->area.y + p->area.h / 2) + 0.5;
-	ui_draw_line(p->area.x + config.icon_size + 5, y,
-		     p->area.x + p->area.w - 5, y, 1.0, config.color_sel_bg);
+	ui_draw_line(p->area.x + 5, y, p->area.x + p->area.w - 5, y,
+		     1.0, config.color_sep_fg);
+}
+
+void draw_item_sep_with_text(struct item *p)
+{
+	int text_x_coord;
+
+	text_x_coord = p->area.x + config.item_padding_x;
+	if (config.icon_size)
+		text_x_coord += config.icon_size + config.item_padding_x;
+
+	ui_insert_text(parse_caret_action(p->t[0], "^sep("), text_x_coord,
+		       p->area.y, p->area.h, config.color_sep_fg);
 }
 
 void draw_item_bg_norm(struct item *p)
@@ -325,9 +363,10 @@ void draw_menu(void)
 		/* Draw menu items text */
 		if (p->selectable)
 			draw_item_text(p);
-		else
-			if (!strncmp(p->t[0], "^sep(", 5))
+		else if (!strncmp(p->t[0], "^sep()", 6))
 				draw_item_sep(p);
+		else if (!strncmp(p->t[0], "^sep(", 5))
+				draw_item_sep_with_text(p);
 
 		/* Draw Icons */
 		if (config.icon_size && p->icon) {
@@ -443,32 +482,6 @@ void checkout_submenu(char *tag)
 		menu.last = menu.first + menu.nr_items_in_submenu - 1;
 	else
 		menu.last = menu.first + geo_get_nr_visible_items() - 1;
-}
-
-/*
- * Returns bar from ^foo(bar)
- * s="^foo(bar)"
- * token="^foo("
- */
-char *parse_caret_action(char *s, char *token)
-{
-	char *p, *q;
-
-	p = NULL;
-	q = NULL;
-
-	if (!s)
-		return NULL;
-
-	if (!strncmp(s, token, strlen(token))) {
-		p = strdup(s);
-		p += strlen(token);
-		q = strchr(p, ')');
-		if (q)
-			*q = '\0';
-	}
-
-	return p;
 }
 
 void action_cmd(char *cmd)
@@ -1018,9 +1031,11 @@ void read_stdin(void)
 		item->tag = NULL;
 		item->selectable = 1;
 		item->area.h = config.item_height;
-		if (!strncmp(item->t[0], "^sep(", 5)) {
+		if (!strncmp(item->t[0], "^sep()", 6)) {
 			item->selectable = 0;
 			item->area.h = config.sep_height;
+		} else if (!strncmp(item->t[0], "^sep(", 5)) {
+			item->selectable = 0;
 		}
 	}
 
