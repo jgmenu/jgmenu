@@ -123,6 +123,13 @@ void geo_set_menu_width(int w)
 	geo_update();
 }
 
+void geo_set_menu_width_from_itemarea_width(int w)
+{
+	menu_width = w + 2 * item_margin_x +
+		     2 * menu_margin_x;
+	geo_update();
+}
+
 void geo_set_menu_height(int h)
 {
 	menu_height = h;

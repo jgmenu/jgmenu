@@ -215,9 +215,6 @@ void init_menuitem_coordinates(void)
 	/* reset y variable */
 	geo_get_item_coordinates(NULL);
 
-//	if (menu.title && config.show_title)
-//		geo_get_item_coordinates(config.item_height);
-
 	p = menu.first;
 	list_for_each_entry_from(p, &menu.filter, filter) {
 		geo_get_item_coordinates(&p->area);
@@ -396,6 +393,32 @@ struct node *get_node_from_tag(const char *tag)
 	return NULL;
 }
 
+void set_submenu_width(void)
+{
+	struct item *p;
+	struct sbuf s;
+	struct point point;
+
+	sbuf_init(&s);
+	p = menu.subhead;
+	list_for_each_entry_from(p, &menu.master, master) {
+		if (p->t[0]) {
+			sbuf_addstr(&s, p->t[0]);
+			sbuf_addch(&s, '\n');
+		}
+		if (p == menu.subtail)
+			break;
+	}
+	point = ui_get_text_size(s.buf, config.font);
+	if (config.icon_size)
+		point.x += config.icon_size + config.item_padding_x;
+	if (point.x > config.menu_width)
+		geo_set_menu_width_from_itemarea_width(point.x);
+	else
+		geo_set_menu_width_from_itemarea_width(config.menu_width);
+	free(s.buf);
+}
+
 /*
  * Sets *menu.first and *menu.last pointing to the beginnning and end of
  * the submenu
@@ -482,6 +505,8 @@ void checkout_submenu(char *tag)
 		menu.last = menu.first + menu.nr_items_in_submenu - 1;
 	else
 		menu.last = menu.first + geo_get_nr_visible_items() - 1;
+
+	set_submenu_width();
 }
 
 void action_cmd(char *cmd)
@@ -1372,8 +1397,8 @@ int main(int argc, char *argv[])
 
 	ui_create_window(geo_get_menu_x0(), geo_get_menu_y0(),
 			 geo_get_menu_width(), geo_get_menu_height());
-	ui_init_canvas(geo_get_menu_width(), geo_get_screen_height());
-	ui_init_cairo(geo_get_menu_width(), geo_get_screen_height(), config.font);
+	ui_init_canvas(geo_get_screen_width(), geo_get_screen_height());
+	ui_init_cairo(geo_get_screen_width(), geo_get_screen_height(), config.font);
 
 	init_empty_item();
 	filter_init();

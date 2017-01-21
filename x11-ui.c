@@ -74,6 +74,8 @@ void grabpointer(void)
 
 void ui_init_cairo(int canvas_width, int canvas_height, const char *font)
 {
+	struct point p;
+
 	ui->cs = cairo_xlib_surface_create(ui->dpy, ui->canvas, ui->vinfo.visual, canvas_width, canvas_height);
 	ui->c = cairo_create(ui->cs);
 
@@ -84,7 +86,8 @@ void ui_init_cairo(int canvas_width, int canvas_height, const char *font)
 	ui->pangolayout = pango_cairo_create_layout(ui->c);
 	ui->pangofont = pango_font_description_from_string(font);
 
-	ui->font_height_actual = ui_get_text_height(font);
+	p = ui_get_text_size("abcfghjklABC", font);
+	ui->font_height_actual = p.y;
 }
 
 void ui_init(void)
@@ -298,32 +301,31 @@ void ui_insert_text(char *s, int x, int y, int h, double *rgba)
 	pango_cairo_show_layout(ui->c, ui->pangolayout);
 }
 
-int ui_get_text_height(const char *fontdesc)
+struct point ui_get_text_size(const char *str, const char *fontdesc)
 {
 	cairo_surface_t *cs;
 	cairo_t *c;
 	PangoLayout *layout;
 	PangoFontDescription *font;
-	PangoLayoutLine *line;
-	PangoRectangle ink;
-	PangoRectangle logical;
+	struct point point;
 
 	cs = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 120, 120);
 	c = cairo_create(cs);
 	layout = pango_cairo_create_layout(c);
 	font = pango_font_description_from_string(fontdesc);
-	pango_layout_set_text(layout, "foo", -1);
+	pango_layout_set_text(layout, str, -1);
 	pango_layout_set_font_description(layout, font);
 	cairo_set_source_rgba(c, 0, 0, 0, 1.0);
 	pango_cairo_update_layout(c, layout);
-
-	line = pango_layout_get_line_readonly(layout, 0);
-	pango_layout_line_get_extents(line, &ink, &logical);
+	pango_layout_get_pixel_size(layout, &point.x, &point.y);
 	cairo_surface_destroy(cs);
+	cairo_destroy(c);
 	pango_font_description_free(font);
 	g_object_unref(layout);
+	point.x += 3;
+	point.y += 3;
 
-	return (logical.height / 1000 + 1);
+	return point;
 }
 
 int ui_is_point_in_area(struct point p, struct area a)

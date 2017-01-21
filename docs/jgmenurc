@@ -18,6 +18,7 @@ item_height	  = 25
 item_padding_x	  = 4
 item_radius	  = 1
 item_border	  = 0
+sep_height	  = 5
 
 max_items	  = 80
 min_items	  = 1
@@ -45,3 +46,4 @@ color_sel_bg	  = #ffffff 20
 color_sel_fg	  = #eeeeee 100
 color_noprog_fg	  = #eeeeee 100
 color_title_bg	  = #ffffff 20
+color_sep_fg	  = #ffffff 20
