@@ -44,10 +44,12 @@ void config_set_defaults(void)
 
 	parse_hexstr("#000000 70", config.color_menu_bg);
 	parse_hexstr("#eeeeee 20", config.color_menu_fg);
+	parse_hexstr("#eeeeee 8", config.color_menu_border);
 	parse_hexstr("#000000 00", config.color_norm_bg);
 	parse_hexstr("#eeeeee 100", config.color_norm_fg);
 	parse_hexstr("#ffffff 20", config.color_sel_bg);
 	parse_hexstr("#eeeeee 100", config.color_sel_fg);
+	parse_hexstr("#eeeeee 8", config.color_sel_border);
 	parse_hexstr("#eeeeee 100", config.color_noprog_fg);
 	parse_hexstr("#ffffff 20", config.color_title_bg);
 	parse_hexstr("#ffffff 20", config.color_sep_fg);
@@ -120,6 +122,8 @@ static void process_line(char *line)
 		parse_hexstr(value, config.color_menu_bg);
 	else if (!strncmp(option, "color_menu_fg", 13))
 		parse_hexstr(value, config.color_menu_fg);
+	else if (!strncmp(option, "color_menu_border", 17))
+		parse_hexstr(value, config.color_menu_border);
 	else if (!strncmp(option, "color_norm_bg", 13))
 		parse_hexstr(value, config.color_norm_bg);
 	else if (!strncmp(option, "color_norm_fg", 13))
@@ -128,6 +132,8 @@ static void process_line(char *line)
 		parse_hexstr(value, config.color_sel_bg);
 	else if (!strncmp(option, "color_sel_fg", 12))
 		parse_hexstr(value, config.color_sel_fg);
+	else if (!strncmp(option, "color_sel_border", 16))
+		parse_hexstr(value, config.color_sel_border);
 	else if (!strncmp(option, "color_noprog_fg", 14))
 		parse_hexstr(value, config.color_noprog_fg);
 	else if (!strncmp(option, "color_title_bg", 14))

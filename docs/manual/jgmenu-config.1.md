@@ -149,10 +149,12 @@ search_all_items
 
 color_menu_bg  
 color_menu_fg  
+color_menu_border  
 color_norm_bg  
 color_norm_fg  
 color_sel_bg  
 color_sel_fg  
+color_sel_border  
 color_noprog_fg  
 color_title_bg  
 color_sep_fg  

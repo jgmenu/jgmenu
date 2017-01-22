@@ -39,10 +39,12 @@ struct config {
 
 	double color_menu_bg[4];
 	double color_menu_fg[4];
+	double color_menu_border[4];
 	double color_norm_bg[4];
 	double color_norm_fg[4];
 	double color_sel_bg[4];
 	double color_sel_fg[4];
+	double color_sel_border[4];
 	double color_noprog_fg[4];
 	double color_title_bg[4];
 	double color_sep_fg[4];

@@ -275,10 +275,6 @@ void draw_item_bg_norm(struct item *p)
 	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
 			  p->area.h, config.item_radius, 0.0, 1,
 			  config.color_norm_bg);
-	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
-			  p->area.h, config.item_radius,
-			  config.item_border, 0,
-			  config.color_norm_fg);
 }
 
 void draw_item_bg_sel(struct item *p)
@@ -286,10 +282,11 @@ void draw_item_bg_sel(struct item *p)
 	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
 			  p->area.h, config.item_radius, 0.0, 1,
 			  config.color_sel_bg);
-	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
-			  p->area.h, config.item_radius,
-			  config.item_border, 0,
-			  config.color_sel_fg);
+	if (config.item_border)
+		ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
+				  p->area.h, config.item_radius,
+				  config.item_border, 0,
+				  config.color_sel_border);
 }
 
 void draw_item_text(struct item *p)
@@ -338,8 +335,10 @@ void draw_menu(void)
 	}
 
 	/* Draw menu border */
-	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius,
-			  config.menu_border, 0, config.color_menu_fg);
+	if (config.menu_border)
+		ui_draw_rectangle(0, 0, w, geo_get_menu_height(),
+				  config.menu_radius, config.menu_border,
+				  0, config.color_menu_border);
 
 	/* Draw menu items */
 	p = menu.first;
