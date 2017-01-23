@@ -39,6 +39,7 @@
 
 static pthread_t thread;	/* worker thread for loading icons	  */
 static int pipe_fds[2];		/* pipe to communicate between threads	  */
+static int die_when_loaded;	/* Used for performance testing		  */
 
 struct item {
 	char *t[MAX_FIELDS];
@@ -1146,6 +1147,10 @@ void run(void)
 	fd_set readfds;
 	static int all_icons_have_been_requested;
 
+	/* for performance testing */
+	if (die_when_loaded && !config.icon_size)
+		exit(0);
+
 	FD_ZERO(&readfds);
 	nfds = 0;
 
@@ -1209,6 +1214,10 @@ void run(void)
 				/* 'x' means that icons have finished loading */
 				if (ch != 'x')
 					continue;
+
+				/* for performance testing */
+				if (die_when_loaded && all_icons_have_been_requested)
+					exit(0);
 
 				if (DEBUG_ICONS_LOADED_NOTIFICATION && all_icons_have_been_requested)
 					fprintf(stderr, "All icons loaded\n");
@@ -1369,6 +1378,8 @@ int main(int argc, char *argv[])
 			xatoi(&config.min_items, argv[i] + 15, XATOI_NONNEG,
 			      "config.min_items");
 			config.max_items = config.min_items;
+		} else if (!strncmp(argv[i], "--die-when-loaded", 17)) {
+			die_when_loaded = 1;
 		} else if (!strncmp(argv[i], "--at-pointer", 12)) {
 			config.at_pointer = 1;
 		}

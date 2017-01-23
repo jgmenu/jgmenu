@@ -31,5 +31,10 @@ t0008: t0008-xpm.c ../xpm-loader.c ../xpm-loader.h
 t1011:
 	./t1011-hashmap.sh
 
+t9000:
+	@./t9000-icon-load.sh
+	@./t9000-icon-load.sh
+	@./t9000-icon-load.sh
+
 clean:
 	@$(RM) actual expect
