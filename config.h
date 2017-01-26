@@ -23,9 +23,6 @@ struct config {
 	int item_border;
 	int sep_height;
 
-	int max_items;		/* max number of items to show in menu */
-				/* if more items present, user has to scroll */
-	int min_items;
 	char *font;
 	int icon_size;		/* if set to zero, icons won't show */
 	char *icon_theme;

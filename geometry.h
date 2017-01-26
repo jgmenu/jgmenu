@@ -31,6 +31,8 @@
  * The menu_margin_* is the distance between the X11 window and the edge
  * of the screen
  *
+ * "itemarea" refers to the area occupied by menu-items (incl item_margin*)
+ *
  * Usage:
  * ------
  *   - Init X11 (XOpenDisplay, etc)
@@ -49,11 +51,12 @@
 void geo_update(void);
 void geo_init(void);
 int geo_get_item_coordinates(struct area *a);
-int geo_get_nr_items_that_fit_on_screen(void);
+int geo_get_max_itemarea_that_fits_on_screen(void);
 
 void geo_set_menu_width(int w);
 void geo_set_menu_width_from_itemarea_width(int w);
 void geo_set_menu_height(int h);
+void geo_set_menu_height_from_itemarea_height(int h);
 void geo_set_menu_margin_x(int x);
 void geo_set_menu_margin_y(int y);
 void geo_set_menu_halign(const char *pos);
@@ -67,6 +70,7 @@ void geo_set_item_margin_y(int margin);
 int geo_get_menu_x0(void);
 int geo_get_menu_y0(void);
 int geo_get_menu_height(void);
+int geo_get_itemarea_height(void);
 int geo_get_menu_width(void);
 int geo_get_item_height(void);
 int geo_get_screen_height(void);

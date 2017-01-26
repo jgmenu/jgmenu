@@ -13,8 +13,6 @@ item_padding_x	= 4
 item_radius	= 1
 item_border	= 0.0
 
-max_items	= 100
-min_items	= 0
 font		= Ubuntu condensed 14px
 icon_size	= 0
 show_title	= 0

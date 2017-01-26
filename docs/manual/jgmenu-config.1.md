@@ -92,13 +92,6 @@ sep_height
 
     height of separator (defined by ^sep())
 
-max_items  
-min_items  
-
-    max_items and min_items are used to determine the height of the  
-    menu. For example if both are set to 10, the menu will always  
-    have the height of 10 items (incl padding and margin).
-
 font  
 
     "font" accepts a string such as "Cantarell 10"  

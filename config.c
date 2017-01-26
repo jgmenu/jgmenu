@@ -29,8 +29,6 @@ void config_set_defaults(void)
 	config.item_border	 = 0;
 	config.sep_height	 = 5;
 
-	config.max_items	 = 80;
-	config.min_items	 = 1;
 	config.font		 = NULL; /* Leave as NULL. Is set in jgmenu.c */
 	config.icon_size	 = 22;
 	config.icon_theme	 = NULL; /* Leave as NULL. Is set in config-xs.c */
@@ -94,10 +92,6 @@ static void process_line(char *line)
 	else if (!strncmp(option, "sep_height", 10))
 		xatoi(&config.sep_height, value, XATOI_NONNEG, "config.sep_height");
 
-	else if (!strncmp(option, "max_items", 9))
-		xatoi(&config.max_items, value, XATOI_GT_0, "config.max_items");
-	else if (!strncmp(option, "min_items", 9))
-		xatoi(&config.min_items, value, XATOI_GT_0, "config.min_items");
 	else if (!strncmp(option, "font", 4))
 		config.font = strdup(value);
 	else if (!strncmp(option, "icon_size", 9))

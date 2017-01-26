@@ -24,26 +24,15 @@ int screen_height;	/*  g */
 int screen_x0;
 int screen_y0;
 
-int nr_visible_items;	/* sg */
 int show_title;		/* s  */
-
 int item_height;	/* sg */
 
-/*
- * geo_update() contains algorithms for geometric variables
- */
 void geo_update(void)
 {
 	if (menu_halign == LEFT)
 		menu_x0 = menu_margin_x - 1;
 	else if (menu_halign == RIGHT)
 		menu_x0 = screen_width - menu_width - menu_margin_x - 1;
-
-	menu_height = nr_visible_items * (item_height + item_margin_y) +
-		      item_margin_y;
-
-	if (show_title)
-		menu_height = menu_height + item_height;
 
 	if (menu_valign == BOTTOM)
 		menu_y0 = screen_y0 + screen_height - menu_height -
@@ -71,7 +60,6 @@ void geo_init(void)
 	item_margin_y = 4;
 
 	show_title = 0;
-	nr_visible_items = 1;
 
 	ui_get_screen_res(&screen_x0, &screen_y0, &screen_width,
 			  &screen_height);
@@ -101,18 +89,14 @@ out:
 	return 0;
 }
 
-int geo_get_nr_items_that_fit_on_screen(void)
+int geo_get_max_itemarea_that_fits_on_screen(void)
 {
-	int nr_items, h;
+	int h;
 
 	h = screen_height - menu_margin_y - item_margin_y;
-
 	if (show_title)
-		h = h - item_height;
-
-	nr_items = h / (item_height + item_margin_y);
-
-	return nr_items;
+		h -= item_height;
+	return h;
 }
 
 /*********************************************************************/
@@ -125,14 +109,21 @@ void geo_set_menu_width(int w)
 
 void geo_set_menu_width_from_itemarea_width(int w)
 {
-	menu_width = w + 2 * item_margin_x +
-		     2 * menu_margin_x;
+	menu_width = w + 2 * item_margin_x;
 	geo_update();
 }
 
 void geo_set_menu_height(int h)
 {
 	menu_height = h;
+	geo_update();
+}
+
+void geo_set_menu_height_from_itemarea_height(int h)
+{
+	menu_height = h;
+	if (show_title)
+		menu_height += item_height;
 	geo_update();
 }
 
@@ -176,15 +167,6 @@ void geo_set_item_height(int h)
 	geo_update();
 }
 
-void geo_set_nr_visible_items(int nr)
-{
-	if (nr > geo_get_nr_items_that_fit_on_screen())
-		nr_visible_items = geo_get_nr_items_that_fit_on_screen();
-	else
-		nr_visible_items = nr;
-	geo_update();
-}
-
 void geo_set_show_title(char *s)
 {
 	if (s)
@@ -223,6 +205,15 @@ int geo_get_menu_height(void)
 	return menu_height;
 }
 
+int geo_get_itemarea_height(void)
+{
+	int h = menu_height;
+
+	if (show_title)
+		h -= item_height;
+	return h;
+}
+
 int geo_get_menu_width(void)
 {
 	return menu_width;
@@ -241,9 +232,4 @@ int geo_get_screen_height(void)
 int geo_get_screen_width(void)
 {
 	return screen_width;
-}
-
-int geo_get_nr_visible_items(void)
-{
-	return nr_visible_items;
 }

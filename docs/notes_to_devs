@@ -1,0 +1,47 @@
+DEVELOPMENT NOTES
+=================
+
+Upversion
+---------
+  - update "default_version" in scripts/version-gen.sh
+  - git tag -a 'vX.Y'
+
+Adding new config variables
+---------------------------
+Any new config variables need to be added to the following:
+  - config.c
+  - config.h
+  - docs/jgmenurc
+  - jgmenu-init.sh
+  - docs/manual/jgmenu-config.1.md
+
+Testing
+-------
+make ex		Runs a few menus specifically designed to test the code
+
+make check	Checks coding style
+
+		To just check a specific .c or .h file, do
+			./scripts/checkpatch-wrapper foo.c
+
+make test	Runs tests of specific modules (still to be implemented)
+
+APIs
+----
+list.h
+https://kernelnewbies.org/FAQ/LinkedLists
+
+hashmap.c
+https://www.kernel.org/pub/software/scm/git/docs/technical/api-hashmap.html
+
+Architecture
+------------
+jgmenu_run is a wrapper calling jgmenu-<command>
+
+`jgmenu_run` makes jgmenu easier to use by  
+  - creating a simple interface for common commands
+  - saving the user having to remember script file extensions
+
+It also helps keep $prefix/bin tidier by putting all the other scripts in
+$libexecdir.
+

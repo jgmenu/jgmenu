@@ -153,6 +153,44 @@ void step_fwd(struct item **ptr, int nr)
 		*ptr = container_of((*ptr)->filter.next, struct item, filter);
 }
 
+struct item *fill_from_top(struct item *first)
+{
+	struct item *p, *last;
+	int h = geo_get_itemarea_height();
+
+	h -= config.item_margin_y;
+	p = first;
+	last = p;
+	list_for_each_entry_from(p, &menu.filter, filter) {
+		h -= p->area.h + config.item_margin_y;
+		if (h < 0)
+			break;
+		last = p;
+	}
+	return last;
+}
+
+struct item *fill_from_bottom(struct item *last)
+{
+	struct item *p, *first;
+	int h = geo_get_itemarea_height();
+	int ignoring = 1;
+
+	h -= config.item_margin_y;
+	first = last;
+	list_for_each_entry_reverse(p, &menu.filter, filter) {
+		if (p == last)
+			ignoring = 0;
+		if (ignoring)
+			continue;
+		h -= p->area.h + config.item_margin_y;
+		if (h < 0)
+			break;
+		first = p;
+	}
+	return first;
+}
+
 void update_filtered_list(void)
 {
 	struct item *item;
@@ -194,13 +232,7 @@ void update_filtered_list(void)
 
 	menu.filter_tail = list_last_entry(&menu.filter, struct item, filter);
 	menu.first = menu.filter_head;
-
-	if (geo_get_nr_visible_items() < get_nr_items()) {
-		menu.last = menu.first;
-		step_fwd(&menu.last, geo_get_nr_visible_items() - 1);
-	} else {
-		menu.last = menu.filter_tail;
-	}
+	menu.last = fill_from_top(menu.first);
 
 	/* FIXME: change this to something more sophisticated */
 	menu.sel = menu.first;
@@ -419,6 +451,31 @@ void set_submenu_width(void)
 	free(s.buf);
 }
 
+int submenu_itemarea_height(void)
+{
+	struct item *p;
+	int h = 0;
+
+	p = menu.subhead;
+	list_for_each_entry_from(p, &menu.master, master) {
+		h += config.item_margin_y + p->area.h;
+		if (p == menu.subtail)
+			break;
+	}
+	h += config.item_margin_y;
+	return h;
+}
+
+void set_submenu_height(void)
+{
+	int reqh = submenu_itemarea_height();
+	int maxh = geo_get_max_itemarea_that_fits_on_screen();
+	int h;
+
+	h = reqh < maxh ? reqh : maxh;
+	geo_set_menu_height_from_itemarea_height(h);
+}
+
 /*
  * Sets *menu.first and *menu.last pointing to the beginnning and end of
  * the submenu
@@ -493,19 +550,7 @@ void checkout_submenu(char *tag)
 	else
 		geo_set_show_title(0);
 
-	/* set height of menu */
-	if (config.max_items < menu.nr_items_in_submenu)
-		geo_set_nr_visible_items(config.max_items);
-	else if (config.min_items > menu.nr_items_in_submenu)
-		geo_set_nr_visible_items(config.min_items);
-	else
-		geo_set_nr_visible_items(menu.nr_items_in_submenu);
-
-	if (config.min_items > menu.nr_items_in_submenu)
-		menu.last = menu.first + menu.nr_items_in_submenu - 1;
-	else
-		menu.last = menu.first + geo_get_nr_visible_items() - 1;
-
+	set_submenu_height();
 	set_submenu_width();
 }
 
@@ -550,10 +595,10 @@ int scroll_step_down(void)
 		++i;
 	}
 
-	if (i <= geo_get_nr_visible_items())
+//	if (i <= geo_get_nr_visible_items())
 		return i;
-	else
-		return geo_get_nr_visible_items();
+//	else
+//		return geo_get_nr_visible_items();
 }
 
 int scroll_step_up(void)
@@ -567,10 +612,10 @@ int scroll_step_up(void)
 		++i;
 	}
 
-	if (i <= geo_get_nr_visible_items())
+//	if (i <= geo_get_nr_visible_items())
 		return i;
-	else
-		return geo_get_nr_visible_items();
+//	else
+//		return geo_get_nr_visible_items();
 }
 
 void move_window(void)
@@ -590,68 +635,101 @@ void checkout_parent(void)
 			  geo_get_menu_width(), geo_get_menu_height());
 }
 
+struct item *next_selectable(struct item *cur, int *isoutside)
+{
+	struct item *p = cur;
+
+	*isoutside = 0;
+	while (p != menu.filter_tail) {
+		if (p == menu.last)
+			*isoutside = 1;
+		step_fwd(&p, 1);
+		if (p->selectable)
+			break;
+	}
+	if (!p->selectable)
+		p = cur;
+	return p;
+}
+
+struct item *prev_selectable(struct item *cur, int *isoutside)
+{
+	struct item *p = cur;
+
+	*isoutside = 0;
+	while (p != menu.filter_head) {
+		if (p == menu.first)
+			*isoutside = 1;
+		step_back(&p, 1);
+		if (p->selectable)
+			break;
+	}
+	if (!p->selectable)
+		p = cur;
+	return p;
+}
+
 void key_event(XKeyEvent *ev)
 {
 	char buf[32];
 	int len;
 	KeySym ksym = NoSymbol;
 	Status status;
-	int nr_steps;
+	int isoutside;
+//	int nr_steps;
 
 	len = XmbLookupString(ui->xic, ev, buf, sizeof(buf), &ksym, &status);
 	if (status == XBufferOverflow)
 		return;
 	switch (ksym) {
-	case XK_End:
-		if (get_nr_items() > geo_get_nr_visible_items()) {
-			menu.last = menu.filter_tail;
-			menu.first = menu.filter_tail;
-			step_back(&menu.first, geo_get_nr_visible_items() - 1);
-			init_menuitem_coordinates();
-		}
-		menu.sel = menu.last;
-		break;
+//	case XK_End:
+//		if (get_nr_items() > geo_get_nr_visible_items()) {
+//			menu.last = menu.filter_tail;
+//			menu.first = menu.filter_tail;
+//			step_back(&menu.first, geo_get_nr_visible_items() - 1);
+//			init_menuitem_coordinates();
+//		}
+//		menu.sel = menu.last;
+//		break;
 	case XK_Escape:
 		exit(0);
-	case XK_Home:
-		if (get_nr_items() > geo_get_nr_visible_items()) {
-			menu.first = menu.filter_head;
-			menu.last = menu.filter_head;
-			step_fwd(&menu.last, geo_get_nr_visible_items() - 1);
-			init_menuitem_coordinates();
-		}
-		menu.sel = menu.first;
-		break;
+//	case XK_Home:
+//		if (get_nr_items() > geo_get_nr_visible_items()) {
+//			menu.first = menu.filter_head;
+//			menu.last = menu.filter_head;
+//			step_fwd(&menu.last, geo_get_nr_visible_items() - 1);
+//			init_menuitem_coordinates();
+//		}
+//		menu.sel = menu.first;
+//		break;
 	case XK_Up:
 		if (menu.sel == menu.filter_head)
 			break;
-		if (menu.sel != menu.first) {
-			step_back(&menu.sel, 1);
-		} else {
-			step_back(&menu.first, 1);
-			step_back(&menu.last, 1);
-			menu.sel = menu.first;
-			init_menuitem_coordinates();
+		menu.sel = prev_selectable(menu.sel, &isoutside);
+		if (isoutside) {
+			menu.first = menu.sel;
+			menu.last = fill_from_top(menu.first);
 		}
+		init_menuitem_coordinates();
 		break;
-	case XK_Next:	/* PageDown */
-		if (get_nr_items() > geo_get_nr_visible_items()) {
-			nr_steps = scroll_step_down();
-			step_fwd(&menu.first, nr_steps);
-			step_fwd(&menu.last, nr_steps);
-			init_menuitem_coordinates();
-		}
-		menu.sel = menu.last;
-		break;
-	case XK_Prior:	/* PageUp */
-		if (get_nr_items() > geo_get_nr_visible_items()) {
-			nr_steps = scroll_step_up();
-			step_back(&menu.first, nr_steps);
-			step_back(&menu.last, nr_steps);
-			init_menuitem_coordinates();
-		}
-		menu.sel = menu.first;
-		break;
+//	case XK_Next:	/* PageDown */
+//		if (get_nr_items() > geo_get_nr_visible_items()) {
+//			nr_steps = scroll_step_down();
+//			step_fwd(&menu.first, nr_steps);
+//			step_fwd(&menu.last, nr_steps);
+//			init_menuitem_coordinates();
+//		}
+//		menu.sel = menu.last;
+//		break;
+//	case XK_Prior:	/* PageUp */
+//		if (get_nr_items() > geo_get_nr_visible_items()) {
+//			nr_steps = scroll_step_up();
+//			step_back(&menu.first, nr_steps);
+//			step_back(&menu.last, nr_steps);
+//			init_menuitem_coordinates();
+//		}
+//		menu.sel = menu.first;
+//		break;
 	case XK_Return:
 	case XK_KP_Enter:
 		if (!menu.sel->selectable)
@@ -666,14 +744,12 @@ void key_event(XKeyEvent *ev)
 	case XK_Down:
 		if (menu.sel == menu.filter_tail)
 			break;
-		if (menu.sel != menu.last) {
-			step_fwd(&menu.sel, 1);
-		} else {
-			step_fwd(&menu.first, 1);
-			step_fwd(&menu.last, 1);
-			menu.sel = menu.last;
-			init_menuitem_coordinates();
+		menu.sel = next_selectable(menu.sel, &isoutside);
+		if (isoutside) {
+			menu.last = menu.sel;
+			menu.first = fill_from_bottom(menu.last);
 		}
+		init_menuitem_coordinates();
 		break;
 	case XK_F3:
 		config.color_menu_bg[3] -= 0.1;
@@ -761,7 +837,7 @@ void mouse_event(XEvent *e)
 	/* scroll up */
 	if (ev->button == Button4 && menu.first != menu.filter_head) {
 		step_back(&menu.first, 1);
-		step_back(&menu.last, 1);
+		menu.last = fill_from_top(menu.first);
 		step_back(&menu.sel, 1);
 		init_menuitem_coordinates();
 		draw_menu();
@@ -770,8 +846,8 @@ void mouse_event(XEvent *e)
 
 	/* scroll down */
 	if (ev->button == Button5 && menu.last != menu.filter_tail) {
-		step_fwd(&menu.first, 1);
 		step_fwd(&menu.last, 1);
+		menu.first = fill_from_bottom(menu.last);
 		step_fwd(&menu.sel, 1);
 		init_menuitem_coordinates();
 		draw_menu();
@@ -1374,10 +1450,6 @@ int main(int argc, char *argv[])
 		} else if (!strncmp(argv[i], "--icon-size=", 12)) {
 			xatoi(&config.icon_size, argv[i] + 12, XATOI_NONNEG,
 			      "config.icon_size");
-		} else if (!strncmp(argv[i], "--fixed-height=", 15)) {
-			xatoi(&config.min_items, argv[i] + 15, XATOI_NONNEG,
-			      "config.min_items");
-			config.max_items = config.min_items;
 		} else if (!strncmp(argv[i], "--die-when-loaded", 17)) {
 			die_when_loaded = 1;
 		} else if (!strncmp(argv[i], "--at-pointer", 12)) {
