@@ -1,0 +1,51 @@
+NOTES ON ICONS
+==============
+
+Some of the content of this file has not been implemented yet. It's just ideas
+which I will try to incorporate.
+
+1.  The main loop kicks off two threads to load icons:
+    (A) The root menu; (B) The rest
+    B starts when A is finished. This allows the root-menu to be displayed
+    quickly whilst the rest is loaded in the background.
+
+2.  icon.c stats icons in
+    ~/.local/share/icons/jgmenu-cache/<size>/
+    This directory contains symlinks pointing to icons which match the
+    name, size and theme.
+
+    For example:
+
+	folder -> /usr/share/icons/Adwaita/22x22/places/folder.png
+
+    Symlinking without file extensions saves time when stating as we don't
+    have to try with .png, .svg, xpm for each one.
+
+    If the user changes icon_size or icon_theme in jgmenurc, we prevent the
+    old cache from being loaded in the following way:
+
+      - The _size_ is part of the path we stat (e.g. jgmenu-cache/<size>),
+        so if it does not exist we know it.
+
+      - The _theme_ is stored in index.theme under "Inherits=".
+        We throw an error if it is wrong.
+
+3.  Any icon-names which fail the stat are saved in a list and dealt
+    with as follows:
+
+      - icon-find.c finds their full path if they exist (time-consuming)
+
+      - icon.c spawns "jgmenu_run cache --amend <name> <path>" for any icons
+	missing in the cache.
+        If an icon cannot be found on the system, an empty file is created
+	in the cache instead of the symlink in order to prevent un-neccesary
+        searching in future.
+
+4.  icon-find.c puts all "wanted" icon names in a hashmap before searching.
+    As the expensive search happens each file will be compared with the hashmap
+    keys. The search includes
+      - A ftw of the theme directory
+      - A dirent of /usr/share/pixmaps
+      - A dirent of /usr/share/icons
+      - etc
+

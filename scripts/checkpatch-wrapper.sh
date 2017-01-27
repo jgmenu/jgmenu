@@ -11,7 +11,8 @@ fi
 
 for i in "$@"
 do
-	if test ${i} != "list.h" && test ${i} != "xpm-color-table.h"
+	if test ${i} != "list.h" && test ${i} != "xpm-color-table.h" &&
+	   test ${i} != "flex-array.h"
 	then
 		printf "Checking ${i}\n"
 		perl scripts/checkpatch.pl ${cmd_args} "${i}" \

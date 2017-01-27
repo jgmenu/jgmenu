@@ -116,7 +116,7 @@ void init_empty_item(void)
 	empty_item.t[2] = NULL;
 	empty_item.tag = NULL;
 	empty_item.icon = NULL;
-	empty_item.selectable= 1;
+	empty_item.selectable = 1;
 	empty_item.area.h = config.item_height;
 }
 
@@ -191,9 +191,44 @@ struct item *fill_from_bottom(struct item *last)
 	return first;
 }
 
+struct item *next_selectable(struct item *cur, int *isoutside)
+{
+	struct item *p = cur;
+
+	*isoutside = 0;
+	while (p != menu.filter_tail) {
+		if (p == menu.last)
+			*isoutside = 1;
+		step_fwd(&p, 1);
+		if (p->selectable)
+			break;
+	}
+	if (!p->selectable)
+		p = cur;
+	return p;
+}
+
+struct item *prev_selectable(struct item *cur, int *isoutside)
+{
+	struct item *p = cur;
+
+	*isoutside = 0;
+	while (p != menu.filter_head) {
+		if (p == menu.first)
+			*isoutside = 1;
+		step_back(&p, 1);
+		if (p->selectable)
+			break;
+	}
+	if (!p->selectable)
+		p = cur;
+	return p;
+}
+
 void update_filtered_list(void)
 {
 	struct item *item;
+	int isoutside;
 
 	INIT_LIST_HEAD(&menu.filter);
 
@@ -236,6 +271,8 @@ void update_filtered_list(void)
 
 	/* FIXME: change this to something more sophisticated */
 	menu.sel = menu.first;
+	if (!menu.sel->selectable)
+		menu.sel = next_selectable(menu.first, &isoutside);
 }
 
 void init_menuitem_coordinates(void)
@@ -384,7 +421,8 @@ void draw_menu(void)
 
 		/* Draw submenu arrow */
 		if (config.arrow_show && ((!strncmp(p->t[1], "^checkout(", 10) &&
-		    strncmp(p->t[0], "..", 2)) || !strncmp(p->t[1], "^sub(", 5)))
+		    			   strncmp(p->t[0], "..", 2)) ||
+					   !strncmp(p->t[1], "^sub(", 5)))
 			ui_insert_text(config.arrow_string, p->area.x + p->area.w -
 				       config.item_padding_x - (p->area.h / 3), p->area.y,
 				       p->area.h, config.color_norm_fg);
@@ -393,9 +431,9 @@ void draw_menu(void)
 		if (p->selectable)
 			draw_item_text(p);
 		else if (!strncmp(p->t[0], "^sep()", 6))
-				draw_item_sep(p);
+			draw_item_sep(p);
 		else if (!strncmp(p->t[0], "^sep(", 5))
-				draw_item_sep_with_text(p);
+			draw_item_sep_with_text(p);
 
 		/* Draw Icons */
 		if (config.icon_size && p->icon) {
@@ -543,7 +581,8 @@ void checkout_submenu(char *tag)
 	menu.subhead = menu.first;
 	menu.subtail = menu.last;
 
-	menu.sel = menu.first;
+	menu.sel = NULL;
+	/* menu.sel gets set in updated_filtered_list() */
 
 	if (config.show_title)
 		geo_set_show_title(menu.title);
@@ -584,40 +623,6 @@ void action_cmd(char *cmd)
 	}
 }
 
-int scroll_step_down(void)
-{
-	int i = 0;
-	struct item *item;
-
-	list_for_each_entry_reverse(item, &menu.filter, filter) {
-		if (item == menu.last)
-			break;
-		++i;
-	}
-
-//	if (i <= geo_get_nr_visible_items())
-		return i;
-//	else
-//		return geo_get_nr_visible_items();
-}
-
-int scroll_step_up(void)
-{
-	int i = 0;
-	struct item *item;
-
-	list_for_each_entry(item, &menu.filter, filter) {
-		if (item == menu.first)
-			break;
-		++i;
-	}
-
-//	if (i <= geo_get_nr_visible_items())
-		return i;
-//	else
-//		return geo_get_nr_visible_items();
-}
-
 void move_window(void)
 {
 	XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(),
@@ -635,40 +640,6 @@ void checkout_parent(void)
 			  geo_get_menu_width(), geo_get_menu_height());
 }
 
-struct item *next_selectable(struct item *cur, int *isoutside)
-{
-	struct item *p = cur;
-
-	*isoutside = 0;
-	while (p != menu.filter_tail) {
-		if (p == menu.last)
-			*isoutside = 1;
-		step_fwd(&p, 1);
-		if (p->selectable)
-			break;
-	}
-	if (!p->selectable)
-		p = cur;
-	return p;
-}
-
-struct item *prev_selectable(struct item *cur, int *isoutside)
-{
-	struct item *p = cur;
-
-	*isoutside = 0;
-	while (p != menu.filter_head) {
-		if (p == menu.first)
-			*isoutside = 1;
-		step_back(&p, 1);
-		if (p->selectable)
-			break;
-	}
-	if (!p->selectable)
-		p = cur;
-	return p;
-}
-
 void key_event(XKeyEvent *ev)
 {
 	char buf[32];
@@ -676,32 +647,25 @@ void key_event(XKeyEvent *ev)
 	KeySym ksym = NoSymbol;
 	Status status;
 	int isoutside;
-//	int nr_steps;
 
 	len = XmbLookupString(ui->xic, ev, buf, sizeof(buf), &ksym, &status);
 	if (status == XBufferOverflow)
 		return;
 	switch (ksym) {
-//	case XK_End:
-//		if (get_nr_items() > geo_get_nr_visible_items()) {
-//			menu.last = menu.filter_tail;
-//			menu.first = menu.filter_tail;
-//			step_back(&menu.first, geo_get_nr_visible_items() - 1);
-//			init_menuitem_coordinates();
-//		}
-//		menu.sel = menu.last;
-//		break;
+	case XK_End:
+		menu.last = menu.filter_tail;
+		menu.first = fill_from_bottom(menu.last);
+		menu.sel = menu.last;
+		init_menuitem_coordinates();
+		break;
 	case XK_Escape:
 		exit(0);
-//	case XK_Home:
-//		if (get_nr_items() > geo_get_nr_visible_items()) {
-//			menu.first = menu.filter_head;
-//			menu.last = menu.filter_head;
-//			step_fwd(&menu.last, geo_get_nr_visible_items() - 1);
-//			init_menuitem_coordinates();
-//		}
-//		menu.sel = menu.first;
-//		break;
+	case XK_Home:
+		menu.first = menu.filter_head;
+		menu.last = fill_from_top(menu.first);
+		menu.sel = menu.first;
+		init_menuitem_coordinates();
+		break;
 	case XK_Up:
 		if (menu.sel == menu.filter_head)
 			break;
@@ -712,24 +676,30 @@ void key_event(XKeyEvent *ev)
 		}
 		init_menuitem_coordinates();
 		break;
-//	case XK_Next:	/* PageDown */
-//		if (get_nr_items() > geo_get_nr_visible_items()) {
-//			nr_steps = scroll_step_down();
-//			step_fwd(&menu.first, nr_steps);
-//			step_fwd(&menu.last, nr_steps);
-//			init_menuitem_coordinates();
-//		}
-//		menu.sel = menu.last;
-//		break;
-//	case XK_Prior:	/* PageUp */
-//		if (get_nr_items() > geo_get_nr_visible_items()) {
-//			nr_steps = scroll_step_up();
-//			step_back(&menu.first, nr_steps);
-//			step_back(&menu.last, nr_steps);
-//			init_menuitem_coordinates();
-//		}
-//		menu.sel = menu.first;
-//		break;
+	case XK_Next:	/* PageDown */
+		menu.first = menu.last;
+		if (menu.first != menu.filter_tail)
+			step_fwd(&menu.first, 1);
+		menu.last = fill_from_top(menu.first);
+		if (menu.last == menu.filter_tail)
+			menu.first = fill_from_bottom(menu.last);
+		init_menuitem_coordinates();
+		menu.sel = menu.last;
+		if (!menu.last->selectable)
+			menu.sel = prev_selectable(menu.last, &isoutside);
+		break;
+	case XK_Prior:	/* PageUp */
+		menu.last = menu.first;
+		if (menu.last != menu.filter_head)
+			step_back(&menu.last, 1);
+		menu.first = fill_from_bottom(menu.last);
+		if (menu.first == menu.filter_head)
+			menu.last = fill_from_top(menu.first);
+		init_menuitem_coordinates();
+		menu.sel = menu.first;
+		if (!menu.sel->selectable)
+			menu.sel = next_selectable(menu.first, &isoutside);
+		break;
 	case XK_Return:
 	case XK_KP_Enter:
 		if (!menu.sel->selectable)
