@@ -4,100 +4,68 @@ jgmenu
 Introduction
 ------------
 
-Jgmenu is a simple X11 menu application.
+jgmenu is a simple X11 menu intended to be used with tint2 and openbox.
 
-It is written with the following (original) aims:
+### Key Features
 
-  - Be a stand-alone, simple and contemporary-looking menu  
-  - Be hackable with a clean, small code base  
-  - Minimise features and bloat  
-  - Work with linux, openbox and tint2  
-  - Have co-ordinate and alignment parameters to avoid xdotool hacks, etc.  
-  - Contain similar settings to tint2 (e.g. padding, transparency)  
-  - Have few dependencies (perferably just Xlib, cairo and Xinerama)  
-  - Be free from toolkits such as GTK and Qt.  
-  - Read the menu items from stdin in a similar way to dmenu and dzen2, but  
-    with seperate fields for the name and command  
+  - It is a stand-alone, simple and contemporary-looking menu  
+  - It is hackable with a clean, small code base  
+  - Although originally written to be used with tint2 and openbox,  
+    it should run with others panels and window managers  
+  - It has a config file to set alignment, margins, padding, transparency, etc  
+  - It does not depend on any toolkits such as GTK and Qt   
+  - It uses cairo and pango to render the menu directly onto an X11 window  
+  - It reads menu items from stdin in a similar way to dmenu and dzen2, but  
+    parse comma seperated fields for the name and command  
 
-These original "aims" still hold true today, with the exception of a few added  
-dependencies:  
-
-  - pango (for font rendering)  
-  - librsvg (for SVG icons)  
-
-Some of the `jgmenu_run` commands have further dependencies such as libxml2.  
-The build process currently requires these, but it would be easy to #ifdef  
-them out if anyone wants that.
-
-It's also worth noting that it has been compiled and runs fine on various  
-Linux distributions as well as OpenBSD.
-
-Jgmenu is written with an uppercase "J" when referring to the entire  
-application, and lowercase (jgmenu) when referring to the binary file.
+It has been compiled and runs on OpenBSD and various Linux distributions  
+including Bunsenlabs, Arch, Ubuntu, Alpine and Mint.
 
 Screenshots
 -----------
 
-[![foo](http://i.imgur.com/4oprqYZt.png)](http://i.imgur.com/4oprqYZ.png)
+[![foo](http://i.imgur.com/4oprqYZt.png)](http://i.imgur.com/4oprqYZ.png)  
+jgmenu and tint2 using Numix-Circle icon theme
+
 [![foo](http://i.imgur.com/QvBqI2Lt.png)](http://i.imgur.com/QvBqI2L.png)  
-
-From the left:  
-
-1. jgmenu and tint2 using Numix-Circle icon theme
-2. jgmenu and tint2 using Papirus icon theme
-
-Dependencies
-------------
-
-### Build dependencies
-
-  - libx11
-  - libxinerama
-  - cairo
-  - pango
-  - librsvg
-  - libxml2
-
-For Arch Linux users, there is an AUR package named "jgmenu" which installs  
-the correct build dependencies.
-
-On Debian based systems such as Bunsenlabs and Ubuntu, do:
-
-```bash
-sudo apt-get install libx11-dev libxinerama-dev libcairo2-dev \
-libpango1.0-dev librsvg2-dev libxml2-dev
-```
-
-### Run-time dependencies:
-
-  - A *menu* package (for example gnome-menus or lxmenu-data)  
-    Required for "`jgmenu_run pmenu`" and "`jgmenu_run xdg`"  
-
-  - python3  
-    Required by "`jgmenu_run pmenu`"
-
-To enable menu transparency, you need to have a Composite Manager such as  
-`compton`. Most Desktop Environments already have one installed.
-
-### Development dependencies
-
-To build the man pages, you need to have `pandoc` installed. However, as many  
-users do not have this package, the man pages are commited in the git repo.  
-(i.e. you only need pandoc if you want to contribute to or change the man  
-pages.)
+jgmenu and tint2 using Papirus icon theme
 
 Build and Install
 -----------------
 
-Although it is possible to run `jgmenu_run` from the source directory (by  
-setting `JGMENU_EXEC_PATH`), it is recommended to install it as follows:  
+### In simple steps
+
+For Arch Linux users, there is an AUR package named "jgmenu".
+
+On Debian based systems such as Bunsenlabs and Ubuntu, do:
 
 ```bash
+sudo apt-get install libx11-dev libxinerama-dev libcairo2-dev libpango1.0-dev librsvg2-dev libxml2-dev
+mkdir ~/src && cd ~/src
+git clone https://github.com/johanmalm/jgmenu.git
+cd jgmenu
 make
 make install
 ```
 
-By default, `make install` will install Jgmenu in your $HOME-directory, thus  
+For subsequent updates, do:
+
+```bash
+git pull
+make clean
+make
+make install
+```
+
+To run the menu, see the "getting started" section below, or read  
+[JGMENUTUTORIAL (7)](docs/manual/jgmenututorial.7.md)  
+
+A user has written some alternative installation notes
+[here](https://forums.bunsenlabs.org/viewtopic.php?id=3100)  
+
+### Furter details on build and installation
+
+By default, `make install` will install jgmenu in your $HOME-directory, thus  
 avoiding the need for root-privilegies. You will need `$HOME/bin` in your  
 `$PATH` to run from there.
 
@@ -134,6 +102,40 @@ following:
   - $prefix/share/man/man1/jgmenu*  
   - $prefix/share/man/man7/jgmenu*  
 
+Although it is recommended to do a `make install`, it is possible to run  
+`./jgmenu_run` from the source directory by setting `JGMENU_EXEC_PATH`.
+
+Dependencies
+------------
+
+### Build dependencies
+
+  - libx11
+  - libxinerama
+  - cairo
+  - pango
+  - librsvg
+  - libxml2
+
+
+### Run-time dependencies:
+
+  - A *menu* package (for example gnome-menus or lxmenu-data)  
+    Required for "`jgmenu_run pmenu`" and "`jgmenu_run xdg`"  
+
+  - python3  
+    Required by "`jgmenu_run pmenu`"
+
+To enable menu transparency, you need to have a Composite Manager such as  
+`compton`. Most Desktop Environments already have one installed.
+
+### Development dependencies
+
+To build the man pages, you need to have `pandoc` installed. However, as many  
+users do not have this package, the man pages are commited in the git repo.  
+(i.e. you only need pandoc if you want to contribute to or change the man  
+pages.)
+
 
 Getting started (after installation)
 ------------------------------------
@@ -155,13 +157,15 @@ Read [JGMENU-CONFIG (1)](docs/manual/jgmenu-config.1.md) and the example
 [jgmenurc](docs/jgmenurc) for further  
 information.  
 
-Create icon-cache:
+Some icons themes are slow to load on start-up. In order to improve start-up  
+times it is recommended to create icon-cache (although it is not necessary).  
+Create icon-cache using the following command:
 
 ```bash
 jgmenu_run cache
 ```
 
-There are many ways to run Jgmenu. To get started, try:
+There are many ways to run jgmenu. To get started, try:
 
 ```bash
 jgmenu_run pmenu
@@ -229,5 +233,4 @@ See also
   - `jgmenu_run` [xdg](docs/manual/jgmenu-xdg.1.md)
   - `jgmenu_run` [csv](docs/manual/jgmenu-csv.1.md)
   - `jgmenu_run` [cache](docs/manual/jgmenu-cache.1.md)
-
 

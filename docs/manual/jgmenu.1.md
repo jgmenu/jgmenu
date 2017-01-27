@@ -13,7 +13,7 @@ jgmenu \[\--no-spawn] \[\--checkout=<*tag*>] \[\--config-file=<*file*>]
 
 # DESCRIPTION
 
-Jgmenu is a small menu application for Linux/BSD, intended to be  
+jgmenu is a small menu application for Linux/BSD, intended to be  
 used with openbox and tint2. It has a number of helper-scripts and  
 wrappers. See *JGMENU_RUN*(1) for further details.  
 

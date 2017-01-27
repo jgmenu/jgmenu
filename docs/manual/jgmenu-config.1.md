@@ -4,7 +4,7 @@
 
 # NAME
 
-jgmenu-config - gets and sets Jgmenu options
+jgmenu-config - gets and sets jgmenu options
 
 # SYNOPSIS
 
@@ -25,7 +25,7 @@ Config options can be queried and set using this command.
 
 # CONFIGURATION FILE
 
-The Jgmenu configuration file contains a number of variables that  
+The jgmenu configuration file contains a number of variables that  
 affect its behavior. It is stored at
 
 $HOME/.config/jgmenu/jgmenurc

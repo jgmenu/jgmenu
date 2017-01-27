@@ -1,14 +1,14 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 13 January, 2016
+% 27 January, 2017
 
 # NAME
 
-The Jgmenu tutorial
+The jgmenu tutorial
 
 # INTRODUCTION
 
-This tutorial aims to explain the usage of Jgmenu through a set of  
+This tutorial aims to explain the usage of jgmenu through a set of  
 lessons.
 
 To keep things simple, when discussing XDG paths, only one location  
@@ -173,7 +173,7 @@ Lesson 6
 --------
 
 So far we have looked at producing a single "root" menu only.  
-Jgmenu understands a small amount of markup and enables submenus  
+jgmenu understands a small amount of markup and enables submenus  
 by ^tag() and ^checkout(). Try this:  
 
     cat <<EOF >menu.txt
@@ -209,7 +209,7 @@ categories in the following way:
 (normally in /usr/share/applications) without and categories  
 or directories.
 
-Jgmenu has a *search* capability. When a menu is open, just start  
+jgmenu has a *search* capability. When a menu is open, just start  
 typing to invoke a filter.
 
 Carrying on the comparison with dmenu, the equivalent can be achieved  

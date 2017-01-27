@@ -12,7 +12,7 @@
 
 # DESCRIPTION
 
-Jgmenu is a small menu application designed for Linux/BSD. It  
+jgmenu is a small menu application designed for Linux/BSD. It  
 consists of the jgmenu binary and a number of helper modules  
 written in C, python and shell. The `jgmenu_run` command is an  
 abstraction layer which hides the plumbing of components and  

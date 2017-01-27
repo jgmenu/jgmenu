@@ -45,3 +45,8 @@ jgmenu_run is a wrapper calling jgmenu-<command>
 It also helps keep $prefix/bin tidier by putting all the other scripts in
 $libexecdir.
 
+Grammar
+-------
+jgmenu is always written with a lowercase "j". It should be obvious from the  
+context if we refer to the entire application or just the binary file.
+
