@@ -11,12 +11,12 @@ jgmenu is a simple X11 menu intended to be used with tint2 and openbox.
   - It is a stand-alone, simple and contemporary-looking menu  
   - It is hackable with a clean, small code base  
   - Although originally written to be used with tint2 and openbox,  
-    it should run with others panels and window managers  
+    it runs with others panels and window managers  
   - It has a config file to set alignment, margins, padding, transparency, etc  
   - It does not depend on any toolkits such as GTK and Qt   
   - It uses cairo and pango to render the menu directly onto an X11 window  
   - It reads menu items from stdin in a similar way to dmenu and dzen2, but  
-    parse comma seperated fields for the name and command  
+    parses comma seperated fields for the name, command and icon  
 
 It has been compiled and runs on OpenBSD and various Linux distributions  
 including Bunsenlabs, Arch, Ubuntu, Alpine and Mint.
@@ -25,10 +25,13 @@ Screenshots
 -----------
 
 [![foo](http://i.imgur.com/4oprqYZt.png)](http://i.imgur.com/4oprqYZ.png)  
-jgmenu and tint2 using Numix-Circle icon theme
+jgmenu+tint2+openbox with Numix-Circle icon theme
 
 [![foo](http://i.imgur.com/QvBqI2Lt.png)](http://i.imgur.com/QvBqI2L.png)  
-jgmenu and tint2 using Papirus icon theme
+jgmenu+tint2+openbox with Papirus icon theme
+
+[![foo](http://i.imgur.com/4XzVBDOt.png)](http://i.imgur.com/4XzVBDO.png)  
+jgmenu on bunsenlabs (`jgmenu_run ob`)
 
 Build and Install
 -----------------

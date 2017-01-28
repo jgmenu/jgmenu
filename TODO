@@ -7,9 +7,6 @@ HIGH-LEVEL ROADMAP
 
   - Write XDG menu parser based on libmenu-cache (probably "jgmenu_run xdg2")
 
-  - Add item_border_color, menu_border_color to config.{h,c}
-    Currently borders use the fg colour which is often a bit "strong"
-
   - Add tint2 compatibility mode (i.e. read tint2rc file)
 	config.h variables should be set in the following order:
 	(i.e. bottom of list has higher precedence)
@@ -26,3 +23,5 @@ HIGH-LEVEL ROADMAP
   - Add support for "fixed-position" items such as icons/images and shapes
 
   - Add search box
+
+  - Consider "hover" features and "inline expansion" of menus
