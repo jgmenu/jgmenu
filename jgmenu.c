@@ -421,7 +421,7 @@ void draw_menu(void)
 
 		/* Draw submenu arrow */
 		if (config.arrow_show && ((!strncmp(p->t[1], "^checkout(", 10) &&
-		    			   strncmp(p->t[0], "..", 2)) ||
+					   strncmp(p->t[0], "..", 2)) ||
 					   !strncmp(p->t[1], "^sub(", 5)))
 			ui_insert_text(config.arrow_string, p->area.x + p->area.w -
 				       config.item_padding_x - (p->area.h / 3), p->area.y,
@@ -437,8 +437,8 @@ void draw_menu(void)
 
 		/* Draw Icons */
 		if (config.icon_size && p->icon) {
-			icon_y_coord = p->area.y + 1 + (config.item_height - config.icon_size) / 2;
-			ui_insert_image(p->icon, p->area.x, icon_y_coord, config.icon_size);
+			icon_y_coord = p->area.y + (config.item_height - config.icon_size) / 2;
+			ui_insert_image(p->icon, p->area.x + 1, icon_y_coord, config.icon_size);
 		}
 
 		if (p == menu.last)
