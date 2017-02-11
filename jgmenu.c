@@ -15,6 +15,7 @@
 #include <pthread.h>
 #include <sys/select.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <errno.h>
 #include <math.h>
 #include <sys/stat.h>
@@ -640,6 +641,23 @@ void checkout_parent(void)
 			  geo_get_menu_width(), geo_get_menu_height());
 }
 
+static void awake_menu(void)
+{
+	printf("Caught SIGUSR1 - awaking menu\n");
+	XMapWindow(ui->dpy, ui->win);
+	grabkeyboard();
+	grabpointer();
+	draw_menu();
+}
+
+static void hide_menu(void)
+{
+	fprintf(stderr, "info: hiding menu - jgmenu is still running\n");
+	XUngrabKeyboard(ui->dpy, CurrentTime);
+	XUngrabPointer(ui->dpy, CurrentTime);
+	XUnmapWindow(ui->dpy, ui->win);
+}
+
 void key_event(XKeyEvent *ev)
 {
 	char buf[32];
@@ -750,6 +768,9 @@ void key_event(XKeyEvent *ev)
 	case XK_F8:
 		geo_set_menu_halign("right");
 		move_window();
+		break;
+	case XK_F10:
+		hide_menu();
 		break;
 	case XK_BackSpace:
 		if (filter_needle_length())
@@ -1180,9 +1201,16 @@ void process_pointer_position(void)
 	oldy = mouse_coords.y;
 }
 
-/*
- * The select() call in the main loop is a better alternative than usleep().
- */
+static void signal_handler(int sig)
+{
+	int saved_errno;
+
+	saved_errno = errno;
+	if (write(pipe_fds[1], "1", 1) == -1 && errno != EAGAIN)
+		die("write");
+	errno = saved_errno;
+}
+
 void run(void)
 {
 	XEvent ev;
@@ -1192,6 +1220,7 @@ void run(void)
 	int ready, nfds, x11_fd;
 	fd_set readfds;
 	static int all_icons_have_been_requested;
+	struct sigaction sa;
 
 	/* for performance testing */
 	if (die_when_loaded && !config.icon_size)
@@ -1227,6 +1256,12 @@ void run(void)
 		pthread_create(&thread, NULL, load_icons, NULL);
 	}
 
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+	sa.sa_handler = signal_handler;
+	if (sigaction(SIGUSR1, &sa, NULL) == -1)
+		die("sigaction");
+
 	for (;;) {
 		FD_ZERO(&readfds);
 		FD_SET(x11_fd, &readfds);
@@ -1255,6 +1290,12 @@ void run(void)
 					if (errno == EAGAIN)
 						break;
 					die("error reading pipe");
+				}
+
+				/* Caught SIGUSR1 */
+				if (ch == '1') {
+					awake_menu();
+					continue;
 				}
 
 				/* 'x' means that icons have finished loading */
