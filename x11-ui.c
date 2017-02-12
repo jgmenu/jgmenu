@@ -205,7 +205,6 @@ void ui_create_window(int x, int y, int w, int h)
 	xim = XOpenIM(ui->dpy, NULL, NULL, NULL);
 	ui->xic = XCreateIC(xim, XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
 			    XNClientWindow, ui->win, XNFocusWindow, ui->win, NULL);
-	XMapRaised(ui->dpy, ui->win);
 
 	ui->gc = XCreateGC(ui->dpy, ui->win, 0, NULL);
 

@@ -29,7 +29,7 @@ fi
 test -e ./config.mk && . ./config.mk
 
 : ${desktop_file="jgmenu.desktop"}
-: ${JGMENU_DESKTOP_EXEC="jgmenu_run pmenu"}
+: ${JGMENU_DESKTOP_EXEC="killall -SIGUSR1 jgmenu || jgmenu_run pmenu"}
 : ${JGMENU_DESKTOP_ICON="start-here"}
 
 mkdir -p ${desktop_dir}

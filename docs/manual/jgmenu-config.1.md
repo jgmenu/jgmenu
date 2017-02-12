@@ -54,6 +54,21 @@ All space-related variables are in pixels unless otherwise specified
 
 ## Variables
 
+stay_alive  
+
+    If set to 1, the menu will "hide" rather than "exit" when the  
+    following events occur:  
+      - clicking on menu item  
+      - clicking outside the menu  
+      - pressing escape  
+    When in the hidden mode, a USR1 signal will "un-hide" the menu.  
+
+hide_on_startup  
+
+    If set to 1, jgmenu start in "hidden" mode. This is useful for  
+    starting jgmenu during the boot process and then sending a   
+    `killall -SIGUSR1 jgmenu` to show the menu.  
+
 menu_margin_x  
 menu_margin_y  
 menu_width  

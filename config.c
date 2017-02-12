@@ -11,6 +11,8 @@ struct config config;
 void config_set_defaults(void)
 {
 	config.spawn		 = 1;
+	config.stay_alive	 = 0;
+	config.hide_on_startup	 = 0;
 
 	config.menu_margin_x	 = 0;
 	config.menu_margin_y	 = 31;
@@ -60,7 +62,12 @@ static void process_line(char *line)
 	if (!parse_config_line(line, &option, &value))
 		return;
 
-	if (!strncmp(option, "menu_margin_x", 13))
+	if (!strncmp(option, "stay_alive", 10))
+		xatoi(&config.stay_alive, value, XATOI_NONNEG, "config.stay_alive");
+	else if (!strncmp(option, "hide_on_startup", 15))
+		xatoi(&config.hide_on_startup, value, XATOI_NONNEG, "config.hide_on_startup");
+
+	else if (!strncmp(option, "menu_margin_x", 13))
 		xatoi(&config.menu_margin_x, value, XATOI_NONNEG, "config.margin_x");
 	else if (!strncmp(option, "menu_margin_y", 13))
 		xatoi(&config.menu_margin_y, value, XATOI_NONNEG, "config.margin_y");

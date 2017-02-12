@@ -594,6 +594,29 @@ void checkout_submenu(char *tag)
 	set_submenu_width();
 }
 
+static void awake_menu(void)
+{
+	XMapWindow(ui->dpy, ui->win);
+	grabkeyboard();
+	grabpointer();
+	draw_menu();
+}
+
+static void hide_menu(void)
+{
+	XUngrabKeyboard(ui->dpy, CurrentTime);
+	XUngrabPointer(ui->dpy, CurrentTime);
+	XUnmapWindow(ui->dpy, ui->win);
+}
+
+void hide_or_exit(void)
+{
+	if (config.stay_alive)
+		hide_menu();
+	else
+		exit(0);
+}
+
 void action_cmd(char *cmd)
 {
 	char *p = NULL;
@@ -616,11 +639,11 @@ void action_cmd(char *cmd)
 		p = parse_caret_action(cmd, "^sub(");
 		if (p) {
 			spawn(p);
-			exit(0);
+			hide_or_exit();
 		}
 	} else {
 		spawn(cmd);
-		exit(0);
+		hide_or_exit();
 	}
 }
 
@@ -639,23 +662,6 @@ void checkout_parent(void)
 	checkout_submenu(menu.current_node->parent->tag);
 	XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
 			  geo_get_menu_width(), geo_get_menu_height());
-}
-
-static void awake_menu(void)
-{
-	printf("Caught SIGUSR1 - awaking menu\n");
-	XMapWindow(ui->dpy, ui->win);
-	grabkeyboard();
-	grabpointer();
-	draw_menu();
-}
-
-static void hide_menu(void)
-{
-	fprintf(stderr, "info: hiding menu - jgmenu is still running\n");
-	XUngrabKeyboard(ui->dpy, CurrentTime);
-	XUngrabPointer(ui->dpy, CurrentTime);
-	XUnmapWindow(ui->dpy, ui->win);
 }
 
 void key_event(XKeyEvent *ev)
@@ -677,7 +683,8 @@ void key_event(XKeyEvent *ev)
 		init_menuitem_coordinates();
 		break;
 	case XK_Escape:
-		exit(0);
+		hide_or_exit();
+		break;
 	case XK_Home:
 		menu.first = menu.filter_head;
 		menu.last = fill_from_top(menu.first);
@@ -726,7 +733,7 @@ void key_event(XKeyEvent *ev)
 			action_cmd(menu.sel->t[1]);
 		} else {
 			printf("%s", menu.sel->t[1]);
-			exit(0);
+			hide_or_exit();
 		}
 		break;
 	case XK_Down:
@@ -818,7 +825,7 @@ void mouse_event(XEvent *e)
 	     ev->y < geo_get_menu_y0() ||
 	     ev->y > geo_get_menu_y0() + geo_get_menu_height()) &&
 	     (ev->button != Button4 && ev->button != Button5)) {
-		exit(0);
+		hide_or_exit();
 	}
 
 	/* right-click */
@@ -856,7 +863,7 @@ void mouse_event(XEvent *e)
 					break;
 				}
 				puts(item->t[1]);
-				exit(0);
+				hide_or_exit();
 			}
 		}
 	}
@@ -1283,7 +1290,10 @@ void run(void)
 		if (ready == -1)
 			die("select()");
 
-		/* The icon thread has finished */
+		/*
+		 * Check if there is something in the selfpipe. E.g. the icon
+		 * thread has finished or we have caught a USR1 signal
+		 */
 		if (FD_ISSET(pipe_fds[0], &readfds) && ready) {
 			for (;;) {
 				if (read(pipe_fds[0], &ch, 1) == -1) {
@@ -1497,6 +1507,13 @@ int main(int argc, char *argv[])
 	filter_init();
 	update_filtered_list();
 	init_menuitem_coordinates();
+	if (config.hide_on_startup) {
+		fprintf(stderr, "info: menu started in 'hidden' mode; ");
+		fprintf(stderr, "show by `killall -SIGUSR1 jgmenu`\n");
+		hide_menu();
+	} else {
+		XMapRaised(ui->dpy, ui->win);
+	}
 	draw_menu();
 
 	run();

@@ -79,6 +79,43 @@ Alpha takes a decimal value from 0 to 100 where:
 All space\-related variables are in pixels unless otherwise specified
 .SS Variables
 .PP
+stay_alive
+.PP
+\ \ \ \ If set to 1, the menu will "hide" rather than "exit" when the
+.PD 0
+.P
+.PD
+\ \ \ \ following events occur:
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \- clicking on menu item
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \- clicking outside the menu
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \- pressing escape
+.PD 0
+.P
+.PD
+\ \ \ \ When in the hidden mode, a USR1 signal will "un\-hide" the menu.
+.PP
+hide_on_startup
+.PP
+\ \ \ \ If set to 1, jgmenu start in "hidden" mode.
+This is useful for
+.PD 0
+.P
+.PD
+\ \ \ \ starting\ jgmenu during the boot process and then sending a
+.PD 0
+.P
+.PD
+\ \ \ \ \f[C]killall\ \-SIGUSR1\ jgmenu\f[] to show the menu.
+.PP
 menu_margin_x
 .PD 0
 .P
