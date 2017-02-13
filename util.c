@@ -218,3 +218,16 @@ void xatoi(int *var, const char *value, int flags, const char *key)
 	else
 		*var = (int)res;
 }
+
+int multiple_processess_running(const char *prog)
+{
+	FILE *f;
+	char buf[4096];
+	int ret = 0;
+
+	f = popen("pgrep -x -c jgmenu", "r");
+	fgets(buf, sizeof(buf), f);
+	if (atoi(buf) > 1)
+		ret = 1;
+	return ret;
+}
