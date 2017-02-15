@@ -1477,6 +1477,9 @@ int main(int argc, char *argv[])
 			config.at_pointer = 1;
 		}
 
+	if (config.stay_alive && multiple_processess_running("jgmenu"))
+		die("an instance of 'jgmenu' is already running");
+
 	set_theme_and_font();
 
 	ui_init();
