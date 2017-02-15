@@ -1,4 +1,11 @@
+#include <signal.h>
+
 #include "util.h"
+
+static struct sigaction sigchld_action = {
+	.sa_handler = SIG_DFL,
+	.sa_flags = SA_NOCLDWAIT
+};
 
 void die(const char *err, ...)
 {
@@ -13,26 +20,37 @@ void die(const char *err, ...)
 	exit(1);
 }
 
+/* voids zombie processes */
+void set_no_child_wait(void)
+{
+	static int done;
+
+	if (done)
+		return;
+	sigaction(SIGCHLD, &sigchld_action, NULL);
+	done = 1;
+}
+
 void spawn(const char *arg)
 {
+	const char default_shell[] = "/bin/sh";
 	const char *shell = NULL;
 
-	shell = getenv("SHELL");
-	if (!shell)
-		shell = "/bin/sh";
 	if (!arg)
 		return;
-
-	/*
-	 * Double-fork idea from dzen2 (https://github.com/robm/dzen)
-	 * to avoid jgmenu being the parent of the new process.
-	 */
-	if (fork() == 0) {
-		if (fork() == 0) {
-			setsid();
-			execl(shell, shell, "-c", arg, (char *)NULL);
-		}
+	set_no_child_wait();
+	shell = getenv("SHELL");
+	if (!shell)
+		shell = default_shell;
+	switch (fork()) {
+	case -1:
+		die("unable to fork()");
+	case 0:
+		setsid();
+		execl(shell, shell, "-c", arg, (char *)NULL);
 		exit(0);
+	default:
+		break;
 	}
 }
 
