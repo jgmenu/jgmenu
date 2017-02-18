@@ -64,12 +64,24 @@ void grabkeyboard(void)
  */
 void grabpointer(void)
 {
-	XGrabPointer(ui->dpy, DefaultRootWindow(ui->dpy),
-		     False,	/* False gives (x,y) wrt root window. */
-		     ButtonPressMask | ButtonReleaseMask |
-		     PointerMotionMask | FocusChangeMask |
-		     EnterWindowMask | LeaveWindowMask,
-		     GrabModeAsync, GrabModeAsync, None, None, CurrentTime);
+	int i;
+
+	/*
+	 * Setting the third argument of XGrabPointer() to "False"
+	 * gives (x,y) wrt root window.
+	 */
+	for (i = 0; i < 1000; i++) {
+		if (XGrabPointer(ui->dpy, DefaultRootWindow(ui->dpy),
+				 False,
+				 ButtonPressMask | ButtonReleaseMask |
+				 PointerMotionMask | FocusChangeMask |
+				 EnterWindowMask | LeaveWindowMask,
+				 GrabModeAsync, GrabModeAsync, None, None,
+				 CurrentTime) == GrabSuccess)
+			return;
+		usleep(1000);
+	}
+	die("cannot grab pointer");
 }
 
 void ui_init_cairo(int canvas_width, int canvas_height, const char *font)
