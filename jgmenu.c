@@ -820,17 +820,20 @@ void mouse_event(XEvent *e)
 	mouse_coords.y -= MOUSE_FUDGE;
 
 	/* Die if mouse clicked outside window */
-	if ((ev->x < geo_get_menu_x0() ||
-	     ev->x > geo_get_menu_x0() + geo_get_menu_width() ||
-	     ev->y < geo_get_menu_y0() ||
-	     ev->y > geo_get_menu_y0() + geo_get_menu_height()) &&
-	     (ev->button != Button4 && ev->button != Button5)) {
+	if (ev->button == Button1 &&
+	     (ev->x < geo_get_menu_x0() ||
+	      ev->x > geo_get_menu_x0() + geo_get_menu_width() ||
+	      ev->y < geo_get_menu_y0() ||
+	      ev->y > geo_get_menu_y0() + geo_get_menu_height()))
 		hide_or_exit();
-	}
 
 	/* right-click */
-	if (ev->button == Button3)
-		die("Right clicked.");
+	if (ev->button == Button3) {
+		checkout_parent();
+		update_filtered_list();
+		init_menuitem_coordinates();
+		draw_menu();
+	}
 
 	/* scroll up */
 	if (ev->button == Button4 && menu.first != menu.filter_head) {
