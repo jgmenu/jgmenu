@@ -10,25 +10,38 @@ die () {
 }
 
 usage () {
-	printf "usage: jgmenu_run <command> [<args>]\n"
-	printf "\n"
-	printf "Top level convenience wrapper for jgmenu\n"
-	printf "\n"
+	printf "usage: jgmenu_run\n"
+	printf "       jgmenu_run <command> [<args>]\n\n"
+	printf "Top level convenience wrapper for jgmenu\n\n"
+	printf "If no 'command' or argument is specified, jgmenu_run does one of the following:\n"
+	printf "  - Shows the menu if an instance of jgmenu is already running\n"
+	printf "  - Starts jgmenu in 'stay-alive' mode (i.e. as a long-running application)\n"
+	printf "    using pmenu unless otherwise specified by 'csv_cmd' in jgmenurc\n\n"
 	printf "Valid 'commands' include:\n"
-	printf "    pmenu           Menu based on .directory and .desktop files\n"
-	printf "    xdg             Menu based on .menu file\n"
-	printf "    csv             Menu based on .csv file\n"
-	printf "    cache           Create icon cache\n"
-	printf "\n"
+	printf "    start           Start menu in 'hidden' mode\n"
+	printf "    re-start        Re-start jgmenu to read config file and load new apps\n"
+	printf "    pmenu           Run menu based on .desktop and .directory files\n"
+	printf "    xdg             Run menu based on .desktop, .directory and .menu files\n"
+	printf "    csv             Run menu based on .csv file\n"
+	printf "    cache           Create icon cache\n\n"
 	exit 0
 }
 
-
-
+# "jgmenu_run" with no arguments specified
 if test $# -lt 1
 then
-	usage
+	if ! killall -SIGUSR1 jgmenu >/dev/null 2>&1
+	then
+		cmd=$(jgmenu_run config --get csv_cmd)
+		test -z "${cmd}" && cmd="jgmenu_run parse-pmenu"
+
+		# Run it through a shell enable tilde and variable expansion
+		/bin/sh -c "${cmd} | jgmenu --stay-alive"
+	fi
+	exit 0
 fi
+
+test "$1" = "--help" && usage
 
 cmd="$1"
 cmds="jgmenu-${cmd} jgmenu-${cmd}.sh jgmenu-${cmd}.py"

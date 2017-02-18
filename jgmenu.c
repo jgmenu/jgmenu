@@ -1475,6 +1475,10 @@ int main(int argc, char *argv[])
 			die_when_loaded = 1;
 		} else if (!strncmp(argv[i], "--at-pointer", 12)) {
 			config.at_pointer = 1;
+		} else if (!strncmp(argv[i], "--stay-alive", 12)) {
+			config.stay_alive = 1;
+		} else if (!strncmp(argv[i], "--hide-on-startup", 17)) {
+			config.hide_on_startup = 1;
 		}
 
 	if (config.stay_alive && multiple_processess_running("jgmenu"))
@@ -1512,7 +1516,7 @@ int main(int argc, char *argv[])
 	init_menuitem_coordinates();
 	if (config.hide_on_startup) {
 		fprintf(stderr, "info: menu started in 'hidden' mode; ");
-		fprintf(stderr, "show by `killall -SIGUSR1 jgmenu`\n");
+		fprintf(stderr, "show by `jgmenu_run`\n");
 		hide_menu();
 	} else {
 		XMapRaised(ui->dpy, ui->win);

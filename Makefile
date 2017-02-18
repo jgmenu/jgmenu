@@ -16,7 +16,8 @@ include ./Makefile.inc
 
 SCRIPTS_SHELL  = jgmenu_run jgmenu-cache.sh jgmenu-pmenu.sh \
 		 jgmenu-csv.sh jgmenu-xdg.sh jgmenu-config.sh \
-		 jgmenu-init.sh jgmenu-ob.sh
+		 jgmenu-init.sh jgmenu-ob.sh jgmenu-start.sh \
+		 jgmenu-restart.sh
 
 SCRIPTS_PYTHON = jgmenu-parse-pmenu.py jgmenu-unity-hack.py
 
