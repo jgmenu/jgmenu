@@ -331,8 +331,8 @@ void icon_find(struct sbuf *name, int size)
 	requested_icon_size = size;
 
 	/* Search through $XDG_DATA_DIRS/icons/<theme>/ */
-	list_for_each_entry(s, &icon_dirs, list) {
-		list_for_each_entry(t, &theme_list, list) {
+	list_for_each_entry(t, &theme_list, list) {
+		list_for_each_entry(s, &icon_dirs, list) {
 			sbuf_cpy(&most_suitable_icon, "");
 			sbuf_cpy(&path, s->buf);
 			sbuf_addch(&path, '/');
