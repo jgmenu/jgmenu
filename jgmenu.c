@@ -31,7 +31,7 @@
 #include "filter.h"
 #include "list.h"
 
-#define DEBUG_ICONS_LOADED_NOTIFICATION 0
+#define DEBUG_ICONS_LOADED_NOTIFICATION 1
 
 #define MAX_FIELDS 3		/* nr fields to parse for each stdin line */
 

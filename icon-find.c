@@ -13,7 +13,7 @@
 #include "util.h"
 
 #define DEBUG_PRINT_FINAL_SELECTION 0
-#define DEBUG_PRINT_ALL_HITS 0		/* regardless of size */
+#define DEBUG_PRINT_ALL_HITS 1		/* regardless of size */
 #define DEBUG_PRINT_INHERITED_THEMES 0
 #define DEBUG_PRINT_ICON_DIRS 0
 
@@ -233,17 +233,8 @@ static void process_file(const char *fpath)
 		printf("\n");
 }
 
-static int ftw_filter(const char *fpath, const struct stat *sb, int typeflag)
-{
-	if (typeflag == FTW_F)
-		if (strstr(fpath, requested_icon_name))
-			process_file(fpath);
-
-	return 0;
-}
-
 /*
- * Alternative to ftw_filter for search of one directory only
+ * Alternative to ftw, does not call fstat on all files in the directory tree
  */
 int search_dir_for_file(const char *path, const char *file)
 {
@@ -251,17 +242,27 @@ int search_dir_for_file(const char *path, const char *file)
 	DIR *dp;
 	struct sbuf s;
 
+	if (DEBUG_PRINT_ALL_HITS)
+		fprintf(stderr, "  %s:%d:%s: searching %s for %s\n",
+				__FILE__, __LINE__, __FUNCTION__, path, file);
+
 	sbuf_init(&s);
 	dp = opendir(path);
 	if (!dp)
 		return 1;
 
 	while ((entry = readdir(dp))) {
-		if (strstr(entry->d_name, file)) {
-			sbuf_cpy(&s, path);
-			sbuf_addch(&s, '/');
-			sbuf_addstr(&s, entry->d_name);
-			process_file(s.buf);
+		sbuf_cpy(&s, path);
+		sbuf_addch(&s, '/');
+		sbuf_addstr(&s, entry->d_name);
+		if (entry->d_type == DT_DIR) {
+			if (entry->d_name[0] != '.') {
+				search_dir_for_file(s.buf, file);
+			}
+		} else if (entry->d_type == DT_REG || entry->d_type == DT_LNK) {
+			if (strstr(s.buf, file)) {
+				process_file(s.buf);
+			}
 		}
 	}
 
@@ -340,7 +341,10 @@ void icon_find(struct sbuf *name, int size)
 			base_dir_length = strlen(path.buf);
 			smallest_match = 0;
 
-			ftw(path.buf, ftw_filter, 32);
+			if (DEBUG_PRINT_ALL_HITS)
+				fprintf(stderr, "%s:%d:%s: searching directory tree %s for %s\n",
+						__FILE__, __LINE__, __FUNCTION__, path.buf, name->buf);
+			search_dir_for_file(path.buf, name->buf);
 
 			if (DEBUG_PRINT_FINAL_SELECTION && most_suitable_icon.len)
 				printf("OUTPUT: %s\n", most_suitable_icon.buf);

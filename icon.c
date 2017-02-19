@@ -21,7 +21,7 @@
 #include "sbuf.h"
 #include "xpm-loader.h"
 
-#define DEBUG_THEMES 0
+#define DEBUG_THEMES 1
 
 struct icon {
 	char *name;
@@ -110,6 +110,8 @@ void icon_set_name(const char *name)
 
 void icon_load(void)
 {
+	if (DEBUG_THEMES)
+		fprintf(stderr, "%s:%d %s:\n", __FILE__, __LINE__, __FUNCTION__);
 	struct icon *icon;
 	struct sbuf s;
 	static int first_load = 1;
