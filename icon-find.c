@@ -12,7 +12,7 @@
 #include "list.h"
 #include "util.h"
 
-#define DEBUG_PRINT_FINAL_SELECTION 0
+#define DEBUG_PRINT_FINAL_SELECTION 1
 #define DEBUG_PRINT_ALL_HITS 1		/* regardless of size */
 #define DEBUG_PRINT_INHERITED_THEMES 0
 #define DEBUG_PRINT_ICON_DIRS 0
@@ -62,7 +62,7 @@ static void get_parent_themes(struct list_head *parent_themes, const char *child
 
 			if (!strncmp(option, "Inherits", 8)) {
 				if (DEBUG_PRINT_INHERITED_THEMES)
-					printf("%s inherits %s\n", child_theme, value);
+					fprintf(stderr, "%s inherits %s\n", child_theme, value);
 				sbuf_split(parent_themes, value, ',');
 				fclose(fp);
 				goto out2;
@@ -127,10 +127,10 @@ void icon_find_print_themes(void)
 {
 	struct sbuf *t;
 
-	printf("THEMES: ");
+	fprintf(stderr, "THEMES: ");
 	list_for_each_entry(t, &theme_list, list)
-		printf("%s, ", t->buf);
-	printf("\n");
+		fprintf(stderr, "%s, ", t->buf);
+	fprintf(stderr, "\n");
 }
 
 static void init_theme_list(void)
@@ -149,7 +149,7 @@ static void init_icon_dirs(void)
 
 	if (DEBUG_PRINT_ICON_DIRS)
 		list_for_each_entry(path, &icon_dirs, list)
-			printf("%s\n", path->buf);
+			fprintf(stderr, "%s\n", path->buf);
 }
 
 static void init_pixmap_dirs(void)
@@ -214,23 +214,22 @@ static void process_file(const char *fpath)
 		return;
 
 	if (DEBUG_PRINT_ALL_HITS)
-		printf("%s - %d", fpath, size_of_this_one);
+		fprintf(stderr, "    %s:%d:%s: %s - %d\n",
+			   __FILE__, __LINE__, __FUNCTION__, fpath, size_of_this_one);
 
 	if (!smallest_match &&
 	    size_of_this_one >= requested_icon_size) {
 		smallest_match = size_of_this_one;
 		sbuf_cpy(&most_suitable_icon, fpath);
 		if (DEBUG_PRINT_ALL_HITS)
-			printf(" - Grab");
+			fprintf(stderr, "    %s:%d:%s: Grab\n", __FILE__, __LINE__, __FUNCTION__);
 	} else if (size_of_this_one < smallest_match &&
 		   size_of_this_one >= requested_icon_size) {
 		smallest_match = size_of_this_one;
 		sbuf_cpy(&most_suitable_icon, fpath);
 		if (DEBUG_PRINT_ALL_HITS)
-			printf(" - Grab");
+			fprintf(stderr, "    %s:%d:%s: Grab\n", __FILE__, __LINE__, __FUNCTION__);
 	}
-	if (DEBUG_PRINT_ALL_HITS)
-		printf("\n");
 }
 
 /*
@@ -347,7 +346,7 @@ void icon_find(struct sbuf *name, int size)
 			search_dir_for_file(path.buf, name->buf);
 
 			if (DEBUG_PRINT_FINAL_SELECTION && most_suitable_icon.len)
-				printf("OUTPUT: %s\n", most_suitable_icon.buf);
+				fprintf(stderr, "OUTPUT: %s\n", most_suitable_icon.buf);
 
 			if (most_suitable_icon.len)
 				goto out;
