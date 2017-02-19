@@ -25,6 +25,7 @@
 
 struct icon {
 	char *name;
+	struct sbuf path;
 	cairo_surface_t *surface;
 	struct list_head list;
 };
@@ -108,11 +109,23 @@ void icon_set_name(const char *name)
 	list_add(&icon->list, &icon_cache);
 }
 
+cairo_surface_t *load_cairo_icon(const char *path)
+{
+	if (strstr(path, ".png"))
+		return get_png_icon(path);
+	else if (strstr(path, ".svg"))
+		return get_svg_icon(path, icon_size);
+	else if (strstr(path, ".xpm"))
+		return get_xpm_icon(path);
+	return NULL;
+}
+
 void icon_load(void)
 {
 	if (DEBUG_THEMES)
 		fprintf(stderr, "%s:%d %s:\n", __FILE__, __LINE__, __FUNCTION__);
 	struct icon *icon;
+	struct icon_path *path, *tmp_path;
 	struct sbuf s;
 	static int first_load = 1;
 
@@ -127,23 +140,42 @@ void icon_load(void)
 
 	sbuf_init(&s);
 
+	struct list_head icon_paths;
+	INIT_LIST_HEAD(&icon_paths);
 	list_for_each_entry(icon, &icon_cache, list) {
-		if (!icon->name)
-			die("no icon name set\n");
-
+		sbuf_init(&icon->path);
+		if (icon->name)
+			sbuf_cpy(&icon->path, icon->name);
+		/* Do not lookup icons with a NULL name or a full path. */
+		if (!icon->name || strchr(icon->name, '/'))
+			continue;
 		/* icon_load is run twice, so let's not duplicate effort */
 		if (icon->surface)
 			continue;
+		path = xcalloc(1, sizeof(struct icon_path));
+		sbuf_init(&path->name);
+		sbuf_init(&path->path);
+		path->icon = icon;
+		sbuf_cpy(&path->name, icon->name);
+		list_add(&path->list, &icon_paths);
+	}
+	icon_find_all(&icon_paths, icon_size);
+	list_for_each_entry(path, &icon_paths, list) {
+		icon = (struct icon *)path->icon;
+		sbuf_cpy(&icon->path, path->path.buf);
+	}
+	list_for_each_entry_safe(path, tmp_path, &icon_paths, list) {
+		free(path->name.buf);
+		free(path->path.buf);
+		list_del(&path->list);
+		free(path);
+	}
 
-		sbuf_cpy(&s, icon->name);
-		icon_find(&s, icon_size);
-
-		if (strstr(s.buf, ".png"))
-			icon->surface = get_png_icon(s.buf);
-		else if (strstr(s.buf, ".svg"))
-			icon->surface = get_svg_icon(s.buf, icon_size);
-		else if (strstr(s.buf, ".xpm"))
-			icon->surface = get_xpm_icon(s.buf);
+	list_for_each_entry(icon, &icon_cache, list) {
+		/* icon_load is run twice, so let's not duplicate effort */
+		if (icon->surface)
+			continue;
+		icon->surface = load_cairo_icon(icon->path.buf);
 	}
 
 	free(s.buf);

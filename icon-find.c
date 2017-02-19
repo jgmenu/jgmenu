@@ -30,11 +30,9 @@ static struct list_head theme_list;
 static int has_been_inited;
 
 /* Variables used in the "find" algorithm */
-static char requested_icon_name[1024];
 static int  requested_icon_size;
 static struct sbuf most_suitable_icon;
 static int base_dir_length;
-static int smallest_match;
 
 static void get_parent_themes(struct list_head *parent_themes, const char *child_theme)
 {
@@ -205,7 +203,8 @@ static int parse_icon_size(const char *fpath)
 	return size;
 }
 
-static void process_file(const char *fpath)
+/* Like process_file, but without global variables (other than requested_icon_size). */
+static void process_file(const char *fpath, struct icon_path *item)
 {
 	int size_of_this_one = 0;
 
@@ -217,38 +216,44 @@ static void process_file(const char *fpath)
 		fprintf(stderr, "    %s:%d:%s: %s - %d\n",
 			   __FILE__, __LINE__, __FUNCTION__, fpath, size_of_this_one);
 
-	if (!smallest_match &&
-	    size_of_this_one >= requested_icon_size) {
-		smallest_match = size_of_this_one;
-		sbuf_cpy(&most_suitable_icon, fpath);
+	if (!item->smallest_match &&
+		size_of_this_one >= requested_icon_size) {
+		item->smallest_match = size_of_this_one;
+		sbuf_cpy(&item->path, fpath);
 		if (DEBUG_PRINT_ALL_HITS)
 			fprintf(stderr, "    %s:%d:%s: Grab\n", __FILE__, __LINE__, __FUNCTION__);
-	} else if (size_of_this_one < smallest_match &&
+	} else if (size_of_this_one < item->smallest_match &&
 		   size_of_this_one >= requested_icon_size) {
-		smallest_match = size_of_this_one;
-		sbuf_cpy(&most_suitable_icon, fpath);
+		item->smallest_match = size_of_this_one;
+		sbuf_cpy(&item->path, fpath);
 		if (DEBUG_PRINT_ALL_HITS)
 			fprintf(stderr, "    %s:%d:%s: Grab\n", __FILE__, __LINE__, __FUNCTION__);
 	}
 }
 
-/*
- * Alternative to ftw, does not call fstat on all files in the directory tree
- */
-int search_dir_for_file(const char *path, const char *file)
+int str_has_prefix(const char *str, const char *prefix)
+{
+	return strncmp(prefix, str, strlen(prefix)) == 0;
+}
+
+void search_dir_for_files(const char *path, struct list_head *files, int depth_limit)
 {
 	struct dirent *entry;
 	DIR *dp;
 	struct sbuf s;
+	struct icon_path *file;
+
+	if (!depth_limit)
+		return;
 
 	if (DEBUG_PRINT_ALL_HITS)
-		fprintf(stderr, "  %s:%d:%s: searching %s for %s\n",
-				__FILE__, __LINE__, __FUNCTION__, path, file);
+		fprintf(stderr, "  %s:%d:%s: searching %s for all icons\n",
+				__FILE__, __LINE__, __FUNCTION__, path);
 
 	sbuf_init(&s);
 	dp = opendir(path);
 	if (!dp)
-		return 1;
+		return;
 
 	while ((entry = readdir(dp))) {
 		sbuf_cpy(&s, path);
@@ -256,21 +261,24 @@ int search_dir_for_file(const char *path, const char *file)
 		sbuf_addstr(&s, entry->d_name);
 		if (entry->d_type == DT_DIR) {
 			if (entry->d_name[0] != '.') {
-				search_dir_for_file(s.buf, file);
+				search_dir_for_files(s.buf, files, depth_limit > 0 ? depth_limit - 1 : depth_limit);
 			}
 		} else if (entry->d_type == DT_REG || entry->d_type == DT_LNK) {
-			if (strstr(s.buf, file)) {
-				process_file(s.buf);
+			list_for_each_entry(file, files, list) {
+				if (!file->found && str_has_prefix(entry->d_name, file->name.buf)) {
+					process_file(s.buf, file);
+				}
 			}
 		}
 	}
 
 	closedir(dp);
-	return 0;
 }
 
 void icon_find_init(void)
 {
+	if (has_been_inited)
+		return;
 	init_icon_dirs();
 	init_pixmap_dirs();
 	init_theme_list();
@@ -278,6 +286,7 @@ void icon_find_init(void)
 	has_been_inited = 1;
 }
 
+/* Removes the extension. */
 void remove_pngsvgxpm_extensions(struct sbuf *name)
 {
 	char *ext;
@@ -295,60 +304,54 @@ void remove_pngsvgxpm_extensions(struct sbuf *name)
 	}
 }
 
-void icon_find(struct sbuf *name, int size)
+int all_icons_found(struct list_head *icons)
 {
+	int found = 1;
+	struct icon_path *icon;
+	list_for_each_entry(icon, icons, list) {
+		if (!icon->path.len) {
+			found = 0;
+		} else {
+			icon->found = 1;
+		}
+	}
+	return found;
+}
+
+void icon_find_all(struct list_head *icons, int size)
+{
+	struct icon_path *icon;
 	struct sbuf path;
 	struct sbuf *s, *t;
-	char *p;
 
-	if (!has_been_inited)
-		icon_find_init();
-
-	/*
-	 * Don't search for icon if path (absolute or relative)
-	 * has been specified.
-	 */
-	p = strchr(name->buf, '/');
-	if (p)
-		return;
+	icon_find_init();
 
 	/*
 	 * .desktop files should not specify file-extensions, but some do.
 	 * Themes use different file-formats, so it's best to remove them.
 	 */
-	remove_pngsvgxpm_extensions(name);
+	list_for_each_entry(icon, icons, list) {
+		remove_pngsvgxpm_extensions(&icon->name);
+		sbuf_addch(&icon->name, '.');
+	}
 
-	/*
-	 * Ensure we only find exact matches. E.g. if we search for "folder"
-	 * we don't want "folder-documents.png" returned.
-	 */
-	sbuf_prepend(name, "/");
-	sbuf_addch(name, '.');
-
-	sbuf_init(&path);
-	strcpy(requested_icon_name, name->buf);
 	requested_icon_size = size;
 
+	sbuf_init(&path);
 	/* Search through $XDG_DATA_DIRS/icons/<theme>/ */
 	list_for_each_entry(t, &theme_list, list) {
 		list_for_each_entry(s, &icon_dirs, list) {
-			sbuf_cpy(&most_suitable_icon, "");
 			sbuf_cpy(&path, s->buf);
 			sbuf_addch(&path, '/');
 			sbuf_addstr(&path, t->buf);
 
 			base_dir_length = strlen(path.buf);
-			smallest_match = 0;
-
 			if (DEBUG_PRINT_ALL_HITS)
-				fprintf(stderr, "%s:%d:%s: searching directory tree %s for %s\n",
-						__FILE__, __LINE__, __FUNCTION__, path.buf, name->buf);
-			search_dir_for_file(path.buf, name->buf);
+				fprintf(stderr, "%s:%d:%s: searching directory tree %s for all icons\n",
+						__FILE__, __LINE__, __FUNCTION__, path.buf);
+			search_dir_for_files(path.buf, icons, -1);
 
-			if (DEBUG_PRINT_FINAL_SELECTION && most_suitable_icon.len)
-				fprintf(stderr, "OUTPUT: %s\n", most_suitable_icon.buf);
-
-			if (most_suitable_icon.len)
+			if (all_icons_found(icons))
 				goto out;
 		}
 	}
@@ -357,23 +360,39 @@ void icon_find(struct sbuf *name, int size)
 	 * A small number of icons are stored in other places:
 	 *	- $XDG_DATA_DIRS/pixmaps/  (e.g. xpm icons)
 	 *	- $XDG_DATA_DIRS/icons/    (i.e. top level directory)
-	 *
-	 * For this search we remove the prepended '/'
 	 */
-	sbuf_shift_left(name, 1);
-	strcpy(requested_icon_name, name->buf);
-
 	list_for_each_entry(s, &icon_dirs, list)
-		search_dir_for_file(s->buf, requested_icon_name);
+		search_dir_for_files(s->buf, icons, 1);
 
-	if (most_suitable_icon.len)
+	if (all_icons_found(icons))
 		goto out;
 
 	list_for_each_entry(s, &pixmap_dirs, list)
-		search_dir_for_file(s->buf, requested_icon_name);
+		search_dir_for_files(s->buf, icons, 1);
 
 out:
-	sbuf_cpy(name, most_suitable_icon.buf);
 	free(path.buf);
-	sbuf_cpy(&most_suitable_icon, "");
+}
+
+void icon_find(struct sbuf *name, int size)
+{
+	struct icon_path *path;
+	struct list_head icon_paths;
+
+	if (strchr(name->buf, '/'))
+		return;
+
+	INIT_LIST_HEAD(&icon_paths);
+	path = xcalloc(1, sizeof(struct icon_path));
+	sbuf_init(&path->name);
+	sbuf_init(&path->path);
+	sbuf_cpy(&path->name, name->buf);
+	list_add(&path->list, &icon_paths);
+	icon_find_all(&icon_paths, size);
+	sbuf_cpy(name, path->path.buf);
+
+	free(path->name.buf);
+	free(path->path.buf);
+	list_del(&path->list);
+	free(path);
 }
