@@ -21,7 +21,7 @@
 #include "sbuf.h"
 #include "xpm-loader.h"
 
-#define DEBUG_THEMES 1
+#define DEBUG_THEMES 0
 
 struct icon {
 	char *name;

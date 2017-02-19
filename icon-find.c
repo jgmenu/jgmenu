@@ -12,8 +12,8 @@
 #include "list.h"
 #include "util.h"
 
-#define DEBUG_PRINT_FINAL_SELECTION 1
-#define DEBUG_PRINT_ALL_HITS 1		/* regardless of size */
+#define DEBUG_PRINT_FINAL_SELECTION 0
+#define DEBUG_PRINT_ALL_HITS 0		/* regardless of size */
 #define DEBUG_PRINT_INHERITED_THEMES 0
 #define DEBUG_PRINT_ICON_DIRS 0
 
