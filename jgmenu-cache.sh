@@ -2,7 +2,6 @@
 
 IFS="$(printf '\n\t')"
 
-
 die () {
 	printf "fatal: %s\n" "$1"
 	exit 1
@@ -106,8 +105,8 @@ create_symlinks () {
 		else
 			test ${verbose} = "t" && echo "[ CREATE  ] ${f}"
 			ln -s "$(jgmenu-icon-find --theme=${icon_theme} \
-				 --icon-size=${icon_size} ${f})" \
-			      ${1} >/dev/null 2>&1
+			   --icon-size=${icon_size} ${f} 2>/dev/null)" \
+				    ${1} >/dev/null 2>&1
 		fi
 	done
 }

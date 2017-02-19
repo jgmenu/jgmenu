@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <math.h>
 #include <sys/stat.h>
+#include <time.h>
 
 #include "x11-ui.h"
 #include "config.h"
@@ -31,7 +32,7 @@
 #include "filter.h"
 #include "list.h"
 
-#define DEBUG_ICONS_LOADED_NOTIFICATION 0
+#define DEBUG_ICONS_LOADED_NOTIFICATION 1
 
 #define MAX_FIELDS 3		/* nr fields to parse for each stdin line */
 
@@ -914,13 +915,27 @@ void dlist_append(struct item *item, struct item **list, struct item **last)
 	*last = item;
 }
 
+static double timespec_to_sec(struct timespec* ts)
+{
+	return (double)ts->tv_sec + (double)ts->tv_nsec / 1000000000.0;
+}
+
 /*
  * This function is loaded in the background under a new pthread
  * X11 is not thread-safe, so load_icons() must not call any X functions.
  */
 void *load_icons(void *arg)
 {
+	struct timespec ts_start;
+	struct timespec ts_end;
+	double duration;
+	clock_gettime(CLOCK_MONOTONIC, &ts_start);
 	icon_load();
+	clock_gettime(CLOCK_MONOTONIC, &ts_end);
+	if (DEBUG_ICONS_LOADED_NOTIFICATION) {
+		 duration = timespec_to_sec(&ts_end) - timespec_to_sec(&ts_start);
+		 fprintf(stderr, "Icons loaded in %f seconds\n", duration);
+	}
 
 	if (write(pipe_fds[1], "x", 1) == -1)
 		die("error writing to icon_pipe");
