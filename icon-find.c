@@ -219,7 +219,7 @@ static void process_file(const char *fpath)
 	if (!smallest_match &&
 	    size_of_this_one >= requested_icon_size) {
 		smallest_match = size_of_this_one;
-		sbuf_addstr(&most_suitable_icon, fpath);
+		sbuf_cpy(&most_suitable_icon, fpath);
 		if (DEBUG_PRINT_ALL_HITS)
 			printf(" - Grab");
 	} else if (size_of_this_one < smallest_match &&
