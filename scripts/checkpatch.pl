@@ -5573,13 +5573,13 @@ sub process {
 		}
 
 # check for gcc specific __FUNCTION__
-		if ($line =~ /\b__FUNCTION__\b/) {
-			if (WARN("USE_FUNC",
-				 "__func__ should be used instead of gcc specific __FUNCTION__\n"  . $herecurr) &&
-			    $fix) {
-				$fixed[$fixlinenr] =~ s/\b__FUNCTION__\b/__func__/g;
-			}
-		}
+#		if ($line =~ /\b__FUNCTION__\b/) {
+#			if (WARN("USE_FUNC",
+#				 "__func__ should be used instead of gcc specific __FUNCTION__\n"  . $herecurr) &&
+#			    $fix) {
+#				$fixed[$fixlinenr] =~ s/\b__FUNCTION__\b/__func__/g;
+#			}
+#		}
 
 # check for uses of __DATE__, __TIME__, __TIMESTAMP__
 		while ($line =~ /\b(__(?:DATE|TIME|TIMESTAMP)__)\b/g) {
