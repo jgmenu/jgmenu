@@ -31,6 +31,7 @@
 #include "config-xs.h"
 #include "filter.h"
 #include "list.h"
+#include "lockfile.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 1
 
@@ -1447,6 +1448,7 @@ int main(int argc, char *argv[])
 	struct stat sb;
 	char *checkout_arg = NULL;
 
+	lockfile_init();
 	config_set_defaults();
 	menu.title = NULL;
 	menu.current_node = NULL;
@@ -1498,9 +1500,6 @@ int main(int argc, char *argv[])
 		} else if (!strncmp(argv[i], "--hide-on-startup", 17)) {
 			config.hide_on_startup = 1;
 		}
-
-	if (config.stay_alive && multiple_processess_running("jgmenu"))
-		die("an instance of 'jgmenu' is already running");
 
 	set_theme_and_font();
 

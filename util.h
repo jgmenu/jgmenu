@@ -26,6 +26,5 @@ int hex_to_dec(char c);
 int parse_hexstr(char *hex, double *rgba);
 int get_first_num_from_str(const char *s);
 void xatoi(int *var, const char *value, int flags, const char *key);
-int multiple_processess_running(const char *prog);
 
 #endif /* UTIL_H */

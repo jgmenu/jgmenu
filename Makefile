@@ -26,17 +26,13 @@ PROGS   += jgmenu-parse-ob
 
 OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
         icon.o xpm-loader.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o \
-	config-xs.o filter.o compat.o hashmap.o
+	config-xs.o filter.o compat.o hashmap.o lockfile.o
 
 LIB_H = $(shell find . -name '*.h' -print)
 
 JGMENU_LIB = libjgmenu.a
 
 all: $(PROGS)
-	@echo""
-	@echo 'WARNING: The Makefile has been refactored since v0.4.4'
-	@echo 'Please remove all files in $$prefix/bin before doing a'
-	@echo "'make install'"
 	@echo ""
 
 $(PROGS): % : $(OBJS) %.o
