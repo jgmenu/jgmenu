@@ -122,13 +122,14 @@ cairo_surface_t *load_cairo_icon(const char *path)
 
 void icon_load(void)
 {
-	if (DEBUG_THEMES)
-		fprintf(stderr, "%s:%d %s:\n", __FILE__, __LINE__, __FUNCTION__);
 	struct icon *icon;
 	struct icon_path *path, *tmp_path;
 	struct sbuf s;
 	static int first_load = 1;
+	struct list_head icon_paths;
 
+	if (DEBUG_THEMES)
+		fprintf(stderr, "%s:%d %s:\n", __FILE__, __LINE__, __FUNCTION__);
 	if (first_load) {
 		icon_find_init();
 		icon_find_add_theme(icon_theme.buf);
@@ -140,7 +141,6 @@ void icon_load(void)
 
 	sbuf_init(&s);
 
-	struct list_head icon_paths;
 	INIT_LIST_HEAD(&icon_paths);
 	list_for_each_entry(icon, &icon_cache, list) {
 		sbuf_init(&icon->path);

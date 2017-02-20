@@ -364,7 +364,6 @@ static void print_desktop_files(void)
 	list_for_each_entry(f, &desktop_files_all, full_list)
 		if (f->name)
 			printf("%s,%s,%s\n", f->name, f->exec, f->icon);
-
 }
 
 int main(int argc, char **argv)

@@ -823,10 +823,10 @@ void mouse_event(XEvent *e)
 
 	/* Die if mouse clicked outside window */
 	if (ev->button == Button1 &&
-	     (ev->x < geo_get_menu_x0() ||
-	      ev->x > geo_get_menu_x0() + geo_get_menu_width() ||
-	      ev->y < geo_get_menu_y0() ||
-	      ev->y > geo_get_menu_y0() + geo_get_menu_height()))
+	    (ev->x < geo_get_menu_x0() ||
+	    ev->x > geo_get_menu_x0() + geo_get_menu_width() ||
+	    ev->y < geo_get_menu_y0() ||
+	    ev->y > geo_get_menu_y0() + geo_get_menu_height()))
 		hide_or_exit();
 
 	/* right-click */
@@ -916,7 +916,7 @@ void dlist_append(struct item *item, struct item **list, struct item **last)
 	*last = item;
 }
 
-static double timespec_to_sec(struct timespec* ts)
+static double timespec_to_sec(struct timespec *ts)
 {
 	return (double)ts->tv_sec + (double)ts->tv_nsec / 1000000000.0;
 }
@@ -930,12 +930,13 @@ void *load_icons(void *arg)
 	struct timespec ts_start;
 	struct timespec ts_end;
 	double duration;
+
 	clock_gettime(CLOCK_MONOTONIC, &ts_start);
 	icon_load();
 	clock_gettime(CLOCK_MONOTONIC, &ts_end);
 	if (DEBUG_ICONS_LOADED_NOTIFICATION) {
-		 duration = timespec_to_sec(&ts_end) - timespec_to_sec(&ts_start);
-		 fprintf(stderr, "Icons loaded in %f seconds\n", duration);
+		duration = timespec_to_sec(&ts_end) - timespec_to_sec(&ts_start);
+		fprintf(stderr, "Icons loaded in %f seconds\n", duration);
 	}
 
 	if (write(pipe_fds[1], "x", 1) == -1)

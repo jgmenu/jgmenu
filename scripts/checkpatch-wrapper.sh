@@ -105,12 +105,14 @@ do
 			-e 'CamelCase.*XKeyEvent' \
 			-e 'CamelCase.*XMapRaised' \
 			-e 'CamelCase.*XMatchVisualInfo' \
+			-e 'CamelCase.*xmlChar' \
 			-e 'CamelCase.*xmlCleanupParser' \
 			-e 'CamelCase.*xmlDoc' \
 			-e 'CamelCase.*xmlDocGetRootElement' \
 			-e 'CamelCase.*xmlFreeDoc' \
 			-e 'CamelCase.*xmlNode' \
 			-e 'CamelCase.*xmlReadFile' \
+			-e 'CamelCase.*xmlGetProp' \
 			-e 'CamelCase.*XNClientWindow' \
 			-e 'CamelCase.*XNextEvent' \
 			-e 'CamelCase.*XNFocusWindow' \

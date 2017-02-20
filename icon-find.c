@@ -31,7 +31,6 @@ static int has_been_inited;
 
 /* Variables used in the "find" algorithm */
 static int  requested_icon_size;
-static struct sbuf most_suitable_icon;
 static int base_dir_length;
 
 static void get_parent_themes(struct list_head *parent_themes, const char *child_theme)
@@ -214,20 +213,22 @@ static void process_file(const char *fpath, struct icon_path *item)
 
 	if (DEBUG_PRINT_ALL_HITS)
 		fprintf(stderr, "    %s:%d:%s: %s - %d\n",
-			   __FILE__, __LINE__, __FUNCTION__, fpath, size_of_this_one);
+			__FILE__, __LINE__, __FUNCTION__, fpath,
+			size_of_this_one);
 
-	if (!item->smallest_match &&
-		size_of_this_one >= requested_icon_size) {
+	if (!item->smallest_match && size_of_this_one >= requested_icon_size) {
 		item->smallest_match = size_of_this_one;
 		sbuf_cpy(&item->path, fpath);
 		if (DEBUG_PRINT_ALL_HITS)
-			fprintf(stderr, "    %s:%d:%s: Grab\n", __FILE__, __LINE__, __FUNCTION__);
+			fprintf(stderr, "    %s:%d:%s: Grab\n",
+				__FILE__, __LINE__, __FUNCTION__);
 	} else if (size_of_this_one < item->smallest_match &&
 		   size_of_this_one >= requested_icon_size) {
 		item->smallest_match = size_of_this_one;
 		sbuf_cpy(&item->path, fpath);
 		if (DEBUG_PRINT_ALL_HITS)
-			fprintf(stderr, "    %s:%d:%s: Grab\n", __FILE__, __LINE__, __FUNCTION__);
+			fprintf(stderr, "    %s:%d:%s: Grab\n",
+				__FILE__, __LINE__, __FUNCTION__);
 	}
 }
 
@@ -248,7 +249,7 @@ void search_dir_for_files(const char *path, struct list_head *files, int depth_l
 
 	if (DEBUG_PRINT_ALL_HITS)
 		fprintf(stderr, "  %s:%d:%s: searching %s for all icons\n",
-				__FILE__, __LINE__, __FUNCTION__, path);
+			__FILE__, __LINE__, __FUNCTION__, path);
 
 	sbuf_init(&s);
 	dp = opendir(path);
@@ -260,14 +261,12 @@ void search_dir_for_files(const char *path, struct list_head *files, int depth_l
 		sbuf_addch(&s, '/');
 		sbuf_addstr(&s, entry->d_name);
 		if (entry->d_type == DT_DIR) {
-			if (entry->d_name[0] != '.') {
+			if (entry->d_name[0] != '.')
 				search_dir_for_files(s.buf, files, depth_limit > 0 ? depth_limit - 1 : depth_limit);
-			}
 		} else if (entry->d_type == DT_REG || entry->d_type == DT_LNK) {
 			list_for_each_entry(file, files, list) {
-				if (!file->found && str_has_prefix(entry->d_name, file->name.buf)) {
+				if (!file->found && str_has_prefix(entry->d_name, file->name.buf))
 					process_file(s.buf, file);
-				}
 			}
 		}
 	}
@@ -282,7 +281,6 @@ void icon_find_init(void)
 	init_icon_dirs();
 	init_pixmap_dirs();
 	init_theme_list();
-	sbuf_init(&most_suitable_icon);
 	has_been_inited = 1;
 }
 
@@ -308,12 +306,12 @@ int all_icons_found(struct list_head *icons)
 {
 	int found = 1;
 	struct icon_path *icon;
+
 	list_for_each_entry(icon, icons, list) {
-		if (!icon->path.len) {
+		if (!icon->path.len)
 			found = 0;
-		} else {
+		else
 			icon->found = 1;
-		}
 	}
 	return found;
 }
@@ -348,7 +346,7 @@ void icon_find_all(struct list_head *icons, int size)
 			base_dir_length = strlen(path.buf);
 			if (DEBUG_PRINT_ALL_HITS)
 				fprintf(stderr, "%s:%d:%s: searching directory tree %s for all icons\n",
-						__FILE__, __LINE__, __FUNCTION__, path.buf);
+					__FILE__, __LINE__, __FUNCTION__, path.buf);
 			search_dir_for_files(path.buf, icons, -1);
 
 			if (all_icons_found(icons))
