@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 31 December, 2016
+% 21 February, 2017
 
 # NAME
 
@@ -9,7 +9,8 @@ jgmenu - A simple X11 menu
 # SYNOPSIS
 
 jgmenu \[\--no-spawn] \[\--checkout=<*tag*>] \[\--config-file=<*file*>]  
-       \[\--icon-size=<*size*>] \[\--at-pointer]
+       \[\--icon-size=<*size*>] \[\--at-pointer] \[\--stay-alive]  
+       \[\--hide-on-startup]
 
 # DESCRIPTION
 
@@ -65,14 +66,31 @@ start-up times:
 \--at-pointer  
 :   launch menu at mouse pointer
 
+\--stay-alive
+:   make jgmenu a long-running application. In this mode, the  
+       normal "exit events" such as selecing an item or clicking  
+       outside the menu, will hide the menu. A hidden menu is awoken  
+       by running the `jgmenu_run` command.
+
+\--hide-on-startup
+:   start menu is hidden state
+
+# USER INTERFACE
+The user interface is generally pretty intuitive. Here follow mouse  
+and keyboard events which are not so obvious:  
+
+  - Right-click - return to parent menu  
+  - Backspace - return to parent menu  
+  - F10 - quit even if in `stay_alive` mode  
+
 # CONFIGURATION SETTINGS
 The default configuration file location is ~/.config/jgmenu/jgmenurc
 
 # SEE ALSO
 
-`JGMENU_RUN` (1)  
-`JGMENUTUTORIAL` (7)
-`JGMENU-CONFIG` (1)  
+`JGMENU_RUN(1)`  
+`JGMENUTUTORIAL(7)`  
+`JGMENU-CONFIG(1)`  
 
 
 The jgmenu source code and documentation can be downloaded from  
