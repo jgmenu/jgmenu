@@ -268,12 +268,20 @@ def main():
   parser.add_argument("--locale", help="Use a custom locale (e.g. 'en_US.UTF-8'; available locales can be shown " +
                                        "by running 'locale -a')", default="")
   args = parser.parse_args()
+  if args.append_file:
+    append_file = args.append_file
+  else:
+    append_file = os.getenv("HOME") + "/.config/jgmenu/append.csv"
+  if args.prepend_file:
+    prepend_file = args.prepend_file
+  else:
+    prepend_file = os.getenv("HOME") + "/.config/jgmenu/prepend.csv"
   try:
     locale.setlocale(locale.LC_ALL, args.locale)
   except:
     print("Warning: setting locale failed! Use an available locale as listed by 'locale -a'.", file=sys.stderr)
   setup_gettext()
-  create_menu(args.append_file, args.prepend_file)
+  create_menu(append_file, prepend_file)
 
 if __name__ == '__main__':
   main()
