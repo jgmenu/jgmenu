@@ -33,7 +33,7 @@
 #include "list.h"
 #include "lockfile.h"
 
-#define DEBUG_ICONS_LOADED_NOTIFICATION 1
+#define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
 #define MAX_FIELDS 3		/* nr fields to parse for each stdin line */
 
@@ -779,7 +779,8 @@ void key_event(XKeyEvent *ev)
 		move_window();
 		break;
 	case XK_F10:
-		hide_menu();
+		/* force exit even if in 'stay_alive' mode */
+		exit(0);
 		break;
 	case XK_BackSpace:
 		if (filter_needle_length())
