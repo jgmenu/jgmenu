@@ -1,6 +1,6 @@
 % JGMENU_RUN(1)  
 % Johan Malm  
-% 31 September, 2016
+% 21 February, 2017
 
 # NAME
 
@@ -8,6 +8,7 @@
 
 # SYNOPSIS
 
+`jgmenu_run`  
 `jgmenu_run` <*command*> \[<*args*>]
 
 # DESCRIPTION
@@ -18,22 +19,34 @@ written in C, python and shell. The `jgmenu_run` command is an
 abstraction layer which hides the plumbing of components and  
 creates a simpler user interface.
 
+If no 'command' or argument is specified, `jgmenu_run` shows the  
+menu if an instance is already running or else starts jgmenu in  
+'stay-alive' mode (i.e. as a long-running application), using pmenu  
+unless otherwise specified by `csv_cmd` in jgmenurc.
+
 # COMMANDS
 
 Some commands have their own man-pages. These can be opened by  
-`man jgmenu-<command>`. If a specific man-page does not exist,  
-use the `--help` option for usage details.
+`man jgmenu-<command>`. If such a man-page does not exist, use  
+the `--help` option for usage details.
 
 Valid `commands` include:
 
 ### High-level commands
+
+start  
+        Start the menu is hidden mode
+
+restart  
+        Re-start the menu in order to read the config file or load  
+        newly installed apps.
 
 pmenu  
         Menu based on .directory and .desktop files
 
 xdg  
         Menu based on .menu, .directory and .desktop files  
-        See JGMENUTUTORIAL (7) (lesson 2) for further details on the  
+        See JGMENUTUTORIAL(7) (lesson 2) for further details on the  
         differences between "pmenu" and "xdg"
 
 csv  
@@ -77,15 +90,12 @@ jgmenu_run cache
 To run the menu:
 
 ```
-jgmenu_run pmenu
+jgmenu_run
 ```
 
 # SEE ALSO
 
-`JGMENU` (1)  
-`JGMENUTUTORIAL` (7)  
-`JGMENU-CACHE` (1)  
-`JGMENU-CONFIG` (1)  
-
-
-
+`JGMENU(1)`  
+`JGMENUTUTORIAL(7)`  
+`JGMENU-CACHE(1)`  
+`JGMENU-CONFIG(1)`  

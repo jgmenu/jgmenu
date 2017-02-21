@@ -1,0 +1,40 @@
+jgmenu v0.5 release notes
+=========================
+
+Updates since v0.4.5
+--------------------
+
+  - Added support for the following:
+	- items with different heights (e.g. ^sep())
+	- automatic detection of menu width
+	- separator with text
+    
+  - Added these config options:
+	- color_menu_border
+	- color_sel_border
+	- sep_height
+	- color_sep_fg
+	- csv_cmd
+    
+  - This is the first time we've done some regression. The following
+    config items were removed:
+	- max_items (does not make sense with variable height)
+	- min_items (as above)
+
+  - Added support for "stay_alive" mode and added config options
+	- stay_alive
+	- hide_on_startup
+    and associated command line arguments
+	- --stay-alive
+	- --hide-on-startup
+
+  - Significantly improved icon lookup performance (thanks o9000)
+
+  - Simplified jgmenu_run usage. If no argument is specified,
+    jgmenu_run now does one of the following:
+	- Shows the menu if an instance of jgmenu is already running
+	- Starts jgmenu in 'stay-alive' mode (i.e. as a long-running
+	  application) using pmenu unless otherwise specified by
+	  'csv_cmd' in jgmenurc
+
+  - Added the "start" and "restart" commands to jgmenu_run

@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 27 January, 2017
+% 21 February, 2017
 
 # NAME
 
@@ -33,26 +33,37 @@ ignore it for the purposes of running one of the lessons, just use
 
 # LESSONS
 
-Lesson 1
+Lesson 0
 --------
 
-After installing jgmenu, you can get going quickly by taking the  
-following steps:
+After installing jgmenu, you can get going quickly by running:  
+
+    jgmenu_run
+
+Lesson 1
+--------
 
 Create a config file by running:
 
     jgmenu_run init
 
 Edit the config file (~/.config/jgmenu/jgmenurc) to suit your  
-system. You will most likely need to review the icon-theme, alignment  
-and margins.
+system. You will most likely need to review the icon-theme,  
+alignment and margins.  
 
-Create icon cache using the command:
+Read JGMENU-CONFIG(1) for further information.  
+
+Some icons themes are slow to load on start-up. In order to improve  
+start-up times it is recommended to create icon-cache (although it  
+is not necessary). Create icon cache using the command:  
 
     jgmenu_run cache
 
-There are many ways to run the menu, but the following is a simple way  
-to get started. It will display a Linux/BSD system menu:
+There are many ways to run the menu. In lesson 0, you saw jgmenu  
+as a long running application.  As we go through the lesson we will  
+run jgmenu as a short-lived applications. This means that it starts  
+from scratch every time it is called. The following is a simple way  
+to get started. It will display a Linux/BSD system menu.
 
     jgmenu_run pmenu
 

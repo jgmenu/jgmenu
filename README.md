@@ -6,12 +6,15 @@ Introduction
 
 jgmenu is a simple X11 menu intended to be used with tint2 and openbox.
 
+To run the menu, see lesson 0 and 1 in
+[JGMENUTUTORIAL(7)](docs/manual/jgmenututorial.7.md)  
+
 ### Key Features
 
   - It is a stand-alone, simple and contemporary-looking menu  
   - It is hackable with a clean, small code base  
-  - Although originally written to be used with tint2 and openbox,  
-    it runs with others panels and window managers  
+  - Although written to be used with tint2 and openbox, it runs with other  
+    panels and window managers  
   - It has a config file to set alignment, margins, padding, transparency, etc  
   - It does not depend on any toolkits such as GTK and Qt   
   - It uses cairo and pango to render the menu directly onto an X11 window  
@@ -59,9 +62,6 @@ make clean
 make
 make install
 ```
-
-To run the menu, see the "getting started" section below, or read  
-[JGMENUTUTORIAL (7)](docs/manual/jgmenututorial.7.md)  
 
 A user has written some alternative installation notes
 [here](https://forums.bunsenlabs.org/viewtopic.php?id=3100)  
@@ -123,11 +123,10 @@ Dependencies
 
 ### Run-time dependencies:
 
-  - A *menu* package (for example gnome-menus or lxmenu-data)  
-    Required for "`jgmenu_run pmenu`" and "`jgmenu_run xdg`"  
+  - A *menu* package (for example gnome-menus or lxmenu-data) is required  
+    for "`jgmenu_run pmenu`" and "`jgmenu_run xdg`"  
 
-  - python3  
-    Required by "`jgmenu_run pmenu`"
+  - python3 is required by "`jgmenu_run pmenu`"
 
 To enable menu transparency, you need to have a Composite Manager such as  
 `compton`. Most Desktop Environments already have one installed.
@@ -138,47 +137,6 @@ To build the man pages, you need to have `pandoc` installed. However, as many
 users do not have this package, the man pages are commited in the git repo.  
 (i.e. you only need pandoc if you want to contribute to or change the man  
 pages.)
-
-
-Getting started (after installation)
-------------------------------------
-
-Create a configuration file using the following command:
-
-```bash
-jgmenu_run init
-```
-
-Edit the configuration file (`~/.config/jgmenu/jgmenurc`) to suit your setup.  
-Typically you will need to review the following as a minimum:  
-
-  - icon theme
-  - alignment
-  - margins
-
-Read [JGMENU-CONFIG (1)](docs/manual/jgmenu-config.1.md) and the example
-[jgmenurc](docs/jgmenurc) for further  
-information.  
-
-Some icons themes are slow to load on start-up. In order to improve start-up  
-times it is recommended to create icon-cache (although it is not necessary).  
-Create icon-cache using the following command:
-
-```bash
-jgmenu_run cache
-```
-
-There are many ways to run jgmenu. To get started, try:
-
-```bash
-jgmenu_run pmenu
-```
-
-For further details, see the man pages:
-
-  - [JGMENUTUTORIAL (7)](docs/manual/jgmenututorial.7.md)
-  - [JGMENU_RUN (1)](docs/manual/jgmenu_run.1.md)
-  - [JGMENU (1)](docs/manual/jgmenu.1.md)
 
 Desktop File and Panel Integration
 ----------------------------------
@@ -220,20 +178,24 @@ If you are using Ubuntu's Unity, prepend the `Exec` command with
 for 5+ seconds after the menu has been opened. For example:
 
 ```bash
-JGMENU_DESKTOP_EXEC="env JGMENU_UNITY=1 jgmenu_run csv"
+JGMENU_DESKTOP_EXEC="env JGMENU_UNITY=1 jgmenu_run"
 ```
 
 See also
 --------
 
+### Man pages
+
+  - [JGMENUTUTORIAL(7)](docs/manual/jgmenututorial.7.md)
+  - [JGMENU_RUN(1)](docs/manual/jgmenu_run.1.md)
+  - [JGMENU(1)](docs/manual/jgmenu.1.md)
+  - [JGMENU-CONFIG(1)](docs/manual/jgmenu-config.1.md)
+  - [JGMENU-PMENU(1)](docs/manual/jgmenu-pmenu.1.md)
+  - [JGMENU-XDG(1)](docs/manual/jgmenu-xdg.1.md)
+  - [JGMENU-CSV(1)](docs/manual/jgmenu-csv.1.md)
+  - [JGMENU-CACHE(1)](docs/manual/jgmenu-cache.1.md)
+
 ### Other files in repo
 
-  - [Road Map](TODO)
-
-### Other man pages
-
-  - `jgmenu_run` [pmenu](docs/manual/jgmenu-pmenu.1.md)
-  - `jgmenu_run` [xdg](docs/manual/jgmenu-xdg.1.md)
-  - `jgmenu_run` [csv](docs/manual/jgmenu-csv.1.md)
-  - `jgmenu_run` [cache](docs/manual/jgmenu-cache.1.md)
-
+  - [Road Map](TODO)  
+  - [jgmenurc](docs/jgmenurc)  

@@ -1,6 +1,6 @@
 % JGMENU-CONFIG(1)  
 % Johan Malm  
-% 10 December, 2016
+% 21 February, 2017
 
 # NAME
 
@@ -68,6 +68,13 @@ hide_on_startup
     If set to 1, jgmenu start in "hidden" mode. This is useful for  
     starting jgmenu during the boot process and then sending a   
     `killall -SIGUSR1 jgmenu` to show the menu.  
+
+csv_cmd  
+    defines the command to produce the jgmenu flavoured CSV for  
+    `jgmenu_run` (when run without argument). Examples include:  
+
+    csv_cmd = jgmenu_run parse-ob  
+    csv_cmd = cat ~/mymenu.csv  
 
 menu_margin_x  
 menu_margin_y  

@@ -12,6 +12,7 @@ populate_tmp_file () {
 cat <<'EOF' >>"${tmp_jgmenurc}"
 stay_alive	  = 0
 hide_on_startup	  = 0
+csv_cmd		  = jgmenu_run parse-pmenu
 menu_margin_x	  = 0
 menu_margin_y	  = 32
 menu_width	  = 200
