@@ -81,11 +81,9 @@ struct node {
 struct menu {
 	struct item *head;	/* first item in linked list		  */
 	struct item *tail;	/* last item in linked list		  */
-	int nr_items_in_list;
 
 	struct item *subhead;	/* first item in checked out submenu	  */
 	struct item *subtail;	/* last item in checked out submenu	  */
-	int nr_items_in_submenu;
 
 	struct item *first;	/* first visible item			  */
 	struct item *last;	/* last visible item			  */
@@ -569,10 +567,6 @@ void checkout_submenu(char *tag)
 		if (!menu.last)
 			die("menu.last pointer not set");
 	}
-
-	menu.nr_items_in_submenu = 1;
-	for (item = menu.first; item && item->t[0] && item != menu.last; item++)
-		menu.nr_items_in_submenu++;
 
 	/*
 	 * menu.subhead remembers where the submenu starts.
@@ -1072,27 +1066,6 @@ void build_tree(void)
 		walk_tagged_items(get_item_from_tag(item->tag), NULL);
 }
 
-void debug_print(void)
-{
-	struct node *n;
-	struct item *i;
-
-	list_for_each_entry(n, &menu.nodes, node) {
-		fprintf(stderr, "[debug_print] n->tag=%s", n->tag);
-		if (n->parent && n->parent->tag)
-			fprintf(stderr, "; parent=%s", n->parent->tag);
-		fprintf(stderr, "\nITEMS:");
-
-		list_for_each_entry(i, &n->items, list) {
-			if (!i)
-				die("[debug_print] no item");
-			fprintf(stderr, "%s:", i->t[1]);
-		}
-
-		fprintf(stderr, "\n---\n");
-	}
-}
-
 void read_stdin(void)
 {
 	char buf[BUFSIZ], *p;
@@ -1130,13 +1103,9 @@ void read_stdin(void)
 
 	/*
 	 * Using "menu.head[i].t[0] = NULL" as a dynamic array end-marker
-	 * rather than menu.nr_items_in_list or menu.tail.
+	 * rather than menu.tail.
 	 */
 	menu.head[i].t[0] = NULL;
-
-	/* menu.nr_items_in_list holds the number of items in the dynamic array */
-	/* Not currently using menu.nr_items_in_list in code except to define the cairo buf */
-	menu.nr_items_in_list = i;
 
 	/* Create doubly-linked list */
 	menu.tail = NULL;
@@ -1168,7 +1137,6 @@ void read_stdin(void)
 
 	build_tree();
 	hang_items_off_nodes();
-	/* debug_print(); */
 }
 
 void init_pipe_flags(void)
