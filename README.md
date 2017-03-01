@@ -123,7 +123,7 @@ Dependencies
 
 ### Run-time dependencies:
 
-  - A *menu* package (for example gnome-menus or lxmenu-data) is required  
+  - A *menu* package (for example one of lxmenu-data, libgarcon-common or gnome-menus) is required
     for "`jgmenu_run pmenu`" and "`jgmenu_run xdg`"  
 
   - python3 is required by "`jgmenu_run pmenu`"
