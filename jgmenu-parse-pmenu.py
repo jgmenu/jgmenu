@@ -12,6 +12,159 @@ import locale
 import os
 import sys
 
+strings = {
+  "Back": "Back",
+  "Back[am]": "ወደ ኋላ",
+  "Back[ar]": "إلى الخلف",
+  "Back[ast]": "Atrás",
+  "Back[be]": "Назад",
+  "Back[bg]": "Назад",
+  "Back[bn]": "পূর্ববর্তী",
+  "Back[ca]": "Endarrere",
+  "Back[cs]": "Zpět",
+  "Back[da]": "Tilbage",
+  "Back[de]": "_Zurück",
+  "Back[el]": "Πίσω",
+  "Back[eo]": "Malantaŭen",
+  "Back[es]": "Atrás",
+  "Back[et]": "Tagasi",
+  "Back[eu]": "Atzera",
+  "Back[fa_IR]": "بازگشت",
+  "Back[fi]": "Edellinen",
+  "Back[fr]": "Précédent",
+  "Back[gl]": "Recuar",
+  "Back[he]": "אחורה",
+  "Back[hr]": "Natrag",
+  "Back[hu]": "Vissza",
+  "Back[id]": "Kembali",
+  "Back[is]": "Til baka",
+  "Back[it]": "Indietro",
+  "Back[ja]": "戻る",
+  "Back[kk]": "Артқа",
+  "Back[ko]": "뒤로",
+  "Back[lt]": "Atgal",
+  "Back[lv]": "Atpakaļ",
+  "Back[ms]": "Undur",
+  "Back[nb]": "Tilbake",
+  "Back[nl]": "Terug",
+  "Back[nn]": "Tilbake",
+  "Back[oc]": "Precedent",
+  "Back[pa]": "ਪਿੱਛੇ",
+  "Back[pl]": "Wstecz",
+  "Back[pt_BR]": "Voltar",
+  "Back[pt]": "Recuar",
+  "Back[ro]": "Înapoi",
+  "Back[ru]": "Назад",
+  "Back[sk]": "Späť",
+  "Back[sq]": "Prapa",
+  "Back[sr]": "Назад",
+  "Back[sv]": "Bakåt",
+  "Back[te]": "వెనుకకు",
+  "Back[th]": "ถอยกลับ",
+  "Back[tr]": "Geri",
+  "Back[ug]": "ئارقىسىغا",
+  "Back[uk]": "Назад",
+  "Back[ur_PK]": "پیچھے",
+  "Back[ur]": "پیچھے",
+  "Back[vi]": "Quay lui",
+  "Back[zh_CN]": "后退",
+  "Back[zh_HK]": "往前",
+  "Back[zh_TW]": "往前",
+  "Other": "Other",
+  "Other[af]": "Ander",
+  "Other[ar]": "أخرى",
+  "Other[as]": "অন্যান্য",
+  "Other[ast]": "Otres",
+  "Other[be]": "Іншыя",
+  "Other[be@latin]": "Inšyja",
+  "Other[bg]": "Други",
+  "Other[bn]": "অন্যান্য",
+  "Other[bn_IN]": "অন্যান্য",
+  "Other[br]": "All",
+  "Other[ca]": "Altres",
+  "Other[cs]": "Ostatní",
+  "Other[cy]": "Eraill",
+  "Other[da]": "Andre",
+  "Other[de]": "Sonstige",
+  "Other[dz]": "གཞན།",
+  "Other[el]": "Άλλα",
+  "Other[en_CA]": "Other",
+  "Other[en_GB]": "Other",
+  "Other[eo]": "Alia",
+  "Other[es]": "Otras",
+  "Other[es_VE]": "Otras",
+  "Other[et]": "Muu",
+  "Other[eu]": "Bestelakoak",
+  "Other[fa]": "غیره",
+  "Other[fi]": "Muut",
+  "Other[fr]": "Autre",
+  "Other[frp]": "Autres",
+  "Other[fur]": "Altri",
+  "Other[ga]": "Eile",
+  "Other[gl]": "Outros",
+  "Other[gn]": "Amboae",
+  "Other[gu]": "અન્ય",
+  "Other[he]": "אחר",
+  "Other[hi]": "अन्य",
+  "Other[hr]": "Ostalo",
+  "Other[hu]": "Egyéb",
+  "Other[hy]": "Այլ",
+  "Other[id]": "Lainnya",
+  "Other[io]": "Altra",
+  "Other[is]": "Aðrir",
+  "Other[it]": "Altro",
+  "Other[ja]": "その他",
+  "Other[ka]": "სხვა",
+  "Other[kk]": "Басқалар",
+  "Other[ko]": "기타",
+  "Other[ku]": "Yên din",
+  "Other[ky]": "Башкалар",
+  "Other[lt]": "Kitos",
+  "Other[lv]": "Citas programmas",
+  "Other[mai]": "आन",
+  "Other[mg]": "Hafa",
+  "Other[mk]": "Други",
+  "Other[ml]": "മറ്റുളളവ",
+  "Other[mn]": "Бусад",
+  "Other[mr]": "अन्य",
+  "Other[ms]": "Lain-lain",
+  "Other[nb]": "Annet",
+  "Other[ne]": "अन्य",
+  "Other[nl]": "Overig",
+  "Other[nn]": "Andre",
+  "Other[oc]": "Autre",
+  "Other[or]": "ଅନ୍ଯାନ୍ଯ",
+  "Other[pa]": "ਹੋਰ",
+  "Other[pl]": "Inne",
+  "Other[ps]": "نور",
+  "Other[pt]": "Outras",
+  "Other[pt_BR]": "Outros",
+  "Other[ro]": "Altele",
+  "Other[ru]": "Прочие",
+  "Other[rw]": "Ikindi",
+  "Other[si]": "වෙනත්",
+  "Other[sk]": "Ostatné",
+  "Other[sl]": "Drugo",
+  "Other[sq]": "Tjetër",
+  "Other[sr]": "Остало",
+  "Other[sr@latin]": "Ostalo",
+  "Other[sv]": "Övriga",
+  "Other[ta]": "மற்றவை",
+  "Other[te]": "ఇతర",
+  "Other[th]": "อื่นๆ",
+  "Other[tr]": "Diğer",
+  "Other[ug]": "باشقىلار",
+  "Other[uk]": "Інші",
+  "Other[ur]": "دیگر",
+  "Other[ur_PK]": "دیگر",
+  "Other[uz@cyrillic]": "Бошқа",
+  "Other[vi]": "Khác",
+  "Other[xh]": "Ezinye",
+  "Other[zh_CN]": "其它",
+  "Other[zh_HK]": "其它",
+  "Other[zh_TW]": "其它"
+}
+
 # Computes a list of the current locale names, in most specific to least specific order.
 # The empty string is always the last element.
 def get_current_locale_names():
@@ -105,7 +258,7 @@ def load_categories():
         if "_pmenu_raw_Name" in entry and "Type" in entry and entry["Type"] == "Directory":
           categories[normalize_category(entry["_pmenu_raw_Name"])[-1]] = entry
   if "Other" not in categories:
-    categories["Other"] = {"Name": "Other", "Icon": "applications-other", "_path": "auto-generated"}
+    categories["Other"] = {"Name": strings["Other"], "Icon": "applications-other", "_path": "auto-generated"}
   return categories
 
 
@@ -242,7 +395,7 @@ def create_menu(arg_append_file, arg_prepend_file):
     print("")
     print("#", category["_path"])
     print("submenu,^tag(" + category["Name"] + ")")
-    print("go back,^checkout(pmenu),folder")
+    print(strings["Back"] + ",^checkout(pmenu),folder")
     for app in tree[c]:
       icon = app["Icon"] if "Icon" in app else "application-x-executable"
       print("#", app["_path"])
@@ -264,6 +417,7 @@ def setup_gettext():
       return s
 
 def main():
+  global strings
   parser = argparse.ArgumentParser(prog="jgmenu_run parse-pmenu")
   parser.add_argument("--append-file", help="Path to menu file to append to the root menu", metavar="FILE")
   parser.add_argument("--prepend-file", help="Path to menu file to prepend to the root menu", metavar="FILE")
@@ -283,6 +437,7 @@ def main():
   except:
     print("Warning: setting locale failed! Use an available locale as listed by 'locale -a'.", file=sys.stderr)
   setup_gettext()
+  strings = internationalized(strings)
   create_menu(append_file, prepend_file)
 
 if __name__ == '__main__':
