@@ -40,6 +40,8 @@
 #define MOUSE_FUDGE 3		/* Pointer vertical offset		  */
 				/* Not sure why I need this		  */
 
+void checkout_root(void);
+
 static pthread_t thread;	/* worker thread for loading icons	  */
 static int pipe_fds[2];		/* pipe to communicate between threads	  */
 static int die_when_loaded;	/* Used for performance testing		  */
@@ -592,6 +594,7 @@ void checkout_submenu(char *tag)
 
 static void awake_menu(void)
 {
+	checkout_root();
 	XMapWindow(ui->dpy, ui->win);
 	grabkeyboard();
 	grabpointer();
@@ -658,6 +661,15 @@ void checkout_parent(void)
 	checkout_submenu(menu.current_node->parent->tag);
 	XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
 			  geo_get_menu_width(), geo_get_menu_height());
+}
+
+void checkout_root(void)
+{
+	while (menu.current_node->parent)
+		menu.current_node = menu.current_node->parent;
+	checkout_submenu(menu.current_node->tag);
+	XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
+	      geo_get_menu_width(), geo_get_menu_height());
 }
 
 void key_event(XKeyEvent *ev)
