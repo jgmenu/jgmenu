@@ -103,7 +103,7 @@ def load_categories():
       for filename in filenames:
         entry = read_desktop_entry(os.path.join(dirpath, filename))
         if "_pmenu_raw_Name" in entry and "Type" in entry and entry["Type"] == "Directory":
-          categories[entry["_pmenu_raw_Name"]] = entry
+          categories[normalize_category(entry["_pmenu_raw_Name"])[-1]] = entry
   if "Other" not in categories:
     categories["Other"] = {"Name": "Other", "Icon": "applications-other", "_path": "auto-generated"}
   return categories
