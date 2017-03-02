@@ -667,7 +667,14 @@ void key_event(XKeyEvent *ev)
 		init_menuitem_coordinates();
 		break;
 	case XK_Escape:
-		hide_or_exit();
+		if (filter_needle_length()) {
+			filter_reset();
+			update_filtered_list();
+			init_menuitem_coordinates();
+			draw_menu();
+		} else {
+			hide_or_exit();
+		}
 		break;
 	case XK_Home:
 		if (filter_head() == &empty_item)
