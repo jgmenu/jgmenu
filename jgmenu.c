@@ -37,16 +37,13 @@
 
 #define MAX_FIELDS 3		/* nr fields to parse for each stdin line */
 
-#define MOUSE_FUDGE 3		/* Pointer vertical offset		  */
-				/* Not sure why I need this		  */
-
 static pthread_t thread;	/* worker thread for loading icons	  */
-static int pipe_fds[2];		/* pipe to communicate between threads	  */
+static int pipe_fds[2];		/* talk between threads + catch signals   */
 static int die_when_loaded;	/* Used for performance testing		  */
 
 struct item {
 	char *t[MAX_FIELDS];
-	char *tag;			/* MOVED TO node */
+	char *tag;
 	struct area area;
 	cairo_surface_t *icon;
 	int selectable;
@@ -75,29 +72,25 @@ struct node {
  *
  * *first and *last point to the first/last visible menu items (i.e. what can
  * pysically be seen on the screen.)
- * The "number of visible menu items" is not a variable in the menu struct,
- * but can be got by calling geo_get_nr_visible_items().
  */
 struct menu {
-	struct item *head;	/* first item in linked list		  */
-	struct item *tail;	/* last item in linked list		  */
+	struct item *head;	 /* first item in linked list		  */
+	struct item *tail;	 /* last item in linked list		  */
 
-	struct item *subhead;	/* first item in checked out submenu	  */
-	struct item *subtail;	/* last item in checked out submenu	  */
-
-	struct item *first;	/* first visible item			  */
-	struct item *last;	/* last visible item			  */
-	struct item *sel;	/* currently selected item		  */
-
-	struct item *filter_head;
-	struct item *filter_tail;
+	struct item *subhead;	 /* first item in checked out submenu	  */
+	struct item *subtail;	 /* last item in checked out submenu	  */
+	struct item *first;	 /* first visible item			  */
+	struct item *last;	 /* last visible item			  */
+	struct item *sel;	 /* currently selected item		  */
 
 	char *title;
-	struct node *current_node;
 
-	struct list_head master;
-	struct list_head filter;
-	struct list_head nodes;
+	/* These two lists are the core building blocks of the code	  */
+	struct list_head master; /* all items				  */
+	struct list_head filter; /* items to be displayed in menu	  */
+
+	struct list_head nodes;	 /* hierarchical structure of tags	  */
+	struct node *current_node;
 };
 
 struct menu menu;
@@ -127,15 +120,14 @@ void usage(void)
 	exit(0);
 }
 
-int get_nr_items(void)
+struct item *filter_head(void)
 {
-	int i = 0;
-	struct item *item;
+	return list_first_entry_or_null(&menu.filter, struct item, filter);
+}
 
-	list_for_each_entry(item, &menu.filter, filter)
-		++i;
-
-	return i;
+struct item *filter_tail(void)
+{
+	return list_last_entry(&menu.filter, struct item, filter);
 }
 
 void step_back(struct item **ptr, int nr)
@@ -197,7 +189,7 @@ struct item *next_selectable(struct item *cur, int *isoutside)
 	struct item *p = cur;
 
 	*isoutside = 0;
-	while (p != menu.filter_tail) {
+	while (p != filter_tail()) {
 		if (p == menu.last)
 			*isoutside = 1;
 		step_fwd(&p, 1);
@@ -214,7 +206,7 @@ struct item *prev_selectable(struct item *cur, int *isoutside)
 	struct item *p = cur;
 
 	*isoutside = 0;
-	while (p != menu.filter_head) {
+	while (p != filter_head()) {
 		if (p == menu.first)
 			*isoutside = 1;
 		step_back(&p, 1);
@@ -255,19 +247,15 @@ void update_filtered_list(void)
 		}
 	}
 
-	menu.filter_head = list_first_entry_or_null(&menu.filter, struct item, filter);
-	if (!menu.filter_head) {
+	if (!filter_head()) {
 		list_add_tail(&empty_item.filter, &menu.filter);
-		menu.filter_tail = &empty_item;
-		menu.filter_head = &empty_item;
 		menu.first = &empty_item;
 		menu.last = &empty_item;
 		menu.sel = &empty_item;
 		return;
 	}
 
-	menu.filter_tail = list_last_entry(&menu.filter, struct item, filter);
-	menu.first = menu.filter_head;
+	menu.first = filter_head();
 	menu.last = fill_from_top(menu.first);
 
 	/* FIXME: change this to something more sophisticated */
@@ -368,14 +356,7 @@ void draw_item_text(struct item *p)
 	if (config.icon_size)
 		text_x_coord += config.icon_size + config.item_padding_x;
 
-	if (strncmp(p->t[1], "^checkout(", 10) &&
-	    strncmp(p->t[1], "^sub(", 5) &&
-	    strncmp(p->t[0], "..", 2) &&
-	    !is_prog(p->t[1]))
-		/* Set color for programs not available in $PATH */
-		ui_insert_text(p->t[0], text_x_coord, p->area.y,
-			       p->area.h, config.color_noprog_fg);
-	else if (p == menu.sel)
+	if (p == menu.sel)
 		ui_insert_text(p->t[0], text_x_coord, p->area.y,
 			       p->area.h, config.color_sel_fg);
 	else
@@ -515,30 +496,27 @@ void set_submenu_height(void)
 	geo_set_menu_height_from_itemarea_height(h);
 }
 
-/*
- * Sets *menu.first and *menu.last pointing to the beginnning and end of
- * the submenu
- */
 void checkout_submenu(char *tag)
 {
 	struct item *item;
 	char *tagtok = "^tag(";
 
-	menu.first = NULL;
+	menu.subhead = NULL;
 	menu.title = NULL;
 
+	/* Find head of submenu */
 	if (!tag) {
 		menu.current_node = list_first_entry_or_null(&menu.nodes, struct node, node);
-		menu.first = menu.head;
+		menu.subhead = menu.head;
 	} else {
 		menu.current_node = get_node_from_tag(tag);
 		list_for_each_entry(item, &menu.master, master) {
 			if (item->tag && !strncmp(item->tag, tag, strlen(tag))) {
 				menu.title = item->t[0];
 				if (item->next)
-					menu.first = item + 1;
+					menu.subhead = item + 1;
 				else
-					menu.first = NULL;
+					menu.subhead = NULL;
 				break;
 			}
 		}
@@ -546,37 +524,32 @@ void checkout_submenu(char *tag)
 		/* If ^checkout() called without associated ^tag() */
 		if (!menu.title)
 			die("cannot find ^tag(%s)", tag);
-		if (!menu.first)
-			die("menu.first not set. Menu has no content");
+		if (!menu.subhead)
+			die("menu.subhead not set. Menu has no content");
 	}
 
-	menu.last = NULL;
+	/* Find tail of submenu */
+	menu.subtail = NULL;
 
-	if (!menu.first->next) {
-		menu.last = menu.first;
+	if (!menu.subhead->next) {
+		menu.subtail = menu.subhead;
 	} else {
-		item = menu.first;
+		item = menu.subhead;
 
-		while (!menu.last && item && item->t[0]) {
+		while (!menu.subtail && item && item->t[0]) {
 			if (!item->next || !strncmp(item->next->t[1], tagtok, strlen(tagtok)))
-				menu.last = item;
+				menu.subtail = item;
 			else
 				item++;
 		}
 
-		if (!menu.last)
-			die("menu.last pointer not set");
+		if (!menu.subtail)
+			die("menu.subtail pointer not set");
 	}
 
-	/*
-	 * menu.subhead remembers where the submenu starts.
-	 * menu.first will change with scrolling
-	 */
-	/* FIXME - subhead and subtail should be used above for first/last
-	 * only initiated at the end of this function
-	 */
-	menu.subhead = menu.first;
-	menu.subtail = menu.last;
+	/* DELETE SOON */
+	menu.first = menu.subhead;
+	menu.last = menu.subtail;
 
 	menu.sel = NULL;
 	/* menu.sel gets set in updated_filtered_list() */
@@ -685,7 +658,9 @@ void key_event(XKeyEvent *ev)
 		return;
 	switch (ksym) {
 	case XK_End:
-		menu.last = menu.filter_tail;
+		if (filter_head() == &empty_item)
+			break;
+		menu.last = filter_tail();
 		menu.first = fill_from_bottom(menu.last);
 		menu.sel = menu.last;
 		init_menuitem_coordinates();
@@ -694,13 +669,16 @@ void key_event(XKeyEvent *ev)
 		hide_or_exit();
 		break;
 	case XK_Home:
-		menu.first = menu.filter_head;
+		if (filter_head() == &empty_item)
+			break;
+		menu.first = filter_head();
 		menu.last = fill_from_top(menu.first);
 		menu.sel = menu.first;
 		init_menuitem_coordinates();
 		break;
 	case XK_Up:
-		if (menu.sel == menu.filter_head)
+		if (filter_head() == &empty_item ||
+		    menu.sel == filter_head())
 			break;
 		menu.sel = prev_selectable(menu.sel, &isoutside);
 		if (isoutside) {
@@ -710,11 +688,13 @@ void key_event(XKeyEvent *ev)
 		init_menuitem_coordinates();
 		break;
 	case XK_Next:	/* PageDown */
+		if (filter_head() == &empty_item)
+			break;
 		menu.first = menu.last;
-		if (menu.first != menu.filter_tail)
+		if (menu.first != filter_tail())
 			step_fwd(&menu.first, 1);
 		menu.last = fill_from_top(menu.first);
-		if (menu.last == menu.filter_tail)
+		if (menu.last == filter_tail())
 			menu.first = fill_from_bottom(menu.last);
 		init_menuitem_coordinates();
 		menu.sel = menu.last;
@@ -722,11 +702,13 @@ void key_event(XKeyEvent *ev)
 			menu.sel = prev_selectable(menu.last, &isoutside);
 		break;
 	case XK_Prior:	/* PageUp */
+		if (filter_head() == &empty_item)
+			break;
 		menu.last = menu.first;
-		if (menu.last != menu.filter_head)
+		if (menu.last != filter_head())
 			step_back(&menu.last, 1);
 		menu.first = fill_from_bottom(menu.last);
-		if (menu.first == menu.filter_head)
+		if (menu.first == filter_head())
 			menu.last = fill_from_top(menu.first);
 		init_menuitem_coordinates();
 		menu.sel = menu.first;
@@ -745,7 +727,8 @@ void key_event(XKeyEvent *ev)
 		}
 		break;
 	case XK_Down:
-		if (menu.sel == menu.filter_tail)
+		if (filter_head() == &empty_item ||
+		    menu.sel == filter_tail())
 			break;
 		menu.sel = next_selectable(menu.sel, &isoutside);
 		if (isoutside) {
@@ -819,6 +802,8 @@ struct point mousexy(void)
 	return coords;
 }
 
+/* Pointer vertical offset (not sure why this is needed) */
+#define MOUSE_FUDGE 3
 void mouse_event(XEvent *e)
 {
 	struct item *item;
@@ -845,7 +830,7 @@ void mouse_event(XEvent *e)
 	}
 
 	/* scroll up */
-	if (ev->button == Button4 && menu.first != menu.filter_head) {
+	if (ev->button == Button4 && menu.first != filter_head()) {
 		step_back(&menu.first, 1);
 		menu.last = fill_from_top(menu.first);
 		step_back(&menu.sel, 1);
@@ -855,7 +840,7 @@ void mouse_event(XEvent *e)
 	}
 
 	/* scroll down */
-	if (ev->button == Button5 && menu.last != menu.filter_tail) {
+	if (ev->button == Button5 && menu.last != filter_tail()) {
 		step_fwd(&menu.last, 1);
 		menu.first = fill_from_bottom(menu.last);
 		step_fwd(&menu.sel, 1);
@@ -1115,7 +1100,6 @@ void read_stdin(void)
 
 	/*
 	 * Using "menu.head[i].t[0] = NULL" as a dynamic array end-marker
-	 * rather than menu.tail.
 	 */
 	menu.head[i].t[0] = NULL;
 
