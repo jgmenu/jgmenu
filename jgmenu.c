@@ -599,6 +599,15 @@ void hide_or_exit(void)
 		exit(0);
 }
 
+void checkout_parent(void)
+{
+	if (!menu.current_node->parent)
+		return;
+	checkout_submenu(menu.current_node->parent->tag);
+	XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
+			  geo_get_menu_width(), geo_get_menu_height());
+}
+
 void action_cmd(char *cmd)
 {
 	char *p = NULL;
@@ -608,21 +617,26 @@ void action_cmd(char *cmd)
 
 	if (!strncmp(cmd, "^checkout(", 10)) {
 		p = parse_caret_action(cmd, "^checkout(");
-		if (p) {
-			checkout_submenu(p);
-			/* menu height has changed - need to redraw window */
-			XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
-					  geo_get_menu_width(), geo_get_menu_height());
-			update_filtered_list();
-			init_menuitem_coordinates();
-			draw_menu();
-		}
+		if (!p)
+			return;
+		checkout_submenu(p);
+		/* menu height has changed - need to redraw window */
+		XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
+				  geo_get_menu_width(), geo_get_menu_height());
+		update_filtered_list();
+		init_menuitem_coordinates();
+		draw_menu();
 	} else if (!strncmp(cmd, "^sub(", 5)) {
 		p = parse_caret_action(cmd, "^sub(");
-		if (p) {
-			spawn(p);
-			hide_or_exit();
-		}
+		if (!p)
+			return;
+		spawn(p);
+		hide_or_exit();
+	} else if (!strncmp(cmd, "^back(", 6)) {
+		checkout_parent();
+		update_filtered_list();
+		init_menuitem_coordinates();
+		draw_menu();
 	} else {
 		spawn(cmd);
 		hide_or_exit();
@@ -635,15 +649,6 @@ void move_window(void)
 			  geo_get_menu_y0(), geo_get_menu_width(),
 			  geo_get_menu_height());
 	draw_menu();
-}
-
-void checkout_parent(void)
-{
-	if (!menu.current_node->parent)
-		return;
-	checkout_submenu(menu.current_node->parent->tag);
-	XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
-			  geo_get_menu_width(), geo_get_menu_height());
 }
 
 void key_event(XKeyEvent *ev)
