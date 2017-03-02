@@ -395,7 +395,7 @@ def create_menu(arg_append_file, arg_prepend_file):
     print("")
     print("#", category["_path"])
     print("submenu,^tag(" + category["Name"] + ")")
-    print(strings["Back"] + ",^checkout(pmenu),folder")
+    print(strings["Back"] + ",^back(),go-previous")
     for app in tree[c]:
       icon = app["Icon"] if "Icon" in app else "application-x-executable"
       print("#", app["_path"])
