@@ -6,6 +6,7 @@
 void filter_init(void);
 void filter_addstr(const char *str, size_t n);
 void filter_backspace(void);
+void filter_reset(void);
 int filter_needle_length(void);
 int filter_ismatch(const char *haystack);
 

@@ -32,11 +32,17 @@ void filter_backspace(void)
 {
 	if (!has_been_inited)
 		die("filter has not been initiated");
-
 	if (needle.len > 0) {
 		needle.buf[--needle.len] = '\0';
 		printf("%s\n", needle.buf);
 	}
+}
+
+void filter_reset(void)
+{
+	if (!has_been_inited)
+		die("filter has not been initiated");
+	sbuf_cpy(&needle, "");
 }
 
 int filter_needle_length(void)

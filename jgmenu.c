@@ -572,6 +572,7 @@ void checkout_root(void)
 
 static void awake_menu(void)
 {
+	filter_reset();
 	checkout_root();
 	XMapWindow(ui->dpy, ui->win);
 	grabkeyboard();
