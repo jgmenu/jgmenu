@@ -570,6 +570,20 @@ void checkout_root(void)
 	checkout_submenu(menu.current_node->tag);
 }
 
+void resize(void)
+{
+	XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(),
+			  geo_get_menu_y0(), geo_get_menu_width(),
+			  geo_get_menu_height());
+}
+
+void update(void)
+{
+	update_filtered_list();
+	init_menuitem_coordinates();
+	draw_menu();
+}
+
 static void awake_menu(void)
 {
 	filter_reset();
@@ -577,11 +591,8 @@ static void awake_menu(void)
 	XMapWindow(ui->dpy, ui->win);
 	grabkeyboard();
 	grabpointer();
-	XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
-			  geo_get_menu_width(), geo_get_menu_height());
-	update_filtered_list();
-	init_menuitem_coordinates();
-	draw_menu();
+	resize();
+	update();
 }
 
 static void hide_menu(void)
@@ -604,8 +615,7 @@ void checkout_parent(void)
 	if (!menu.current_node->parent)
 		return;
 	checkout_submenu(menu.current_node->parent->tag);
-	XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
-			  geo_get_menu_width(), geo_get_menu_height());
+	resize();
 }
 
 void action_cmd(char *cmd)
@@ -620,12 +630,8 @@ void action_cmd(char *cmd)
 		if (!p)
 			return;
 		checkout_submenu(p);
-		/* menu height has changed - need to redraw window */
-		XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(), geo_get_menu_y0(),
-				  geo_get_menu_width(), geo_get_menu_height());
-		update_filtered_list();
-		init_menuitem_coordinates();
-		draw_menu();
+		resize();
+		update();
 	} else if (!strncmp(cmd, "^sub(", 5)) {
 		p = parse_caret_action(cmd, "^sub(");
 		if (!p)
@@ -641,14 +647,6 @@ void action_cmd(char *cmd)
 		spawn(cmd);
 		hide_or_exit();
 	}
-}
-
-void move_window(void)
-{
-	XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(),
-			  geo_get_menu_y0(), geo_get_menu_width(),
-			  geo_get_menu_height());
-	draw_menu();
 }
 
 void key_event(XKeyEvent *ev)
@@ -670,13 +668,12 @@ void key_event(XKeyEvent *ev)
 		menu.first = fill_from_bottom(menu.last);
 		menu.sel = menu.last;
 		init_menuitem_coordinates();
+		draw_menu();
 		break;
 	case XK_Escape:
 		if (filter_needle_length()) {
 			filter_reset();
-			update_filtered_list();
-			init_menuitem_coordinates();
-			draw_menu();
+			update();
 		} else {
 			hide_or_exit();
 		}
@@ -688,6 +685,7 @@ void key_event(XKeyEvent *ev)
 		menu.last = fill_from_top(menu.first);
 		menu.sel = menu.first;
 		init_menuitem_coordinates();
+		draw_menu();
 		break;
 	case XK_Up:
 		if (filter_head() == &empty_item ||
@@ -699,6 +697,7 @@ void key_event(XKeyEvent *ev)
 			menu.last = fill_from_top(menu.first);
 		}
 		init_menuitem_coordinates();
+		draw_menu();
 		break;
 	case XK_Next:	/* PageDown */
 		if (filter_head() == &empty_item)
@@ -713,6 +712,7 @@ void key_event(XKeyEvent *ev)
 		menu.sel = menu.last;
 		if (!menu.last->selectable)
 			menu.sel = prev_selectable(menu.last, &isoutside);
+		draw_menu();
 		break;
 	case XK_Prior:	/* PageUp */
 		if (filter_head() == &empty_item)
@@ -727,6 +727,7 @@ void key_event(XKeyEvent *ev)
 		menu.sel = menu.first;
 		if (!menu.sel->selectable)
 			menu.sel = next_selectable(menu.first, &isoutside);
+		draw_menu();
 		break;
 	case XK_Return:
 	case XK_KP_Enter:
@@ -749,6 +750,7 @@ void key_event(XKeyEvent *ev)
 			menu.first = fill_from_bottom(menu.last);
 		}
 		init_menuitem_coordinates();
+		draw_menu();
 		break;
 	case XK_F3:
 		config.color_menu_bg[3] -= 0.1;
@@ -766,19 +768,23 @@ void key_event(XKeyEvent *ev)
 		break;
 	case XK_F5:
 		geo_set_menu_halign("left");
-		move_window();
+		resize();
+		draw_menu();
 		break;
 	case XK_F6:
 		geo_set_menu_valign("bottom");
-		move_window();
+		resize();
+		draw_menu();
 		break;
 	case XK_F7:
 		geo_set_menu_valign("top");
-		move_window();
+		resize();
+		draw_menu();
 		break;
 	case XK_F8:
 		geo_set_menu_halign("right");
-		move_window();
+		resize();
+		draw_menu();
 		break;
 	case XK_F10:
 		/* force exit even if in 'stay_alive' mode */
@@ -789,15 +795,11 @@ void key_event(XKeyEvent *ev)
 			filter_backspace();
 		else
 			checkout_parent();
-		update_filtered_list();
-		init_menuitem_coordinates();
-		draw_menu();
+		update();
 		break;
 	default:
 		filter_addstr(buf, len);
-		update_filtered_list();
-		init_menuitem_coordinates();
-		draw_menu();
+		update();
 		break;
 	}
 }
@@ -837,9 +839,7 @@ void mouse_event(XEvent *e)
 	/* right-click */
 	if (ev->button == Button3) {
 		checkout_parent();
-		update_filtered_list();
-		init_menuitem_coordinates();
-		draw_menu();
+		update();
 	}
 
 	/* scroll up */
@@ -1350,7 +1350,7 @@ void run(void)
 				break;
 			case KeyPress:
 				key_event(&ev.xkey);
-				draw_menu();
+			//	draw_menu();
 				break;
 			case Expose:
 				if (ev.xexpose.count == 0)
