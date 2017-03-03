@@ -21,7 +21,7 @@ void die(const char *err, ...)
 }
 
 /* voids zombie processes */
-void set_no_child_wait(void)
+static void set_no_child_wait(void)
 {
 	static int done;
 

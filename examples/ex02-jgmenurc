@@ -12,11 +12,13 @@ item_height	= 30
 item_padding_x	= 8
 item_radius	= 10
 item_border	= 1
+sep_height	= 5
+icon_size	= 0
 
 font		= Ubuntu 14px
 show_title	= 1
 
-color_menu_bg	= #000000 00
+color_menu_bg	= #335588 100
 color_menu_fg	= #eeeeee 40
 color_norm_bg	= #000000 100
 color_norm_fg	= #eeeeee 100
@@ -24,3 +26,4 @@ color_sel_bg	= #ffbb22 60
 color_sel_fg	= #eeeeee 100
 color_noprog_fg	= #ff00cc 80
 color_title_bg	= #223355 90
+color_sep_fg	  = #ffffff 20

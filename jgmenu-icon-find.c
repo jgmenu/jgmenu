@@ -8,7 +8,7 @@ static char *theme;
 static char *icon_name;
 static int icon_size = 22;
 
-void usage(void)
+static void usage(void)
 {
 	printf("Usage: jgmenu-icon-find [<options>] <icon-name>\n"
 	       "    --theme=<theme>       specify icon-theme\n"

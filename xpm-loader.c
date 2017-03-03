@@ -407,7 +407,7 @@ static const char *file_buffer(enum buf_op op, void *handle)
 	return NULL;
 }
 
-XPMColor *lookup_color(XPMColor *colors, int n_colors, const char *name)
+static XPMColor *lookup_color(XPMColor *colors, int n_colors, const char *name)
 {
 	int i;
 

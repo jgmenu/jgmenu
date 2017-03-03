@@ -232,12 +232,12 @@ static void process_file(const char *fpath, struct icon_path *item)
 	}
 }
 
-int str_has_prefix(const char *str, const char *prefix)
+static int str_has_prefix(const char *str, const char *prefix)
 {
 	return strncmp(prefix, str, strlen(prefix)) == 0;
 }
 
-void search_dir_for_files(const char *path, struct list_head *files, int depth_limit)
+static void search_dir_for_files(const char *path, struct list_head *files, int depth_limit)
 {
 	struct dirent *entry;
 	DIR *dp;
@@ -285,7 +285,7 @@ void icon_find_init(void)
 }
 
 /* Removes the extension. */
-void remove_pngsvgxpm_extensions(struct sbuf *name)
+static void remove_pngsvgxpm_extensions(struct sbuf *name)
 {
 	char *ext;
 
@@ -302,7 +302,7 @@ void remove_pngsvgxpm_extensions(struct sbuf *name)
 	}
 }
 
-int all_icons_found(struct list_head *icons)
+static int all_icons_found(struct list_head *icons)
 {
 	int found = 1;
 	struct icon_path *icon;

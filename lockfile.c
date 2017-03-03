@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
+#include "lockfile.h"
 #include "sbuf.h"
 
 #define LOCKFILE ".jgmenu-lockfile"
 static struct sbuf lockfile;
 
-void lockfile_unlink(void)
+static void lockfile_unlink(void)
 {
 	unlink(lockfile.buf);
 }

@@ -6,15 +6,16 @@
 #include <string.h>
 
 #include "list.h"
+#include "isprog.h"
 
 struct path_segment {
 	char *path;
 	struct list_head list;
 };
 
-struct list_head head;
+static struct list_head head;
 
-void parse_path(void)
+static void parse_path(void)
 {
 	struct path_segment *tmp;
 	char *path, *p;
@@ -37,7 +38,7 @@ void parse_path(void)
 }
 
 /* Check if file exists and is exectable by "others" (i.e. user) */
-int is_ixoth(char *filename)
+static int is_ixoth(char *filename)
 {
 	struct stat sb;
 
