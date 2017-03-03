@@ -544,6 +544,36 @@ void update(void)
 	draw_menu();
 }
 
+void launch_menu_at_pointer(void)
+{
+	Window dw;
+	int di;
+	unsigned int du;
+	struct point pos;
+
+	XQueryPointer(ui->dpy, DefaultRootWindow(ui->dpy), &dw, &dw, &di, &di,
+		      &pos.x, &pos.y, &du);
+
+	if (pos.x < geo_get_screen_width() - geo_get_menu_width()) {
+		geo_set_menu_halign("left");
+		geo_set_menu_margin_x(pos.x);
+	} else {
+		geo_set_menu_halign("right");
+		geo_set_menu_margin_x(geo_get_screen_width() - pos.x);
+	}
+
+	if (pos.y < geo_get_screen_height() - geo_get_menu_height()) {
+		geo_set_menu_valign("top");
+		geo_set_menu_margin_y(pos.y);
+	} else if (geo_get_menu_height() < pos.y) {
+		geo_set_menu_valign("bottom");
+		geo_set_menu_margin_y(geo_get_screen_height() - pos.y);
+	} else {
+		geo_set_menu_valign("bottom");
+		geo_set_menu_margin_y(0);
+	}
+}
+
 static void awake_menu(void)
 {
 	filter_reset();
@@ -551,6 +581,7 @@ static void awake_menu(void)
 	XMapWindow(ui->dpy, ui->win);
 	grabkeyboard();
 	grabpointer();
+	launch_menu_at_pointer();
 	resize();
 	update();
 }
@@ -1289,36 +1320,6 @@ void init_geo_variables_from_config(void)
 	geo_set_item_margin_x(config.item_margin_x);
 	geo_set_item_margin_y(config.item_margin_y);
 	geo_set_item_height(config.item_height);
-}
-
-void launch_menu_at_pointer(void)
-{
-	Window dw;
-	int di;
-	unsigned int du;
-	struct point pos;
-
-	XQueryPointer(ui->dpy, DefaultRootWindow(ui->dpy), &dw, &dw, &di, &di,
-		      &pos.x, &pos.y, &du);
-
-	if (pos.x < geo_get_screen_width() - geo_get_menu_width()) {
-		geo_set_menu_halign("left");
-		geo_set_menu_margin_x(pos.x);
-	} else {
-		geo_set_menu_halign("right");
-		geo_set_menu_margin_x(geo_get_screen_width() - pos.x);
-	}
-
-	if (pos.y < geo_get_screen_height() - geo_get_menu_height()) {
-		geo_set_menu_valign("top");
-		geo_set_menu_margin_y(pos.y);
-	} else if (geo_get_menu_height() < pos.y) {
-		geo_set_menu_valign("bottom");
-		geo_set_menu_margin_y(geo_get_screen_height() - pos.y);
-	} else {
-		geo_set_menu_valign("bottom");
-		geo_set_menu_margin_y(0);
-	}
 }
 
 void set_theme_and_font(void)
