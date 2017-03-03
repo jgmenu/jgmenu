@@ -36,8 +36,6 @@
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
-//#define MAX_FIELDS 3		   /* nr fields to parse for each stdin line */
-
 static pthread_t thread;	   /* worker thread for loading icons	  */
 static int pipe_fds[2];		   /* talk between threads + catch sig    */
 static int die_when_loaded;	   /* Used for performance testing	  */
@@ -715,6 +713,18 @@ void key_event(XKeyEvent *ev)
 		init_menuitem_coordinates();
 		draw_menu();
 		break;
+	case XK_Left:
+		if (!menu.current_node->parent)
+			break;
+		checkout_parent();
+		update();
+		break;
+	case XK_Right:
+		if (strncmp(menu.sel->t[1], "^checkout(", 10))
+			break;
+		action_cmd(menu.sel->t[1]);
+		update();
+		break;
 	case XK_F3:
 		config.color_menu_bg[3] -= 0.1;
 		if (config.color_menu_bg[3] < 0.0)
@@ -1329,7 +1339,7 @@ static char *tag_of_first_item(void)
 	item = list_first_entry_or_null(&menu.master, struct item, master);
 	if (!item)
 		die("no items in master list");
-	return (item->tag);
+	return item->tag;
 }
 
 int main(int argc, char *argv[])

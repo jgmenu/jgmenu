@@ -1,6 +1,7 @@
 ASAN_FLAGS = -O0 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic -fuse-ld=gold
 
-all: t1011
+all: t1012
+#all: t1011
 #all: t0002 t0003 t0005 t0007 t0008
 
 # string buffer tests
@@ -31,6 +32,8 @@ t0008: t0008-xpm.c ../xpm-loader.c ../xpm-loader.h
 t1011:
 	./t1011-hashmap.sh
 
+t1012:
+	./t1012-argv-buf.sh
 t9000:
 	@./t9000-icon-load.sh
 	@./t9000-icon-load.sh
