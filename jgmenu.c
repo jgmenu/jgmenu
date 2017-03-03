@@ -59,6 +59,7 @@ static struct item empty_item;
 struct node {
 	char *tag;
 	struct item *item;	   /* item that node points to		  */
+	struct item *last_sel;	   /* used when returning to node	  */
 	struct node *parent;
 	struct list_head items;	   /* menu-items having off node	  */
 	struct list_head node;
@@ -247,10 +248,14 @@ void update_filtered_list(void)
 	menu.first = filter_head();
 	menu.last = fill_from_top(menu.first);
 
-	/* FIXME: change this to something more sophisticated */
-	menu.sel = menu.first;
-	if (!menu.sel->selectable)
-		menu.sel = next_selectable(menu.first, &isoutside);
+	if (!filter_needle_length() && menu.current_node->last_sel) {
+		menu.sel = menu.current_node->last_sel;
+		menu.current_node->last_sel = NULL;
+	} else {
+		menu.sel = menu.first;
+		if (!menu.sel->selectable)
+			menu.sel = next_selectable(menu.first, &isoutside);
+	}
 }
 
 void init_menuitem_coordinates(void)
@@ -586,6 +591,7 @@ void action_cmd(char *cmd)
 		p = parse_caret_action(cmd, "^checkout(");
 		if (!p)
 			return;
+		menu.current_node->last_sel = menu.sel;
 		checkout_submenu(p);
 		resize();
 		update();
@@ -927,6 +933,7 @@ void create_node(const char *name, struct node *parent)
 	n = xmalloc(sizeof(struct node));
 	n->tag = strdup(name);
 	n->item = get_item_from_tag(name);
+	n->last_sel = NULL;
 	n->parent = parent;
 	INIT_LIST_HEAD(&n->items);
 	list_add_tail(&n->node, &menu.nodes);
