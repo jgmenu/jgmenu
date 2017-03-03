@@ -32,14 +32,15 @@
 #include "filter.h"
 #include "list.h"
 #include "lockfile.h"
+#include "argv-buf.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
-#define MAX_FIELDS 3		/* nr fields to parse for each stdin line */
+//#define MAX_FIELDS 3		   /* nr fields to parse for each stdin line */
 
-static pthread_t thread;	/* worker thread for loading icons	  */
-static int pipe_fds[2];		/* talk between threads + catch signals   */
-static int die_when_loaded;	/* Used for performance testing		  */
+static pthread_t thread;	   /* worker thread for loading icons	  */
+static int pipe_fds[2];		   /* talk between threads + catch sig    */
+static int die_when_loaded;	   /* Used for performance testing	  */
 
 struct item {
 	char *t[MAX_FIELDS];
@@ -47,10 +48,9 @@ struct item {
 	struct area area;
 	cairo_surface_t *icon;
 	int selectable;
-	struct item *next, *prev;	/* DELETE? */
 	struct list_head master;
 	struct list_head filter;
-	struct list_head list;		/* submenu list under each node */
+	struct list_head list;	   /* submenu list under each node	  */
 };
 
 static struct item empty_item;
@@ -58,38 +58,27 @@ static struct item empty_item;
 /* A node is marked by a ^tag() and denotes the start of a submenu */
 struct node {
 	char *tag;
-	struct item *item;		/* item that node points to */
+	struct item *item;	   /* item that node points to		  */
 	struct node *parent;
-	struct list_head items;		/* menu-items having off node */
+	struct list_head items;	   /* menu-items having off node	  */
 	struct list_head node;
 };
 
 /*
- * All menu items in the input file are stored in a dynamic array (=vector).
- * These items are also joined in a doubly linked list.
- *
+ * The lists "master" and "filter" are the core building blocks of the code
  * When a submenu is checked out, *subhead and *subtail are set.
- *
- * *first and *last point to the first/last visible menu items (i.e. what can
- * pysically be seen on the screen.)
  */
 struct menu {
-	struct item *head;	 /* first item in linked list		  */
-	struct item *tail;	 /* last item in linked list		  */
-
-	struct item *subhead;	 /* first item in checked out submenu	  */
-	struct item *subtail;	 /* last item in checked out submenu	  */
-	struct item *first;	 /* first visible item			  */
-	struct item *last;	 /* last visible item			  */
-	struct item *sel;	 /* currently selected item		  */
-
+	struct item *head;	   /* first item in linked list		  */
+	struct item *subhead;	   /* first item in checked out submenu	  */
+	struct item *subtail;	   /* last item in checked out submenu	  */
+	struct item *first;	   /* first visible item			  */
+	struct item *last;	   /* last visible item			  */
+	struct item *sel;	   /* currently selected item		  */
 	char *title;
-
-	/* These two lists are the core building blocks of the code	  */
-	struct list_head master; /* all items				  */
-	struct list_head filter; /* items to be displayed in menu	  */
-
-	struct list_head nodes;	 /* hierarchical structure of tags	  */
+	struct list_head master;   /* all items				  */
+	struct list_head filter;   /* items to be displayed in menu	  */
+	struct list_head nodes;	   /* hierarchical structure of tags	  */
 	struct node *current_node;
 };
 
@@ -398,13 +387,12 @@ void draw_menu(void)
 		/* Draw item background */
 		if (p == menu.sel)
 			draw_item_bg_sel(p);
-		else
+		else if (p->selectable)
 			draw_item_bg_norm(p);
 
 		/* Draw submenu arrow */
-		if (config.arrow_show && ((!strncmp(p->t[1], "^checkout(", 10) &&
-					   strncmp(p->t[0], "..", 2)) ||
-					   !strncmp(p->t[1], "^sub(", 5)))
+		if (config.arrow_show && (!strncmp(p->t[1], "^checkout(", 10) ||
+					  !strncmp(p->t[1], "^sub(", 5)))
 			ui_insert_text(config.arrow_string, p->area.x + p->area.w -
 				       config.item_padding_x - (p->area.h / 3), p->area.y,
 				       p->area.h, config.color_norm_fg);
@@ -499,60 +487,29 @@ void set_submenu_height(void)
 void checkout_submenu(char *tag)
 {
 	struct item *item;
-	char *tagtok = "^tag(";
 
-	menu.subhead = NULL;
 	menu.title = NULL;
 
 	/* Find head of submenu */
 	if (!tag) {
 		menu.current_node = list_first_entry_or_null(&menu.nodes, struct node, node);
-		menu.subhead = menu.head;
+		menu.subhead = list_first_entry_or_null(&menu.master, struct item, master);
 	} else {
 		menu.current_node = get_node_from_tag(tag);
-		list_for_each_entry(item, &menu.master, master) {
-			if (item->tag && !strncmp(item->tag, tag, strlen(tag))) {
-				menu.title = item->t[0];
-				if (item->next)
-					menu.subhead = item + 1;
-				else
-					menu.subhead = NULL;
-				break;
-			}
-		}
-
-		/* If ^checkout() called without associated ^tag() */
-		if (!menu.title)
-			die("cannot find ^tag(%s)", tag);
+		menu.subhead = container_of((menu.current_node->item)->master.next,
+					    struct item, master);
 		if (!menu.subhead)
-			die("menu.subhead not set. Menu has no content");
+			die("no menu.subhead");
 	}
 
 	/* Find tail of submenu */
-	menu.subtail = NULL;
-
-	if (!menu.subhead->next) {
-		menu.subtail = menu.subhead;
-	} else {
-		item = menu.subhead;
-
-		while (!menu.subtail && item && item->t[0]) {
-			if (!item->next || !strncmp(item->next->t[1], tagtok, strlen(tagtok)))
-				menu.subtail = item;
-			else
-				item++;
-		}
-
-		if (!menu.subtail)
-			die("menu.subtail pointer not set");
+	menu.subtail = menu.subhead;
+	item = menu.subhead;
+	list_for_each_entry_from(item, &menu.master, master) {
+		if (item->tag)
+			break;
+		menu.subtail = item;
 	}
-
-	/* DELETE SOON */
-	menu.first = menu.subhead;
-	menu.last = menu.subtail;
-
-	menu.sel = NULL;
-	/* menu.sel gets set in updated_filtered_list() */
 
 	if (config.show_title)
 		geo_set_show_title(menu.title);
@@ -864,7 +821,8 @@ void mouse_event(XEvent *e)
 
 	/* left-click */
 	if (ev->button == Button1) {
-		for (item = menu.first; item && item->t[0] && item->prev != menu.last ; item++) {
+		item = menu.first;
+		list_for_each_entry_from(item, &menu.master, master) {
 			if (ui_is_point_in_area(mouse_coords, item->area)) {
 				if (!item->selectable)
 					break;
@@ -875,50 +833,10 @@ void mouse_event(XEvent *e)
 				puts(item->t[1]);
 				hide_or_exit();
 			}
+			if (item == menu.last)
+				break;
 		}
 	}
-}
-
-char *next_field(char *str)
-{
-	char *tmp;
-
-	tmp = strchr(str, ',');
-	if (tmp)
-		tmp++;
-	return tmp;
-}
-
-void parse_csv(struct item *p)
-{
-	char *q;
-	int j;
-
-	p->t[1] = NULL;
-	p->t[2] = NULL;
-
-	for (j = 0; j < MAX_FIELDS - 1; j++)
-		if (p->t[j])
-			p->t[j + 1] = next_field(p->t[j]);
-
-	while ((q = strrchr(p->t[0], ',')))
-		*q = '\0';
-
-	/* Prevents seg fault when t[1] == NULL */
-	if (!p->t[1])
-		p->t[1] = p->t[0];
-}
-
-void dlist_append(struct item *item, struct item **list, struct item **last)
-{
-	if (*last)
-		(*last)->next = item;
-	else
-		*list = item;
-
-	item->prev = *last;
-	item->next = NULL;
-	*last = item;
 }
 
 static double timespec_to_sec(struct timespec *ts)
@@ -948,14 +866,6 @@ void *load_icons(void *arg)
 		die("error writing to icon_pipe");
 
 	return NULL;
-}
-
-void create_master_list(void)
-{
-	struct item *item;
-
-	for (item = menu.head; item && item->t[0]; item++)
-		list_add_tail(&item->master, &menu.master);
 }
 
 struct item *get_item_from_tag(const char *tag)
@@ -1079,49 +989,35 @@ void build_tree(void)
 void read_stdin(void)
 {
 	char buf[BUFSIZ], *p;
-	size_t i, size = 0;
-	struct item *item;
+	size_t i;
+	struct item *item = NULL;
+	struct argv_buf argv_buf;
 
-	menu.head = NULL;
-
+	argv_set_delim(&argv_buf, ',');
 	for (i = 0; fgets(buf, sizeof(buf), stdin); i++) {
-		if (size <= (i + 1) * sizeof(struct item)) {
-			size += BUFSIZ;
-			menu.head = xrealloc(menu.head, size);
-		}
-
 		p = strchr(buf, '\n');
 		if (p)
 			*p = '\0';
-
 		if ((buf[0] == '#') ||
 		    (buf[0] == '\n') ||
 		    (buf[0] == '\0')) {
 			i--;
 			continue;
 		}
-
-		menu.head[i].t[0] = strdup(buf);
-		if (!menu.head[i].t[0])
-			die("cannot strdup");
-
-		parse_csv(&menu.head[i]);
+		argv_init(&argv_buf);
+		argv_strdup(&argv_buf, buf);
+		argv_parse(&argv_buf);
+		item = xmalloc(sizeof(struct item));
+		item->t[0] = argv_buf.argv[0];
+		item->t[1] = argv_buf.argv[1];
+		item->t[2] = argv_buf.argv[2];
+		if (!item->t[1])
+			item->t[1] = item->t[0];
+		list_add_tail(&item->master, &menu.master);
 	}
 
-	if (!menu.head || i <= 0)
+	if (!item || i <= 0)
 		die("input file contains no menu items");
-
-	/*
-	 * Using "menu.head[i].t[0] = NULL" as a dynamic array end-marker
-	 */
-	menu.head[i].t[0] = NULL;
-
-	/* Create doubly-linked list */
-	menu.tail = NULL;
-	for (item = menu.head; item && item->t[0]; item++)
-		dlist_append(item, &menu.head, &menu.tail);
-
-	create_master_list();
 
 	/* Init items */
 	list_for_each_entry(item, &menu.master, master) {
@@ -1143,9 +1039,6 @@ void read_stdin(void)
 			continue;
 		item->tag = parse_caret_action(item->t[1], "^tag(");
 	}
-
-	build_tree();
-	hang_items_off_nodes();
 }
 
 void init_pipe_flags(void)
@@ -1254,10 +1147,13 @@ void run(void)
 		icon_set_theme(config.icon_theme);
 
 		/* Get icons in top level menu (or the one specified with --check-out= */
-		for (item = menu.subhead; item && item->t[0] && item != menu.subtail + 1; item++)
+		item = menu.subhead;
+		list_for_each_entry_from(item, &menu.master, master) {
 			if (item->t[2])
 				icon_set_name(item->t[2]);
-
+			if (item == menu.subtail)
+				break;
+		}
 		pthread_create(&thread, NULL, load_icons, NULL);
 	}
 
@@ -1322,7 +1218,7 @@ void run(void)
 
 				pthread_join(thread, NULL);
 
-				for (item = menu.head; item && item->t[0]; item++)
+				list_for_each_entry(item, &menu.master, master)
 					if (!item->icon)
 						item->icon = icon_get_surface(item->t[2]);
 
@@ -1332,7 +1228,7 @@ void run(void)
 					continue;
 
 				/* Get remaining icons */
-				for (item = menu.head; item && item->t[0]; item++)
+				list_for_each_entry(item, &menu.master, master)
 					if (item->t[2])
 						icon_set_name(item->t[2]);
 
@@ -1350,7 +1246,6 @@ void run(void)
 				break;
 			case KeyPress:
 				key_event(&ev.xkey);
-			//	draw_menu();
 				break;
 			case Expose:
 				if (ev.xexpose.count == 0)
@@ -1420,6 +1315,16 @@ void set_theme_and_font(void)
 		config.font = strdup(JGMENU_DEFAULT_FONT);
 }
 
+static char *tag_of_first_item(void)
+{
+	struct item *item;
+
+	item = list_first_entry_or_null(&menu.master, struct item, master);
+	if (!item)
+		die("no items in master list");
+	return (item->tag);
+}
+
 int main(int argc, char *argv[])
 {
 	int i;
@@ -1487,13 +1392,13 @@ int main(int argc, char *argv[])
 	init_geo_variables_from_config();
 
 	read_stdin();
+	build_tree();
+	hang_items_off_nodes();
 
 	if (checkout_arg)
 		checkout_submenu(checkout_arg);
-	else if (menu.head->tag)
-		checkout_submenu(menu.head->tag);
 	else
-		checkout_submenu(NULL);
+		checkout_submenu(tag_of_first_item());
 
 	grabkeyboard();
 	grabpointer();

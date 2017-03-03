@@ -26,7 +26,7 @@ PROGS   += jgmenu-parse-ob
 
 OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
         icon.o xpm-loader.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o \
-	config-xs.o filter.o compat.o hashmap.o lockfile.o
+	config-xs.o filter.o compat.o hashmap.o lockfile.o argv-buf.o
 
 LIB_H = $(shell find . -name '*.h' -print)
 
