@@ -41,7 +41,9 @@ static int pipe_fds[2];		   /* talk between threads + catch sig    */
 static int die_when_loaded;	   /* Used for performance testing	  */
 
 struct item {
-	char *t[MAX_FIELDS];
+	char *name;
+	char *cmd;
+	char *iconname;
 	char *tag;
 	struct area area;
 	cairo_surface_t *icon;
@@ -86,16 +88,16 @@ struct menu menu;
 static const char jgmenu_usage[] =
 "Usage: jgmenu [OPTIONS]\n"
 "    --version             show version\n"
-"    --no-spawn            redirect command to stdout rather than executing it\n"
+"    --no-spawn            redirect command to stdout instead of executing\n"
 "    --checkout=<tag>      checkout submenu <tag> on startup\n"
 "    --config-file=<file>  read config file\n"
 "    --at-pointer          launch menu at mouse pointer\n";
 
 void init_empty_item(void)
 {
-	empty_item.t[0] = strdup("<empty>");
-	empty_item.t[1] = strdup(":");
-	empty_item.t[2] = NULL;
+	empty_item.name = strdup("<empty>");
+	empty_item.cmd = strdup(":");
+	empty_item.iconname = NULL;
 	empty_item.tag = NULL;
 	empty_item.icon = NULL;
 	empty_item.selectable = 1;
@@ -215,11 +217,11 @@ void update_filtered_list(void)
 
 	if (config.search_all_items && filter_needle_length()) {
 		list_for_each_entry(item, &menu.master, master) {
-			if (!strncmp("^checkout(", item->t[1], 10) ||
-			    !strncmp("^tag(", item->t[1], 5))
+			if (!strncmp("^checkout(", item->cmd, 10) ||
+			    !strncmp("^tag(", item->cmd, 5))
 				continue;
-			if (filter_ismatch(item->t[0]) ||
-			    filter_ismatch(item->t[1]))
+			if (filter_ismatch(item->name) ||
+			    filter_ismatch(item->cmd))
 				list_add_tail(&item->filter, &menu.filter);
 		}
 	} else {
@@ -227,8 +229,8 @@ void update_filtered_list(void)
 			if (item == menu.subhead)
 				break;
 		list_for_each_entry_from(item, &menu.master, master) {
-			if (filter_ismatch(item->t[0]) ||
-			    filter_ismatch(item->t[0]))
+			if (filter_ismatch(item->name) ||
+			    filter_ismatch(item->name))
 				list_add_tail(&item->filter, &menu.filter);
 			if (item == menu.subtail)
 				break;
@@ -276,8 +278,8 @@ void init_menuitem_coordinates(void)
 
 /*
  * Returns bar from ^foo(bar)
- * s="^foo(bar)"
- * token="^foo("
+ *   s="^foo(bar)"
+ *   token="^foo("
  */
 char *parse_caret_action(char *s, char *token)
 {
@@ -317,7 +319,7 @@ void draw_item_sep_with_text(struct item *p)
 	if (config.icon_size)
 		text_x_coord += config.icon_size + config.item_padding_x;
 
-	ui_insert_text(parse_caret_action(p->t[0], "^sep("), text_x_coord,
+	ui_insert_text(parse_caret_action(p->name, "^sep("), text_x_coord,
 		       p->area.y, p->area.h, config.color_sep_fg);
 }
 
@@ -349,10 +351,10 @@ void draw_item_text(struct item *p)
 		text_x_coord += config.icon_size + config.item_padding_x;
 
 	if (p == menu.sel)
-		ui_insert_text(p->t[0], text_x_coord, p->area.y,
+		ui_insert_text(p->name, text_x_coord, p->area.y,
 			       p->area.h, config.color_sel_fg);
 	else
-		ui_insert_text(p->t[0], text_x_coord, p->area.y,
+		ui_insert_text(p->name, text_x_coord, p->area.y,
 			       p->area.h, config.color_norm_fg);
 }
 
@@ -394,8 +396,8 @@ void draw_menu(void)
 			draw_item_bg_norm(p);
 
 		/* Draw submenu arrow */
-		if (config.arrow_show && (!strncmp(p->t[1], "^checkout(", 10) ||
-					  !strncmp(p->t[1], "^sub(", 5)))
+		if (config.arrow_show && (!strncmp(p->cmd, "^checkout(", 10) ||
+					  !strncmp(p->cmd, "^sub(", 5)))
 			ui_insert_text(config.arrow_string, p->area.x + p->area.w -
 				       config.item_padding_x - (p->area.h / 3), p->area.y,
 				       p->area.h, config.color_norm_fg);
@@ -403,9 +405,9 @@ void draw_menu(void)
 		/* Draw menu items text */
 		if (p->selectable)
 			draw_item_text(p);
-		else if (!strncmp(p->t[0], "^sep()", 6))
+		else if (!strncmp(p->name, "^sep()", 6))
 			draw_item_sep(p);
-		else if (!strncmp(p->t[0], "^sep(", 5))
+		else if (!strncmp(p->name, "^sep(", 5))
 			draw_item_sep_with_text(p);
 
 		/* Draw Icons */
@@ -445,8 +447,8 @@ void set_submenu_width(void)
 	sbuf_init(&s);
 	p = menu.subhead;
 	list_for_each_entry_from(p, &menu.master, master) {
-		if (p->t[0]) {
-			sbuf_addstr(&s, p->t[0]);
+		if (p->name) {
+			sbuf_addstr(&s, p->name);
 			sbuf_addch(&s, '\n');
 		}
 		if (p == menu.subtail)
@@ -726,9 +728,9 @@ void key_event(XKeyEvent *ev)
 		if (!menu.sel->selectable)
 			break;
 		if (config.spawn) {
-			action_cmd(menu.sel->t[1]);
+			action_cmd(menu.sel->cmd);
 		} else {
-			printf("%s", menu.sel->t[1]);
+			printf("%s", menu.sel->cmd);
 			hide_or_exit();
 		}
 		break;
@@ -751,9 +753,9 @@ void key_event(XKeyEvent *ev)
 		update();
 		break;
 	case XK_Right:
-		if (strncmp(menu.sel->t[1], "^checkout(", 10))
+		if (strncmp(menu.sel->cmd, "^checkout(", 10))
 			break;
-		action_cmd(menu.sel->t[1]);
+		action_cmd(menu.sel->cmd);
 		update();
 		break;
 	case XK_F3:
@@ -874,10 +876,10 @@ void mouse_event(XEvent *e)
 				if (!item->selectable)
 					break;
 				if (config.spawn) {
-					action_cmd(item->t[1]);
+					action_cmd(item->cmd);
 					break;
 				}
-				puts(item->t[1]);
+				puts(item->cmd);
 				hide_or_exit();
 			}
 			if (item == menu.last)
@@ -941,9 +943,11 @@ void hang_items_off_nodes(void)
 			die("node has no tag");
 
 		if (n->item)
-			p = container_of((n->item)->master.next, struct item, master);
+			p = container_of((n->item)->master.next,
+					 struct item, master);
 		else
-			p = list_first_entry_or_null(&menu.master, struct item, master);
+			p = list_first_entry_or_null(&menu.master,
+						     struct item, master);
 
 		list_for_each_entry_from(p, &menu.master, master) {
 			if (p->tag)
@@ -1004,14 +1008,14 @@ void walk_tagged_items(struct item *this, struct node *parent)
 
 	/* walk the items under current node and put into tree structure */
 	list_for_each_entry_from(p, &menu.master, master) {
-		if (!strncmp("^checkout(", p->t[1], 10)) {
-			child = get_item_from_tag(parse_caret_action(p->t[1], "^checkout("));
+		if (!strncmp("^checkout(", p->cmd, 10)) {
+			child = get_item_from_tag(parse_caret_action(p->cmd, "^checkout("));
 			if (!child)
 				continue;
 			if (child->tag && node_exists(child->tag))
 				continue;
 			walk_tagged_items(child, current_node);
-		} else if (!strncmp("^tag(", p->t[1], 5)) {
+		} else if (!strncmp("^tag(", p->cmd, 5)) {
 			break;
 		}
 	}
@@ -1056,11 +1060,11 @@ void read_stdin(void)
 		argv_strdup(&argv_buf, buf);
 		argv_parse(&argv_buf);
 		item = xmalloc(sizeof(struct item));
-		item->t[0] = argv_buf.argv[0];
-		item->t[1] = argv_buf.argv[1];
-		item->t[2] = argv_buf.argv[2];
-		if (!item->t[1])
-			item->t[1] = item->t[0];
+		item->name = argv_buf.argv[0];
+		item->cmd = argv_buf.argv[1];
+		item->iconname = argv_buf.argv[2];
+		if (!item->cmd)
+			item->cmd = item->name;
 		list_add_tail(&item->master, &menu.master);
 	}
 
@@ -1073,19 +1077,19 @@ void read_stdin(void)
 		item->tag = NULL;
 		item->selectable = 1;
 		item->area.h = config.item_height;
-		if (!strncmp(item->t[0], "^sep()", 6)) {
+		if (!strncmp(item->name, "^sep()", 6)) {
 			item->selectable = 0;
 			item->area.h = config.sep_height;
-		} else if (!strncmp(item->t[0], "^sep(", 5)) {
+		} else if (!strncmp(item->name, "^sep(", 5)) {
 			item->selectable = 0;
 		}
 	}
 
 	/* Populate tag field */
 	list_for_each_entry(item, &menu.master, master) {
-		if (strncmp("^tag(", item->t[1], 5))
+		if (strncmp("^tag(", item->cmd, 5))
 			continue;
-		item->tag = parse_caret_action(item->t[1], "^tag(");
+		item->tag = parse_caret_action(item->cmd, "^tag(");
 	}
 }
 
@@ -1194,11 +1198,14 @@ void run(void)
 		icon_set_size(config.icon_size);
 		icon_set_theme(config.icon_theme);
 
-		/* Get icons in top level menu (or the one specified with --check-out= */
+		/*
+		 * Get icons in top level menu (or the one specified with
+		 * --check-out=
+		 */
 		item = menu.subhead;
 		list_for_each_entry_from(item, &menu.master, master) {
-			if (item->t[2])
-				icon_set_name(item->t[2]);
+			if (item->iconname)
+				icon_set_name(item->iconname);
 			if (item == menu.subtail)
 				break;
 		}
@@ -1258,17 +1265,19 @@ void run(void)
 				if (die_when_loaded && all_icons_have_been_requested)
 					exit(0);
 
-				if (DEBUG_ICONS_LOADED_NOTIFICATION && all_icons_have_been_requested)
+				if (DEBUG_ICONS_LOADED_NOTIFICATION &&
+				    all_icons_have_been_requested)
 					fprintf(stderr, "All icons loaded\n");
 
-				if (DEBUG_ICONS_LOADED_NOTIFICATION && !all_icons_have_been_requested)
+				if (DEBUG_ICONS_LOADED_NOTIFICATION &&
+				    !all_icons_have_been_requested)
 					fprintf(stderr, "Root menu icons loaded\n");
 
 				pthread_join(thread, NULL);
 
 				list_for_each_entry(item, &menu.master, master)
 					if (!item->icon)
-						item->icon = icon_get_surface(item->t[2]);
+						item->icon = icon_get_surface(item->iconname);
 
 				draw_menu();
 
@@ -1277,8 +1286,8 @@ void run(void)
 
 				/* Get remaining icons */
 				list_for_each_entry(item, &menu.master, master)
-					if (item->t[2])
-						icon_set_name(item->t[2]);
+					if (item->iconname)
+						icon_set_name(item->iconname);
 
 				pthread_create(&thread, NULL, load_icons, NULL);
 				all_icons_have_been_requested = 1;
@@ -1297,7 +1306,8 @@ void run(void)
 				break;
 			case Expose:
 				if (ev.xexpose.count == 0)
-					ui_map_window(geo_get_menu_width(), geo_get_menu_height());
+					ui_map_window(geo_get_menu_width(),
+						      geo_get_menu_height());
 				break;
 			case VisibilityNotify:
 				if (ev.xvisibility.state != VisibilityUnobscured)
