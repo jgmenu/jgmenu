@@ -583,7 +583,8 @@ static void awake_menu(void)
 	XMapWindow(ui->dpy, ui->win);
 	grabkeyboard();
 	grabpointer();
-	launch_menu_at_pointer();
+	if (config.at_pointer)
+		launch_menu_at_pointer();
 	resize();
 	update();
 }
