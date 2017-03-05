@@ -501,6 +501,8 @@ void checkout_submenu(char *tag)
 		menu.subhead = list_first_entry_or_null(&menu.master, struct item, master);
 	} else {
 		menu.current_node = get_node_from_tag(tag);
+		if (!menu.current_node)
+			die("node '%s' does not exist", tag);
 		menu.subhead = container_of((menu.current_node->item)->master.next,
 					    struct item, master);
 		if (!menu.subhead)
