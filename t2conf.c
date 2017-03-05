@@ -17,7 +17,19 @@ enum alignment {UNKNOWN, TOP, CENTER, BOTTOM, LEFT, RIGHT, HORIZONTAL,
 		VERTICAL};
 
 static int g_screen_height, g_screen_width;
-static int bg_id = -1;
+static int bg_id;
+
+#define MAX_NR_BGS (8)
+
+struct bg {
+	int rounded;
+	int border_width;
+	char *background_color;
+	char *border_color;
+};
+
+/* bg[0] is used for fully transparent bg */
+static struct bg bg[MAX_NR_BGS + 1];
 
 static enum alignment valign = UNKNOWN;
 static enum alignment halign = UNKNOWN;
@@ -52,11 +64,50 @@ static int parse_width(const char *w)
 static void process_line(char *line)
 {
 	char *option, *value, *field;
+	int id;
 
 	if (!parse_config_line(line, &option, &value))
 		return;
 
-	if (!strncmp(option, "panel_position", 14)) {
+	if (!strcmp(option, "rounded")) {
+		bg_id++;
+		bg[bg_id].rounded = atoi(value);
+	} else if (!strcmp(option, "border_width")) {
+		bg[bg_id].border_width = atoi(value);
+	} else if (!strcmp(option, "background_color")) {
+		bg[bg_id].background_color = strdup(value);
+	} else if (!strcmp(option, "border_color")) {
+		bg[bg_id].border_color = strdup(value);
+
+	} else if (!strncmp(option, "panel_background_id", 19)) {
+		id = atoi(value);
+		if (id > MAX_NR_BGS) {
+			fprintf(stderr, "warn: id too big\n");
+			return;
+		}
+		printf("color_menu_bg = %s\n", bg[id].background_color);
+		printf("color_menu_border = %s\n", bg[id].border_color);
+		printf("menu_border = %d\n", bg[id].border_width);
+	} else if (!strncmp(option, "taskbar_background_id", 21)) {
+		; /* ignore this for now */
+	} else if (!strncmp(option, "task_background_id", 18)) {
+		id = atoi(value);
+		if (id > MAX_NR_BGS) {
+			fprintf(stderr, "warn: id too big\n");
+			return;
+		}
+		printf("color_norm_bg = %s\n", bg[id].background_color);
+	} else if (!strncmp(option, "task_active_background_id", 25)) {
+		id = atoi(value);
+		if (id > MAX_NR_BGS) {
+			fprintf(stderr, "warn: id too big\n");
+			return;
+		}
+		printf("color_sel_bg = %s\n", bg[id].background_color);
+		printf("color_sel_border = %s\n", bg[id].border_color);
+		printf("item_border = %d\n", bg[id].border_width);
+
+	} else if (!strcmp(option, "panel_position")) {
 		field = strtok(value, DELIM);
 		if (!field)
 			return;
@@ -85,7 +136,7 @@ static void process_line(char *line)
 		else if (!strcmp(field, "vertical"))
 			orientation = VERTICAL;
 
-	} else if (!strncmp(option, "panel_size", 10)) {
+	} else if (!strcmp(option, "panel_size")) {
 		/*
 		 * For a vertical panel, panel_size's height/width are swapped
 		 * We cannot calculate width/height at this point as we have
@@ -101,7 +152,7 @@ static void process_line(char *line)
 			return;
 		panel_height = strdup(field);
 
-	} else if (!strncmp(option, "panel_margin", 12)) {
+	} else if (!strcmp(option, "panel_margin")) {
 		field = strtok(value, DELIM);
 		if (!field)
 			return;
@@ -137,7 +188,6 @@ void parse_file(char *filename)
 
 void set_alignment_and_position(void)
 {
-	printf("tint2 configuration\n===================\n");
 	printf("orientation = ");
 	if (orientation == HORIZONTAL)
 		printf("horizontal\n");
@@ -169,6 +219,8 @@ void tint2rc_parse(const char *filename, int screen_width, int screen_height)
 
 	g_screen_width = screen_width;
 	g_screen_height = screen_height;
+	bg[0].background_color = strdup("#000000 00");
+	bg[0].border_color = strdup("#000000 00");
 	sbuf_init(&tint2rc);
 	if (filename)
 		sbuf_addstr(&tint2rc, filename);
