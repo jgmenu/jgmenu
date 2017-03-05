@@ -262,9 +262,11 @@ For example, you could do:
     Browser,firefox,firefox
     File manager,pcmanfm,system-file-manager
     Terminal,xterm,utilities-terminal
+    ^sep()
     EOF
     
     cat >$HOME/.config/jgmenu/append.csv <<EOF
+    ^sep()
     Exit to prompt,openbox --exit,system-log-out
     Suspend,systemctl -i suspend,system-log-out
     Reboot,systemctl -i reboot,system-reboot
@@ -272,6 +274,8 @@ For example, you could do:
     EOF
     
     jgmenu_run pmenu
+
+^sep() inserts a horizontal separator line
 
 Lesson 10
 ---------

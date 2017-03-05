@@ -29,6 +29,10 @@ For example:
 
     printf "Terminal,xterm\nWeb Browser,firefox" | jgmenu
 
+The following mark-up is supported in the *description* field:
+
+  - ^sep() - define a separator (with or without text)
+
 The following mark-up is supported in the *command* field:
 
   - ^tag() - define a submenu
