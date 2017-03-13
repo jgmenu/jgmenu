@@ -831,7 +831,7 @@ struct point mousexy(void)
 void mouse_event(XEvent *e)
 {
 	struct item *item;
-	XButtonPressedEvent *ev = &e->xbutton;
+	XButtonReleasedEvent *ev = &e->xbutton;
 	struct point mouse_coords;
 
 	mouse_coords = mousexy();
@@ -1301,7 +1301,7 @@ void run(void)
 			XNextEvent(ui->dpy, &ev);
 
 			switch (ev.type) {
-			case ButtonPress:
+			case ButtonRelease:
 				mouse_event(&ev);
 				break;
 			case KeyPress:
