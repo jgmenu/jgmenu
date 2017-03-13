@@ -1363,7 +1363,6 @@ int main(int argc, char *argv[])
 	struct stat sb;
 	char *checkout_arg = NULL;
 
-	lockfile_init();
 	config_set_defaults();
 	menu.title = NULL;
 	menu.current_node = NULL;
@@ -1416,6 +1415,8 @@ int main(int argc, char *argv[])
 			config.hide_on_startup = 1;
 		}
 
+	/* check lockfile after --help and --version */
+	lockfile_init();
 	set_theme_and_font();
 
 	ui_init();
