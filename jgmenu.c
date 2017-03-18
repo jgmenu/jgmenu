@@ -33,6 +33,7 @@
 #include "list.h"
 #include "lockfile.h"
 #include "argv-buf.h"
+#include "t2conf.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -1421,6 +1422,7 @@ int main(int argc, char *argv[])
 
 	ui_init();
 	geo_init();
+	tint2rc_parse(NULL, geo_get_screen_width(), geo_get_screen_height());
 	init_geo_variables_from_config();
 
 	read_stdin();
