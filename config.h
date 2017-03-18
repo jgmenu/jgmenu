@@ -7,6 +7,7 @@ struct config {
 	int spawn;		/* 1:execute commands  0:print to stdout */
 	int stay_alive;
 	int hide_on_startup;
+	int read_tint2rc;
 
 	int menu_margin_x;
 	int menu_margin_y;

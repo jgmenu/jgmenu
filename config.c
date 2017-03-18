@@ -13,6 +13,7 @@ void config_set_defaults(void)
 	config.spawn		 = 1;
 	config.stay_alive	 = 0;
 	config.hide_on_startup	 = 0;
+	config.read_tint2rc	 = 0;
 
 	config.menu_margin_x	 = 0;
 	config.menu_margin_y	 = 31;
@@ -66,6 +67,8 @@ static void process_line(char *line)
 		xatoi(&config.stay_alive, value, XATOI_NONNEG, "config.stay_alive");
 	else if (!strncmp(option, "hide_on_startup", 15))
 		xatoi(&config.hide_on_startup, value, XATOI_NONNEG, "config.hide_on_startup");
+	else if (!strncmp(option, "read_tint2rc", 12))
+		xatoi(&config.read_tint2rc, value, XATOI_NONNEG, "config.read_tint2rc");
 
 	else if (!strncmp(option, "menu_margin_x", 13))
 		xatoi(&config.menu_margin_x, value, XATOI_NONNEG, "config.margin_x");

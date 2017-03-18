@@ -1422,7 +1422,9 @@ int main(int argc, char *argv[])
 
 	ui_init();
 	geo_init();
-	tint2rc_parse(NULL, geo_get_screen_width(), geo_get_screen_height());
+	if (config.read_tint2rc)
+		tint2rc_parse(NULL, geo_get_screen_width(),
+			      geo_get_screen_height());
 	init_geo_variables_from_config();
 
 	read_stdin();
