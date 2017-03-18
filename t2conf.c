@@ -1,14 +1,11 @@
 /* Simple tint2rc parser for jgmenu */
 
-/* gcc -o t2conf t2conf.c sbuf.c util.c */
-
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "util.h"
 #include "config.h"
 #include "sbuf.h"
+#include "t2conf.h"
 
 #define DEFAULT_TINT2RC "~/.config/tint2/tint2rc"
 #define DELIM " \t\r\n"
@@ -19,7 +16,7 @@ enum alignment {UNKNOWN, TOP, CENTER, BOTTOM, LEFT, RIGHT, HORIZONTAL,
 static int g_screen_height, g_screen_width;
 static int bg_id;
 
-#define MAX_NR_BGS (8)
+#define MAX_NR_BGS (16)
 
 struct bg {
 	int rounded;
@@ -85,28 +82,52 @@ static void process_line(char *line)
 			fprintf(stderr, "warn: id too big\n");
 			return;
 		}
-		printf("color_menu_bg = %s\n", bg[id].background_color);
-		printf("color_menu_border = %s\n", bg[id].border_color);
-		printf("menu_border = %d\n", bg[id].border_width);
+		printf("color_menu_bg    = %s\n", bg[id].background_color);
+		parse_hexstr(bg[id].background_color, config.color_menu_bg);
+
+		/*
+		 * We could parse set color_menu_border and border_width here,
+		 * but choose not too because it sometimes looks a bit strange.
+		 * parse_hexstr(bg[id].border_color, config.color_menu_border);
+		 * config.menu_border = bg[id].border_width;
+		 */
+
 	} else if (!strncmp(option, "taskbar_background_id", 21)) {
-		; /* ignore this for now */
+		; /* ignore this */
 	} else if (!strncmp(option, "task_background_id", 18)) {
 		id = atoi(value);
 		if (id > MAX_NR_BGS) {
 			fprintf(stderr, "warn: id too big\n");
 			return;
 		}
-		printf("color_norm_bg = %s\n", bg[id].background_color);
+
+		/*
+		 * We don't set color_norm_bg. Only the selected item gets
+		 * a colour. If we wanted it, it would be:
+		 * parse_hexstr(bg[id].background_color, config.color_norm_bg);
+		 */
+
 	} else if (!strncmp(option, "task_active_background_id", 25)) {
 		id = atoi(value);
 		if (id > MAX_NR_BGS) {
 			fprintf(stderr, "warn: id too big\n");
 			return;
 		}
-		printf("color_sel_bg = %s\n", bg[id].background_color);
+		printf("item_radius      = %d\n", bg[id].rounded);
+		config.item_radius = bg[id].rounded;
+		printf("color_sel_bg     = %s\n", bg[id].background_color);
+		parse_hexstr(bg[id].background_color, config.color_sel_bg);
 		printf("color_sel_border = %s\n", bg[id].border_color);
-		printf("item_border = %d\n", bg[id].border_width);
+		parse_hexstr(bg[id].border_color, config.color_sel_border);
+		printf("item_border      = %d\n", bg[id].border_width);
+		config.item_border = bg[id].border_width;
 
+	} else if (!strcmp(option, "task_font_color")) {
+		printf("color_norm_fg    = %s\n", value);
+		parse_hexstr(value, config.color_norm_fg);
+	} else if (!strcmp(option, "task_active_font_color")) {
+		printf("color_sel_fg     = %s\n", value);
+		parse_hexstr(value, config.color_sel_fg);
 	} else if (!strcmp(option, "panel_position")) {
 		field = strtok(value, DELIM);
 		if (!field)
@@ -182,35 +203,52 @@ void parse_file(char *filename)
 		return;
 	}
 
+	printf("From tint2rc:\n");
 	read_file(fp);
 	fclose(fp);
 }
 
 void set_alignment_and_position(void)
 {
-	printf("orientation = ");
+	printf("orientation      = ");
 	if (orientation == HORIZONTAL)
 		printf("horizontal\n");
 	else if (orientation == VERTICAL)
 		printf("vertical\n");
 
 	if (orientation == HORIZONTAL) {
-		printf("margin_y    = %d\n", parse_height(panel_height) + panel_margin_v);
-		printf("halign      = left\n");
+		printf("margin_y         = %d\n", parse_height(panel_height) + panel_margin_v);
+		printf("halign           = left\n");
 		if (valign == TOP)
-			printf("valign      = top\n");
+			printf("valign           = top\n");
 		else if (valign == BOTTOM)
-			printf("valign      = bottom\n");
+			printf("valign           = bottom\n");
 	}
 
 	if (orientation == VERTICAL) {
-		printf("margin_x    = %d\n", parse_width(panel_height) + panel_margin_h);
-		printf("valign      = top\n");
+		printf("margin_x         = %d\n", parse_width(panel_height) + panel_margin_h);
+		printf("valign           = top\n");
 		if (halign == LEFT)
-			printf("halign      = left\n");
+			printf("halign           = left\n");
 		else if (halign == RIGHT)
-			printf("halign      = right\n");
+			printf("halign           = right\n");
 	}
+}
+
+void t2conf_cleanup(void)
+{
+	int i;
+
+	for (i = 0; i < MAX_NR_BGS; i++) {
+		if (bg[i].background_color)
+			free(bg[i].background_color);
+		if (bg[i].border_color)
+			free(bg[i].border_color);
+	}
+	if (panel_width)
+		free(panel_width);
+	if (panel_height)
+		free(panel_height);
 }
 
 void tint2rc_parse(const char *filename, int screen_width, int screen_height)
@@ -230,10 +268,5 @@ void tint2rc_parse(const char *filename, int screen_width, int screen_height)
 	parse_file(tint2rc.buf);
 	free(tint2rc.buf);
 	set_alignment_and_position();
-}
-
-int main(int argc, char **argv)
-{
-	tint2rc_parse(NULL, 1024, 600);
-/*	tint2rc_parse("~/.config/tint2/tint2rc-top", 1024, 600); */
+	t2conf_cleanup();
 }
