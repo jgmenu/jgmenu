@@ -1,5 +1,3 @@
-CC       = gcc
-MAKE     = make
 RM       = rm -f
 AR       = ar
 
