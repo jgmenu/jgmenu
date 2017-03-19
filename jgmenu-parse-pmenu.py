@@ -169,7 +169,7 @@ strings = {
 # The empty string is always the last element.
 def get_current_locale_names():
   # E.g. "en_US"
-  lang = locale.getlocale()[0]
+  lang = locale.getlocale()[0] or "en_US"
   # ["en", "US"]
   lang_parts = lang.split("_")
   locale_names = [""]
