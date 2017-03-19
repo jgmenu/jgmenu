@@ -119,6 +119,8 @@ static void process_line(char *line)
 		parse_hexstr(bg[id].background_color, config.color_sel_bg);
 		printf("color_sel_border = %s\n", bg[id].border_color);
 		parse_hexstr(bg[id].border_color, config.color_sel_border);
+		printf("color_sep_fg     = %s\n", bg[id].border_color);
+		parse_hexstr(bg[id].border_color, config.color_sep_fg);
 		printf("item_border      = %d\n", bg[id].border_width);
 		config.item_border = bg[id].border_width;
 
@@ -208,6 +210,28 @@ void parse_file(char *filename)
 	fclose(fp);
 }
 
+void set_menu_halign(const char *s)
+{
+	if (!s) {
+		fprintf(stderr, "warn: empty string in set_menu_halign()");
+		return;
+	}
+	if (config.menu_halign)
+		free(config.menu_halign);
+	config.menu_halign = strdup(s);
+}
+
+void set_menu_valign(const char *s)
+{
+	if (!s) {
+		fprintf(stderr, "warn: empty string in set_menu_valign()");
+		return;
+	}
+	if (config.menu_valign)
+		free(config.menu_valign);
+	config.menu_valign = strdup(s);
+}
+
 void set_alignment_and_position(void)
 {
 	printf("orientation      = ");
@@ -216,22 +240,37 @@ void set_alignment_and_position(void)
 	else if (orientation == VERTICAL)
 		printf("vertical\n");
 
+	/*
+	 * In each orientation there is one of menu_margin_{x,y} not
+	 * set because it is too complicated for t2conf.c to work
+	 * out. (i.e. x for horizontal and y for vertical).
+	 */
 	if (orientation == HORIZONTAL) {
 		printf("margin_y         = %d\n", parse_height(panel_height) + panel_margin_v);
+		config.menu_margin_y = parse_height(panel_height) + panel_margin_v;
 		printf("halign           = left\n");
-		if (valign == TOP)
+		set_menu_halign("left");
+		if (valign == TOP) {
 			printf("valign           = top\n");
-		else if (valign == BOTTOM)
+			set_menu_valign("top");
+		} else if (valign == BOTTOM) {
 			printf("valign           = bottom\n");
+			set_menu_valign("bottom");
+		}
 	}
 
 	if (orientation == VERTICAL) {
 		printf("margin_x         = %d\n", parse_width(panel_height) + panel_margin_h);
+		config.menu_margin_x = parse_width(panel_height) + panel_margin_h;
 		printf("valign           = top\n");
-		if (halign == LEFT)
+		set_menu_valign("top");
+		if (halign == LEFT) {
 			printf("halign           = left\n");
-		else if (halign == RIGHT)
+			set_menu_halign("left");
+		} else if (halign == RIGHT) {
 			printf("halign           = right\n");
+			set_menu_halign("right");
+		}
 	}
 }
 
