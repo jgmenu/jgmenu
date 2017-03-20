@@ -542,11 +542,15 @@ void resize(void)
 			  geo_get_menu_height());
 }
 
-void update(void)
+void update(int resize_required)
 {
 	update_filtered_list();
 	init_menuitem_coordinates();
 	draw_menu();
+	if (!resize_required)
+		return;
+	resize();
+	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
 }
 
 void launch_menu_at_pointer(void)
@@ -588,8 +592,7 @@ static void awake_menu(void)
 	grabpointer();
 	if (config.at_pointer)
 		launch_menu_at_pointer();
-	resize();
-	update();
+	update(1);
 }
 
 static void hide_menu(void)
@@ -612,7 +615,6 @@ void checkout_parent(void)
 	if (!menu.current_node->parent)
 		return;
 	checkout_submenu(menu.current_node->parent->tag);
-	resize();
 }
 
 void action_cmd(char *cmd)
@@ -628,8 +630,7 @@ void action_cmd(char *cmd)
 			return;
 		menu.current_node->last_sel = menu.sel;
 		checkout_submenu(p);
-		resize();
-		update();
+		update(1);
 	} else if (!strncmp(cmd, "^sub(", 5)) {
 		p = parse_caret_action(cmd, "^sub(");
 		if (!p)
@@ -638,9 +639,7 @@ void action_cmd(char *cmd)
 		hide_or_exit();
 	} else if (!strncmp(cmd, "^back(", 6)) {
 		checkout_parent();
-		update_filtered_list();
-		init_menuitem_coordinates();
-		draw_menu();
+		update(1);
 	} else {
 		spawn(cmd);
 		hide_or_exit();
@@ -671,7 +670,7 @@ void key_event(XKeyEvent *ev)
 	case XK_Escape:
 		if (filter_needle_length()) {
 			filter_reset();
-			update();
+			update(0);
 		} else {
 			hide_or_exit();
 		}
@@ -754,28 +753,29 @@ void key_event(XKeyEvent *ev)
 		if (!menu.current_node->parent)
 			break;
 		checkout_parent();
-		update();
+		update(1);
 		break;
 	case XK_Right:
 		if (strncmp(menu.sel->cmd, "^checkout(", 10))
 			break;
 		action_cmd(menu.sel->cmd);
-		update();
 		break;
 	case XK_F10:
 		/* force exit even if in 'stay_alive' mode */
 		exit(0);
 		break;
 	case XK_BackSpace:
-		if (filter_needle_length())
+		if (filter_needle_length()) {
 			filter_backspace();
-		else
+			update(0);
+		} else {
 			checkout_parent();
-		update();
+			update(1);
+		}
 		break;
 	default:
 		filter_addstr(buf, len);
-		update();
+		update(0);
 		break;
 	}
 }
@@ -815,7 +815,7 @@ void mouse_event(XEvent *e)
 	/* right-click */
 	if (ev->button == Button3) {
 		checkout_parent();
-		update();
+		update(1);
 	}
 
 	/* scroll up */
