@@ -762,40 +762,6 @@ void key_event(XKeyEvent *ev)
 		action_cmd(menu.sel->cmd);
 		update();
 		break;
-	case XK_F3:
-		config.color_menu_bg[3] -= 0.1;
-		if (config.color_menu_bg[3] < 0.0)
-			config.color_menu_bg[3] = 0.0;
-		init_menuitem_coordinates();
-		draw_menu();
-		break;
-	case XK_F4:
-		config.color_menu_bg[3] += 0.1;
-		if (config.color_menu_bg[3] > 1.0)
-			config.color_menu_bg[3] = 1.0;
-		init_menuitem_coordinates();
-		draw_menu();
-		break;
-	case XK_F5:
-		geo_set_menu_halign("left");
-		resize();
-		draw_menu();
-		break;
-	case XK_F6:
-		geo_set_menu_valign("bottom");
-		resize();
-		draw_menu();
-		break;
-	case XK_F7:
-		geo_set_menu_valign("top");
-		resize();
-		draw_menu();
-		break;
-	case XK_F8:
-		geo_set_menu_halign("right");
-		resize();
-		draw_menu();
-		break;
 	case XK_F10:
 		/* force exit even if in 'stay_alive' mode */
 		exit(0);
