@@ -76,6 +76,7 @@ do
 			-e 'CamelCase.*VisibilityUnobscured' \
 			-e 'CamelCase.*XBufferOverflow' \
 			-e 'CamelCase.*XButtonPressedEvent' \
+			-e 'CamelCase.*XButtonReleasedEvent' \
 			-e 'CamelCase.*XCloseDisplay' \
 			-e 'CamelCase.*XCopyArea' \
 			-e 'CamelCase.*XCreateColormap' \

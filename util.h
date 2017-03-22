@@ -14,6 +14,7 @@
 #define XATOI_NONNEG (01)
 #define XATOI_GT_0   (02)
 
+void warn(const char *err, ...);
 void die(const char *err, ...);
 void spawn(const char *arg);
 void *xmalloc(size_t size);

@@ -7,6 +7,17 @@ static struct sigaction sigchld_action = {
 	.sa_flags = SA_NOCLDWAIT
 };
 
+void warn(const char *err, ...)
+{
+	va_list params;
+
+	fprintf(stderr, "warning: ");
+	va_start(params, err);
+	vfprintf(stderr, err, params);
+	va_end(params);
+	fprintf(stderr, "\n");
+}
+
 void die(const char *err, ...)
 {
 	va_list params;

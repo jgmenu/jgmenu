@@ -490,6 +490,19 @@ void set_submenu_height(void)
 	geo_set_menu_height_from_itemarea_height(h);
 }
 
+int tag_exists(const char *tag)
+{
+	struct node *n;
+
+	if (!tag)
+		return 0;
+	list_for_each_entry(n, &menu.nodes, node) {
+		if (!strcmp(tag, n->tag))
+			return 1;
+	}
+	return 0;
+}
+
 void checkout_submenu(char *tag)
 {
 	struct item *item;
@@ -501,6 +514,10 @@ void checkout_submenu(char *tag)
 		menu.current_node = list_first_entry_or_null(&menu.nodes, struct node, node);
 		menu.subhead = list_first_entry_or_null(&menu.master, struct item, master);
 	} else {
+		if (!tag_exists(tag)) {
+			warn("tag '%s' does not exist", tag);
+			return;
+		}
 		menu.current_node = get_node_from_tag(tag);
 		if (!menu.current_node)
 			die("node '%s' does not exist", tag);
