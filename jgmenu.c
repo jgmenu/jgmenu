@@ -510,7 +510,7 @@ void checkout_submenu(char *tag)
 	menu.title = NULL;
 
 	/* Find head of submenu */
-	if (!tag) {
+	if (!tag || !strncmp(tag, "__root__", 8)) {
 		menu.current_node = list_first_entry_or_null(&menu.nodes, struct node, node);
 		menu.subhead = list_first_entry_or_null(&menu.master, struct item, master);
 	} else {
@@ -963,8 +963,14 @@ void create_node(const char *name, struct node *parent)
 	struct node *n;
 
 	n = xmalloc(sizeof(struct node));
+	if (!name)
+		die("cannot create node without name");
 	n->tag = strdup(name);
-	n->item = get_item_from_tag(name);
+	if (tag_exists(name))
+		n->item = get_item_from_tag(name);
+	else
+		n->item = list_first_entry_or_null(&menu.master,
+						   struct item, master);
 	n->last_sel = NULL;
 	n->parent = parent;
 	INIT_LIST_HEAD(&n->items);
@@ -982,7 +988,7 @@ void walk_tagged_items(struct item *this, struct node *parent)
 		/* move to next item, as this points to a ^tag() item */
 		p = container_of((this)->master.next, struct item, master);
 	} else {
-		create_node("root", parent);
+		create_node("__root__", NULL);
 		p = list_first_entry_or_null(&menu.master, struct item, master);
 	}
 	/* p now points to first menu-item under tag "this->tag" */
