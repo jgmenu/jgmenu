@@ -601,6 +601,45 @@ void launch_menu_at_pointer(void)
 	}
 }
 
+int tint2_getenv(int *var, const char *key)
+{
+	char *s;
+
+	s = getenv(key);
+	if (!s)
+		return -1;
+	xatoi(var, s, XATOI_NONNEG, key);
+	return 0;
+}
+
+void tint2_align(void)
+{
+	int bx1, bx2, by1, by2, px1, px2, py1, py2;
+
+	if (tint2_getenv(&bx1, "TINT2_BUTTON_ALIGNED_X1") == -1 ||
+	    tint2_getenv(&bx2, "TINT2_BUTTON_ALIGNED_X2") == -1 ||
+	    tint2_getenv(&by1, "TINT2_BUTTON_ALIGNED_Y1") == -1 ||
+	    tint2_getenv(&by2, "TINT2_BUTTON_ALIGNED_Y2") == -1 ||
+	    tint2_getenv(&px1, "TINT2_BUTTON_PANEL_X1") == -1 ||
+	    tint2_getenv(&px2, "TINT2_BUTTON_PANEL_X2") == -1 ||
+	    tint2_getenv(&py1, "TINT2_BUTTON_PANEL_Y1") == -1 ||
+	    tint2_getenv(&py2, "TINT2_BUTTON_PANEL_Y2") == -1) {
+		warn("tint2 environment variables not found");
+		return;
+	}
+
+	fprintf(stderr, "px1=%d\n", px1);
+
+	/* horizontal panel */
+	if (bx1 < px2 - geo_get_menu_width()) {
+		geo_set_menu_margin_x(bx1);
+		geo_set_menu_halign("left");
+	} else {
+		geo_set_menu_margin_x(geo_get_screen_width() - px2);
+		geo_set_menu_halign("right");
+	}
+}
+
 static void awake_menu(void)
 {
 	filter_reset();
@@ -608,10 +647,12 @@ static void awake_menu(void)
 	XMapWindow(ui->dpy, ui->win);
 	grabkeyboard();
 	grabpointer();
-	if (config.at_pointer)
+	if (config.at_pointer) {
 		launch_menu_at_pointer();
-	else
+	} else {
 		tint2env_read_socket();
+		tint2_align();
+	}
 	update(1);
 }
 
@@ -1419,6 +1460,7 @@ int main(int argc, char *argv[])
 			      geo_get_screen_height());
 	init_geo_variables_from_config();
 	tint2env_init_socket();
+	tint2_align();
 
 	read_stdin();
 	build_tree();
