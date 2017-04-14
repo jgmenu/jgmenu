@@ -969,11 +969,11 @@ void create_node(const char *name, struct node *parent)
 	if (!name)
 		die("cannot create node without name");
 	n->tag = strdup(name);
-	if (tag_exists(name))
-		n->item = get_item_from_tag(name);
-	else
+	if (!strcmp(name, "__root__"))
 		n->item = list_first_entry_or_null(&menu.master,
 						   struct item, master);
+	else
+		n->item = get_item_from_tag(name);
 	n->last_sel = NULL;
 	n->parent = parent;
 	INIT_LIST_HEAD(&n->items);
