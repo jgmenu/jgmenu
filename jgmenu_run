@@ -27,6 +27,22 @@ usage () {
 	exit 0
 }
 
+# Pipe to UNIX socket if tint2 button was used.
+# Check set/unset with ${parameter+word}
+if ! test -z ${TINT2_BUTTON_ALIGNED_X+x}
+then
+	printf "%b" \
+		"TINT2_BUTTON_ALIGNED_X1=${TINT2_BUTTON_ALIGNED_X1}\n" \
+		"TINT2_BUTTON_ALIGNED_X2=${TINT2_BUTTON_ALIGNED_X2}\n" \
+		"TINT2_BUTTON_ALIGNED_Y1=${TINT2_BUTTON_ALIGNED_Y1}\n" \
+		"TINT2_BUTTON_ALIGNED_Y2=${TINT2_BUTTON_ALIGNED_Y2}\n" \
+		"TINT2_BUTTON_PANEL_X1=${TINT2_BUTTON_PANEL_X1}\n" \
+		"TINT2_BUTTON_PANEL_X2=${TINT2_BUTTON_PANEL_X2}\n" \
+		"TINT2_BUTTON_PANEL_Y1=${TINT2_BUTTON_PANEL_Y1}\n" \
+		"TINT2_BUTTON_PANEL_Y2=${TINT2_BUTTON_PANEL_Y2}" \
+		| ${JGMENU_EXEC_DIR}/jgmenu-socket
+fi
+
 # "jgmenu_run" with no arguments specified
 if test $# -lt 1
 then

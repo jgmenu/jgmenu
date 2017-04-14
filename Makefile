@@ -21,13 +21,13 @@ SCRIPTS_SHELL  = jgmenu_run jgmenu-cache.sh jgmenu-pmenu.sh \
 
 SCRIPTS_PYTHON = jgmenu-parse-pmenu.py jgmenu-unity-hack.py
 
-PROGS	 = jgmenu jgmenu-parse-xdg jgmenu-icon-find jgmenu-xsettings
-PROGS   += jgmenu-parse-ob
+PROGS	 = jgmenu jgmenu-parse-xdg jgmenu-icon-find jgmenu-xsettings \
+	   jgmenu-parse-ob jgmenu-socket
 
 OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
         icon.o xpm-loader.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o \
 	config-xs.o filter.o compat.o hashmap.o lockfile.o argv-buf.o \
-	t2conf.o
+	t2conf.o t2env.o unix_sockets.o
 
 LIB_H = $(shell find . -name '*.h' -print)
 

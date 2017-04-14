@@ -34,6 +34,7 @@
 #include "lockfile.h"
 #include "argv-buf.h"
 #include "t2conf.h"
+#include "t2env.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -609,6 +610,8 @@ static void awake_menu(void)
 	grabpointer();
 	if (config.at_pointer)
 		launch_menu_at_pointer();
+	else
+		tint2env_read_socket();
 	update(1);
 }
 
@@ -1415,6 +1418,7 @@ int main(int argc, char *argv[])
 		tint2rc_parse(NULL, geo_get_screen_width(),
 			      geo_get_screen_height());
 	init_geo_variables_from_config();
+	tint2env_init_socket();
 
 	read_stdin();
 	build_tree();
