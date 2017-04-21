@@ -46,6 +46,8 @@ fi
 # "jgmenu_run" with no arguments specified
 if test $# -lt 1
 then
+	# The following construct keeps 'awake' quick by preventing a
+	# 'if pgrep -x jgmenu' or similar.
 	if ! killall -SIGUSR1 jgmenu >/dev/null 2>&1
 	then
 		cmd=$(jgmenu_run config --get csv_cmd)
