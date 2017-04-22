@@ -252,11 +252,11 @@ static void hpanel_set_margin_x(void)
 	printf("  - halign           = left\n");
 	set_menu_halign("left");
 	if (halign == CENTER)
-		x = (g_screen_width - parse_width(panel_width)) / 2 + panel_margin_h;
+		x = (g_screen_width - parse_width(panel_width) + panel_margin_h) / 2;
 	else if (halign == RIGHT)
-		x = (g_screen_width - parse_width(panel_width)) + panel_margin_h;
+		x = g_screen_width - parse_width(panel_width);
 	else
-		x = 0;
+		x = panel_margin_h;
 	printf("  - margin_x         = %d\n", x);
 	config.menu_margin_x = x;
 }
@@ -272,6 +272,23 @@ static void vpanel_set_margin_x(void)
 		printf("  - halign           = right\n");
 		set_menu_halign("right");
 	}
+}
+
+static void vpanel_set_margin_y(void)
+{
+	int y;
+
+	printf("  - valign           = top\n");
+	set_menu_valign("top");
+	/* panel_width here refers to panel "length" (=height!) */
+	if (valign == CENTER)
+		y = (g_screen_height - parse_height(panel_width) + panel_margin_v) / 2;
+	else if (valign == BOTTOM)
+		y = g_screen_height - parse_height(panel_width);
+	else
+		y = panel_margin_v;
+	printf("  - margin_y         = %d\n", y);
+	config.menu_margin_y = y;
 }
 
 static void set_alignment_and_position(void)
@@ -295,8 +312,7 @@ static void set_alignment_and_position(void)
 
 	if (orientation == VERTICAL) {
 		vpanel_set_margin_x();
-		printf("  - valign           = top\n");
-		set_menu_valign("top");
+		vpanel_set_margin_y();
 	}
 }
 
@@ -334,4 +350,10 @@ void tint2rc_parse(const char *filename, int screen_width, int screen_height)
 	free(tint2rc.buf);
 	set_alignment_and_position();
 	t2conf_cleanup();
+}
+
+int tint2rc_is_horizontal_panel(void)
+{
+	return (orientation == VERTICAL) ? 0 :
+	       (orientation == HORIZONTAL) ? 1 : -1;
 }

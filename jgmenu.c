@@ -628,15 +628,28 @@ void tint2_align(void)
 		return;
 	}
 
-	fprintf(stderr, "px1=%d\n", px1);
-
-	/* horizontal panel */
-	if (bx1 < px2 - geo_get_menu_width()) {
-		geo_set_menu_margin_x(bx1);
-		geo_set_menu_halign("left");
+	if (tint2rc_is_horizontal_panel() == -1) {
+		warn("invalid value for tint2 panel orientation");
+		return;
+	}
+	if (tint2rc_is_horizontal_panel()) {
+		printf("info: aligning to tint2 button variables in horizontal panel mode\n");
+		if (bx1 < px2 - geo_get_menu_width()) {
+			geo_set_menu_margin_x(bx1);
+			geo_set_menu_halign("left");
+		} else {
+			geo_set_menu_margin_x(geo_get_screen_width() - px2);
+			geo_set_menu_halign("right");
+		}
 	} else {
-		geo_set_menu_margin_x(geo_get_screen_width() - px2);
-		geo_set_menu_halign("right");
+		printf("info: aligning to tint2 button variables in vertical panel mode\n");
+		if (by1 < py2 - geo_get_menu_height()) {
+			geo_set_menu_margin_y(by1);
+			geo_set_menu_valign("top");
+		} else {
+			geo_set_menu_margin_y(geo_get_screen_height() - py2);
+			geo_set_menu_valign("bottom");
+		}
 	}
 }
 
@@ -1392,7 +1405,7 @@ static char *tag_of_first_item(void)
 
 void quit(int signum)
 {
-	fprintf(stderr, "info: caught SIGTERM or SIGINT\n");
+	fprintf(stderr, "\ninfo: caught SIGTERM or SIGINT\n");
 	exit(0);
 }
 
