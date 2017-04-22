@@ -3,6 +3,7 @@
 : ${JGMENU_EXEC_DIR=~/src/jgmenu}
 
 export PATH=$JGMENU_EXEC_DIR:$PATH
+JGMENU_LOCKFILE=~/.jgmenu-lockfile
 
 die () {
 	printf "fatal: %s\n" "$1"
@@ -28,9 +29,9 @@ usage () {
 }
 
 # Pipe to UNIX socket if tint2 button was used.
-# Check set/unset with ${parameter+word}
-if ! test -z ${TINT2_BUTTON_ALIGNED_X+x}
-then
+send_tint2_env_vars_to_jgmenu () {
+	# Check set/unset with ${parameter+word}
+	test -z ${TINT2_BUTTON_ALIGNED_X+x} && return
 	printf "%b" \
 		"TINT2_BUTTON_ALIGNED_X1=${TINT2_BUTTON_ALIGNED_X1}\n" \
 		"TINT2_BUTTON_ALIGNED_X2=${TINT2_BUTTON_ALIGNED_X2}\n" \
@@ -41,20 +42,24 @@ then
 		"TINT2_BUTTON_PANEL_Y1=${TINT2_BUTTON_PANEL_Y1}\n" \
 		"TINT2_BUTTON_PANEL_Y2=${TINT2_BUTTON_PANEL_Y2}" \
 		| ${JGMENU_EXEC_DIR}/jgmenu-socket
-fi
+}
 
 # "jgmenu_run" with no arguments specified
 if test $# -lt 1
 then
-	# The following construct keeps 'awake' quick by preventing a
-	# 'if pgrep -x jgmenu' or similar.
-	if ! killall -SIGUSR1 jgmenu >/dev/null 2>&1
+	# A primary objective here is to keep 'awake' quick
+	# Checking if the lockfile exists is much quicker than
+	# 'pgrep -x jgmenu' (30ms on my machine) or similar.
+	if test -e ${JGMENU_LOCKFILE}
 	then
+		send_tint2_env_vars_to_jgmenu
+		killall -SIGUSR1 jgmenu >/dev/null 2>&1
+	else
 		cmd=$(jgmenu_run config --get csv_cmd)
 		test -z "${cmd}" && cmd="jgmenu_run parse-pmenu"
 
 		# Run it through a shell enable tilde and variable expansion
-		/bin/sh -c "${cmd} | jgmenu --stay-alive"
+		sh -c "${cmd} | jgmenu --stay-alive"
 	fi
 	exit 0
 fi
