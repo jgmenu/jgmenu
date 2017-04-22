@@ -1390,12 +1390,26 @@ static char *tag_of_first_item(void)
 	return item->tag;
 }
 
+void quit(int signum)
+{
+	fprintf(stderr, "info: caught SIGTERM or SIGINT\n");
+	exit(0);
+}
+
 int main(int argc, char *argv[])
 {
 	int i;
 	struct sbuf config_file;
 	struct stat sb;
 	char *checkout_arg = NULL;
+	struct sigaction term_action, int_action;
+
+	memset(&term_action, 0, sizeof(struct sigaction));
+	memset(&int_action, 0, sizeof(struct sigaction));
+	term_action.sa_handler = quit;
+	int_action.sa_handler = quit;
+	sigaction(SIGTERM, &term_action, NULL);
+	sigaction(SIGINT, &int_action, NULL);
 
 	config_set_defaults();
 	menu.title = NULL;
