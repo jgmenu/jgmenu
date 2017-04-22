@@ -1,0 +1,100 @@
+Add bl.c to read bunsenlabs-tint2-session
+	parse tint2-session if it exists
+
+Set stay_alive = 1 by default
+
+  - tint2_position (to obey your recent env vars - default 1)
+  - tint2_appearance (to read tint2rc and parse colours, etc - default 1)
+  - tint2_config_file (in case it's different to
+    ~/.config/tint2/tint2rc)
+  - tint2_rules (to read tint2rc variables in preference to jgmenurc -
+    default 1)
+    This would let the user set tint2_rules=0 and then populate those
+    jgmenurc variables he/she wishes to have a different value to that
+    of tint2rc
+
+align.h (with enum)
+
+jgmenu-init.sh: add variables with # infront (in case tint2_rules=0)
+Add to init.sh, regression items (max_items; min_items)
+
+Add info()
+
+Valgrind and atexit()-cleanup()
+
+argv_buf delim
+
+Add explaination on JGMENU_EXEC_PATH
+
+Remove XINERAMA ifdefs
+
+Remove title (will be overtaken by fixed.c items)
+
+Remove noprog colour
+
+Rename filter list (as it clashes with filter_)
+
+Create icon cache from icon.c
+
+Write jgmenu-config in C to expand ~ + $ to avoid "sh -c" in jgmenu-start.sh
+and jgmenu_run (it doesn't look nice in `top`)
+
+Add option to read fd other than STDIN (--menu-file=)
+
+Add item_padding_x
+
+Add margin_x to menu_width()
+
+Add align CENTER (and re-create bl-exit)
+
+Add menu_padding_{l,r,t,b}
+	(no need to call it root - if submenus have different padding we can call them sub_padding)
+
+Make the "go to parent" automatic based on the node tree.
+
+Add shareness with symlinks
+
+Add icon_margin_r (i.e. distance between icon and text)
+	item_margin_x won't always be suitable.
+
+fixed.c
+-------
+	enum fixed_type {ICON, RECT, TEXT, SEARCH};
+	@type-action-x-y-w-h-r-halign-valign-fgcol-bgcol-content
+		NOTES:
+		  - x, y: distance from edge
+		  - 'content' is icon_path or text
+		  - For RECT, a 1px thick border will be drawn using fgcol
+Add scroll_bar
+
+Add man-page for jgmenu_run ob
+
+Write jgmenu-init.sh --help message.
+
+Add svg2png support in jgmenu-cache
+
+Icon theme:
+
+	In README.md, explain that you have to set icon_theme in jgmenurc
+	(unless you have an xsettings-daemon running)
+
+	In jgmenu_run cache, WARN if the icon theme doesn't not exist
+
+Add jgmenuconf
+	Would need jgmenu_run init and jgmenu_run config
+
+Remove harded coded variables (such as 22, etc)
+
+Check if variable is number in shell script (=isnumeric())
+(needed in jgmenu-cache.sh)
+
+Add equivalent to ~/.config/gtk-3.0/settings.ini | grep... in theme.c
+
+Add rtrim, ltrim, trim, to sbuf.c
+
+Write examples/README explaining what the ex0? files are.
+
+git-config
+----------
+	Add --add
+	Add --add-to-fav
