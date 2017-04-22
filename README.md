@@ -6,7 +6,7 @@ Introduction
 
 jgmenu is a simple X11 menu intended to be used with tint2 and openbox.
 
-To run the menu, see lesson 0 and 1 in
+To run the menu, see lessons 0 and 1 in
 [JGMENUTUTORIAL(7)](docs/manual/jgmenututorial.7.md)  
 
 ### Key Features
@@ -34,7 +34,7 @@ jgmenu+tint2+openbox with Numix-Circle icon theme
 jgmenu+tint2+openbox with Papirus icon theme
 
 [![foo](http://i.imgur.com/4XzVBDOt.png)](http://i.imgur.com/4XzVBDO.png)  
-jgmenu on bunsenlabs (`jgmenu_run ob`)
+jgmenu on Bunsenlabs
 
 Build and Install
 -----------------
@@ -46,7 +46,7 @@ For Arch Linux users, there is an AUR package named "jgmenu".
 On Debian based systems such as Bunsenlabs and Ubuntu, do:
 
 ```bash
-sudo apt-get install libx11-dev libxinerama-dev libcairo2-dev libpango1.0-dev librsvg2-dev libxml2-dev
+./scripts/install-debian-dependencies.sh
 mkdir ~/src && cd ~/src
 git clone https://github.com/johanmalm/jgmenu.git
 cd jgmenu
