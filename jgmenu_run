@@ -44,6 +44,12 @@ send_tint2_env_vars_to_jgmenu () {
 		| ${JGMENU_EXEC_DIR}/jgmenu-socket
 }
 
+remove_lockfile () {
+	rm -f "${JGMENU_LOCKFILE}"
+	printf "warn: %b\n" "old lockfile caused jgmenu to stop; lockfile removed"
+	exit 1
+}
+
 # "jgmenu_run" with no arguments specified
 if test $# -lt 1
 then
@@ -53,7 +59,15 @@ then
 	if test -e ${JGMENU_LOCKFILE}
 	then
 		send_tint2_env_vars_to_jgmenu
-		killall -SIGUSR1 jgmenu >/dev/null 2>&1
+		if ! killall -SIGUSR1 jgmenu >/dev/null 2>&1
+		then
+			# We should not get to here unless
+			#   - there has been a system crash
+			#   - lockfile was left from a jgmenu compiled before
+			#     commit e3cb35 when we started to handle SIGTERM
+			#     and SIGINT
+			remove_lockfile
+		fi
 	else
 		cmd=$(jgmenu_run config --get csv_cmd)
 		test -z "${cmd}" && cmd="jgmenu_run parse-pmenu"
