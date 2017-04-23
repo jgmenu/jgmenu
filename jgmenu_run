@@ -73,7 +73,7 @@ then
 		test -z "${cmd}" && cmd="jgmenu_run parse-pmenu"
 
 		# Run it through a shell enable tilde and variable expansion
-		sh -c "${cmd} | jgmenu --stay-alive"
+		sh -c "${cmd} | jgmenu"
 	fi
 	exit 0
 fi

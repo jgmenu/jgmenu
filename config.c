@@ -10,8 +10,8 @@ struct config config;
 
 void config_set_defaults(void)
 {
-	config.spawn		 = 1;
-	config.stay_alive	 = 0;
+	config.spawn		 = 1;	/* not in jgmenurc */
+	config.stay_alive	 = 1;
 	config.hide_on_startup	 = 0;
 	config.read_tint2rc	 = 0;
 

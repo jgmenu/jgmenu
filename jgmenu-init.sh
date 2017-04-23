@@ -10,7 +10,7 @@ mkdir -p ~/.config/jgmenu
 
 populate_tmp_file () {
 cat <<'EOF' >>"${tmp_jgmenurc}"
-stay_alive	  = 0
+stay_alive	  = 1
 hide_on_startup	  = 0
 csv_cmd		  = jgmenu_run parse-pmenu
 menu_margin_x	  = 0

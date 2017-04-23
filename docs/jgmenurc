@@ -2,7 +2,7 @@
 #
 # See JGMENU-CONFIG(1) for further details.
 
-stay_alive	  = 0
+stay_alive	  = 1
 hide_on_startup	  = 0
 csv_cmd		  = jgmenu_run parse-pmenu
 
