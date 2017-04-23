@@ -57,7 +57,7 @@ void tint2env_read_socket(void)
 	/* sfd is non-blocking */
 	client_fd = accept(sfd, NULL, NULL);
 	if (client_fd == -1) {
-		warn("tint2 socket is empty");
+		fprintf(stderr, "info: tint2 button was not used\n");
 		return;
 	}
 	while ((num_read = read(client_fd, buf, SOCKET_BUF_SIZE)) > 0) {

@@ -624,7 +624,7 @@ void tint2_align(void)
 	    tint2_getenv(&px2, "TINT2_BUTTON_PANEL_X2") == -1 ||
 	    tint2_getenv(&py1, "TINT2_BUTTON_PANEL_Y1") == -1 ||
 	    tint2_getenv(&py2, "TINT2_BUTTON_PANEL_Y2") == -1) {
-		warn("tint2 environment variables not found");
+		fprintf(stderr, "info: tint2 button was not used\n");
 		return;
 	}
 
@@ -660,9 +660,9 @@ static void awake_menu(void)
 	XMapWindow(ui->dpy, ui->win);
 	grabkeyboard();
 	grabpointer();
-	if (config.at_pointer) {
+	if (config.at_pointer)
 		launch_menu_at_pointer();
-	} else {
+	if (config.tint2_button && !config.at_pointer) {
 		tint2env_read_socket();
 		tint2_align();
 	}
@@ -1482,12 +1482,18 @@ int main(int argc, char *argv[])
 
 	ui_init();
 	geo_init();
-	if (config.read_tint2rc)
+	if (config.tint2_rules)
+		init_geo_variables_from_config();
+	if (config.tint2_look)
 		tint2rc_parse(NULL, geo_get_screen_width(),
 			      geo_get_screen_height());
-	init_geo_variables_from_config();
-	tint2env_init_socket();
-	tint2_align();
+	if (!config.tint2_rules)
+		init_geo_variables_from_config();
+
+	if (config.tint2_button) {
+		tint2env_init_socket();
+		tint2_align();
+	}
 
 	read_stdin();
 	build_tree();

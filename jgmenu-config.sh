@@ -10,7 +10,8 @@ usage () {
 # $1 - key
 get_variable () {
 	test -z "$1" && exit 1
-	v=$(cat ${config_file} | grep -i ${1} | awk -F= '{printf $2}')
+	test -e ${config_file} || exit 1
+	v=$(cat ${config_file} 2>/dev/null | grep -i ${1} | awk -F= '{printf $2}')
 	# Using @ as sed delimitor as | and / might be used in $v
 	v_trimmed=$(printf "%s" "${v}" | sed -e 's@^\s*@@' -e 's@\s*$@@')
 	printf "%s\n" "${v_trimmed}"
