@@ -5,14 +5,16 @@
 tmp_jgmenurc=$(mktemp)
 jgmenurc=~/.config/jgmenu/jgmenurc
 jgmenurc_bak=${jgmenurc}.$(date +%Y%m%d%H%M)
-
-mkdir -p ~/.config/jgmenu
+regression_items="max_items min_items"
 
 populate_tmp_file () {
 cat <<'EOF' >>"${tmp_jgmenurc}"
 stay_alive	  = 1
 hide_on_startup	  = 0
 csv_cmd		  = jgmenu_run parse-pmenu
+tint2_look	  = 1
+tint2_button	  = 1
+tint2_rules	  = 1
 menu_margin_x	  = 0
 menu_margin_y	  = 32
 menu_width	  = 200
@@ -54,27 +56,39 @@ backup_jgmenurc () {
 	cp -p ${jgmenurc} ${jgmenurc_bak}
 }
 
+print_start_msg () {
+	if test -z ${printed+x}
+	then
+		printf "%b\n" "Amending config file with missing items..."
+		printf "\n\n%b\n\n" "### the items below were added by 'jgmenu_run init'" >> ${jgmenurc}
+	fi
+	printed=1
+}
+
 amend_jgmenurc () {
+	prefix="      - "
 	while IFS= read -r line
 	do
 		v=$(echo ${line%%=*} | tr -d ' ')
 		test -z "${v}" && continue
-		if ! grep "^${v}" "${jgmenurc}" >/dev/null
+		if ! grep "^${v}\|^#${v}" "${jgmenurc}" >/dev/null
 		then
-			printf "%b\n" "${line}"
-			printf "%b\n" "${line}" >> ${jgmenurc}
+			print_start_msg
+			printf "${prefix}%b\n" "${line}"
+			printf "#%b\n" "${line}" >> ${jgmenurc}
 		fi
 	done <${tmp_jgmenurc}
 }
 
 # START OF SCRIPT
 
+mkdir -p ~/.config/jgmenu
+
 populate_tmp_file
 
 if test -e ${jgmenurc}
 then
 	backup_jgmenurc
-	printf "%s\n" "Amending jgmenurc"
 	amend_jgmenurc
 else
 	printf "%s\n" "Creating jgmenurc"
@@ -82,3 +96,12 @@ else
 fi
 
 rm -f ${tmp_jgmenurc}
+
+# Check for jgmenurc items which are no longer valid
+for r in ${regression_items}
+do
+	if grep ${r} ${jgmenurc} >/dev/null
+	then
+		printf "%b\n" "warning: ${r} is no longer a valid key"
+	fi
+done
