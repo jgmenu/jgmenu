@@ -72,6 +72,10 @@ static void process_line(char *line)
 		xatoi(&config.hide_on_startup, value, XATOI_NONNEG, "config.hide_on_startup");
 	else if (!strncmp(option, "tint2_look", 10))
 		xatoi(&config.tint2_look, value, XATOI_NONNEG, "config.tint2_look");
+	else if (!strncmp(option, "tint2_button", 12))
+		xatoi(&config.tint2_button, value, XATOI_NONNEG, "config.tint2_button");
+	else if (!strncmp(option, "tint2_rules", 11))
+		xatoi(&config.tint2_rules, value, XATOI_NONNEG, "config.tint2_rules");
 
 	else if (!strncmp(option, "menu_margin_x", 13))
 		xatoi(&config.menu_margin_x, value, XATOI_NONNEG, "config.margin_x");

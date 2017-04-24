@@ -13,6 +13,11 @@ Add bl.c to read bunsenlabs-tint2-session
 
 align.h (with enum)
 
+Consider adding a --simple option to jgmenu
+	- stay_alive = 0
+	- tint2_look = 0
+	- tint2_button = 0
+
 jgmenu-init.sh: add variables with # infront (in case tint2_rules=0)
 Add to init.sh, regression items (max_items; min_items)
 

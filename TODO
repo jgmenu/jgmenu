@@ -5,15 +5,7 @@ HIGH-LEVEL ROADMAP
 
   - Create multi-window mode where submenus open in separate windows
 
-  - Write XDG menu parser based on libmenu-cache (probably "jgmenu_run xdg2")
-
-  - Add tint2 compatibility mode (i.e. read tint2rc file)
-	config.h variables should be set in the following order:
-	(i.e. bottom of list has higher precedence)
-	  - default (config.c)
-	  - jgmenurc (--config-file=)
-	  - tint2rc (--tint2rc=)
-	  - cmd line args (e.g. --icon_size=)
+  - Write XDG menu parser based on libmenu-cache (probably "jgmenu_run lx")
 
   - Pipemenus
 
@@ -24,4 +16,9 @@ HIGH-LEVEL ROADMAP
 
   - Add search box
 
+AFTER v1.0
+----------
   - Consider "hover" features and "inline expansion" of menus
+
+  - On wake-up, check changes to .desktop files, tint2, xsettings,
+    jgmenurc, etc.

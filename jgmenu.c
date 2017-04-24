@@ -1482,13 +1482,18 @@ int main(int argc, char *argv[])
 
 	ui_init();
 	geo_init();
-	if (config.tint2_rules)
-		init_geo_variables_from_config();
+
 	if (config.tint2_look)
 		tint2rc_parse(NULL, geo_get_screen_width(),
 			      geo_get_screen_height());
-	if (!config.tint2_rules)
-		init_geo_variables_from_config();
+	/*
+	 * It's not neat to read the config file a second time, but cannot
+	 * think of a better way.
+	 */
+	if (!config.tint2_rules && config_file.len)
+		config_parse_file(config_file.buf);
+
+	init_geo_variables_from_config();
 
 	if (config.tint2_button) {
 		tint2env_init_socket();
