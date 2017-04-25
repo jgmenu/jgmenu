@@ -1,6 +1,6 @@
 % JGMENU-CONFIG(1)  
 % Johan Malm  
-% 21 February, 2017
+% 25 April, 2017
 
 # NAME
 
@@ -70,11 +70,29 @@ hide_on_startup
     `killall -SIGUSR1 jgmenu` to show the menu.  
 
 csv_cmd  
+
     defines the command to produce the jgmenu flavoured CSV for  
     `jgmenu_run` (when run without argument). Examples include:  
 
     csv_cmd = jgmenu_run parse-ob  
     csv_cmd = cat ~/mymenu.csv  
+
+tint2_look  
+
+    Reads tint2rc and parse config options for colours, dimensions  
+    and alignment.  
+
+tint2_button  
+
+    Reads tint2 button environment position variables. These give  
+    more accurate alignment along the length of the panel than what  
+    the "tint2_look" option achieves.  
+
+tint2_rules  
+
+    Reads tint2rc variables in preference to jgmenurc.  
+    If "tint2_rules = 0", jgmenurc can be used to overrule specific  
+    tint2rc settings.  
 
 menu_margin_x  
 menu_margin_y  
