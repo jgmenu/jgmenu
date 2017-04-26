@@ -1,0 +1,31 @@
+{
+   <libgobject2>
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.*
+   ...
+}
+
+{
+   <libfontconfig>
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libfontconfig.so.*
+   ...
+}
+
+{
+   <libpangocairo>
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so.*
+   ...
+}
+
+{
+   <libcairo>
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libpango-1.0.so.0.3600.8
+   ...
+}

@@ -9,3 +9,4 @@ jgmenu-parse-ob
 jgmenu-socket
 README.html
 config.mk
+valgrind.log
