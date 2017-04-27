@@ -35,6 +35,7 @@
 #include "argv-buf.h"
 #include "t2conf.h"
 #include "t2env.h"
+#include "bl.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -1424,7 +1425,7 @@ static void set_simple_mode(void)
 	config.tint2_rules = 0;
 }
 
-static void read_config_file(const char *filename)
+static void read_jgmenurc(const char *filename)
 {
 	struct stat sb;
 	static struct sbuf f;
@@ -1448,6 +1449,21 @@ static void read_config_file(const char *filename)
 		return;
 	}
 	config_parse_file(f.buf);
+}
+
+static void read_tint2rc(void)
+{
+	struct sbuf f;
+
+	sbuf_init(&f);
+	bl_tint2file(&f);
+	if (f.len) {
+		fprintf(stderr, "info: using BunsenLabs tint2 session file '%s'\n", f.buf);
+		tint2rc_parse(f.buf, geo_get_screen_width(), geo_get_screen_height());
+	} else {
+		tint2rc_parse(NULL, geo_get_screen_width(), geo_get_screen_height());
+	}
+	free(f.buf);
 }
 
 int main(int argc, char *argv[])
@@ -1478,7 +1494,7 @@ int main(int argc, char *argv[])
 			arg_vsimple = 1;
 	}
 	if (!arg_vsimple)
-		read_config_file(arg_config_file);
+		read_jgmenurc(arg_config_file);
 
 	for (i = 1; i < argc; i++) {
 		if (!strncmp(argv[i], "--version", 9)) {
@@ -1518,12 +1534,11 @@ int main(int argc, char *argv[])
 	geo_init();
 
 	if (config.tint2_look)
-		tint2rc_parse(NULL, geo_get_screen_width(),
-			      geo_get_screen_height());
+		read_tint2rc();
 
 	/* Parse jgmenurc again to overrule tint2rc values */
 	if (!config.tint2_rules && !arg_vsimple)
-		read_config_file(arg_config_file);
+		read_jgmenurc(arg_config_file);
 
 	init_geo_variables_from_config();
 

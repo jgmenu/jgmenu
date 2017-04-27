@@ -205,7 +205,7 @@ static void parse_file(char *filename)
 		return;
 	}
 
-	printf("info: config variables set based on tint2rc:\n");
+	printf("info: config variables set based on '%s':\n", filename);
 	read_file(fp);
 	fclose(fp);
 }
@@ -341,7 +341,7 @@ void tint2rc_parse(const char *filename, int screen_width, int screen_height)
 	bg[0].background_color = strdup("#000000 00");
 	bg[0].border_color = strdup("#000000 00");
 	sbuf_init(&tint2rc);
-	if (filename)
+	if (filename && filename != '\0')
 		sbuf_addstr(&tint2rc, filename);
 	else
 		sbuf_addstr(&tint2rc, DEFAULT_TINT2RC);
