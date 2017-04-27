@@ -1403,18 +1403,51 @@ static char *tag_of_first_item(void)
 	return item->tag;
 }
 
-void quit(int signum)
+static void quit(int signum)
 {
 	fprintf(stderr, "\ninfo: caught SIGTERM or SIGINT\n");
 	exit(0);
 }
 
+static void set_simple_mode(void)
+{
+	config.stay_alive = 0;
+	config.tint2_look = 0;
+	config.tint2_button = 0;
+	config.tint2_rules = 0;
+}
+
+static void read_config_file(const char *filename)
+{
+	struct stat sb;
+	static struct sbuf f;
+	static int initiated;
+
+	if (initiated) {
+		if (stat(f.buf, &sb) != 0)
+			return;
+		config_parse_file(f.buf);
+		return;
+	}
+	sbuf_init(&f);
+	if (filename)
+		sbuf_cpy(&f, filename);
+	if (!f.len)
+		sbuf_cpy(&f, "~/.config/jgmenu/jgmenurc");
+	sbuf_expand_tilde(&f);
+	initiated = 1;
+	if (stat(f.buf, &sb) != 0) {
+		warn("config file '%s' does not exist", f.buf);
+		return;
+	}
+	config_parse_file(f.buf);
+}
+
 int main(int argc, char *argv[])
 {
 	int i;
-	struct sbuf config_file;
-	struct stat sb;
-	char *checkout_arg = NULL;
+	char *arg_checkout = NULL, *arg_config_file = NULL;
+	int arg_simple = 0, arg_vsimple = 0;
 	struct sigaction term_action, int_action;
 
 	memset(&term_action, 0, sizeof(struct sigaction));
@@ -1430,29 +1463,17 @@ int main(int argc, char *argv[])
 	INIT_LIST_HEAD(&menu.master);
 	INIT_LIST_HEAD(&menu.filter);
 	INIT_LIST_HEAD(&menu.nodes);
-	sbuf_init(&config_file);
 
 	for (i = 1; i < argc; i++) {
-		if (!strncmp(argv[i], "--config-file=", 14)) {
-			if (stat(argv[i] + 14, &sb) != 0)
-				fprintf(stderr,
-					"warning: file '%s' does not exist\n",
-					argv[i] + 14);
-			else
-				sbuf_cpy(&config_file, argv[i] + 14);
-			break;
-		}
+		if (!strncmp(argv[i], "--config-file=", 14))
+			arg_config_file = argv[i] + 14;
+		else if (!strncmp(argv[i], "--vsimple", 9))
+			arg_vsimple = 1;
 	}
-	if (!config_file.len) {
-		sbuf_cpy(&config_file, "~/.config/jgmenu/jgmenurc");
-		sbuf_expand_tilde(&config_file);
-		if (stat(config_file.buf, &sb) != 0)
-			sbuf_cpy(&config_file, "");
-	}
-	if (config_file.len)
-		config_parse_file(config_file.buf);
+	if (!arg_vsimple)
+		read_config_file(arg_config_file);
 
-	for (i = 1; i < argc; i++)
+	for (i = 1; i < argc; i++) {
 		if (!strncmp(argv[i], "--version", 9)) {
 			printf("%s\n", VERSION);
 			exit(0);
@@ -1462,7 +1483,7 @@ int main(int argc, char *argv[])
 		} else if (!strncmp(argv[i], "--no-spawn", 10)) {
 			config.spawn = 0;
 		} else if (!strncmp(argv[i], "--checkout=", 11)) {
-			checkout_arg = argv[i] + 11;
+			arg_checkout = argv[i] + 11;
 		} else if (!strncmp(argv[i], "--icon-size=", 12)) {
 			xatoi(&config.icon_size, argv[i] + 12, XATOI_NONNEG,
 			      "config.icon_size");
@@ -1474,7 +1495,15 @@ int main(int argc, char *argv[])
 			config.stay_alive = 1;
 		} else if (!strncmp(argv[i], "--hide-on-startup", 17)) {
 			config.hide_on_startup = 1;
+		} else if (!strncmp(argv[i], "--simple", 8)) {
+			arg_simple = 1;
 		}
+	}
+
+	if (arg_simple || arg_vsimple)
+		set_simple_mode();
+	if (arg_vsimple)
+		config.icon_size = 0;
 
 	/* check lockfile after --help and --version */
 	lockfile_init();
@@ -1486,12 +1515,10 @@ int main(int argc, char *argv[])
 	if (config.tint2_look)
 		tint2rc_parse(NULL, geo_get_screen_width(),
 			      geo_get_screen_height());
-	/*
-	 * It's not neat to read the config file a second time, but cannot
-	 * think of a better way.
-	 */
-	if (!config.tint2_rules && config_file.len)
-		config_parse_file(config_file.buf);
+
+	/* Parse jgmenurc again to overrule tint2rc values */
+	if (!config.tint2_rules && !arg_vsimple)
+		read_config_file(arg_config_file);
 
 	init_geo_variables_from_config();
 
@@ -1504,8 +1531,8 @@ int main(int argc, char *argv[])
 	build_tree();
 	hang_items_off_nodes();
 
-	if (checkout_arg)
-		checkout_submenu(checkout_arg);
+	if (arg_checkout)
+		checkout_submenu(arg_checkout);
 	else
 		checkout_submenu(tag_of_first_item());
 
