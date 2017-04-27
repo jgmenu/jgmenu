@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 21 February, 2017
+% 27 April, 2017
 
 # NAME
 
@@ -9,8 +9,8 @@ jgmenu - A simple X11 menu
 # SYNOPSIS
 
 jgmenu \[\--no-spawn] \[\--checkout=<*tag*>] \[\--config-file=<*file*>]  
-       \[\--icon-size=<*size*>] \[\--at-pointer] \[\--stay-alive]  
-       \[\--hide-on-startup]
+       \[\--icon-size=<*size*>] \[\--at-pointer] \[\--hide-on-startup]  
+       \[\--simple] \[\--vsimple]
 
 # DESCRIPTION
 
@@ -72,14 +72,16 @@ start-up times:
 \--at-pointer  
 :   launch menu at mouse pointer
 
-\--stay-alive
-:   make jgmenu a long-running application. In this mode, the  
-       normal "exit events" such as selecing an item or clicking  
-       outside the menu, will hide the menu. A hidden menu is awoken  
-       by running the `jgmenu_run` command.
-
 \--hide-on-startup
 :   start menu is hidden state
+
+\--simple
+:   ignore tint2 settings and run in 'short-lived' mode (i.e. exit  
+       after mouse click or enter/escape)
+
+\--vsimple
+:   same as --simple, but also disables icons and ignores jgmenurc
+
 
 # USER INTERFACE
 The user interface is generally pretty intuitive. Here follow mouse  

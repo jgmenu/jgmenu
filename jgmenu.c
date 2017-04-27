@@ -92,8 +92,15 @@ static const char jgmenu_usage[] =
 "    --version             show version\n"
 "    --no-spawn            redirect command to stdout instead of executing\n"
 "    --checkout=<tag>      checkout submenu <tag> on startup\n"
-"    --config-file=<file>  read config file\n"
-"    --at-pointer          launch menu at mouse pointer\n";
+"    --config-file=<file>  specify config file\n"
+"    --icon-size=<size>    specify icon size (22 by default); set to 0 to\n"
+"                          disable icons\n"
+"    --at-pointer          launch menu at mouse pointer\n"
+"    --hide-on-startup     start menu is hidden state\n"
+"    --simple              ignore tint2 settings and run in 'short-lived' mode\n"
+"                          (i.e. exit after mouse click or enter/escape)\n"
+"    --vsimple             same as --simple, but also disables icons and\n"
+"                          ignores jgmenurc\n";
 
 void init_empty_item(void)
 {
@@ -1491,8 +1498,6 @@ int main(int argc, char *argv[])
 			die_when_loaded = 1;
 		} else if (!strncmp(argv[i], "--at-pointer", 12)) {
 			config.at_pointer = 1;
-		} else if (!strncmp(argv[i], "--stay-alive", 12)) {
-			config.stay_alive = 1;
 		} else if (!strncmp(argv[i], "--hide-on-startup", 17)) {
 			config.hide_on_startup = 1;
 		} else if (!strncmp(argv[i], "--simple", 8)) {

@@ -1,29 +1,16 @@
 Add bl.c to read bunsenlabs-tint2-session
 	parse tint2-session if it exists
 
-  - tint2_look (to read tint2rc and parse colours, etc - default 1)
-  - tint2_button (to obey your recent env vars - default 1)
-  - tint2_rules (to read tint2rc variables in preference to jgmenurc -
-    default 1)
-    This would let the user set tint2_rules=0 and then populate those
-    jgmenurc variables he/she wishes to have a different value to that
-    of tint2rc
-  - tint2_config_file (in case it's different to
-    ~/.config/tint2/tint2rc)
+Add tint2_config_file (in case it's different to ~/.config/tint2/tint2rc)
 
-align.h (with enum)
+=== upversion ===
 
-Consider adding a --simple option to jgmenu
-	- stay_alive = 0
-	- tint2_look = 0
-	- tint2_button = 0
-
-jgmenu-init.sh: add variables with # infront (in case tint2_rules=0)
-Add to init.sh, regression items (max_items; min_items)
+align.h (use enum to avoid ugly strings)
+UNIX socket - set v align for h panel and vice versa.
 
 Add info()
 
-Valgrind and atexit()-cleanup()
+Add atexit()-cleanup()
 
 argv_buf delim
 
@@ -48,7 +35,7 @@ Add item_padding_x
 
 Add margin_x to menu_width()
 
-Add align CENTER (and re-create bl-exit)
+Add align CENTER
 
 Add menu_padding_{l,r,t,b}
 	(no need to call it root - if submenus have different padding we can call them sub_padding)

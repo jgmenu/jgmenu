@@ -1,6 +1,6 @@
 % JGMENU_RUN(1)  
 % Johan Malm  
-% 21 February, 2017
+% 24 April, 2017
 
 # NAME
 
@@ -19,10 +19,9 @@ written in C, python and shell. The `jgmenu_run` command is an
 abstraction layer which hides the plumbing of components and  
 creates a simpler user interface.
 
-If no 'command' or argument is specified, `jgmenu_run` shows the  
-menu if an instance is already running or else starts jgmenu in  
-'stay-alive' mode (i.e. as a long-running application), using pmenu  
-unless otherwise specified by `csv_cmd` in jgmenurc.
+If no 'command' or argument is specified, `jgmenu_run` either awakes  
+jgmenu or (if not already running) starts jgmenu using the command  
+specified by `csv_cmd` in jgmenurc (pmenu by default).
 
 # COMMANDS
 

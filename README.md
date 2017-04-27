@@ -21,8 +21,8 @@ To run the menu, see lessons 0 and 1 in
   - It reads menu items from stdin in a similar way to dmenu and dzen2, but  
     parses comma seperated fields for the name, command and icon  
 
-It has been compiled and runs on OpenBSD and various Linux distributions  
-including Bunsenlabs, Arch, Ubuntu, Alpine and Mint.
+It has been compiled and runs on OpenBSD, FreeBSD and various Linux  
+distributions including Bunsenlabs, Arch, Ubuntu, Alpine and Mint.
 
 Screenshots
 -----------
