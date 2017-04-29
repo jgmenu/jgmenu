@@ -1,12 +1,15 @@
-Add bl.c to read bunsenlabs-tint2-session
-	parse tint2-session if it exists
-
-Add tint2_config_file (in case it's different to ~/.config/tint2/tint2rc)
+align.h (use enum to avoid ugly strings)
+UNIX socket - set v align for h panel and vice versa.
 
 === upversion ===
 
-align.h (use enum to avoid ugly strings)
-UNIX socket - set v align for h panel and vice versa.
+1px out on Ubuntu (up and left)
+
+TINT2_PANEL_ORIENTATION (would further avoid requirement to restart)
+
+tint2 hour glass
+
+Add tint2_config_file (in case it's different to ~/.config/tint2/tint2rc)
 
 Add info()
 

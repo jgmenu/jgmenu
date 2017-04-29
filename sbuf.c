@@ -20,7 +20,7 @@ void sbuf_addch(struct sbuf *s, char ch)
 
 void sbuf_addstr(struct sbuf *s, const char *data)
 {
-	size_t len;
+	int len;
 
 	if (!data) {
 		fprintf(stderr, "warn: NULL passed to sbuf_addstr\n");

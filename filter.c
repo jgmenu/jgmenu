@@ -17,7 +17,7 @@ void filter_init(void)
 
 void filter_addstr(const char *str, size_t n)
 {
-	int i;
+	size_t i;
 
 	if (!has_been_inited)
 		die("filter has not been initiated");

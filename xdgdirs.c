@@ -58,7 +58,7 @@ static void expand_env_vars(struct sbuf *s)
 
 void xdgdirs_get_basedirs(struct list_head *dir_list)
 {
-	int i;
+	size_t i;
 	struct sbuf tmp;
 
 	sbuf_init(&tmp);

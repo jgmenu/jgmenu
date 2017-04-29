@@ -140,7 +140,7 @@ static XSetting *parse_settings(unsigned char *data, size_t len, size_t *count)
 
 	for (i = 0; i < n_entries; i++) {
 		CARD16 name_len;
-		size_t pad_len;
+		int pad_len;
 		XSetting *setting;
 
 		setting = &result[i];

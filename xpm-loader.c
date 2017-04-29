@@ -322,7 +322,7 @@ static char *xpm_extract_color(const char *buffer)
 		for (; *p != '\0' && xpm_isspace(*p); p++)
 			; /* nothing to do */
 		/* copy word */
-		for (r = word; *p != '\0' && !xpm_isspace(*p) && r - word < sizeof(word) - 1; p++, r++)
+		for (r = word; *p != '\0' && !xpm_isspace(*p) && r - word < (int)sizeof(word) - 1; p++, r++)
 			*r = *p;
 		*r = '\0';
 		if (*word == '\0') {
@@ -356,7 +356,7 @@ static char *xpm_extract_color(const char *buffer)
 				space -= MIN(space, 1);
 			}
 			strncat(color, word, space);
-			space -= MIN(space, strlen(word));
+			space -= MIN(space, (int)strlen(word));
 		} else { /* word is a key */
 			if (key > current_key) {
 				current_key = key;
@@ -450,7 +450,7 @@ static u_int32_t *pixbuf_create_from_xpm(const char *(*get_buf)(enum buf_op op, 
 		return NULL;
 	if (cpp <= 0 || cpp >= 32)
 		return NULL;
-	if (n_col <= 0 || n_col >= INT_MAX / (cpp + 1) || n_col >= INT_MAX / sizeof(XPMColor))
+	if (n_col <= 0 || n_col >= INT_MAX / (cpp + 1) || n_col >= INT_MAX / (int)sizeof(XPMColor))
 		return NULL;
 
 	name_buf = (char *)calloc(n_col, cpp + 1);
@@ -507,7 +507,7 @@ static u_int32_t *pixbuf_create_from_xpm(const char *(*get_buf)(enum buf_op op, 
 
 	for (ycnt = 0; ycnt < h; ycnt++) {
 		buffer = (*get_buf)(op_body, handle);
-		if ((!buffer) || (strlen(buffer) < wbytes))
+		if ((!buffer) || ((int)strlen(buffer) < wbytes))
 			continue;
 
 		for (n = 0, xcnt = 0; n < wbytes; n += cpp, xcnt++) {

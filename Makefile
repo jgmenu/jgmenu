@@ -34,7 +34,6 @@ LIB_H = $(shell find . -name '*.h' -print)
 JGMENU_LIB = libjgmenu.a
 
 all: $(PROGS)
-	@echo ""
 
 $(PROGS): % : $(OBJS) %.o
 	$(QUIET_LINK)$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
