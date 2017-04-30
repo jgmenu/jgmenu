@@ -1,0 +1,43 @@
+jgmenu v0.5.1 release notes
+===========================
+
+Updates since v0.5
+------------------
+
+  - Changed the following to be default behaviours:
+	- Read tint2rc and apply config settings
+	- Start jgmenu as a long-running application ('stay_alive')
+
+  - Added the following config options (see JGMENU-CONFIG(1)):
+	- tint2_look
+	- tint2_button
+	- tint2_rules
+
+  - Added the following command line options (see JGMENU(1)):
+	--simple
+	--vsimple
+
+  - Removed the command line option '--stay-alive' (regression warning!)
+    as it's now the default mode
+
+  - Lots of minor fixes and improvements to pmenu
+
+  - Added tint2 compatibility mode which reads tint2rc file and sets
+    colours and dimensions. Global config variables are set in the
+    following order (i.e. bottom of list has higher precedence):
+	  - default (config.c)
+	  - jgmenurc (or as specified by --config-file=)
+	  - command line arguments
+	  - tint2rc
+    Although jgmenurc can overrule tint2rc by setting "tint2_rules = 0"
+
+  - Added tint2 button support using a UNIX socket. This reads
+    environment position variables from tint2 and aligns jgmenu to them.
+
+  - Improved UI - for example:
+	- escape key clear search
+	- react to mouse-button release instead of mouse-button press
+	- left arrow reverts to parent menu
+	- right arrow goes to submenu
+
+  - Improved 'Back' (icon and translation)
