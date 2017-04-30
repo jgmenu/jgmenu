@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 21 February, 2017
+% 30 April, 2017
 
 # NAME
 
@@ -11,47 +11,43 @@ The jgmenu tutorial
 This tutorial aims to explain the usage of jgmenu through a set of  
 lessons.
 
-To keep things simple, when discussing XDG paths, only one location  
-will be referred to rather than XDG variables and every possible  
-location. So for example, if "/usr/share" is quoted, it may refer to  
-"/usr/local/share", "$HOME/.local/share", etc on your system.
-
-It is assumed that you understand basic shell usage such as  
-re-direction (e.g. \<, >) and piping (e.g. |).
-
-The syntax below is used to denote the creation of a text file from  
-whatever is between the EOFs. You can use an editor instead.
-
-    cat >file <<EOF
-    foo
-    bar
-    EOF
-
-If you have a config file at ~/.config/jgmenu/jgmenurc and want to  
-ignore it for the purposes of running one of the lessons, just use  
-"--config-file=" without specifying a file.
-
 # LESSONS
 
-Lesson 0
+Lesson 1
 --------
 
 After installing jgmenu, you can get going quickly by running:  
 
     jgmenu_run
 
-Lesson 1
---------
+That's it!  
 
-Create a config file by running:
+There are three points worth noting:  
+
+  - You should see a "Linux/BSD system" menu with categories such as  
+    "Graphics" and "Office". We call this menu "pmenu" (explained  
+    below).
+
+  - If you use tint2, jgmenu should have copied its appearance,  
+    position and alignment. 
+
+  - You have just started a long-running application. If you click  
+    outside the menu, press escape or select a menu item (using  
+    mouse or keyboard), the menu will no longer be visible but is  
+    still running. It can be awoken (made visible) by executing  
+    `jgmenu_run` again.
+
+If you do not use tint2 or if you wish to override some of its  
+settings, you can create a config file by running:  
 
     jgmenu_run init
 
-Edit the config file (~/.config/jgmenu/jgmenurc) to suit your  
-system. You will most likely need to review the icon-theme,  
-alignment and margins.  
+Edit this config file (~/.config/jgmenu/jgmenurc) to suit your  
+system. Read JGMENU-CONFIG(1) for further information.  
 
-Read JGMENU-CONFIG(1) for further information.  
+If you have a config file at ~/.config/jgmenu/jgmenurc and want to  
+ignore it for the purposes of running one of the lessons, just use  
+the command line argument "--config-file=" without specifying a file.  
 
 Some icons themes are slow to load on start-up. In order to improve  
 start-up times it is recommended to create icon-cache (although it  
@@ -59,16 +55,21 @@ is not necessary). Create icon cache using the command:
 
     jgmenu_run cache
 
-There are many ways to run the menu. In lesson 0, you saw jgmenu  
-as a long running application.  As we go through the lesson we will  
-run jgmenu as a short-lived applications. This means that it starts  
-from scratch every time it is called. The following is a simple way  
-to get started. It will display a Linux/BSD system menu.
-
-    jgmenu_run pmenu
-
 Lesson 2
 --------
+
+From this point onwards, it is assumed that you understand basic  
+shell usage including as re-direction (e.g. \<, >) and piping  
+(e.g. |).
+
+The syntax below is used to denote the creation of a text file from  
+whatever is between the EOFs. You can of course use your favourite  
+text editor instead.
+
+    cat >file <<EOF
+    foo
+    bar
+    EOF
 
 freedesktop.org have developed a menu standard which is adhered to  
 by the big Desktop Environments. In this tutorial we will refer to  
@@ -82,6 +83,11 @@ There are at least two ways to run XDG(ish) menus:
 To understand the subtleties between these, you need a basic  
 appreciataion of the XDG menu-spec and desktop-entry-spec. See:  
 http://standards.freedesktop.org/ for further information.  
+
+To keep things simple, when discussing XDG paths, only one location  
+will be referred to rather than XDG variables and every possible  
+location. So for example, if "/usr/share" is quoted, it may refer to  
+"/usr/local/share", "$HOME/.local/share", etc on your system.
 
 In brief, there are three types of files which define the Linux/BSD  
 system menu:
@@ -98,7 +104,7 @@ system menu:
     files contain most of the information needed to build a menu  
     (e.g. "Name", "Exec command", "Icon", "Category")
 
-`jgmenu_run pmenu` is written in python by o9000. It uses .directory  
+`jgmenu_run pmenu` is written in python by @o9000. It uses .directory  
 and .desktop files to build a menu, but ignores any .menu files.  
 Instead of the structure specified in the .menu file, it simply maps  
 each ".desktop" application onto one of the ".directory" categories.  
@@ -117,9 +123,13 @@ full compliance.
 Lesson 3
 ---------
 
-Let us put XDG system menus to one side and get back to basics.  
-The next few lessons will explain how you can build your own menu  
-from scratch. Try the following:
+There are many ways to run jgmenu. In lesson 1, you saw jgmenu as a  
+long-running application. As we go through the next few lessons we  
+will run jgmenu as a short-lived applications. This means that it  
+starts from scratch every time it is called.
+
+Let us put XDG system menus and `jgmenu_run` to one side and get  
+back to basics. Try the following:
 
     echo >foo.txt <<EOF
     xterm
@@ -130,7 +140,10 @@ If you have not got used to the syntax yet, it just means that you
 put the words "xterm" and "firefox" in a text file using a text  
 editor. Then do:
 
-    cat foo.txt | jgmenu --icon-size=0
+    cat foo.txt | jgmenu --simple --icon-size=0
+
+The option --simple make jgmenu short-lived and disables all syncing  
+with tint2
 
 The option --icon-size=0, disables icons (i.e. it does not just  
 display them at zero size, it actually avoid loading them)
@@ -152,13 +165,16 @@ is parsed as *description*,*command*. Consider the following:
     (
     printf "Terminal,xterm\n"
     printf "File Manager,pcmanfm\n"
-    ) | jgmenu
+    ) | jgmenu --vsimple
     EOF
     
     chmod +x menu.sh
     ./menu.sh
 
 This lets you give a more meaningful description to each menu item.
+
+The command line argument --vsimple is the same as --simple, but also  
+disables icons and ignores jgmenurc
 
 Lesson 5
 --------
@@ -175,7 +191,7 @@ sensible in your $HOME/.config/jgmenu/jgmenurc.
     Exit to prompt,openbox --exit,system-log-out
     Reboot,systemctl -i reboot,system-reboot
     Poweroff,systemctl -i poweroff,system-shutdown
-    ) | jgmenu
+    ) | jgmenu --simple
 
 In the third field you can also specify the full path if you wish  
 e.g. "/usr/share/icons/Faenza/places/22/folder.png"
@@ -196,10 +212,10 @@ by ^tag() and ^checkout(). Try this:
     Set Background Image,nitrogen
     EOF
     
-    jgmenu <menu.txt
+    jgmenu --vsimple <menu.txt
     
     # OR
-    cat menu.txt | jgmenu
+    cat menu.txt | jgmenu --vsimple
 
 A couple of points on submenus:
 
@@ -214,7 +230,7 @@ Lesson 7
 You can create a very simple XDG menu without any directories or  
 categories in the following way:  
 
-    jgmenu_run parse-xdg --no-dirs | jgmenu --icon-size=0
+    jgmenu_run parse-xdg --no-dirs | jgmenu --vsimple
 
 "parse-xdg --no-dirs" outputs all apps with a .desktop file  
 (normally in /usr/share/applications) without and categories  
@@ -240,7 +256,7 @@ This one is just for a bit of fun:
             cd $d
             find . -maxdepth 1 -type f -executable | sed "s|^\./||"
     done
-    ) | jgmenu
+    ) | jgmenu --vsimple
 
 If you have dmenu installed, the following should be the same:
 

@@ -1,17 +1,28 @@
-align.h (use enum to avoid ugly strings)
-UNIX socket - set v align for h panel and vice versa.
+Update JGMENU-CONFIG(1). Specify input type for each key.
 
-=== upversion ===
+Add align.h to use enum instead of ugly strings
 
-1px out on Ubuntu (up and left)
+In tint2_align(), set v align for h panel and vice versa.
 
-TINT2_PANEL_ORIENTATION (would further avoid requirement to restart)
+The window is 1px out on Ubuntu (up and left). Investigate.
 
-tint2 hour glass
+Refactor jgmenu.c to prepare for config file re-load
+	- create arg.c for command line args
+	- make sure we free strings in config.c
+
+Check tint2rc 'modified time' and re-read on change
+Consider the same for jgmenurc and tint2-sessionfile (bl)
+
+When starting (not awaking) jgmenu, tint2 sets the pointer to "hour glass".
+Consider how this could be avoided.
+
+^term() find terminal and wrap around commands
+
+Sync with o9000's pmenu.py
 
 Add tint2_config_file (in case it's different to ~/.config/tint2/tint2rc)
 
-Add info()
+Add info() for fprintf(stderr, "info: ....\n");
 
 Add atexit()-cleanup()
 
