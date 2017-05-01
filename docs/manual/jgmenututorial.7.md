@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 30 April, 2017
+% 1 May, 2017  
 
 # NAME
 
@@ -22,7 +22,7 @@ After installing jgmenu, you can get going quickly by running:
 
 That's it!  
 
-There are three points worth noting:  
+There are three points worth noting about what you have just done:  
 
   - You should see a "Linux/BSD system" menu with categories such as  
     "Graphics" and "Office". We call this menu "pmenu" (explained  
@@ -55,12 +55,18 @@ is not necessary). Create icon cache using the command:
 
     jgmenu_run cache
 
+If you use tint2 and want a traditional "start menu", you can do one  
+of the following using tint2conf or by editing tint2rc directly:
+
+  - Add jgmenu.desktop to your launcher  
+
+  - Create a button setting `button_lclick_command = jgmenu_run`  
+
 Lesson 2
 --------
 
 From this point onwards, it is assumed that you understand basic  
-shell usage including as re-direction (e.g. \<, >) and piping  
-(e.g. |).
+shell usage including re-direction (e.g. \<, >) and piping (e.g. |).
 
 The syntax below is used to denote the creation of a text file from  
 whatever is between the EOFs. You can of course use your favourite  

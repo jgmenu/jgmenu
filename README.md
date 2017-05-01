@@ -6,8 +6,15 @@ Introduction
 
 jgmenu is a simple X11 menu intended to be used with tint2 and openbox.
 
-To run the menu, see lessons 0 and 1 in
-[JGMENUTUTORIAL(7)](docs/manual/jgmenututorial.7.md)  
+  - Install - see the rest of this document  
+
+  - Run - see [JGMENUTUTORIAL(7)](docs/manual/jgmenututorial.7.md)  
+
+  - [Screenshots](docs/screenshots.md)  
+
+  - [High level road map](TODO)  
+
+  - [Example config file](docs/jgmenurc)  
 
 ### Key Features
 
@@ -16,6 +23,7 @@ To run the menu, see lessons 0 and 1 in
   - Although written to be used with tint2 and openbox, it runs with other  
     panels and window managers  
   - It has a config file to set alignment, margins, padding, transparency, etc  
+  - It can synchronise with tint2's settings  
   - It does not depend on any toolkits such as GTK and Qt   
   - It uses cairo and pango to render the menu directly onto an X11 window  
   - It reads menu items from stdin in a similar way to dmenu and dzen2, but  
@@ -23,18 +31,6 @@ To run the menu, see lessons 0 and 1 in
 
 It has been compiled and runs on OpenBSD, FreeBSD and various Linux  
 distributions including Bunsenlabs, Arch, Ubuntu, Alpine and Mint.
-
-Screenshots
------------
-
-[![foo](http://i.imgur.com/4oprqYZt.png)](http://i.imgur.com/4oprqYZ.png)  
-jgmenu+tint2+openbox with Numix-Circle icon theme
-
-[![foo](http://i.imgur.com/QvBqI2Lt.png)](http://i.imgur.com/QvBqI2L.png)  
-jgmenu+tint2+openbox with Papirus icon theme
-
-[![foo](http://i.imgur.com/4XzVBDOt.png)](http://i.imgur.com/4XzVBDO.png)  
-jgmenu on Bunsenlabs
 
 Build and Install
 -----------------
@@ -169,8 +165,7 @@ following options:
 For example:
 
 ```bash
-JGMENU_DESKTOP_EXEC="jgmenu_run csv \"--add-pmenu\""
-JGMENU_DESKTOP_ICON="distributor-logo-archlinux"
+JGMENU_DESKTOP_ICON="distributor-logo"
 ```
 
 If you are using Ubuntu's Unity, prepend the `Exec` command with  
@@ -195,7 +190,3 @@ See also
   - [JGMENU-CSV(1)](docs/manual/jgmenu-csv.1.md)
   - [JGMENU-CACHE(1)](docs/manual/jgmenu-cache.1.md)
 
-### Other files in repo
-
-  - [Road Map](TODO)  
-  - [jgmenurc](docs/jgmenurc)  

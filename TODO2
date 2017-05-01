@@ -22,6 +22,8 @@ Sync with o9000's pmenu.py
 
 Add tint2_config_file (in case it's different to ~/.config/tint2/tint2rc)
 
+Let jgmenu start in short-lived mode even if another instance is running
+
 Add info() for fprintf(stderr, "info: ....\n");
 
 Add atexit()-cleanup()
