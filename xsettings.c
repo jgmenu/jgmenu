@@ -28,12 +28,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct XSettingsBuffer {
+struct xsettings_buffer {
 	char byte_order;
 	size_t len;
 	unsigned char *data;
 	unsigned char *pos;
-} XSettingsBuffer;
+};
 
 #define XSETTINGS_PAD(n, m) ((n + m - 1) & (~(m - 1)))
 #define BYTES_LEFT(buffer) ((buffer)->data + (buffer)->len - (buffer)->pos)
@@ -50,7 +50,7 @@ static int ignore_x11_errors(Display *display, XErrorEvent *event)
 	return True;
 }
 
-static Bool fetch_card8(XSettingsBuffer *buffer, CARD8 *result)
+static Bool fetch_card8(struct xsettings_buffer *buffer, CARD8 *result)
 {
 	if (BYTES_LEFT(buffer) < 1)
 		return False;
@@ -59,7 +59,7 @@ static Bool fetch_card8(XSettingsBuffer *buffer, CARD8 *result)
 	return True;
 }
 
-static Bool fetch_card16(XSettingsBuffer *buffer, CARD16 *result)
+static Bool fetch_card16(struct xsettings_buffer *buffer, CARD16 *result)
 {
 	CARD16 x;
 
@@ -74,7 +74,7 @@ static Bool fetch_card16(XSettingsBuffer *buffer, CARD16 *result)
 	return True;
 }
 
-static Bool fetch_ushort(XSettingsBuffer *buffer, unsigned short *result)
+static Bool fetch_ushort(struct xsettings_buffer *buffer, unsigned short *result)
 {
 	CARD16 x;
 
@@ -84,7 +84,7 @@ static Bool fetch_ushort(XSettingsBuffer *buffer, unsigned short *result)
 		return True;
 }
 
-static Bool fetch_card32(XSettingsBuffer *buffer, CARD32 *result)
+static Bool fetch_card32(struct xsettings_buffer *buffer, CARD32 *result)
 {
 	CARD32 x;
 
@@ -104,10 +104,10 @@ static Bool fetch_card32(XSettingsBuffer *buffer, CARD32 *result)
 
 #define XSETTINGS_PAD(n, m) ((n + m - 1) & (~(m - 1)))
 
-static XSetting *parse_settings(unsigned char *data, size_t len, size_t *count)
+static struct xsetting *parse_settings(unsigned char *data, size_t len, size_t *count)
 {
-	XSetting *result = NULL;
-	XSettingsBuffer buffer;
+	struct xsetting *result = NULL;
+	struct xsettings_buffer buffer;
 	CARD32 serial;
 	CARD32 n_entries;
 	size_t i;
@@ -133,7 +133,7 @@ static XSetting *parse_settings(unsigned char *data, size_t len, size_t *count)
 	if (!fetch_card32(&buffer, &n_entries) || !n_entries)
 		goto err;
 
-	result = calloc(n_entries, sizeof(XSetting));
+	result = calloc(n_entries, sizeof(struct xsetting));
 	if (!result)
 		goto err;
 	*count = n_entries;
@@ -141,7 +141,7 @@ static XSetting *parse_settings(unsigned char *data, size_t len, size_t *count)
 	for (i = 0; i < n_entries; i++) {
 		CARD16 name_len;
 		int pad_len;
-		XSetting *setting;
+		struct xsetting *setting;
 
 		setting = &result[i];
 
@@ -207,14 +207,14 @@ err:
 	return NULL;
 }
 
-void free_xsettings(XSetting *settings, size_t count)
+void free_xsettings(struct xsetting *settings, size_t count)
 {
 	size_t i;
 
 	if (!settings)
 		return;
 	for (i = 0; i < count; i++) {
-		XSetting *setting = &settings[i];
+		struct xsetting *setting = &settings[i];
 
 		if (setting->type == XSETTINGS_TYPE_STRING)
 			free(setting->value.string_value);
@@ -286,12 +286,12 @@ static unsigned char *read_xsettings(Display *display, Window manager,
 	return result;
 }
 
-XSetting *get_xsettings(Display *display, size_t *count)
+struct xsetting *get_xsettings(Display *display, size_t *count)
 {
 	Window manager = get_xsettings_manager(display);
 	unsigned long size;
 	unsigned char *buffer;
-	XSetting *result;
+	struct xsetting *result;
 
 	/* no xsettings daemon found */
 	if (!manager)

@@ -124,9 +124,6 @@ do
 			-e 'CamelCase.*XQueryPointer' \
 			-e 'CamelCase.*XQueryTree' \
 			-e 'CamelCase.*XSetErrorHandler' \
-			-e 'CamelCase.*XSetting' \
-			-e 'CamelCase.*XSettingsBuffer' \
-			-e 'CamelCase.*XSettingsColor' \
 			-e 'CamelCase.*XUngrabKeyboard' \
 			-e 'CamelCase.*XUngrabPointer' \
 			-e 'CamelCase.*XVisualInfo' \

@@ -673,14 +673,14 @@ static const char color_names[] =
   "yellow4\0"
   "YellowGreen\0";
 
-typedef struct {
+struct xpm_color_entry {
 	u_int16_t name_offset;
 	unsigned char red;
 	unsigned char green;
 	unsigned char blue;
-} XPMColorEntry;
+};
 
-static const XPMColorEntry xColors[] = {
+static const struct xpm_color_entry xcolors[] = {
   { 0, 240, 248, 255 },
   { 10, 250, 235, 215 },
   { 23, 255, 239, 219 },

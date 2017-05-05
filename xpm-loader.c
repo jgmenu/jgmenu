@@ -42,13 +42,13 @@
 
 enum buf_op { op_header, op_cmap, op_body };
 
-typedef struct {
+struct xpm_color {
 	char *color_string;
 	u_int16_t red;
 	u_int16_t green;
 	u_int16_t blue;
 	int transparent;
-} XPMColor;
+};
 
 struct file_handle {
 	FILE *infile;
@@ -127,20 +127,20 @@ struct mem_handle {
 
 static int compare_xcolor_entries(const void *a, const void *b)
 {
-	return strcasecmp((const char *)a, color_names + ((const XPMColorEntry *)b)->name_offset);
+	return strcasecmp((const char *)a, color_names + ((const struct xpm_color_entry *)b)->name_offset);
 }
 
-static int find_color(const char *name, XPMColor *colorPtr)
+static int find_color(const char *name, struct xpm_color *color_ptr)
 {
-	XPMColorEntry *found;
+	struct xpm_color_entry *found;
 
-	found = bsearch(name, xColors, G_N_ELEMENTS(xColors), sizeof(XPMColorEntry), compare_xcolor_entries);
+	found = bsearch(name, xcolors, G_N_ELEMENTS(xcolors), sizeof(struct xpm_color_entry), compare_xcolor_entries);
 	if (!found)
 		return 0;
 
-	colorPtr->red = (found->red * 65535) / 255;
-	colorPtr->green = (found->green * 65535) / 255;
-	colorPtr->blue = (found->blue * 65535) / 255;
+	color_ptr->red = (found->red * 65535) / 255;
+	color_ptr->green = (found->green * 65535) / 255;
+	color_ptr->blue = (found->blue * 65535) / 255;
 
 	return 1;
 }
@@ -161,7 +161,7 @@ static int find_color(const char *name, XPMColor *colorPtr)
  *----------------------------------------------------------------------
  */
 
-static int parse_color(const char *spec, XPMColor *colorPtr)
+static int parse_color(const char *spec, struct xpm_color *color_ptr)
 {
 	if (spec[0] == '#') {
 		int i, red, green, blue;
@@ -174,30 +174,30 @@ static int parse_color(const char *spec, XPMColor *colorPtr)
 		if (i == 4) {
 			if (sscanf(spec + 1, "%4x%4x%4x", &red, &green, &blue) != 3)
 				return 0;
-			colorPtr->red = red;
-			colorPtr->green = green;
-			colorPtr->blue = blue;
+			color_ptr->red = red;
+			color_ptr->green = green;
+			color_ptr->blue = blue;
 		} else if (i == 1) {
 			if (sscanf(spec + 1, "%1x%1x%1x", &red, &green, &blue) != 3)
 				return 0;
-			colorPtr->red = (red * 65535) / 15;
-			colorPtr->green = (green * 65535) / 15;
-			colorPtr->blue = (blue * 65535) / 15;
+			color_ptr->red = (red * 65535) / 15;
+			color_ptr->green = (green * 65535) / 15;
+			color_ptr->blue = (blue * 65535) / 15;
 		} else if (i == 2) {
 			if (sscanf(spec + 1, "%2x%2x%2x", &red, &green, &blue) != 3)
 				return 0;
-			colorPtr->red = (red * 65535) / 255;
-			colorPtr->green = (green * 65535) / 255;
-			colorPtr->blue = (blue * 65535) / 255;
+			color_ptr->red = (red * 65535) / 255;
+			color_ptr->green = (green * 65535) / 255;
+			color_ptr->blue = (blue * 65535) / 255;
 		} else /* if (i == 3) */ {
 			if (sscanf(spec + 1, "%3x%3x%3x", &red, &green, &blue) != 3)
 				return 0;
-			colorPtr->red = (red * 65535) / 4095;
-			colorPtr->green = (green * 65535) / 4095;
-			colorPtr->blue = (blue * 65535) / 4095;
+			color_ptr->red = (red * 65535) / 4095;
+			color_ptr->green = (green * 65535) / 4095;
+			color_ptr->blue = (blue * 65535) / 4095;
 		}
 	} else {
-		if (!find_color(spec, colorPtr))
+		if (!find_color(spec, color_ptr))
 			return 0;
 	}
 	return 1;
@@ -407,12 +407,12 @@ static const char *file_buffer(enum buf_op op, void *handle)
 	return NULL;
 }
 
-static XPMColor *lookup_color(XPMColor *colors, int n_colors, const char *name)
+static struct xpm_color *lookup_color(struct xpm_color *colors, int n_colors, const char *name)
 {
 	int i;
 
 	for (i = 0; i < n_colors; i++) {
-		XPMColor *color = &colors[i];
+		struct xpm_color *color = &colors[i];
 
 		if (strcmp(name, color->color_string) == 0)
 			return color;
@@ -432,7 +432,7 @@ static u_int32_t *pixbuf_create_from_xpm(const char *(*get_buf)(enum buf_op op, 
 	const char *buffer;
 	char *name_buf;
 	char pixel_str[32];
-	XPMColor *colors, *color, *fallbackcolor;
+	struct xpm_color *colors, *color, *fallbackcolor;
 	u_int32_t *data = NULL;
 
 	fallbackcolor = NULL;
@@ -450,13 +450,13 @@ static u_int32_t *pixbuf_create_from_xpm(const char *(*get_buf)(enum buf_op op, 
 		return NULL;
 	if (cpp <= 0 || cpp >= 32)
 		return NULL;
-	if (n_col <= 0 || n_col >= INT_MAX / (cpp + 1) || n_col >= INT_MAX / (int)sizeof(XPMColor))
+	if (n_col <= 0 || n_col >= INT_MAX / (cpp + 1) || n_col >= INT_MAX / (int)sizeof(struct xpm_color))
 		return NULL;
 
 	name_buf = (char *)calloc(n_col, cpp + 1);
 	if (!name_buf)
 		return NULL;
-	colors = (XPMColor *)calloc(n_col, sizeof(XPMColor));
+	colors = (struct xpm_color *)calloc(n_col, sizeof(struct xpm_color));
 	if (!colors) {
 		free(name_buf);
 		return NULL;

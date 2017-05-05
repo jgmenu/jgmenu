@@ -10,7 +10,7 @@
 #include "xsettings-helper.h"
 #include "xsettings.h"
 
-static void print_setting(XSetting *setting)
+static void print_setting(struct xsetting *setting)
 {
 	printf("%s: ", setting->name);
 	if (setting->type == XSETTINGS_TYPE_INT)
@@ -26,7 +26,7 @@ static void print_setting(XSetting *setting)
 		printf("??\n");
 }
 
-static void print_settings(XSetting *settings, size_t count, const char *key,
+static void print_settings(struct xsetting *settings, size_t count, const char *key,
 			   struct sbuf *s)
 {
 	size_t i;
@@ -49,7 +49,7 @@ int xsettings_get(struct sbuf *s, const char *key)
 	Display *display;
 	size_t count;
 	static int ret;
-	XSetting *settings;
+	struct xsetting *settings;
 
 	if (!key)
 		return 1;

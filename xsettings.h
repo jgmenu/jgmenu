@@ -10,22 +10,22 @@
 #define XSETTINGS_TYPE_COLOR 2
 #define XSETTINGS_TYPE_NONE 0xff
 
-typedef struct XSettingsColor {
+struct xsettings_color {
 	unsigned short red, green, blue, alpha;
-} XSettingsColor;
+};
 
-typedef struct XSetting {
+struct xsetting {
 	unsigned char type;
 	char *name;
 	union {
 		int int_value;
 		char *string_value;
-		XSettingsColor color_value;
+		struct xsettings_color color_value;
 	} value;
 	CARD32 serial;
-} XSetting;
+};
 
-XSetting *get_xsettings(Display *display, size_t *count);
-void free_xsettings(XSetting *settings, size_t count);
+struct xsetting *get_xsettings(Display *display, size_t *count);
+void free_xsettings(struct xsetting *settings, size_t count);
 
 #endif /* XSETTINGS_H */
