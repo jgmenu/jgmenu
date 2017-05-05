@@ -1,3 +1,5 @@
+t2conf.c: add font, icon theme (depending on xsettings)
+
 Update JGMENU-CONFIG(1). Specify input type for each key.
 
 Add align.h to use enum instead of ugly strings

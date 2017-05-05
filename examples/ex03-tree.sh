@@ -23,4 +23,4 @@ printf "%b\n" 'b2'
 printf "%b\n" 'c,^tag(c)'
 printf "%b\n" 'c1'
 printf "%b\n" 'c2'
-) | ../jgmenu --config-file=./ex02-jgmenurc
+) | ../jgmenu --simple --config-file=./ex02-jgmenurc

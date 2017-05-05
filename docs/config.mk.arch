@@ -1,2 +1,2 @@
-JGMENU_DESKTOP_EXEC="jgmenu_run csv \"--add-pmenu\""
+JGMENU_DESKTOP_EXEC="jgmenu_run"
 JGMENU_DESKTOP_ICON="distributor-logo-archlinux"
