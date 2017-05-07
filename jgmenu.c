@@ -1620,7 +1620,8 @@ int main(int argc, char *argv[])
 		config.icon_size = 0;
 
 	/* check lockfile after --help and --version */
-	lockfile_init();
+	if (config.stay_alive)
+		lockfile_init();
 
 	ui_init();
 	geo_init();
