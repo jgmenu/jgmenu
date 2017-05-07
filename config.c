@@ -37,7 +37,7 @@ void config_set_defaults(void)
 
 	config.font		 = NULL; /* Leave as NULL. Is set in jgmenu.c */
 	config.icon_size	 = 22;
-	config.icon_theme	 = NULL; /* Leave as NULL. Is set in config-xs.c */
+	config.icon_theme	 = NULL; /* Leave as NULL. Is set in jgmenu.c */
 	config.ignore_xsettings  = 0;
 	config.ignore_icon_cache = 0;
 	config.show_title	 = 0;

@@ -48,7 +48,7 @@ int xsettings_get(struct sbuf *s, const char *key)
 {
 	Display *display;
 	size_t count;
-	static int ret;
+	int ret = 0;
 	struct xsetting *settings;
 
 	if (!key)

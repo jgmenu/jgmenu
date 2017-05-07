@@ -58,8 +58,6 @@ Add align CENTER
 Add menu_padding_{l,r,t,b}
 	(no need to call it root - if submenus have different padding we can call them sub_padding)
 
-Make the "go to parent" automatic based on the node tree.
-
 Add shareness with symlinks
 
 Add icon_margin_r (i.e. distance between icon and text)

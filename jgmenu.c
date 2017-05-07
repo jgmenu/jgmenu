@@ -36,6 +36,7 @@
 #include "t2conf.h"
 #include "t2env.h"
 #include "bl.h"
+#include "xsettings-helper.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -636,11 +637,11 @@ void tint2_align(void)
 		return;
 	}
 
-	if (tint2rc_is_horizontal_panel() == -1) {
+	if (t2conf_is_horizontal_panel() == -1) {
 		warn("invalid value for tint2 panel orientation");
 		return;
 	}
-	if (tint2rc_is_horizontal_panel()) {
+	if (t2conf_is_horizontal_panel()) {
 		printf("info: aligning to tint2 button variables in horizontal panel mode\n");
 		if (bx1 < px2 - geo_get_menu_width()) {
 			geo_set_menu_margin_x(bx1);
@@ -1390,15 +1391,108 @@ void init_geo_variables_from_config(void)
 	geo_set_item_height(config.item_height);
 }
 
-void set_theme_and_font(void)
+/* config.font might already be set by jgmenurc before set_font() is called */
+void set_font(void)
 {
-	config_xs_get_theme(&config.icon_theme, config.ignore_xsettings,
-			    config.ignore_icon_cache);
+	char *f = NULL;
 
-	if (!config.font && !config.ignore_xsettings)
-		config_xs_get_font(&config.font);
+	t2conf_get_font(&f);
+	if (f) {
+		if (config.font)
+			free(config.font);
+		config.font = strdup(f);
+	}
+
+	/* if not set by tint2rc or jgmenurc, we ask xsettings */
+	if (!config.font && !config.ignore_xsettings &&
+	    !t2conf_get_override_xsettings()) {
+		struct sbuf s;
+		int ret;
+
+		sbuf_init(&s);
+		ret = xsettings_get(&s, "Gtk/FontName");
+		if (ret == 0) {
+			config.font = strdup(s.buf);
+			fprintf(stderr, "info: using xsettings font\n");
+		}
+		free(s.buf);
+	}
+
 	if (!config.font)
 		config.font = strdup(JGMENU_DEFAULT_FONT);
+	fprintf(stderr, "info: font=%s\n", config.font);
+}
+
+static int get_xsettings_icon_theme(char **theme)
+{
+	int ret;
+	struct sbuf s;
+
+	sbuf_init(&s);
+	ret = xsettings_get(&s, "Net/IconThemeName");
+	if (ret == 0) {
+		if (config.icon_theme)
+			free(config.icon_theme);
+		config.icon_theme = strdup(s.buf);
+		fprintf(stderr, "info: set theme '%s' from xsettings\n", s.buf);
+	}
+	free(s.buf);
+	if (ret == 0)
+		return 1;
+	else
+		return 0;
+}
+
+/*
+ * The icon theme is obtained in the following order or precedence:
+ *   - xsettings
+ *   - tint2rc
+ *   - jgmenurc
+ *   - set default ("Adwaita")
+ *
+ * The font name is first sought in jgmenurc and then xsettings.
+ *
+ * The reasons for this inconsistency is that it is anticipated that most
+ * users will
+ *   - change icon themes using gnome-settings, lxappearance or similar;
+ *   - but will change font-settings in jgmenurc as this will be more specific
+ *     to jgmenu (particularly the font size).
+ */
+void set_theme(void)
+{
+	char *t = NULL;
+
+	/* config.icon_theme might already be set based on jgmenurc */
+	if (!config.ignore_xsettings && !t2conf_get_override_xsettings())
+		if (get_xsettings_icon_theme(&config.icon_theme))
+			return;
+
+	t2conf_get_icon_theme(&t);
+	if (t) {
+		if (config.icon_theme)
+			free(config.icon_theme);
+		config.icon_theme = strdup(t);
+		fprintf(stderr, "info: set theme '%s' from tint2rc\n", t);
+		return;
+	}
+
+	/*
+	 * If xsettings and tint2rc gave nothing, the value from jgmenurc (if
+	 * there was one) will remain at this point.
+	 */
+	if (config.icon_theme) {
+		fprintf(stderr, "info: using theme '%s' from jgmenurc\n", config.icon_theme);
+		return;
+	}
+
+	/* TODO: Get ~/.config/gtk-3.0/settings.ini icon_theme */
+
+	/*
+	 * If *theme is still NULL here, we will leave it.
+	 * The icon theme will be set to "default" in icon.c if a NULL pointer
+	 * is passed to it.
+	 */
+	warn("using default theme set in icon.c; consider using jgmenurc or tint2rc");
 }
 
 static char *tag_of_first_item(void)
@@ -1459,9 +1553,9 @@ static void read_tint2rc(void)
 	bl_tint2file(&f);
 	if (f.len) {
 		fprintf(stderr, "info: using BunsenLabs tint2 session file '%s'\n", f.buf);
-		tint2rc_parse(f.buf, geo_get_screen_width(), geo_get_screen_height());
+		t2conf_parse(f.buf, geo_get_screen_width(), geo_get_screen_height());
 	} else {
-		tint2rc_parse(NULL, geo_get_screen_width(), geo_get_screen_height());
+		t2conf_parse(NULL, geo_get_screen_width(), geo_get_screen_height());
 	}
 	free(f.buf);
 }
@@ -1528,7 +1622,6 @@ int main(int argc, char *argv[])
 
 	/* check lockfile after --help and --version */
 	lockfile_init();
-	set_theme_and_font();
 
 	ui_init();
 	geo_init();
@@ -1540,6 +1633,8 @@ int main(int argc, char *argv[])
 	if (!config.tint2_rules && !arg_vsimple)
 		read_jgmenurc(arg_config_file);
 
+	set_font();
+	set_theme();
 	init_geo_variables_from_config();
 
 	if (config.tint2_button) {

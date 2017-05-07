@@ -35,6 +35,9 @@ static char *panel_width;
 static char *panel_height;
 static int panel_margin_h;
 static int panel_margin_v;
+static char *font;
+static char *icon_theme;
+static int override_xsettings;
 
 static int parse_height(const char *h)
 {
@@ -124,12 +127,25 @@ static void process_line(char *line)
 		printf("  - item_border      = %d\n", bg[id].border_width);
 		config.item_border = bg[id].border_width;
 
+	} else if (!strcmp(option, "task_font")) {
+		printf("++++font             = %s\n", value);
+		if (font)
+			free(font);
+		font = strdup(value);
 	} else if (!strcmp(option, "task_font_color")) {
 		printf("  - color_norm_fg    = %s\n", value);
 		parse_hexstr(value, config.color_norm_fg);
 	} else if (!strcmp(option, "task_active_font_color")) {
 		printf("  - color_sel_fg     = %s\n", value);
 		parse_hexstr(value, config.color_sel_fg);
+	} else if (!strcmp(option, "launcher_icon_theme")) {
+		printf("++++icon_theme       = %s\n", value);
+		if (icon_theme)
+			free(icon_theme);
+		icon_theme = strdup(value);
+	} else if (!strcmp(option, "launcher_icon_theme_override")) {
+		printf("++++override_xsetti. = %s\n", value);
+		override_xsettings = atoi(value);
 	} else if (!strcmp(option, "panel_position")) {
 		field = strtok(value, DELIM);
 		if (!field)
@@ -328,11 +344,21 @@ static void t2conf_cleanup(void)
 	}
 	if (panel_width)
 		free(panel_width);
+	panel_width = NULL;
 	if (panel_height)
 		free(panel_height);
+	panel_height = NULL;
 }
 
-void tint2rc_parse(const char *filename, int screen_width, int screen_height)
+void t2conf_atexit(void)
+{
+	if (font)
+		free(font);
+	if (icon_theme)
+		free(icon_theme);
+}
+
+void t2conf_parse(const char *filename, int screen_width, int screen_height)
 {
 	struct sbuf tint2rc;
 
@@ -352,8 +378,23 @@ void tint2rc_parse(const char *filename, int screen_width, int screen_height)
 	t2conf_cleanup();
 }
 
-int tint2rc_is_horizontal_panel(void)
+int t2conf_is_horizontal_panel(void)
 {
 	return (orientation == VERTICAL) ? 0 :
 	       (orientation == HORIZONTAL) ? 1 : -1;
+}
+
+void t2conf_get_font(char **f)
+{
+	*f = font;
+}
+
+int t2conf_get_override_xsettings(void)
+{
+	return override_xsettings;
+}
+
+void t2conf_get_icon_theme(char **t)
+{
+	*t = icon_theme;
 }
