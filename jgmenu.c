@@ -28,7 +28,6 @@
 #include "isprog.h"
 #include "sbuf.h"
 #include "icon.h"
-#include "config-xs.h"
 #include "filter.h"
 #include "list.h"
 #include "lockfile.h"

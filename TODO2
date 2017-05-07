@@ -1,4 +1,4 @@
-t2conf.c: add font, icon theme (depending on xsettings)
+Icon cache is temporarily disabled, so get that going again.
 
 Update JGMENU-CONFIG(1). Specify input type for each key.
 
