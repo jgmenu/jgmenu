@@ -152,7 +152,7 @@ The option --simple make jgmenu short-lived and disables all syncing
 with tint2
 
 The option --icon-size=0, disables icons (i.e. it does not just  
-display them at zero size, it actually avoid loading them)
+display them at zero size, it actually avoids loading them)
 
 If you have dmenu installed, you will get a very similar result  
 with:
@@ -180,13 +180,16 @@ is parsed as *description*,*command*. Consider the following:
 This lets you give a more meaningful description to each menu item.
 
 The command line argument --vsimple is the same as --simple, but also  
-disables icons and ignores jgmenurc
+disables icons and ignores jgmenurc (if it exists).
 
 Lesson 5
 --------
 
 To display icons, you need to populate the third field.  
-Also make sure that *icon_size* and *icon_theme* are set to something  
+
+By default, jgmenu will obtain the icon theme from xsettings (if  
+it is running) or tint2rc (if it exists). When running with the  
+--simple argument, make sure that *icon_theme* is set to something  
 sensible in your $HOME/.config/jgmenu/jgmenurc.
 
     (
@@ -228,7 +231,7 @@ A couple of points on submenus:
   - You can press *backspace* to go back to the parent menu.  
 
   - You can define the root menu with a ^tag(). If you do not, it  
-    can still be checked out with ^checkout(root).
+    can still be checked out with ^back().
 
 Lesson 7
 --------
