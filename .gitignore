@@ -6,6 +6,7 @@ jgmenu-icon-find
 jgmenu-xsettings
 jgmenu-parse-pmenu
 jgmenu-parse-ob
+jgmenu-parse-lx
 jgmenu-socket
 README.html
 config.mk
