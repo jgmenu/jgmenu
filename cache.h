@@ -1,6 +1,11 @@
 #ifndef CACHE_H
 #define CACHE_H
 
+#include "sbuf.h"
+
 extern int cache_exists(void);
+extern int cache_strdup_path(const char *name, struct sbuf *path);
+extern int cache_create_symlink(char *path, char *name);
+extern void cache_atexit_cleanup(void);
 
 #endif /* CACHE_H */

@@ -20,6 +20,7 @@
 #include "util.h"
 #include "sbuf.h"
 #include "xpm-loader.h"
+#include "cache.h"
 
 #define DEBUG_THEMES 0
 
@@ -105,6 +106,7 @@ void icon_set_name(const char *name)
 	icon = xmalloc(sizeof(struct icon));
 
 	icon->name = strdup(name);
+	sbuf_init(&icon->path);
 	icon->surface = NULL;
 	list_add(&icon->list, &icon_cache);
 }
@@ -127,6 +129,7 @@ void icon_load(void)
 	struct sbuf s;
 	static int first_load = 1;
 	struct list_head icon_paths;
+	int nr_symlinks = 0;
 
 	if (DEBUG_THEMES)
 		fprintf(stderr, "%s:%d %s:\n", __FILE__, __LINE__, __FUNCTION__);
@@ -143,7 +146,6 @@ void icon_load(void)
 
 	INIT_LIST_HEAD(&icon_paths);
 	list_for_each_entry(icon, &icon_cache, list) {
-		sbuf_init(&icon->path);
 		if (icon->name)
 			sbuf_cpy(&icon->path, icon->name);
 		/* Do not lookup icons with a NULL name or a full path. */
@@ -151,6 +153,9 @@ void icon_load(void)
 			continue;
 		/* icon_load is run twice, so let's not duplicate effort */
 		if (icon->surface)
+			continue;
+		/* Try to find icon symlink in jgmenu-cache, so save lookup */
+		if (cache_strdup_path(icon->name, &icon->path))
 			continue;
 		path = xcalloc(1, sizeof(struct icon_path));
 		sbuf_init(&path->name);
@@ -163,14 +168,17 @@ void icon_load(void)
 	list_for_each_entry(path, &icon_paths, list) {
 		icon = (struct icon *)path->icon;
 		sbuf_cpy(&icon->path, path->path.buf);
+		if (cache_create_symlink(icon->path.buf, icon->name) == 0)
+			nr_symlinks++;
 	}
+	if (nr_symlinks)
+		fprintf(stderr, "info: created %d cache symlinks\n", nr_symlinks);
 	list_for_each_entry_safe(path, tmp_path, &icon_paths, list) {
 		free(path->name.buf);
 		free(path->path.buf);
 		list_del(&path->list);
 		free(path);
 	}
-
 	list_for_each_entry(icon, &icon_cache, list) {
 		/* icon_load is run twice, so let's not duplicate effort */
 		if (icon->surface)
