@@ -1,3 +1,8 @@
+cache.c:
+  - deal with icons which cannot be found
+  - remove jgmenu_run cache
+  - deal with changes to theme or size
+
 Icon cache is temporarily disabled, so get that going again.
 
 Update JGMENU-CONFIG(1). Specify input type for each key.
@@ -24,8 +29,6 @@ Sync with o9000's pmenu.py
 
 Add tint2_config_file (in case it's different to ~/.config/tint2/tint2rc)
 
-Let jgmenu start in short-lived mode even if another instance is running
-
 Add info() for fprintf(stderr, "info: ....\n");
 
 Add atexit()-cleanup()
@@ -41,8 +44,6 @@ Remove title (will be overtaken by fixed.c items)
 Remove noprog colour
 
 Rename filter list (as it clashes with filter_)
-
-Create icon cache from icon.c
 
 Write jgmenu-config in C to expand ~ + $ to avoid "sh -c" in jgmenu-start.sh
 and jgmenu_run (it doesn't look nice in `top`)

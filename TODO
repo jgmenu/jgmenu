@@ -4,9 +4,6 @@ HIGH-LEVEL ROADMAP
   - On wake-up, check changes to .desktop files, tint2, xsettings,
     jgmenurc, etc.
 
-  - Create icon cache on the fly (and thereby remove the requirement for
-    `jgmenu_run cache`
-
   - Create multi-window mode where submenus open in separate windows
 
   - Write XDG menu parser based on libmenu-cache (probably "jgmenu_run lx")

@@ -5,38 +5,66 @@
 
 #include "sbuf.h"
 #include "util.h"
+#include "list.h"
 
-static struct sbuf root, sub;
+struct menu {
+	struct sbuf buf;
+	struct menu *parent;
+	struct list_head list;
+};
 
-void process_dir(MenuCacheApp *app)
+static struct list_head menu;
+static struct menu *cur;
+
+static void print_menu(void)
 {
-	sbuf_addstr(&root, menu_cache_item_get_id(MENU_CACHE_ITEM(app)));
-	sbuf_addstr(&root, ",^checkout(");
-	sbuf_addstr(&root, menu_cache_item_get_name(MENU_CACHE_ITEM(app)));
-	sbuf_addstr(&root, "),");
-	sbuf_addstr(&root, menu_cache_item_get_icon(MENU_CACHE_ITEM(app)));
-	sbuf_addstr(&root, "\n");
-	sbuf_addstr(&sub, menu_cache_item_get_id(MENU_CACHE_ITEM(app)));
-	sbuf_addstr(&sub, ",^tag(");
-	sbuf_addstr(&sub, menu_cache_item_get_name(MENU_CACHE_ITEM(app)));
-	sbuf_addstr(&sub, ")\n");
+	struct menu *m;
+
+	list_for_each_entry(m, &menu, list)
+		printf("%s", m->buf.buf);
 }
 
-void process_app(MenuCacheApp *app)
+static struct menu *menu_add(struct menu *parent)
+{
+	struct menu *m;
+
+	m = xmalloc(sizeof(struct menu));
+	sbuf_init(&m->buf);
+	m->parent = parent;
+	list_add_tail(&m->list, &menu);
+	return m;
+}
+
+static void process_dir(MenuCacheApp *app)
+{
+	sbuf_addstr(&cur->buf, menu_cache_item_get_id(MENU_CACHE_ITEM(app)));
+	sbuf_addstr(&cur->buf, ",^checkout(");
+	sbuf_addstr(&cur->buf, menu_cache_item_get_name(MENU_CACHE_ITEM(app)));
+	sbuf_addstr(&cur->buf, "),");
+	sbuf_addstr(&cur->buf, menu_cache_item_get_icon(MENU_CACHE_ITEM(app)));
+	sbuf_addstr(&cur->buf, "\n");
+	cur = menu_add(cur);
+	sbuf_addstr(&cur->buf, menu_cache_item_get_id(MENU_CACHE_ITEM(app)));
+	sbuf_addstr(&cur->buf, ",^tag(");
+	sbuf_addstr(&cur->buf, menu_cache_item_get_name(MENU_CACHE_ITEM(app)));
+	sbuf_addstr(&cur->buf, ")\n");
+}
+
+static void process_app(MenuCacheApp *app)
 {
 	/* TODO: Check menu_cache_app_get_use_terminal(app) here */
 	/* TODO: Check visibility flag here too */
 	/* TODO: Remove all the % codes */
 
-	sbuf_addstr(&sub, menu_cache_item_get_name(MENU_CACHE_ITEM(app)));
-	sbuf_addstr(&sub, ",");
-	sbuf_addstr(&sub, menu_cache_app_get_exec(MENU_CACHE_APP(app)));
-	sbuf_addstr(&sub, ",");
-	sbuf_addstr(&sub, menu_cache_item_get_icon(MENU_CACHE_ITEM(app)));
-	sbuf_addstr(&sub, "\n");
+	sbuf_addstr(&cur->buf, menu_cache_item_get_name(MENU_CACHE_ITEM(app)));
+	sbuf_addstr(&cur->buf, ",");
+	sbuf_addstr(&cur->buf, menu_cache_app_get_exec(MENU_CACHE_APP(app)));
+	sbuf_addstr(&cur->buf, ",");
+	sbuf_addstr(&cur->buf, menu_cache_item_get_icon(MENU_CACHE_ITEM(app)));
+	sbuf_addstr(&cur->buf, "\n");
 }
 
-void traverse(MenuCacheDir *dir)
+static void traverse(MenuCacheDir *dir)
 {
 	GSList *l = NULL;
 
@@ -45,9 +73,10 @@ void traverse(MenuCacheDir *dir)
 		case MENU_CACHE_TYPE_DIR:
 			process_dir(l->data);
 			traverse(MENU_CACHE_DIR(l->data));
+			cur = cur->parent;
 			break;
 		case MENU_CACHE_TYPE_SEP:
-			sbuf_addstr(&sub, "^sep()\n");
+			sbuf_addstr(&cur->buf, "^sep()\n");
 			break;
 		case MENU_CACHE_TYPE_APP:
 			process_app(l->data);
@@ -60,11 +89,11 @@ int main(int argc, char **argv)
 	MenuCache *cache;
 	MenuCacheDir *rootdir;
 
-	sbuf_init(&root);
-	sbuf_init(&sub);
+	INIT_LIST_HEAD(&menu);
+	cur = menu_add(NULL);
 
 	/* $XDG_MENU_PREFIX needs to be set */
-	cache = menu_cache_lookup_sync("-applications.menu");
+	cache = menu_cache_lookup_sync("applications.menu");
 	if (!cache)
 		die("cannot connect to menu-cache");
 	rootdir = menu_cache_dup_root_dir(cache);
@@ -75,9 +104,6 @@ int main(int argc, char **argv)
 	traverse(rootdir);
 	menu_cache_item_unref(MENU_CACHE_ITEM(rootdir));
 	menu_cache_unref(cache);
-	printf("%s", root.buf);
-	printf("%s", sub.buf);
-	free(root.buf);
-	free(sub.buf);
+	print_menu();
 	return 0;
 }
