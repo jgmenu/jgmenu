@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
+#include <glib/gi18n.h>
+#include <locale.h>
 #include <menu-cache.h>
 
 #include "sbuf.h"
@@ -91,6 +93,7 @@ int main(int argc, char **argv)
 
 	INIT_LIST_HEAD(&menu);
 	cur = menu_add(NULL);
+	setlocale (LC_ALL, "");
 
 	/* $XDG_MENU_PREFIX needs to be set */
 	cache = menu_cache_lookup_sync("applications.menu");
