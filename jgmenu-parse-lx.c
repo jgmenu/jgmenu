@@ -8,6 +8,7 @@
 #include "sbuf.h"
 #include "util.h"
 #include "list.h"
+#include "back.h"
 
 struct menu {
 	struct sbuf buf;
@@ -17,6 +18,41 @@ struct menu {
 
 static struct list_head menu;
 static struct menu *cur;
+static char *back_str;
+
+static int get_lang(char *b)
+{
+	char *s;
+
+	s = getenv("LANG");
+	if (!s || strlen(s) < 2) {
+		warn("LANG is not set");
+		return -1;
+	}
+	b[0] = s[0];
+	b[1] = s[1];
+	b[2] = '\0';
+	return 0;
+}
+
+/* Localized support for "Back" */
+void init_back_string(void)
+{
+	static char *language;
+	struct back_lookup_table *p;
+
+	language = xmalloc(3 * sizeof(char));
+	get_lang(language);
+	for (p = back_lookup_table; p->lang; p++) {
+		if (!strcmp(p->lang, language)) {
+			back_str = strdup(p->back_string);
+			break;
+		}
+	}
+	if (!back_str)
+		back_str = strdup("Back");
+	free(language);
+}
 
 static void print_menu(void)
 {
@@ -39,6 +75,12 @@ static struct menu *menu_add(struct menu *parent)
 
 static void process_dir(MenuCacheApp *app)
 {
+	static int first_run = 1;
+
+	if (first_run) {
+		init_back_string();
+		first_run = 0;
+	}
 	sbuf_addstr(&cur->buf, menu_cache_item_get_name(MENU_CACHE_ITEM(app)));
 	sbuf_addstr(&cur->buf, ",^checkout(");
 	sbuf_addstr(&cur->buf, menu_cache_item_get_id(MENU_CACHE_ITEM(app)));
@@ -50,6 +92,8 @@ static void process_dir(MenuCacheApp *app)
 	sbuf_addstr(&cur->buf, ",^tag(");
 	sbuf_addstr(&cur->buf, menu_cache_item_get_id(MENU_CACHE_ITEM(app)));
 	sbuf_addstr(&cur->buf, ")\n");
+	sbuf_addstr(&cur->buf, back_str);
+	sbuf_addstr(&cur->buf, ",^back(),go-previous\n");
 }
 
 static void process_app(MenuCacheApp *app)
@@ -93,7 +137,7 @@ int main(int argc, char **argv)
 
 	INIT_LIST_HEAD(&menu);
 	cur = menu_add(NULL);
-	setlocale (LC_ALL, "");
+	setlocale(LC_ALL, "");
 
 	/* $XDG_MENU_PREFIX needs to be set */
 	cache = menu_cache_lookup_sync("applications.menu");
