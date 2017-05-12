@@ -39,16 +39,16 @@ static struct menu *menu_add(struct menu *parent)
 
 static void process_dir(MenuCacheApp *app)
 {
-	sbuf_addstr(&cur->buf, menu_cache_item_get_id(MENU_CACHE_ITEM(app)));
-	sbuf_addstr(&cur->buf, ",^checkout(");
 	sbuf_addstr(&cur->buf, menu_cache_item_get_name(MENU_CACHE_ITEM(app)));
+	sbuf_addstr(&cur->buf, ",^checkout(");
+	sbuf_addstr(&cur->buf, menu_cache_item_get_id(MENU_CACHE_ITEM(app)));
 	sbuf_addstr(&cur->buf, "),");
 	sbuf_addstr(&cur->buf, menu_cache_item_get_icon(MENU_CACHE_ITEM(app)));
 	sbuf_addstr(&cur->buf, "\n");
 	cur = menu_add(cur);
-	sbuf_addstr(&cur->buf, menu_cache_item_get_id(MENU_CACHE_ITEM(app)));
-	sbuf_addstr(&cur->buf, ",^tag(");
 	sbuf_addstr(&cur->buf, menu_cache_item_get_name(MENU_CACHE_ITEM(app)));
+	sbuf_addstr(&cur->buf, ",^tag(");
+	sbuf_addstr(&cur->buf, menu_cache_item_get_id(MENU_CACHE_ITEM(app)));
 	sbuf_addstr(&cur->buf, ")\n");
 }
 
