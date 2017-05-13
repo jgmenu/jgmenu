@@ -1,6 +1,6 @@
 % JGMENU-CONFIG(1)  
 % Johan Malm  
-% 25 April, 2017
+% 12 May, 2017
 
 # NAME
 
@@ -26,9 +26,20 @@ Config options can be queried and set using this command.
 # CONFIGURATION FILE
 
 The jgmenu configuration file contains a number of variables that  
-affect its behavior. It is stored at
+affect its behavior. It is stored at  
 
-$HOME/.config/jgmenu/jgmenurc
+    $HOME/.config/jgmenu/jgmenurc  
+
+Global config variables are set in the following order (i.e. bottom  
+of list has higher precedence):  
+
+  - default (config.c)  
+  - jgmenurc (or as specified by --config-file=)  
+  - command line arguments  
+  - tint2rc  
+
+Values obtained from tint2rc can be overridden by setting  
+"tint2_rules = 0".
 
 ## Syntax
 
@@ -39,22 +50,48 @@ All other lines are recognised as setting variables in the format
 
 White spaces are mostly ignored.
 
-When a variable takes a boolean value, only 0 and 1 are accepted  
-for false and true respectively.
+### Values
 
-Colours are recognised in the format #rrggbb aaa; where  
-  - rr=red; gg=green; bb=blue; aa=alpha  
-The colors take a hexadecimal value from 00 to ff.  
-Alpha takes a decimal value from 0 to 100 where:  
-  - 100 means no transparency  
-  - 0 means fully transparent  
+Unless otherwise specified, values as treated as simple strings.
 
+Here follow some specific types:
 
-All space-related variables are in pixels unless otherwise specified
+boolean  
+    When a variable takes a boolean value, only 0 and 1 are accepted.  
+    0 means false; 1 means true.  
+
+integer  
+    When a variable takes an integer value, only numerical values are  
+    accepted. The only valid characters are digits (0-9) and  
+    minus-sign.  
+
+    All integer variables relating to geometry and position are  
+    interpreted as pixel values unless otherwise specified.  
+
+color  
+    When a variable take a color value, only the syntax described  
+    below is recognised:  
+
+    #rrggbb aaa  
+
+    where rr, gg and bb represent hexadecimal values (00-ff) for  
+    the colours red, green and blue respectively; and aaa stands for  
+    the alpha channel value expressed as a percentage (0-100).  
+    (i.e. 100 means no transparency and 0 means fully transparent.)  
+
+    For example #ff0000 100 represents red with no transparency,  
+    whereas #000088 50 means dark blue with 50% transparency.  
+
+pathname  
+    When a variable takes a pathname value, it is evaluated as a  
+    string. If the first character is tilde (~), it will be  
+    replaced by the the environment variable $HOME just as a shell  
+    would expand it.
+
 
 ## Variables
 
-stay_alive  
+stay_alive = __boolean__  
 
     If set to 1, the menu will "hide" rather than "exit" when the  
     following events occur:  
@@ -63,13 +100,13 @@ stay_alive
       - pressing escape  
     When in the hidden mode, a USR1 signal will "un-hide" the menu.  
 
-hide_on_startup  
+hide_on_startup = __boolean__  
 
     If set to 1, jgmenu start in "hidden" mode. This is useful for  
     starting jgmenu during the boot process and then sending a   
     `killall -SIGUSR1 jgmenu` to show the menu.  
 
-csv_cmd  
+csv_cmd = __string__  
 
     defines the command to produce the jgmenu flavoured CSV for  
     `jgmenu_run` (when run without argument). Examples include:  
@@ -77,62 +114,62 @@ csv_cmd
     csv_cmd = jgmenu_run parse-ob  
     csv_cmd = cat ~/mymenu.csv  
 
-tint2_look  
+tint2_look = __boolean__  
 
     Reads tint2rc and parse config options for colours, dimensions  
     and alignment.  
 
-tint2_button  
+tint2_button = __boolean__  
 
     Reads tint2 button environment position variables. These give  
     more accurate alignment along the length of the panel than what  
     the "tint2_look" option achieves.  
 
-tint2_rules  
+tint2_rules = __boolean__  
 
     Reads tint2rc variables in preference to jgmenurc.  
     If "tint2_rules = 0", jgmenurc can be used to overrule specific  
     tint2rc settings.  
 
-menu_margin_x  
-menu_margin_y  
-menu_width  
-menu_radius  
-menu_border  
+menu_margin_x = __integer__  
+menu_margin_y = __integer__  
+menu_width = __integer__  
+menu_radius = __integer__  
+menu_border = __integer__  
 
     "margin" refers to space outside an object  
     "padding" refers to space inside an object (between border and  
     content)  
     "radius" refers to the size of rounded corners  
-    "border" refers to the border-thickness (in pixels)  
+    "border" refers to the border-thickness  
 
-    The menu_margin_* variables refer to the distance between the  
+    The `menu_margin_*` variables refer to the distance between the  
     menu (=X11 window) and the edge of the screen.  
 
-menu_halign  
-menu_valign  
+menu_halign = (left | right)  
+menu_valign = (top | bottom)  
 
-    Valid options for menu horizontal alignment are "left" and  
-    "right". Vertical alignment understands "top" and "bottom".  
+    Horizontal and vertical alignment respectively.  
 
-at_pointer  
+at_pointer = __boolean__  
 
-    "at_pointer" will launch the menu at the mouse pointer position.  
-    This option overrides menu_margin_? and menu_?align settings
+    If enabled, the menu is launched at the pointer position,  
+    ignoring `menu_margin_?` and `menu_?align` values.  
 
-item_margin_x  
-item_margin_y  
-item_height  
-item_padding_x  
-item_radius  
-item_border  
+item_margin_x = __integer__  
+item_margin_y = __integer__  
+item_height = __integer__  
+item_padding_x = __integer__  
+item_radius = __integer__  
+item_border = __integer__  
 
+    See equivalent `menu_` variable definitions.  
 
-sep_height  
+sep_height = __integer__  
 
     height of separator (defined by ^sep())
 
-font  
+font = __string__  
 
     "font" accepts a string such as "Cantarell 10"  
     The font description without a specified size unit is  
@@ -140,56 +177,44 @@ font
     pixels. Using "points" enables consistency with other  
     applications.
 
-icon_size  
-icon_theme  
+icon_size = __integer__  
 
     If icon_size is set to 0, icons will not be searched for and  
     loaded.
+
+icon_theme = __string__  
 
     If an xsettings-daemon is running, the icon theme will be  
     obtained from that daemon. Otherwise, the variable above will be  
     read.
 
-    It is recommended to create icon cache before running jgmenu,  
-    using `jgmenu_run cache`. However, please note that:  
-      - If no cache exists, jgmenu will search xsettings and jgmenurc  
-        in real time.  
-      - If cache already exists, changing the xsettings values or the  
-        jgmenurc values below will have no effect until  
-        `jgmenu_run cache` is run again or the cache is deleted  
-        (using `jgmenu_run cache --delete`)
-
     The behaviour described above can be over-ruled by defining the  
     following two:
 
-ignore_xsettings  
-ignore_icon_cache  
+ignore_xsettings = __boolean__  
 
-show_title  
-
-arrow_string  
-arrow_show  
+arrow_string = __string__  
 
     The "arrow" indicates that a menu item points a submenu.  
     Suggested styles include:  
     → ▶ ➔ ➙ ➛ ➜ ➝ ➞ ➟ ➠ ➡ ➢ ➣ ➤ ➥ ➦ ↦ ⇒ ⇝ ⇢ ⇥ ⇨ ⇾ ➭ ➮ ➯ ➱ ➲ ➺ ➼ ➽ ➾  
 
-search_all_items  
+arrow_show = __boolean__  
+
+    Show or hide the arrow indicating that a menu item is a "folder"  
+
+search_all_items = __boolean__  
 
     Define "search_all_items" to include all submenus when searching.  
     If set to 0, only the checked out submenu (or root-menu) will be  
     searched.  
 
-color_menu_bg  
-color_menu_fg  
-color_menu_border  
-color_norm_bg  
-color_norm_fg  
-color_sel_bg  
-color_sel_fg  
-color_sel_border  
-color_noprog_fg  
-color_title_bg  
-color_sep_fg  
-
-    Example colour string: #eeeeee 70  
+color_menu_bg = __color__  
+color_menu_fg = __color__  
+color_menu_border = __color__  
+color_norm_bg = __color__  
+color_norm_fg = __color__  
+color_sel_bg = __color__  
+color_sel_fg = __color__  
+color_sel_border = __color__  
+color_sep_fg = __color__  

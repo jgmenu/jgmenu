@@ -1,9 +1,13 @@
+Remove ignore_icon_cache variable
+
 cache.c:
   - deal with icons which cannot be found
-  - remove jgmenu_run cache
-  - deal with changes to theme or size
+  - remove jgmenu-cache.sh
+  - deal with changes to theme or size (i.e. system("rm -rf....");
 
-Icon cache is temporarily disabled, so get that going again.
+remove code relating to back.h from jgmenu-parse-lx.c and put it in back.c
+
+Move resolve_symlink() to sbuf.c
 
 Update JGMENU-CONFIG(1). Specify input type for each key.
 
