@@ -49,7 +49,8 @@ static int cache_write_index_theme(const char *buf, unsigned int size)
 	free(f.buf);
 	if (fd < 0)
 		return (errno == EEXIST) ? 0 : -1;
-	write(fd, buf, size);
+	if (write(fd, buf, size) < 0)
+		warn("error writing index.theme");
 	close(fd);
 	return 0;
 }
@@ -85,7 +86,7 @@ static int cache_check_index_theme(const char *theme, int size)
 	fp = fopen(f.buf, "r");
 	free(f.buf);
 	if (!fp) {
-		warn("icon cache does not exist; is it the first time you run?");
+		warn("icon cache does not exist");
 		return -1;
 	}
 	while (fgets(line, sizeof(line), fp)) {
@@ -150,7 +151,7 @@ void resolve_symlink(struct sbuf *f)
 	linkname = xmalloc(bufsiz);
 	r = readlink(f->buf, linkname, bufsiz);
 	if (r == -1) {
-		warn("readlink");
+		warn("readlink error for %s", f->buf);
 		return;
 	}
 	linkname[r] = '\0';
@@ -166,6 +167,8 @@ int cache_strdup_path(const char *name, struct sbuf *path)
 	struct stat sb;
 	int ret = 0;
 
+	if (!name || name[0] == '\0')
+		return -1;
 	cache_init();
 	sbuf_init(&f);
 	sbuf_cpy(&f, cache_location->buf);

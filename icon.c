@@ -149,7 +149,8 @@ void icon_load(void)
 		if (icon->name)
 			sbuf_cpy(&icon->path, icon->name);
 		/* Do not lookup icons with a NULL name or a full path. */
-		if (!icon->name || strchr(icon->name, '/'))
+		if (!icon->name || icon->name[0] == '\0' ||
+		    strchr(icon->name, '/'))
 			continue;
 		/* icon_load is run twice, so let's not duplicate effort */
 		if (icon->surface)
@@ -172,7 +173,7 @@ void icon_load(void)
 			nr_symlinks++;
 	}
 	if (nr_symlinks)
-		fprintf(stderr, "info: created %d cache symlinks\n", nr_symlinks);
+		fprintf(stderr, "info: created %d symlinks in ~/.local/icon/jgmenu-cache/\n", nr_symlinks);
 	list_for_each_entry_safe(path, tmp_path, &icon_paths, list) {
 		free(path->name.buf);
 		free(path->path.buf);
