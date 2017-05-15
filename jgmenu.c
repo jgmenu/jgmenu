@@ -661,8 +661,25 @@ void tint2_align(void)
 	}
 }
 
+static void if_unity_run_hack(void)
+{
+	static int first_run = 1;
+	static int isunity;
+	char *s;
+
+	if (first_run) {
+		s = getenv("JGMENU_UNITY");
+		if (s && s[0] == '1')
+			isunity= 1;
+		first_run = 0;
+	}
+	if (isunity)
+		spawn("jgmenu_run unity-hack");
+}
+
 static void awake_menu(void)
 {
+	if_unity_run_hack();
 	filter_reset();
 	checkout_root();
 	XMapWindow(ui->dpy, ui->win);
@@ -1622,6 +1639,8 @@ int main(int argc, char *argv[])
 	/* check lockfile after --help and --version */
 	if (config.stay_alive)
 		lockfile_init();
+
+	if_unity_run_hack();
 
 	ui_init();
 	geo_init();

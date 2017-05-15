@@ -1,7 +1,5 @@
 #!/bin/sh
 
-test -z ${JGMENU_UNITY} || jgmenu_run unity-hack &
-
 default_menu_file="${HOME}/.config/jgmenu/default.csv"
 menu_file=""
 
