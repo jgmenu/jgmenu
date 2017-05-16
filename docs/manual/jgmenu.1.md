@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 27 April, 2017
+% 16 May, 2017
 
 # NAME
 
@@ -47,11 +47,6 @@ Icons will be displayed if the third field is populated; for example:
 
     Terminal,xterm,utilities-terminal
     Firefox,firefox,firefox
-
-Some icons themes are slow to load on start-up. In order to improve  
-start-up times:
-
-  - create icon-cache by running `jgmenu_run cache`
 
 # OPTIONS
 
@@ -102,4 +97,4 @@ The default configuration file location is ~/.config/jgmenu/jgmenurc
 
 
 The jgmenu source code and documentation can be downloaded from  
-<http://github.com/johanmalm/jgmenu/>
+<https://github.com/johanmalm/jgmenu/>

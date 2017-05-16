@@ -14,7 +14,7 @@ VER      = $(shell ./scripts/version-gen.sh)
 
 include ./Makefile.inc
 
-SCRIPTS_SHELL  = jgmenu_run jgmenu-cache.sh jgmenu-pmenu.sh \
+SCRIPTS_SHELL  = jgmenu_run jgmenu-pmenu.sh \
 		 jgmenu-csv.sh jgmenu-xdg.sh jgmenu-config.sh \
 		 jgmenu-init.sh jgmenu-ob.sh jgmenu-start.sh \
 		 jgmenu-restart.sh

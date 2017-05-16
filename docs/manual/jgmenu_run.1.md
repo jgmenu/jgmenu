@@ -1,6 +1,6 @@
 % JGMENU_RUN(1)  
 % Johan Malm  
-% 24 April, 2017
+% 16 May, 2017
 
 # NAME
 
@@ -51,9 +51,6 @@ xdg
 csv  
         Menu based on .csv file
 
-cache  
-        Create icon cache
-
 init  
         Create or amend configuration file  
 
@@ -79,13 +76,6 @@ xsettings
 
 # EXAMPLES
 
-Before first use:
-
-```
-jgmenu_run init
-jgmenu_run cache
-```
-
 To run the menu:
 
 ```
@@ -96,5 +86,4 @@ jgmenu_run
 
 `JGMENU(1)`  
 `JGMENUTUTORIAL(7)`  
-`JGMENU-CACHE(1)`  
 `JGMENU-CONFIG(1)`  

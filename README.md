@@ -188,5 +188,4 @@ See also
   - [JGMENU-PMENU(1)](docs/manual/jgmenu-pmenu.1.md)
   - [JGMENU-XDG(1)](docs/manual/jgmenu-xdg.1.md)
   - [JGMENU-CSV(1)](docs/manual/jgmenu-csv.1.md)
-  - [JGMENU-CACHE(1)](docs/manual/jgmenu-cache.1.md)
 

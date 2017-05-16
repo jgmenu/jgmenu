@@ -29,7 +29,7 @@ There are three points worth noting about what you have just done:
     below).
 
   - If you use tint2, jgmenu should have copied its appearance,  
-    position and alignment. 
+    position and alignment.  
 
   - You have just started a long-running application. If you click  
     outside the menu, press escape or select a menu item (using  
@@ -48,12 +48,6 @@ system. Read JGMENU-CONFIG(1) for further information.
 If you have a config file at ~/.config/jgmenu/jgmenurc and want to  
 ignore it for the purposes of running one of the lessons, just use  
 the command line argument "--config-file=" without specifying a file.  
-
-Some icons themes are slow to load on start-up. In order to improve  
-start-up times it is recommended to create icon-cache (although it  
-is not necessary). Create icon cache using the command:  
-
-    jgmenu_run cache
 
 If you use tint2 and want a traditional "start menu", you can do one  
 of the following using tint2conf or by editing tint2rc directly:

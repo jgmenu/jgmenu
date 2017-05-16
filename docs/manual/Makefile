@@ -4,8 +4,7 @@ css     = jg.css
 
 man1pages  = jgmenu.1 jgmenu_run.1
 
-man1pages += jgmenu-cache.1 jgmenu-pmenu.1 jgmenu-xdg.1 jgmenu-csv.1 \
-	     jgmenu-config.1
+man1pages += jgmenu-pmenu.1 jgmenu-xdg.1 jgmenu-csv.1 jgmenu-config.1
 
 man7pages  = jgmenututorial.7
 
@@ -26,7 +25,7 @@ $(manpages): % : %.md
 	@pandoc -s $(variant) --css=$(css) -o $@.html $^
 
 $(readmefile): ../../README.md
-	@echo "    PANDOC    ../../README.md" 
+	@echo "    PANDOC    ../../README.md"
 	@pandoc -s $(variant) --css=$(css) -o ../../README.html ../../README.md
 
 install:

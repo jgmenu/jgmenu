@@ -27,16 +27,3 @@ jgmenu-xdg
     |
  jgmenu-xdg
 
-
-jgmenu-cache
-------------
-
- icon-find.c
-     |
- jgmenu-icon-find.c
-     |
- jgmenu-icon-find
-     |
- jgmenu-cache
-
-
