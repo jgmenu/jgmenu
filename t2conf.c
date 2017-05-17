@@ -16,6 +16,10 @@ enum alignment {UNKNOWN, TOP, CENTER, BOTTOM, LEFT, RIGHT, HORIZONTAL,
 static int g_screen_height, g_screen_width;
 static int bg_id;
 
+static double panel_background_color[4];
+static double taskbar_background_color[4];
+static int use_taskbar_background;
+
 #define MAX_NR_BGS (16)
 
 struct bg {
@@ -85,8 +89,10 @@ static void process_line(char *line)
 			fprintf(stderr, "warn: id too big\n");
 			return;
 		}
-		printf("  - color_menu_bg    = %s\n", bg[id].background_color);
-		parse_hexstr(bg[id].background_color, config.color_menu_bg);
+		printf("  @ panel_bg_col     = %s\n", bg[id].background_color);
+		parse_hexstr(bg[id].background_color, panel_background_color);
+		if (!id)
+			use_taskbar_background = 1;
 
 		/*
 		 * We could parse set color_menu_border and border_width here,
@@ -96,7 +102,13 @@ static void process_line(char *line)
 		 */
 
 	} else if (!strncmp(option, "taskbar_background_id", 21)) {
-		; /* ignore this */
+		id = atoi(value);
+		if (id > MAX_NR_BGS) {
+			fprintf(stderr, "warn: id too big\n");
+			return;
+		}
+		printf("  @ taskbar_bg_col   = %s\n", bg[id].background_color);
+		parse_hexstr(bg[id].background_color, taskbar_background_color);
 	} else if (!strncmp(option, "task_background_id", 18)) {
 		id = atoi(value);
 		if (id > MAX_NR_BGS) {
@@ -309,6 +321,16 @@ static void vpanel_set_margin_y(void)
 
 static void set_alignment_and_position(void)
 {
+	int i;
+
+	if (use_taskbar_background) {
+		for (i = 0; i < 4; i++)
+			config.color_menu_bg[i] = taskbar_background_color[i];
+	} else {
+		for (i = 0; i < 4; i++)
+			config.color_menu_bg[i] = panel_background_color[i];
+	}
+
 	printf("  - orientation      = ");
 	if (orientation == HORIZONTAL)
 		printf("horizontal\n");
