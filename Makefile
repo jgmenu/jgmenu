@@ -17,12 +17,12 @@ include ./Makefile.inc
 SCRIPTS_SHELL  = jgmenu_run jgmenu-pmenu.sh \
 		 jgmenu-csv.sh jgmenu-xdg.sh jgmenu-config.sh \
 		 jgmenu-init.sh jgmenu-ob.sh jgmenu-start.sh \
-		 jgmenu-restart.sh
+		 jgmenu-restart.sh jgmenu-lx.sh
 
 SCRIPTS_PYTHON = jgmenu-parse-pmenu.py jgmenu-unity-hack.py
 
 PROGS	 = jgmenu jgmenu-parse-xdg jgmenu-icon-find jgmenu-xsettings \
-	   jgmenu-parse-ob jgmenu-socket
+	   jgmenu-parse-ob jgmenu-socket jgmenu-parse-lx
 
 OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
         icon.o xpm-loader.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o \
@@ -34,6 +34,7 @@ LIB_H = $(shell find . -name '*.h' -print)
 JGMENU_LIB = libjgmenu.a
 
 all: $(PROGS)
+	@echo "New build dependecies since 18 May: glib2.0 and libmenu-cache"
 
 $(PROGS): % : $(OBJS) %.o
 	$(QUIET_LINK)$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
