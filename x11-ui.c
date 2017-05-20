@@ -220,7 +220,11 @@ void ui_create_window(int x, int y, int w, int h)
 
 	ui->gc = XCreateGC(ui->dpy, ui->win, 0, NULL);
 
-	/* XDefineCursor required to prevent blindly inheriting cursor from parent
+	XStoreName(ui->dpy, ui->win, "jgmenu");
+	XSetIconName(ui->dpy, ui->win, "jgmenu");
+
+	/*
+	 * XDefineCursor required to prevent blindly inheriting cursor from parent
 	 * (e.g. hour-glass pointer set by tint2)
 	 * Check this URL for cursor styles:
 	 * http://tronche.com/gui/x/xlib/appendix/b/
