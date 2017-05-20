@@ -1,21 +1,47 @@
-Remove ignore_icon_cache variable
+IMMEDIATE
+=========
 
-cache.c:
+Finish off cache.c, specifically
   - deal with icons which cannot be found
-  - remove jgmenu-cache.sh
   - deal with changes to theme or size (i.e. system("rm -rf....");
+  - Update notes_on_icons
+  - Move resolve_symlink() to sbuf.c
 
-remove code relating to back.h from jgmenu-parse-lx.c and put it in back.c
+Finish off tint2 integration:
+  - Add align.h to use enum instead of ugly strings
+  - In tint2_align(), set v align for h panel and vice versa.
 
-Move resolve_symlink() to sbuf.c
+Finish off first iteration of 'lx'
+  - remove code relating to back.h from jgmenu-parse-lx.c and put it in back.c
+  - fix bugs found on Ubuntu's gnome- and lxde-
 
-Update JGMENU-CONFIG(1). Specify input type for each key.
+Add info() for fprintf(stderr, "info: ....\n");
 
-Add align.h to use enum instead of ugly strings
+=== Upversion to 0.5.2 ===
 
-In tint2_align(), set v align for h panel and vice versa.
+Sort out positioning (incl issue #20)
+  - Add item_padding_x
+  - Add margin_x to menu_width()
+  - Add align CENTER
+  - Add menu_padding_{l,r,t,b}
+	(no need to call it root - if submenus have different padding we can call them sub_padding)
+  - Add icon_margin_r (i.e. distance between icon and text)
+	item_margin_x won't always be suitable.
 
-The window is 1px out on Ubuntu (up and left). Investigate.
+Add locale and UTF-8 support to XKeyEvent loop (Issue #26)
+
+Support system wide configuration (Issue #27)
+
+Add ^term() find terminal and wrap around commands
+
+Add atexit()-cleanup() so that it's easier to spot potential run-time memory
+leaks with ASAN and Valgrind
+
+=== Upversion to 0.6 ===
+
+
+VARIOUS IN NO PARTICULAR ORDER
+==============================
 
 Refactor jgmenu.c to prepare for config file re-load
 	- create arg.c for command line args
@@ -24,28 +50,13 @@ Refactor jgmenu.c to prepare for config file re-load
 Check tint2rc 'modified time' and re-read on change
 Consider the same for jgmenurc and tint2-sessionfile (bl)
 
-When starting (not awaking) jgmenu, tint2 sets the pointer to "hour glass".
-Consider how this could be avoided.
-
-^term() find terminal and wrap around commands
-
-Sync with o9000's pmenu.py
-
 Add tint2_config_file (in case it's different to ~/.config/tint2/tint2rc)
-
-Add info() for fprintf(stderr, "info: ....\n");
-
-Add atexit()-cleanup()
 
 argv_buf delim
 
 Add explaination on JGMENU_EXEC_PATH
 
 Remove XINERAMA ifdefs
-
-Remove title (will be overtaken by fixed.c items)
-
-Remove noprog colour
 
 Rename filter list (as it clashes with filter_)
 
@@ -54,22 +65,10 @@ and jgmenu_run (it doesn't look nice in `top`)
 
 Add option to read fd other than STDIN (--menu-file=)
 
-Add item_padding_x
-
-Add margin_x to menu_width()
-
-Add align CENTER
-
-Add menu_padding_{l,r,t,b}
-	(no need to call it root - if submenus have different padding we can call them sub_padding)
-
 Add shareness with symlinks
 
-Add icon_margin_r (i.e. distance between icon and text)
-	item_margin_x won't always be suitable.
-
-fixed.c
--------
+widgets.c
+---------
 	enum fixed_type {ICON, RECT, TEXT, SEARCH};
 	@type-action-x-y-w-h-r-halign-valign-fgcol-bgcol-content
 		NOTES:
@@ -109,3 +108,11 @@ git-config
 ----------
 	Add --add
 	Add --add-to-fav
+
+ISSUES
+======
+The window is 1px out on Ubuntu (up and left). Investigate.
+
+When starting (not awaking) jgmenu, tint2 sets the pointer to "hour glass".
+Consider how this could be avoided.
+

@@ -15,7 +15,6 @@ item_border	= 0.0
 
 font		= Ubuntu condensed 14px
 icon_size	= 0
-show_title	= 0
 
 color_menu_bg	= #eeeeee 100
 color_menu_fg	= #000000 100
@@ -23,5 +22,3 @@ color_norm_bg	= #eeeeee 100
 color_norm_fg	= #000000 100
 color_sel_bg	= #000000 60
 color_sel_fg	= #eeeeee 100
-color_noprog_fg	= #000000 100
-color_title_bg	= #ffbb22 60

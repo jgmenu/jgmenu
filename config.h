@@ -33,8 +33,6 @@ struct config {
 	int icon_size;		/* if set to zero, icons won't show */
 	char *icon_theme;
 	int ignore_xsettings;
-	int ignore_icon_cache;
-	int show_title;		/* will only show if ^tag() is set */
 
 	char *arrow_string;
 	int arrow_show;
@@ -48,8 +46,6 @@ struct config {
 	double color_sel_bg[4];
 	double color_sel_fg[4];
 	double color_sel_border[4];
-	double color_noprog_fg[4];
-	double color_title_bg[4];
 	double color_sep_fg[4];
 };
 

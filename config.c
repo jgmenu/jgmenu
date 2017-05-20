@@ -39,8 +39,6 @@ void config_set_defaults(void)
 	config.icon_size	 = 22;
 	config.icon_theme	 = NULL; /* Leave as NULL. Is set in jgmenu.c */
 	config.ignore_xsettings  = 0;
-	config.ignore_icon_cache = 0;
-	config.show_title	 = 0;
 
 	config.arrow_string	 = strdup("▸");
 	config.arrow_show	 = 1;
@@ -54,8 +52,6 @@ void config_set_defaults(void)
 	parse_hexstr("#ffffff 20", config.color_sel_bg);
 	parse_hexstr("#eeeeee 100", config.color_sel_fg);
 	parse_hexstr("#eeeeee 8", config.color_sel_border);
-	parse_hexstr("#eeeeee 100", config.color_noprog_fg);
-	parse_hexstr("#ffffff 20", config.color_title_bg);
 	parse_hexstr("#ffffff 20", config.color_sep_fg);
 }
 
@@ -117,10 +113,6 @@ static void process_line(char *line)
 		config.icon_theme = strdup(value);
 	else if (!strncmp(option, "ignore_xsettings", 16))
 		xatoi(&config.ignore_xsettings, value, XATOI_NONNEG, "config.ignore_xsettings");
-	else if (!strncmp(option, "ignore_icon_cache", 17))
-		xatoi(&config.ignore_icon_cache, value, XATOI_NONNEG, "config.ignore_icon_cache");
-	else if (!strncmp(option, "show_title", 10))
-		xatoi(&config.show_title, value, XATOI_NONNEG, "config.show_title");
 
 	else if (!strncmp(option, "arrow_string", 11))
 		config.arrow_string = strdup(value);
@@ -145,10 +137,6 @@ static void process_line(char *line)
 		parse_hexstr(value, config.color_sel_fg);
 	else if (!strncmp(option, "color_sel_border", 16))
 		parse_hexstr(value, config.color_sel_border);
-	else if (!strncmp(option, "color_noprog_fg", 14))
-		parse_hexstr(value, config.color_noprog_fg);
-	else if (!strncmp(option, "color_title_bg", 14))
-		parse_hexstr(value, config.color_title_bg);
 	else if (!strncmp(option, "color_sep_fg", 12))
 		parse_hexstr(value, config.color_sep_fg);
 }

@@ -34,8 +34,6 @@ font		  = Cantarell 10
 icon_size	  = 22
 icon_theme	  = Adwaita
 ignore_xsettings  = 0
-ignore_icon_cache = 0
-show_title	  = 0
 arrow_show	  = 1
 search_all_items  = 1
 color_menu_bg	  = #000000 70
@@ -46,8 +44,6 @@ color_norm_fg	  = #eeeeee 100
 color_sel_bg	  = #ffffff 20
 color_sel_fg	  = #eeeeee 100
 color_sel_border  = #eeeeee 8
-color_noprog_fg	  = #eeeeee 100
-color_title_bg	  = #ffffff 20
 color_sep_fg	  = #ffffff 20
 EOF
 }

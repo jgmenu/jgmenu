@@ -24,7 +24,6 @@ int screen_height;	/*  g */
 int screen_x0;
 int screen_y0;
 
-int show_title;		/* s  */
 int item_height;	/* sg */
 
 void geo_update(void)
@@ -59,8 +58,6 @@ void geo_init(void)
 	item_margin_x = 4;
 	item_margin_y = 4;
 
-	show_title = 0;
-
 	ui_get_screen_res(&screen_x0, &screen_y0, &screen_width,
 			  &screen_height);
 
@@ -76,11 +73,8 @@ int geo_get_item_coordinates(struct area *a)
 		h = 0;
 		goto out;
 	}
-	if (!h) {
+	if (!h)
 		h = item_margin_y;
-		if (show_title)
-			h += item_height;
-	}
 	a->y = h;
 	a->x = item_margin_x;
 	a->w = menu_width - (item_margin_x * 2);
@@ -94,8 +88,6 @@ int geo_get_max_itemarea_that_fits_on_screen(void)
 	int h;
 
 	h = screen_height - menu_margin_y - item_margin_y;
-	if (show_title)
-		h -= item_height;
 	return h;
 }
 
@@ -122,8 +114,6 @@ void geo_set_menu_height(int h)
 void geo_set_menu_height_from_itemarea_height(int h)
 {
 	menu_height = h;
-	if (show_title)
-		menu_height += item_height;
 	geo_update();
 }
 
@@ -167,15 +157,6 @@ void geo_set_item_height(int h)
 	geo_update();
 }
 
-void geo_set_show_title(char *s)
-{
-	if (s)
-		show_title = 1;
-	else
-		show_title = 0;
-	geo_update();
-}
-
 void geo_set_item_margin_x(int margin)
 {
 	item_margin_x = margin;
@@ -208,9 +189,6 @@ int geo_get_menu_height(void)
 int geo_get_itemarea_height(void)
 {
 	int h = menu_height;
-
-	if (show_title)
-		h -= item_height;
 	return h;
 }
 

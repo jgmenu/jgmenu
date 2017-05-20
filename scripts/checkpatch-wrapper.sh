@@ -50,10 +50,14 @@ do
 			-e 'CamelCase.*GError' \
 			-e 'CamelCase.*GrabModeAsync' \
 			-e 'CamelCase.*GrabSuccess' \
+			-e 'CamelCase.*GSList' \
 			-e 'CamelCase.*KeyPressMask' \
 			-e 'CamelCase.*KeySym' \
 			-e 'CamelCase.*LSBFirst' \
 			-e 'CamelCase.*LeaveWindowMask' \
+			-e 'CamelCase.*MenuCache' \
+			-e 'CamelCase.*MenuCacheApp' \
+			-e 'CamelCase.*MenuCacheDir' \
 			-e 'CamelCase.*MSBFirst' \
 			-e 'CamelCase.*None' \
 			-e 'CamelCase.*NoSymbol' \

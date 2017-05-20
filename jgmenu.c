@@ -79,7 +79,6 @@ struct menu {
 	struct item *first;	   /* first visible item			  */
 	struct item *last;	   /* last visible item			  */
 	struct item *sel;	   /* currently selected item		  */
-	char *title;
 	struct list_head master;   /* all items				  */
 	struct list_head filter;   /* items to be displayed in menu	  */
 	struct list_head nodes;	   /* hierarchical structure of tags	  */
@@ -371,24 +370,15 @@ void draw_item_text(struct item *p)
 void draw_menu(void)
 {
 	struct item *p;
-	int w, h;
+	int w;
 	int icon_y_coord;
 
-	h = geo_get_item_height();
 	w = geo_get_menu_width();
 
 	/* Draw background */
 	ui_clear_canvas();
 	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius,
 			  0.0, 1, config.color_menu_bg);
-
-	/* Draw title */
-	if (menu.title && config.show_title) {
-		ui_draw_rectangle_rounded_at_top(0, 0, w, h, config.menu_radius,
-						 0.0, 1, config.color_title_bg);
-		ui_insert_text(menu.title, config.item_padding_x, 0, h,
-			       config.color_norm_fg);
-	}
 
 	/* Draw menu border */
 	if (config.menu_border)
@@ -516,8 +506,6 @@ void checkout_submenu(char *tag)
 {
 	struct item *item;
 
-	menu.title = NULL;
-
 	/* Find head of submenu */
 	if (!tag || !strncmp(tag, "__root__", 8)) {
 		menu.current_node = list_first_entry_or_null(&menu.nodes, struct node, node);
@@ -544,11 +532,6 @@ void checkout_submenu(char *tag)
 			break;
 		menu.subtail = item;
 	}
-
-	if (config.show_title)
-		geo_set_show_title(menu.title);
-	else
-		geo_set_show_title(0);
 
 	set_submenu_height();
 	set_submenu_width();
@@ -1591,7 +1574,6 @@ int main(int argc, char *argv[])
 	sigaction(SIGINT, &int_action, NULL);
 
 	config_set_defaults();
-	menu.title = NULL;
 	menu.current_node = NULL;
 	INIT_LIST_HEAD(&menu.master);
 	INIT_LIST_HEAD(&menu.filter);

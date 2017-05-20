@@ -8,4 +8,6 @@ sudo apt-get install \
 	libcairo2-dev \
 	libpango1.0-dev \
 	librsvg2-dev \
-	libxml2-dev
+	libxml2-dev \
+	libglib2.0-dev \
+	libmenu-cache-dev

@@ -63,7 +63,6 @@ void geo_set_menu_halign(const char *pos);
 void geo_set_menu_valign(const char *pos);
 void geo_set_item_height(int h);
 void geo_set_nr_visible_items(int nr);
-void geo_set_show_title(char *s);
 void geo_set_item_margin_x(int margin);
 void geo_set_item_margin_y(int margin);
 

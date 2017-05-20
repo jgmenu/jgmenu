@@ -114,15 +114,18 @@ Dependencies
   - cairo
   - pango
   - librsvg
-  - libxml2
+  - libxml2 (for xdg and ob modules)
+  - glib (for lx module)
+  - libmenu-cache (for lx module)
 
 
 ### Run-time dependencies:
 
-  - A *menu* package (for example one of lxmenu-data, libgarcon-common or  
-    gnome-menus) is required for "`jgmenu_run pmenu`" and "`jgmenu_run xdg`"  
-
-  - python3 is required by "`jgmenu_run pmenu`"
+  - A *menu* package  is required for "`jgmenu_run pmenu`",  
+    "`jgmenu_run xdg`" and "`jgmenu_run lx`"  
+    Examples of *menu* packages include: lxmenu-data, gnome-menus  
+    and libgarcon-common (xfce))  
+  - python3 is required by "`jgmenu_run pmenu`"  
 
 To enable menu transparency, you need to have a Composite Manager such as  
 `compton`. Most Desktop Environments already have one installed.
