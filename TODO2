@@ -1,5 +1,5 @@
-IMMEDIATE
-=========
+SHORT TERM THINGS TO DO
+=======================
 
 Finish off cache.c, specifically
   - deal with icons which cannot be found
@@ -40,8 +40,8 @@ leaks with ASAN and Valgrind
 === Upversion to 0.6 ===
 
 
-VARIOUS IN NO PARTICULAR ORDER
-==============================
+VARIOUS THINGS TO DO IN NO PARTICULAR ORDER
+===========================================
 
 Refactor jgmenu.c to prepare for config file re-load
 	- create arg.c for command line args

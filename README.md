@@ -6,13 +6,15 @@ Introduction
 
 jgmenu is a simple X11 menu intended to be used with tint2 and openbox.
 
-  - Install - see the rest of this document  
+  - To install, see the rest of this document  
 
-  - Run - see [JGMENUTUTORIAL(7)](docs/manual/jgmenututorial.7.md)  
+  - To run, see [JGMENUTUTORIAL(7)](docs/manual/jgmenututorial.7.md)  
 
   - [Screenshots](docs/screenshots.md)  
 
   - [High level road map](TODO)  
+
+  - [Low level road map](TODO2)  
 
   - [Example config file](docs/jgmenurc)  
 
@@ -42,10 +44,10 @@ For Arch Linux users, there is an AUR package named "jgmenu".
 On Debian based systems such as Bunsenlabs and Ubuntu, do:
 
 ```bash
-./scripts/install-debian-dependencies.sh
 mkdir ~/src && cd ~/src
 git clone https://github.com/johanmalm/jgmenu.git
 cd jgmenu
+./scripts/install-debian-dependencies.sh
 make
 make install
 ```
