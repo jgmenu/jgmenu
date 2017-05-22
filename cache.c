@@ -8,8 +8,28 @@
 #include "cache.h"
 #include "util.h"
 
-#define CACHE_LOCATION "~/.local/share/icons/jgmenu-cache"
+#define CACHE_LOCATION "~/.cache/jgmenu/icons"
 static struct sbuf *cache_location;
+
+static struct sbuf icon_theme;
+static int icon_size;
+
+void cache_set_icon_theme(const char *theme)
+{
+	static int first_run = 1;
+
+	if (first_run) {
+		sbuf_init(&icon_theme);
+		first_run = 0;
+	}
+	if (theme)
+		sbuf_cpy(&icon_theme, theme);
+}
+
+void cache_set_icon_size(int size)
+{
+	icon_size = size;
+}
 
 static void mkdir_p(const char *path)
 {
@@ -40,18 +60,18 @@ static void mkdir_p(const char *path)
 static int cache_write_index_theme(const char *buf, unsigned int size)
 {
 	struct sbuf f;
-	int fd;
+	FILE *file;
 
 	sbuf_init(&f);
 	sbuf_cpy(&f, cache_location->buf);
 	sbuf_addstr(&f, "/index.theme");
-	fd = open(f.buf, O_WRONLY | O_CREAT | O_EXCL, 0666);
+	file = fopen(f.buf, "w");
 	free(f.buf);
-	if (fd < 0)
-		return (errno == EEXIST) ? 0 : -1;
-	if (write(fd, buf, size) < 0)
+	if (!file)
+		return -1;
+	if (!fwrite(buf, size, 1, file))
 		warn("error writing index.theme");
-	close(fd);
+	fclose(file);
 	return 0;
 }
 
@@ -61,7 +81,7 @@ static void cache_create_index_theme(const char *theme, int size)
 	char iconsize[8];
 
 	sbuf_init(&buf);
-	sbuf_cpy(&buf, "Inherites=");
+	sbuf_cpy(&buf, "Inherits=");
 	sbuf_addstr(&buf, theme);
 	sbuf_addch(&buf, '\n');
 	sbuf_addstr(&buf, "Size=");
@@ -79,6 +99,7 @@ static int cache_check_index_theme(const char *theme, int size)
 	FILE *fp;
 	char line[2048];
 	int ret = 0;
+	int theme_correct = 0, size_correct = 0;
 
 	sbuf_init(&f);
 	sbuf_cpy(&f, cache_location->buf);
@@ -90,21 +111,26 @@ static int cache_check_index_theme(const char *theme, int size)
 		return -1;
 	}
 	while (fgets(line, sizeof(line), fp)) {
-		char *option, *value;
+		char *option, *value, *p;
 
+		p = strchr(line, '\n');
+		if (p)
+			*p = '\0';
 		if (!parse_config_line(line, &option, &value))
 			continue;
 		if (!strncmp(option, "Inherits", 8)) {
-			if (strcmp(value, theme) != 0)
-				ret = -1;
+			if (!strcmp(value, theme))
+				theme_correct = 1;
 		} else if (!strncmp(option, "Size", 4)) {
-			if (atoi(value) != size)
-				ret = -1;
+			if (atoi(value) == size)
+				size_correct = 1;
 		}
 	}
 	fclose(fp);
+	if (!theme_correct || !size_correct)
+		ret = -1;
 	if (ret < 0)
-		warn("the icon theme and/or size has changed");
+		fprintf(stderr, "info: the icon theme and/or size has changed\n");
 	return ret;
 }
 
@@ -114,14 +140,16 @@ static void cache_init(void)
 
 	if (!first_run)
 		return;
+	if (!icon_theme.len || !icon_size)
+		die("cache.c: icon_{theme,size} needs to be set");
 	cache_location = xmalloc(sizeof(struct sbuf));
 	sbuf_init(cache_location);
 	sbuf_cpy(cache_location, CACHE_LOCATION);
 	sbuf_expand_tilde(cache_location);
-	if (cache_check_index_theme("foo", 22) < 0) {
-		fprintf(stderr, "info: creating index.theme\n");
+	if (cache_check_index_theme(icon_theme.buf, icon_size) < 0) {
+		system("rm -rf ~/.cache/jgmenu/icons");
 		mkdir_p(CACHE_LOCATION);
-		cache_create_index_theme("foo", 22);
+		cache_create_index_theme(icon_theme.buf, icon_size);
 	}
 	first_run = 0;
 }
@@ -131,6 +159,7 @@ int cache_exists(void)
 	struct sbuf f;
 	struct stat sb;
 
+	cache_init();
 	sbuf_init(&f);
 	sbuf_cpy(&f, cache_location->buf);
 	sbuf_addstr(&f, "/index.theme");

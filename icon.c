@@ -46,13 +46,16 @@ void icon_init(void)
 
 void icon_set_theme(const char *theme)
 {
-	if (theme)
-		sbuf_cpy(&icon_theme, theme);
+	if (!theme)
+		return;
+	sbuf_cpy(&icon_theme, theme);
+	cache_set_icon_theme(theme);
 }
 
 void icon_set_size(int size)
 {
 	icon_size = size;
+	cache_set_icon_size(size);
 }
 
 static cairo_surface_t *get_png_icon(const char *filename)
@@ -173,7 +176,7 @@ void icon_load(void)
 			nr_symlinks++;
 	}
 	if (nr_symlinks)
-		fprintf(stderr, "info: created %d symlinks in ~/.local/icon/jgmenu-cache/\n", nr_symlinks);
+		fprintf(stderr, "info: created %d symlinks in ~/.cache/jgmenu/icons/\n", nr_symlinks);
 	list_for_each_entry_safe(path, tmp_path, &icon_paths, list) {
 		free(path->name.buf);
 		free(path->path.buf);

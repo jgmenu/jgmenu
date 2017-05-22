@@ -3,6 +3,8 @@
 
 #include "sbuf.h"
 
+extern void cache_set_icon_theme(const char *theme);
+extern void cache_set_icon_size(int size);
 extern int cache_exists(void);
 extern int cache_strdup_path(const char *name, struct sbuf *path);
 extern int cache_create_symlink(char *path, char *name);
