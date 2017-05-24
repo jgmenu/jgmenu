@@ -170,10 +170,16 @@ void icon_load(void)
 	}
 	icon_find_all(&icon_paths, icon_size);
 	list_for_each_entry(path, &icon_paths, list) {
+		/* FIXME: do better than type casting struct */
 		icon = (struct icon *)path->icon;
 		sbuf_cpy(&icon->path, path->path.buf);
-		if (cache_create_symlink(icon->path.buf, icon->name) == 0)
+		if (cache_create_symlink(icon->path.buf, icon->name) == 0) {
 			nr_symlinks++;
+		} else {
+			warn("could not find icon '%s'", icon->name);
+			if (cache_touch(icon->name) < 0)
+				warn("error touching file '%s'", icon->name);
+		}
 	}
 	if (nr_symlinks)
 		fprintf(stderr, "info: created %d symlinks in ~/.cache/jgmenu/icons/\n", nr_symlinks);

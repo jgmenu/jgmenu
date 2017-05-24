@@ -2,8 +2,6 @@ SHORT TERM THINGS TO DO
 =======================
 
 Finish off cache.c, specifically
-  - deal with icons which cannot be found
-  - deal with changes to theme or size (i.e. system("rm -rf....");
   - Update notes_on_icons
   - Move resolve_symlink() to sbuf.c
 

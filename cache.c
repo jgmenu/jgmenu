@@ -147,7 +147,13 @@ static void cache_init(void)
 	sbuf_cpy(cache_location, CACHE_LOCATION);
 	sbuf_expand_tilde(cache_location);
 	if (cache_check_index_theme(icon_theme.buf, icon_size) < 0) {
-		system("rm -rf ~/.cache/jgmenu/icons");
+		char cmd[512];
+
+		if (cache_location->len > 500)
+			die("path to icon path is too long");
+		snprintf(cmd, sizeof(cmd), "rm -rf %s", cache_location->buf);
+		cmd[511] = '\0';
+		system(cmd);
 		mkdir_p(CACHE_LOCATION);
 		cache_create_index_theme(icon_theme.buf, icon_size);
 	}
@@ -172,7 +178,14 @@ void resolve_symlink(struct sbuf *f)
 	char *linkname;
 	ssize_t r, bufsiz;
 
-	if (lstat(f->buf, &sb) == -1)
+	if (!f || !f->buf) {
+		warn("empty argument passed to resolve_symlink()");
+		return;
+	}
+	if (lstat(f->buf, &sb) != 0)
+		return;
+	/* The cache contains empty regular files for missing icons */
+	if ((sb.st_mode & S_IFMT) == S_IFREG)
 		return;
 	bufsiz = sb.st_size + 1;
 	if (sb.st_size == 0)
@@ -188,6 +201,24 @@ void resolve_symlink(struct sbuf *f)
 		warn("readlink: returned buffer may have been truncated");
 	sbuf_cpy(f, linkname);
 	free(linkname);
+}
+
+int cache_touch(const char *name)
+{
+	struct sbuf f;
+	int ret = 0;
+
+	if (!name || name[0] == '\0')
+		return -1;
+	cache_init();
+	sbuf_init(&f);
+	sbuf_cpy(&f, cache_location->buf);
+	sbuf_addch(&f, '/');
+	sbuf_addstr(&f, name);
+	ret = open(f.buf, O_WRONLY | O_CREAT | O_TRUNC,
+		   S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+	free(f.buf);
+	return ret;
 }
 
 int cache_strdup_path(const char *name, struct sbuf *path)

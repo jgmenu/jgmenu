@@ -322,6 +322,8 @@ void icon_find_all(struct list_head *icons, int size)
 	struct sbuf path;
 	struct sbuf *s, *t;
 
+	if (list_empty(icons))
+		return;
 	icon_find_init();
 
 	/*
