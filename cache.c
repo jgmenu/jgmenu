@@ -134,6 +134,19 @@ static int cache_check_index_theme(const char *theme, int size)
 	return ret;
 }
 
+static void cache_delete(void)
+{
+	char cmd[512];
+
+	if (!cache_location || !cache_location->len)
+		die("must do cache_init() before cache_delete()!");
+	if (cache_location->len > 500)
+		die("path to icon path is too long");
+	snprintf(cmd, sizeof(cmd), "rm -rf %s", cache_location->buf);
+	cmd[511] = '\0';
+	system(cmd);
+}
+
 static void cache_init(void)
 {
 	static int first_run = 1;
@@ -147,29 +160,11 @@ static void cache_init(void)
 	sbuf_cpy(cache_location, CACHE_LOCATION);
 	sbuf_expand_tilde(cache_location);
 	if (cache_check_index_theme(icon_theme.buf, icon_size) < 0) {
-		char cmd[512];
-
-		if (cache_location->len > 500)
-			die("path to icon path is too long");
-		snprintf(cmd, sizeof(cmd), "rm -rf %s", cache_location->buf);
-		cmd[511] = '\0';
-		system(cmd);
+		cache_delete();
 		mkdir_p(CACHE_LOCATION);
 		cache_create_index_theme(icon_theme.buf, icon_size);
 	}
 	first_run = 0;
-}
-
-int cache_exists(void)
-{
-	struct sbuf f;
-	struct stat sb;
-
-	cache_init();
-	sbuf_init(&f);
-	sbuf_cpy(&f, cache_location->buf);
-	sbuf_addstr(&f, "/index.theme");
-	return (stat(f.buf, &sb) == 0) ? 1 : 0;
 }
 
 void resolve_symlink(struct sbuf *f)
