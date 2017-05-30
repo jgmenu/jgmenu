@@ -1,29 +1,29 @@
 Implementation
 ==============
 
-jgmenu
-------
-
-                          xdgdirs.c
-                             |
-                          icon-find.c  xpm-loader.c
-                             |           |
-			     +-----------+
- geometry.c   x11-ui.c    icon.c
-     |           |           |
-     +-----------+-----------+
-                 |
-              jgmenu.c
-                 |
-              jgmenu
-
-jgmenu-xdg
-----------
-
- xdgapps.c
- xdgdirs.c
-    |
- jgmenu-xdg.c
-    |
- jgmenu-xdg
-
+jgmenu.c
+  |
+  +--x11-ui.c		  interface with X11
+  |
+  +--icon.c		  load icons
+  |    |
+  |    +--cache.c	  manage icon cache on harddisk
+  |    |
+  |    +--icon-find.c     find icons
+  |    |    |
+  |    |    +--xdgdirs.c  list XDG dirs
+  |    |
+  |    +--xpm-loader.c    load xpm icons (png and svg icons are handled by
+  |                       external libraries)
+  |
+  +--config.c		  read config file
+  |
+  +--t2conf.c		  get settings from tintrc
+  |
+  +--t2env.c		  get environmental variables set by tint2
+  |
+  +--geometry.c		  calculate positions and dimensions
+  |
+  +--filter.c		  filter menu items
+  |
+  +--xsettings-helper.c	  read xsettings variables
