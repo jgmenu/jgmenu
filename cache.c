@@ -137,6 +137,7 @@ static int cache_check_index_theme(const char *theme, int size)
 static void cache_delete(void)
 {
 	char cmd[512];
+	int ret;
 
 	if (!cache_location || !cache_location->len)
 		die("must do cache_init() before cache_delete()!");
@@ -144,7 +145,9 @@ static void cache_delete(void)
 		die("path to icon path is too long");
 	snprintf(cmd, sizeof(cmd), "rm -rf %s", cache_location->buf);
 	cmd[511] = '\0';
-	system(cmd);
+	ret = system(cmd);
+	if (ret)
+		warn("deleting cache returned %d (cmd='%s')", ret, cmd);
 }
 
 static void cache_init(void)
