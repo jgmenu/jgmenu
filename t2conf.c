@@ -7,6 +7,7 @@
 #include "sbuf.h"
 #include "t2conf.h"
 
+#define DEBUG_PRINT_VARIABLES 0
 #define DEFAULT_TINT2RC "~/.config/tint2/tint2rc"
 #define DELIM " \t\r\n"
 
@@ -42,6 +43,19 @@ static int panel_margin_v;
 static char *font;
 static char *icon_theme;
 static int override_xsettings;
+
+static void say(const char *err, ...)
+{
+	va_list params;
+
+	if (!DEBUG_PRINT_VARIABLES)
+		return;
+	fprintf(stderr, "  - ");
+	va_start(params, err);
+	vfprintf(stderr, err, params);
+	va_end(params);
+	fprintf(stderr, "\n");
+}
 
 static int parse_height(const char *h)
 {
@@ -86,10 +100,10 @@ static void process_line(char *line)
 	} else if (!strncmp(option, "panel_background_id", 19)) {
 		id = atoi(value);
 		if (id > MAX_NR_BGS) {
-			fprintf(stderr, "warn: id too big\n");
+			warn("id too big");
 			return;
 		}
-		printf("  @ panel_bg_col     = %s\n", bg[id].background_color);
+		say("panel_bg_col     = %s", bg[id].background_color);
 		parse_hexstr(bg[id].background_color, panel_background_color);
 		if (!id)
 			use_taskbar_background = 1;
@@ -104,15 +118,15 @@ static void process_line(char *line)
 	} else if (!strncmp(option, "taskbar_background_id", 21)) {
 		id = atoi(value);
 		if (id > MAX_NR_BGS) {
-			fprintf(stderr, "warn: id too big\n");
+			warn("id too big");
 			return;
 		}
-		printf("  @ taskbar_bg_col   = %s\n", bg[id].background_color);
+		say("taskbar_bg_col   = %s", bg[id].background_color);
 		parse_hexstr(bg[id].background_color, taskbar_background_color);
 	} else if (!strncmp(option, "task_background_id", 18)) {
 		id = atoi(value);
 		if (id > MAX_NR_BGS) {
-			fprintf(stderr, "warn: id too big\n");
+			warn("id too big");
 			return;
 		}
 
@@ -125,38 +139,38 @@ static void process_line(char *line)
 	} else if (!strncmp(option, "task_active_background_id", 25)) {
 		id = atoi(value);
 		if (id > MAX_NR_BGS) {
-			fprintf(stderr, "warn: id too big\n");
+			warn("id too big");
 			return;
 		}
-		printf("  - item_radius      = %d\n", bg[id].rounded);
+		say("item_radius      = %d", bg[id].rounded);
 		config.item_radius = bg[id].rounded;
-		printf("  - color_sel_bg     = %s\n", bg[id].background_color);
+		say("color_sel_bg     = %s", bg[id].background_color);
 		parse_hexstr(bg[id].background_color, config.color_sel_bg);
-		printf("  - color_sel_border = %s\n", bg[id].border_color);
+		say("color_sel_border = %s", bg[id].border_color);
 		parse_hexstr(bg[id].border_color, config.color_sel_border);
-		printf("  - color_sep_fg     = %s\n", bg[id].border_color);
+		say("color_sep_fg     = %s", bg[id].border_color);
 		parse_hexstr(bg[id].border_color, config.color_sep_fg);
-		printf("  - item_border      = %d\n", bg[id].border_width);
+		say("item_border      = %d", bg[id].border_width);
 		config.item_border = bg[id].border_width;
 
 	} else if (!strcmp(option, "task_font")) {
-		printf("++++font             = %s\n", value);
+		say("font             = %s", value);
 		if (font)
 			free(font);
 		font = strdup(value);
 	} else if (!strcmp(option, "task_font_color")) {
-		printf("  - color_norm_fg    = %s\n", value);
+		say("color_norm_fg    = %s", value);
 		parse_hexstr(value, config.color_norm_fg);
 	} else if (!strcmp(option, "task_active_font_color")) {
-		printf("  - color_sel_fg     = %s\n", value);
+		say("color_sel_fg     = %s", value);
 		parse_hexstr(value, config.color_sel_fg);
 	} else if (!strcmp(option, "launcher_icon_theme")) {
-		printf("++++icon_theme       = %s\n", value);
+		say("icon_theme       = %s", value);
 		if (icon_theme)
 			free(icon_theme);
 		icon_theme = strdup(value);
 	} else if (!strcmp(option, "launcher_icon_theme_override")) {
-		printf("++++override_xsetti. = %s\n", value);
+		say("override_xsetti. = %s", value);
 		override_xsettings = atoi(value);
 	} else if (!strcmp(option, "panel_position")) {
 		field = strtok(value, DELIM);
@@ -229,7 +243,7 @@ static void parse_file(char *filename)
 
 	fp = fopen(filename, "r");
 	if (!fp) {
-		fprintf(stderr, "warning: cannot open file '%s'\n", filename);
+		warn("cannot open file '%s'", filename);
 		return;
 	}
 
@@ -241,7 +255,7 @@ static void parse_file(char *filename)
 static void set_menu_halign(const char *s)
 {
 	if (!s) {
-		fprintf(stderr, "warn: empty string in set_menu_halign()");
+		warn("empty string in set_menu_halign()");
 		return;
 	}
 	if (config.menu_halign)
@@ -252,7 +266,7 @@ static void set_menu_halign(const char *s)
 static void set_menu_valign(const char *s)
 {
 	if (!s) {
-		fprintf(stderr, "warn: empty string in set_menu_valign()");
+		warn("empty string in set_menu_valign()");
 		return;
 	}
 	if (config.menu_valign)
@@ -262,13 +276,14 @@ static void set_menu_valign(const char *s)
 
 static void hpanel_set_margin_y(void)
 {
-	printf("  - margin_y         = %d\n", parse_height(panel_height) + panel_margin_v);
+	say("margin_y         = %d", parse_height(panel_height) +
+	    panel_margin_v);
 	config.menu_margin_y = parse_height(panel_height) + panel_margin_v;
 	if (valign == TOP) {
-		printf("  - valign           = top\n");
+		say("valign           = top");
 		set_menu_valign("top");
 	} else if (valign == BOTTOM) {
-		printf("  - valign           = bottom\n");
+		say("valign           = bottom");
 		set_menu_valign("bottom");
 	}
 }
@@ -277,7 +292,7 @@ static void hpanel_set_margin_x(void)
 {
 	int x;
 
-	printf("  - halign           = left\n");
+	say("halign           = left");
 	set_menu_halign("left");
 	if (halign == CENTER)
 		x = (g_screen_width - parse_width(panel_width) + panel_margin_h) / 2;
@@ -285,19 +300,19 @@ static void hpanel_set_margin_x(void)
 		x = g_screen_width - parse_width(panel_width);
 	else
 		x = panel_margin_h;
-	printf("  - margin_x         = %d\n", x);
+	say("margin_x         = %d", x);
 	config.menu_margin_x = x;
 }
 
 static void vpanel_set_margin_x(void)
 {
-	printf("  - margin_x         = %d\n", parse_width(panel_height) + panel_margin_h);
+	say("margin_x         = %d", parse_width(panel_height) + panel_margin_h);
 	config.menu_margin_x = parse_width(panel_height) + panel_margin_h;
 	if (halign == LEFT) {
-		printf("  - halign           = left\n");
+		say("halign           = left");
 		set_menu_halign("left");
 	} else if (halign == RIGHT) {
-		printf("  - halign           = right\n");
+		say("halign           = right");
 		set_menu_halign("right");
 	}
 }
@@ -306,7 +321,7 @@ static void vpanel_set_margin_y(void)
 {
 	int y;
 
-	printf("  - valign           = top\n");
+	say("valign           = top");
 	set_menu_valign("top");
 	/* panel_width here refers to panel "length" (=height!) */
 	if (valign == CENTER)
@@ -315,7 +330,7 @@ static void vpanel_set_margin_y(void)
 		y = g_screen_height - parse_height(panel_width);
 	else
 		y = panel_margin_v;
-	printf("  - margin_y         = %d\n", y);
+	say("margin_y         = %d", y);
 	config.menu_margin_y = y;
 }
 
@@ -331,11 +346,13 @@ static void set_alignment_and_position(void)
 			config.color_menu_bg[i] = panel_background_color[i];
 	}
 
-	printf("  - orientation      = ");
-	if (orientation == HORIZONTAL)
-		printf("horizontal\n");
-	else if (orientation == VERTICAL)
-		printf("vertical\n");
+	if (DEBUG_PRINT_VARIABLES) {
+		fprintf(stderr, "  - orientation      = ");
+		if (orientation == HORIZONTAL)
+			fprintf(stderr, "horizontal\n");
+		else if (orientation == VERTICAL)
+			fprintf(stderr, "vertical\n");
+	}
 
 	/*
 	 * If "panel_shrink = 1" in tint2rc, one of menu_margin_{x,y} is not
