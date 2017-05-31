@@ -1,7 +1,6 @@
 SHORT TERM THINGS TO DO
 =======================
 Finish off tint2 integration:
-  - Add align.h to use enum instead of ugly strings
   - In tint2_align(), set v align for h panel and vice versa.
 
 Finish off first iteration of 'lx'

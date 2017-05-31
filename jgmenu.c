@@ -573,21 +573,21 @@ void launch_menu_at_pointer(void)
 		      &pos.x, &pos.y, &du);
 
 	if (pos.x < geo_get_screen_width() - geo_get_menu_width()) {
-		geo_set_menu_halign("left");
+		geo_set_menu_halign(LEFT);
 		geo_set_menu_margin_x(pos.x);
 	} else {
-		geo_set_menu_halign("right");
+		geo_set_menu_halign(RIGHT);
 		geo_set_menu_margin_x(geo_get_screen_width() - pos.x);
 	}
 
 	if (pos.y < geo_get_screen_height() - geo_get_menu_height()) {
-		geo_set_menu_valign("top");
+		geo_set_menu_valign(TOP);
 		geo_set_menu_margin_y(pos.y);
 	} else if (geo_get_menu_height() < pos.y) {
-		geo_set_menu_valign("bottom");
+		geo_set_menu_valign(BOTTOM);
 		geo_set_menu_margin_y(geo_get_screen_height() - pos.y);
 	} else {
-		geo_set_menu_valign("bottom");
+		geo_set_menu_valign(BOTTOM);
 		geo_set_menu_margin_y(0);
 	}
 }
@@ -627,20 +627,28 @@ void tint2_align(void)
 		printf("info: aligning to tint2 button variables in horizontal panel mode\n");
 		if (bx1 < px2 - geo_get_menu_width()) {
 			geo_set_menu_margin_x(bx1);
-			geo_set_menu_halign("left");
+			geo_set_menu_halign(LEFT);
 		} else {
 			geo_set_menu_margin_x(geo_get_screen_width() - px2);
-			geo_set_menu_halign("right");
+			geo_set_menu_halign(RIGHT);
 		}
+		if (config.menu_valign == BOTTOM)
+			geo_set_menu_margin_y(geo_get_screen_height() - py1);
+		else
+			geo_set_menu_margin_y(py2);
 	} else {
 		printf("info: aligning to tint2 button variables in vertical panel mode\n");
 		if (by1 < py2 - geo_get_menu_height()) {
 			geo_set_menu_margin_y(by1);
-			geo_set_menu_valign("top");
+			geo_set_menu_valign(TOP);
 		} else {
 			geo_set_menu_margin_y(geo_get_screen_height() - py2);
-			geo_set_menu_valign("bottom");
+			geo_set_menu_valign(TOP);
 		}
+		if (config.menu_halign == LEFT)
+			geo_set_menu_margin_x(px2);
+		else
+			geo_set_menu_margin_x(geo_get_screen_width() - px1);
 	}
 }
 
@@ -653,7 +661,7 @@ static void if_unity_run_hack(void)
 	if (first_run) {
 		s = getenv("JGMENU_UNITY");
 		if (s && s[0] == '1')
-			isunity= 1;
+			isunity = 1;
 		first_run = 0;
 	}
 	if (isunity)

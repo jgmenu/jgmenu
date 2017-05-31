@@ -6,13 +6,11 @@
 #include "config.h"
 #include "sbuf.h"
 #include "t2conf.h"
+#include "align.h"
 
 #define DEBUG_PRINT_VARIABLES 0
 #define DEFAULT_TINT2RC "~/.config/tint2/tint2rc"
 #define DELIM " \t\r\n"
-
-enum alignment {UNKNOWN, TOP, CENTER, BOTTOM, LEFT, RIGHT, HORIZONTAL,
-		VERTICAL};
 
 static int g_screen_height, g_screen_width;
 static int bg_id;
@@ -252,28 +250,6 @@ static void parse_file(char *filename)
 	fclose(fp);
 }
 
-static void set_menu_halign(const char *s)
-{
-	if (!s) {
-		warn("empty string in set_menu_halign()");
-		return;
-	}
-	if (config.menu_halign)
-		free(config.menu_halign);
-	config.menu_halign = strdup(s);
-}
-
-static void set_menu_valign(const char *s)
-{
-	if (!s) {
-		warn("empty string in set_menu_valign()");
-		return;
-	}
-	if (config.menu_valign)
-		free(config.menu_valign);
-	config.menu_valign = strdup(s);
-}
-
 static void hpanel_set_margin_y(void)
 {
 	say("margin_y         = %d", parse_height(panel_height) +
@@ -281,10 +257,10 @@ static void hpanel_set_margin_y(void)
 	config.menu_margin_y = parse_height(panel_height) + panel_margin_v;
 	if (valign == TOP) {
 		say("valign           = top");
-		set_menu_valign("top");
+		config.menu_valign = TOP;
 	} else if (valign == BOTTOM) {
 		say("valign           = bottom");
-		set_menu_valign("bottom");
+		config.menu_valign = BOTTOM;
 	}
 }
 
@@ -293,7 +269,7 @@ static void hpanel_set_margin_x(void)
 	int x;
 
 	say("halign           = left");
-	set_menu_halign("left");
+	config.menu_halign = LEFT;
 	if (halign == CENTER)
 		x = (g_screen_width - parse_width(panel_width) + panel_margin_h) / 2;
 	else if (halign == RIGHT)
@@ -310,10 +286,10 @@ static void vpanel_set_margin_x(void)
 	config.menu_margin_x = parse_width(panel_height) + panel_margin_h;
 	if (halign == LEFT) {
 		say("halign           = left");
-		set_menu_halign("left");
+		config.menu_halign = LEFT;
 	} else if (halign == RIGHT) {
 		say("halign           = right");
-		set_menu_halign("right");
+		config.menu_halign = RIGHT;
 	}
 }
 
@@ -322,7 +298,7 @@ static void vpanel_set_margin_y(void)
 	int y;
 
 	say("valign           = top");
-	set_menu_valign("top");
+	config.menu_valign = TOP;
 	/* panel_width here refers to panel "length" (=height!) */
 	if (valign == CENTER)
 		y = (g_screen_height - parse_height(panel_width) + panel_margin_v) / 2;

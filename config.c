@@ -23,8 +23,8 @@ void config_set_defaults(void)
 	config.menu_width	 = 200;
 	config.menu_radius	 = 1;
 	config.menu_border	 = 0;
-	config.menu_halign	 = NULL;
-	config.menu_valign	 = NULL;
+	config.menu_halign	 = LEFT;
+	config.menu_valign	 = BOTTOM;
 	config.at_pointer	 = 0;
 
 	config.item_margin_x	 = 3;
@@ -62,83 +62,94 @@ static void process_line(char *line)
 	if (!parse_config_line(line, &option, &value))
 		return;
 
-	if (!strncmp(option, "stay_alive", 10))
+	if (!strncmp(option, "stay_alive", 10)) {
 		xatoi(&config.stay_alive, value, XATOI_NONNEG, "config.stay_alive");
-	else if (!strncmp(option, "hide_on_startup", 15))
+	} else if (!strncmp(option, "hide_on_startup", 15)) {
 		xatoi(&config.hide_on_startup, value, XATOI_NONNEG, "config.hide_on_startup");
-	else if (!strncmp(option, "tint2_look", 10))
+	} else if (!strncmp(option, "tint2_look", 10)) {
 		xatoi(&config.tint2_look, value, XATOI_NONNEG, "config.tint2_look");
-	else if (!strncmp(option, "tint2_button", 12))
+	} else if (!strncmp(option, "tint2_button", 12)) {
 		xatoi(&config.tint2_button, value, XATOI_NONNEG, "config.tint2_button");
-	else if (!strncmp(option, "tint2_rules", 11))
+	} else if (!strncmp(option, "tint2_rules", 11)) {
 		xatoi(&config.tint2_rules, value, XATOI_NONNEG, "config.tint2_rules");
 
-	else if (!strncmp(option, "menu_margin_x", 13))
+	} else if (!strncmp(option, "menu_margin_x", 13)) {
 		xatoi(&config.menu_margin_x, value, XATOI_NONNEG, "config.margin_x");
-	else if (!strncmp(option, "menu_margin_y", 13))
+	} else if (!strncmp(option, "menu_margin_y", 13)) {
 		xatoi(&config.menu_margin_y, value, XATOI_NONNEG, "config.margin_y");
-	else if (!strncmp(option, "menu_width", 10))
+	} else if (!strncmp(option, "menu_width", 10)) {
 		xatoi(&config.menu_width, value, XATOI_GT_0, "config.menu_width");
-	else if (!strncmp(option, "menu_radius", 11))
+	} else if (!strncmp(option, "menu_radius", 11)) {
 		xatoi(&config.menu_radius, value, XATOI_NONNEG, "config.menu_radius");
-	else if (!strncmp(option, "menu_border", 11))
+	} else if (!strncmp(option, "menu_border", 11)) {
 		xatoi(&config.menu_border, value, XATOI_NONNEG, "config.menu_border");
-	else if (!strncmp(option, "menu_halign", 11))
-		config.menu_halign = strdup(value);
-	else if (!strncmp(option, "menu_valign", 11))
-		config.menu_valign = strdup(value);
-	else if (!strncmp(option, "at_pointer", 10))
+	} else if (!strncmp(option, "menu_halign", 11)) {
+		if (!value)
+			return;
+		if (!strcasecmp(value, "left"))
+			config.menu_halign = LEFT;
+		else if (!strcasecmp(value, "right"))
+			config.menu_halign = RIGHT;
+	} else if (!strncmp(option, "menu_valign", 11)) {
+		if (!value)
+			return;
+		if (!strcasecmp(value, "top"))
+			config.menu_valign = TOP;
+		else if (!strcasecmp(value, "bottom"))
+			config.menu_valign = BOTTOM;
+	} else if (!strncmp(option, "at_pointer", 10)) {
 		xatoi(&config.at_pointer, value, XATOI_NONNEG, "config.at_pointer");
 
-	else if (!strncmp(option, "item_margin_x", 13))
+	} else if (!strncmp(option, "item_margin_x", 13)) {
 		xatoi(&config.item_margin_x, value, XATOI_NONNEG, "config.item_margin_x");
-	else if (!strncmp(option, "item_margin_y", 13))
+	} else if (!strncmp(option, "item_margin_y", 13)) {
 		xatoi(&config.item_margin_y, value, XATOI_NONNEG, "config.item_margin_y");
-	else if (!strncmp(option, "item_height", 11))
+	} else if (!strncmp(option, "item_height", 11)) {
 		xatoi(&config.item_height, value, XATOI_GT_0, "config.item_height");
-	else if (!strncmp(option, "item_padding_x", 14))
+	} else if (!strncmp(option, "item_padding_x", 14)) {
 		xatoi(&config.item_padding_x, value, XATOI_NONNEG, "config.item_padding_x");
-	else if (!strncmp(option, "item_radius", 11))
+	} else if (!strncmp(option, "item_radius", 11)) {
 		xatoi(&config.item_radius, value, XATOI_NONNEG, "config.item_radius");
-	else if (!strncmp(option, "item_border", 11))
+	} else if (!strncmp(option, "item_border", 11)) {
 		xatoi(&config.item_border, value, XATOI_NONNEG, "config.item_border");
-	else if (!strncmp(option, "sep_height", 10))
+	} else if (!strncmp(option, "sep_height", 10)) {
 		xatoi(&config.sep_height, value, XATOI_NONNEG, "config.sep_height");
 
-	else if (!strncmp(option, "font", 4))
+	} else if (!strncmp(option, "font", 4)) {
 		config.font = strdup(value);
-	else if (!strncmp(option, "icon_size", 9))
+	} else if (!strncmp(option, "icon_size", 9)) {
 		xatoi(&config.icon_size, value, XATOI_NONNEG, "config.icon_size");
-	else if (!strncmp(option, "icon_theme", 10))
+	} else if (!strncmp(option, "icon_theme", 10)) {
 		config.icon_theme = strdup(value);
-	else if (!strncmp(option, "ignore_xsettings", 16))
+	} else if (!strncmp(option, "ignore_xsettings", 16)) {
 		xatoi(&config.ignore_xsettings, value, XATOI_NONNEG, "config.ignore_xsettings");
 
-	else if (!strncmp(option, "arrow_string", 11))
+	} else if (!strncmp(option, "arrow_string", 11)) {
 		config.arrow_string = strdup(value);
-	else if (!strncmp(option, "arrow_show", 10))
+	} else if (!strncmp(option, "arrow_show", 10)) {
 		xatoi(&config.arrow_show, value, XATOI_NONNEG, "config.arrow_show");
-	else if (!strncmp(option, "search_all_items", 16))
+	} else if (!strncmp(option, "search_all_items", 16)) {
 		xatoi(&config.search_all_items, value, XATOI_NONNEG, "config.search_all_items");
 
-	else if (!strncmp(option, "color_menu_bg", 13))
+	} else if (!strncmp(option, "color_menu_bg", 13)) {
 		parse_hexstr(value, config.color_menu_bg);
-	else if (!strncmp(option, "color_menu_fg", 13))
+	} else if (!strncmp(option, "color_menu_fg", 13)) {
 		parse_hexstr(value, config.color_menu_fg);
-	else if (!strncmp(option, "color_menu_border", 17))
+	} else if (!strncmp(option, "color_menu_border", 17)) {
 		parse_hexstr(value, config.color_menu_border);
-	else if (!strncmp(option, "color_norm_bg", 13))
+	} else if (!strncmp(option, "color_norm_bg", 13)) {
 		parse_hexstr(value, config.color_norm_bg);
-	else if (!strncmp(option, "color_norm_fg", 13))
+	} else if (!strncmp(option, "color_norm_fg", 13)) {
 		parse_hexstr(value, config.color_norm_fg);
-	else if (!strncmp(option, "color_sel_bg", 12))
+	} else if (!strncmp(option, "color_sel_bg", 12)) {
 		parse_hexstr(value, config.color_sel_bg);
-	else if (!strncmp(option, "color_sel_fg", 12))
+	} else if (!strncmp(option, "color_sel_fg", 12)) {
 		parse_hexstr(value, config.color_sel_fg);
-	else if (!strncmp(option, "color_sel_border", 16))
+	} else if (!strncmp(option, "color_sel_border", 16)) {
 		parse_hexstr(value, config.color_sel_border);
-	else if (!strncmp(option, "color_sep_fg", 12))
+	} else if (!strncmp(option, "color_sep_fg", 12)) {
 		parse_hexstr(value, config.color_sep_fg);
+	}
 }
 
 static void read_file(FILE *fp)

@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "align.h"
+
 #define JGMENU_DEFAULT_FONT "Cantarell 10"
 
 struct config {
@@ -17,8 +19,8 @@ struct config {
 	int menu_width;
 	int menu_radius;
 	int menu_border;
-	char *menu_halign;
-	char *menu_valign;
+	enum alignment menu_halign;
+	enum alignment menu_valign;
 	int at_pointer;
 
 	int item_margin_x;

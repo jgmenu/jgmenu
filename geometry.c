@@ -4,8 +4,6 @@
 
 #include "geometry.h"
 
-enum alignment {TOP, CENTER, BOTTOM, LEFT, RIGHT};
-
 int menu_margin_x;	/* s  */
 int menu_margin_y;	/* s  */
 int menu_height;	/* sg */
@@ -129,25 +127,15 @@ void geo_set_menu_margin_y(int y)
 	geo_update();
 }
 
-void geo_set_menu_halign(const char *pos)
+void geo_set_menu_halign(enum alignment pos)
 {
-	if (!pos)
-		return;
-	else if (!strcasecmp(pos, "left"))
-		menu_halign = LEFT;
-	else if (!strcasecmp(pos, "right"))
-		menu_halign = RIGHT;
+	menu_halign = pos;
 	geo_update();
 }
 
-void geo_set_menu_valign(const char *pos)
+void geo_set_menu_valign(enum alignment pos)
 {
-	if (!pos)
-		return;
-	else if (!strcasecmp(pos, "top"))
-		menu_valign = TOP;
-	else if (!strcasecmp(pos, "bottom"))
-		menu_valign = BOTTOM;
+	menu_valign = pos;
 	geo_update();
 }
 

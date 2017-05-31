@@ -47,6 +47,7 @@
 #define GEOMETRY_H
 
 #include "x11-ui.h"
+#include "align.h"
 
 void geo_update(void);
 void geo_init(void);
@@ -59,8 +60,8 @@ void geo_set_menu_height(int h);
 void geo_set_menu_height_from_itemarea_height(int h);
 void geo_set_menu_margin_x(int x);
 void geo_set_menu_margin_y(int y);
-void geo_set_menu_halign(const char *pos);
-void geo_set_menu_valign(const char *pos);
+void geo_set_menu_halign(enum alignment pos);
+void geo_set_menu_valign(enum alignment pos);
 void geo_set_item_height(int h);
 void geo_set_nr_visible_items(int nr);
 void geo_set_item_margin_x(int margin);

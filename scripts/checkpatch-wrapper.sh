@@ -128,6 +128,8 @@ do
 			-e 'CamelCase.*XQueryPointer' \
 			-e 'CamelCase.*XQueryTree' \
 			-e 'CamelCase.*XSetErrorHandler' \
+			-e 'CamelCase.*XSetIconName' \
+			-e 'CamelCase.*XStoreName' \
 			-e 'CamelCase.*XUngrabKeyboard' \
 			-e 'CamelCase.*XUngrabPointer' \
 			-e 'CamelCase.*XVisualInfo' \
