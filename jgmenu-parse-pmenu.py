@@ -23,7 +23,7 @@ strings = {
   "Back[ca]": "Endarrere",
   "Back[cs]": "Zpět",
   "Back[da]": "Tilbage",
-  "Back[de]": "_Zurück",
+  "Back[de]": "Zurück",
   "Back[el]": "Πίσω",
   "Back[eo]": "Malantaŭen",
   "Back[es]": "Atrás",
