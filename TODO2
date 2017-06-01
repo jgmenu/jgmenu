@@ -1,12 +1,5 @@
 SHORT TERM THINGS TO DO
 =======================
-Finish off tint2 integration:
-  - In tint2_align(), set v align for h panel and vice versa.
-
-Finish off first iteration of 'lx'
-  - remove code relating to back.h from jgmenu-parse-lx.c and put it in back.c
-  - fix bugs found on Ubuntu's gnome- and lxde-
-
 Add info() for fprintf(stderr, "info: ....\n");
 
 === Upversion to 0.5.2 ===
