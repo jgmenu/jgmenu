@@ -31,7 +31,7 @@ jgmenu is a simple X11 menu intended to be used with tint2 and openbox.
   - It reads menu items from stdin in a similar way to dmenu and dzen2, but  
     parses comma seperated fields for the name, command and icon  
 
-It has been compiled and runs on OpenBSD, FreeBSD and various Linux  
+It has been compiled and run on OpenBSD, FreeBSD and various Linux  
 distributions including Bunsenlabs, Arch, Ubuntu, Alpine and Mint.
 
 Build and Install

@@ -1,6 +1,5 @@
 SHORT TERM THINGS TO DO
 =======================
-=== Upversion to 0.5.2 ===
 
 Sort out positioning (incl issue #20)
   - Add item_padding_x
@@ -70,15 +69,6 @@ Add man-page for jgmenu_run ob
 
 Write jgmenu-init.sh --help message.
 
-Add svg2png support in jgmenu-cache
-
-Icon theme:
-
-	In README.md, explain that you have to set icon_theme in jgmenurc
-	(unless you have an xsettings-daemon running)
-
-	In jgmenu_run cache, WARN if the icon theme doesn't not exist
-
 Add jgmenuconf
 	Would need jgmenu_run init and jgmenu_run config
 
@@ -91,17 +81,9 @@ Add equivalent to ~/.config/gtk-3.0/settings.ini | grep... in theme.c
 
 Add rtrim, ltrim, trim, to sbuf.c
 
-Write examples/README explaining what the ex0? files are.
-
-git-config
-----------
-	Add --add
-	Add --add-to-fav
-
 ISSUES
 ======
 The window is 1px out on Ubuntu (up and left). Investigate.
 
 When starting (not awaking) jgmenu, tint2 sets the pointer to "hour glass".
 Consider how this could be avoided.
-
