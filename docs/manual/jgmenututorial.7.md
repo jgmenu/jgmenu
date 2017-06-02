@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 1 May, 2017  
+% 1 Jun, 2017  
 
 # NAME
 
@@ -119,6 +119,9 @@ are included in the menu.
 the .menu file, but is otherwise written from scratch. It adheres  
 to the basics of XDG's menu-spec but has a long way to go to achieve  
 full compliance.
+
+`jgmenu_run lx` uses LXDE's libmenu-cache to generate an XDG  
+compliant menu including separators and internationalization.  
 
 Lesson 3
 ---------

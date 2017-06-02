@@ -21,9 +21,12 @@ usage () {
 	printf "Valid 'commands' include:\n"
 	printf "    start           Start menu in 'hidden' mode\n"
 	printf "    re-start        Re-start jgmenu to read config file and load new apps\n"
+	printf "    init            Create or amend config file\n"
 	printf "    pmenu           Run menu based on .desktop and .directory files\n"
 	printf "    xdg             Run menu based on .desktop, .directory and .menu files\n"
-	printf "    csv             Run menu based on .csv file\n\n"
+	printf "    lx              Run XDG compliant menu created using LXDE's libmenu-cache\n"
+	printf "    csv             Run menu based on .csv file\n"
+	printf "    ob              Run menu based openbox menu-file\n\n"
 	exit 0
 }
 

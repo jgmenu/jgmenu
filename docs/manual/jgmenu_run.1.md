@@ -1,6 +1,6 @@
 % JGMENU_RUN(1)  
 % Johan Malm  
-% 16 May, 2017
+% 1 Jun, 2017
 
 # NAME
 
@@ -40,19 +40,26 @@ restart
         Re-start the menu in order to read the config file or load  
         newly installed apps.
 
+init  
+        Create or amend configuration file  
+
 pmenu  
-        Menu based on .directory and .desktop files
+        Menu based on .directory and .desktop files  
 
 xdg  
         Menu based on .menu, .directory and .desktop files  
         See JGMENUTUTORIAL(7) (lesson 2) for further details on the  
         differences between "pmenu" and "xdg"
 
+lx  
+        XDG compliant menu based using libmenu-cache to parse  
+        .menu, .directory and .desktop files
+
 csv  
         Menu based on .csv file
 
-init  
-        Create or amend configuration file  
+ob  
+        Menu based on openbox menu-file
 
 ### Low-level commands
 

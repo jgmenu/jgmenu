@@ -1,7 +1,5 @@
 SHORT TERM THINGS TO DO
 =======================
-Add info() for fprintf(stderr, "info: ....\n");
-
 === Upversion to 0.5.2 ===
 
 Sort out positioning (incl issue #20)
@@ -12,6 +10,12 @@ Sort out positioning (incl issue #20)
 	(no need to call it root - if submenus have different padding we can call them sub_padding)
   - Add icon_margin_r (i.e. distance between icon and text)
 	item_margin_x won't always be suitable.
+
+Update examples/
+    - Create README
+    - Make ex??.sh self-sufficient
+
+Add info() for fprintf(stderr, "info: ....\n");
 
 Add locale and UTF-8 support to XKeyEvent loop (Issue #26)
 
