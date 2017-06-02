@@ -1,0 +1,25 @@
+jgmenu v0.5.2 release notes
+===========================
+
+Updates since v0.5.1
+--------------------
+
+  - Add XDG menu parser based on libmenu-cache. This needs libglib2.0-dev
+    and libmenu-cache-dev to build. If anyone feels that they don't want
+    these dependencies, I can easily #ifdef them out. Try it using the
+    command `jgmenu_run lx`. Thank you @Vladimir-csp for suggesting it.
+
+  - Create icon cache on the fly (see docs/notes_on_icons for further
+    details). With this improvement, the command `jgmenu_run cache` is
+    no longer required and has therefore been removed.
+
+  - Improved tint2 integration by parsing font and icon-theme.
+
+  - Remove the following config options (regression):
+	- ignore_icon_cache
+	- show_title
+	- color_noprog_fg
+	- color_title_bg
+
+  - Remove "title" support. This functionality will be replaced later
+    using a more flexible approach.
