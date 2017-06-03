@@ -399,7 +399,7 @@ void draw_menu(void)
 		if (config.arrow_show && (!strncmp(p->cmd, "^checkout(", 10) ||
 					  !strncmp(p->cmd, "^sub(", 5)))
 			ui_insert_text(config.arrow_string, p->area.x + p->area.w -
-				       config.item_padding_x - (p->area.h / 3), p->area.y,
+				       config.item_padding_x - (config.arrow_width * 0.7), p->area.y,
 				       p->area.h, config.color_norm_fg);
 
 		/* Draw menu items text */
@@ -455,12 +455,19 @@ void set_submenu_width(void)
 			break;
 	}
 	point = ui_get_text_size(s.buf, config.font);
+	/* point.x now holds the width of the widest 'line of text' */
+
+	point.x += config.item_padding_x * 2;
+	point.x += config.item_margin_x * 2;
 	if (config.icon_size)
-		point.x += config.icon_size + config.item_padding_x;
-	if (point.x > config.menu_width)
+		point.x += config.icon_size + config.icon_margin_r;
+	if (config.arrow_show)
+		point.x += config.arrow_width;
+	/* point.x now holds the required 'itemarea width' */
+
+	if (geo_get_menu_width_from_itemarea_width(point.x) >
+	    config.menu_width)
 		geo_set_menu_width_from_itemarea_width(point.x);
-	else
-		geo_set_menu_width_from_itemarea_width(config.menu_width);
 	free(s.buf);
 }
 

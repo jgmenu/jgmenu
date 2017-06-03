@@ -34,10 +34,12 @@ struct config {
 	char *font;
 	int icon_size;		/* if set to zero, icons won't show */
 	char *icon_theme;
+	int icon_margin_r;
 	int ignore_xsettings;
 
 	char *arrow_string;
 	int arrow_show;
+	int arrow_width;
 	int search_all_items;
 
 	double color_menu_bg[4];

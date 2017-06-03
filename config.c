@@ -35,13 +35,15 @@ void config_set_defaults(void)
 	config.item_border	 = 0;
 	config.sep_height	 = 5;
 
-	config.font		 = NULL; /* Leave as NULL. Is set in jgmenu.c */
+	config.font		 = NULL; /* Leave as NULL. Set in jgmenu.c */
 	config.icon_size	 = 22;
-	config.icon_theme	 = NULL; /* Leave as NULL. Is set in jgmenu.c */
+	config.icon_theme	 = NULL; /* Leave as NULL. Set in jgmenu.c */
+	config.icon_margin_r	 = 25;	 /* distance between icon and text */
 	config.ignore_xsettings  = 0;
 
 	config.arrow_string	 = strdup("▸");
 	config.arrow_show	 = 1;
+	config.arrow_width	 = 15;	/* this refers to 'allocated' width */
 	config.search_all_items  = 1;
 
 	parse_hexstr("#000000 70", config.color_menu_bg);

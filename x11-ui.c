@@ -305,9 +305,6 @@ void ui_insert_text(char *s, int x, int y, int h, double *rgba)
 
 	offset = (h - ui->font_height_actual) / 2;
 
-	/* Text seems to sit one pixel to high */
-	++offset;
-
 	pango_layout_set_text(ui->pangolayout, s, -1);
 	pango_layout_set_font_description(ui->pangolayout, ui->pangofont);
 	cairo_set_source_rgba(ui->c, rgba[0], rgba[1], rgba[2], rgba[3]);
@@ -337,8 +334,6 @@ struct point ui_get_text_size(const char *str, const char *fontdesc)
 	cairo_destroy(c);
 	pango_font_description_free(font);
 	g_object_unref(layout);
-	point.x += 3;
-	point.y += 3;
 
 	return point;
 }

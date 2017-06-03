@@ -81,11 +81,12 @@ out:
 	return 0;
 }
 
+/* FIXME: This should return a point */
 int geo_get_max_itemarea_that_fits_on_screen(void)
 {
 	int h;
 
-	h = screen_height - menu_margin_y - item_margin_y;
+	h = screen_height - menu_margin_y;
 	return h;
 }
 
@@ -99,7 +100,7 @@ void geo_set_menu_width(int w)
 
 void geo_set_menu_width_from_itemarea_width(int w)
 {
-	menu_width = w + 2 * item_margin_x;
+	menu_width = w;
 	geo_update();
 }
 
@@ -176,13 +177,17 @@ int geo_get_menu_height(void)
 
 int geo_get_itemarea_height(void)
 {
-	int h = menu_height;
-	return h;
+	return menu_height;
 }
 
 int geo_get_menu_width(void)
 {
 	return menu_width;
+}
+
+int geo_get_menu_width_from_itemarea_width(int w)
+{
+	return w;
 }
 
 int geo_get_item_height(void)
