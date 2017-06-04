@@ -9,4 +9,4 @@ usage () {
 
 test "$1" = "--help" && usage
 
-jgmenu_run parse-ob "$@" | jgmenu "$@"
+jgmenu_run parse-ob "$@" | jgmenu --simple --icon-size=0 "$@"
