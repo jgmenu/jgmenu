@@ -36,6 +36,7 @@
 #include "t2env.h"
 #include "bl.h"
 #include "xsettings-helper.h"
+#include "terminal.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -737,6 +738,17 @@ void action_cmd(char *cmd)
 	} else if (!strncmp(cmd, "^back(", 6)) {
 		checkout_parent();
 		update(1);
+	} else if (!strncmp(cmd, "^term(", 6)) {
+		struct sbuf s;
+
+		p = parse_caret_action(cmd, "^term(");
+		if (!p)
+			return;
+		sbuf_init(&s);
+		term_build_terminal_cmd(&s, p, NULL, NULL);
+		spawn(s.buf);
+		free(s.buf);
+		hide_or_exit();
 	} else {
 		spawn(cmd);
 		hide_or_exit();

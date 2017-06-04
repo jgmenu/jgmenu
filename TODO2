@@ -1,26 +1,25 @@
 SHORT TERM THINGS TO DO
 =======================
 
+Added:
+	- icon_margin_r (distance between icon and text)
+	- arrow_width   (width of area allocated for arrow)
+
+Add config options
+	- terminal
+	- terminal_args
+
 Sort out positioning (incl issue #20)
-  - Add item_padding_x
-  - Add margin_x to menu_width()
-  - Add align CENTER
   - Add menu_padding_{l,r,t,b}
-	(no need to call it root - if submenus have different padding we can call them sub_padding)
-  - Add icon_margin_r (i.e. distance between icon and text)
-	item_margin_x won't always be suitable.
+  - Add align CENTER
 
 Update examples/
     - Create README
     - Make ex??.sh self-sufficient
 
-Add info() for fprintf(stderr, "info: ....\n");
-
 Add locale and UTF-8 support to XKeyEvent loop (Issue #26)
 
 Support system wide configuration (Issue #27)
-
-Add ^term() find terminal and wrap around commands
 
 Add atexit()-cleanup() so that it's easier to spot potential run-time memory
 leaks with ASAN and Valgrind

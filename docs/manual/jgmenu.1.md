@@ -43,6 +43,8 @@ The following mark-up is supported in the *command* field:
 
   - ^back() - check-out parent menu
 
+  - ^term() - run program in terminal
+
 Icons will be displayed if the third field is populated; for example:
 
     Terminal,xterm,utilities-terminal
