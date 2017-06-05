@@ -57,13 +57,16 @@ static void process_dir(MenuCacheApp *app)
 
 static void process_app(MenuCacheApp *app)
 {
-	/* TODO: Check menu_cache_app_get_use_terminal(app) here */
 	/* TODO: Check visibility flag here too */
 	/* TODO: Remove all the % codes */
 
 	sbuf_addstr(&cur->buf, menu_cache_item_get_name(MENU_CACHE_ITEM(app)));
 	sbuf_addstr(&cur->buf, ",");
+	if (menu_cache_app_get_use_terminal(app))
+		sbuf_addstr(&cur->buf, "^term(");
 	sbuf_addstr(&cur->buf, menu_cache_app_get_exec(MENU_CACHE_APP(app)));
+	if (menu_cache_app_get_use_terminal(app))
+		sbuf_addstr(&cur->buf, ")");
 	sbuf_addstr(&cur->buf, ",");
 	sbuf_addstr(&cur->buf, menu_cache_item_get_icon(MENU_CACHE_ITEM(app)));
 	sbuf_addstr(&cur->buf, "\n");

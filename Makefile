@@ -34,7 +34,6 @@ LIB_H = $(shell find . -name '*.h' -print)
 JGMENU_LIB = libjgmenu.a
 
 all: $(PROGS)
-	@echo "New build dependecies since 18 May: glib2.0 and libmenu-cache"
 
 $(PROGS): % : $(OBJS) %.o
 	$(QUIET_LINK)$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)

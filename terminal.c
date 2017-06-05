@@ -15,7 +15,7 @@ static void strdup_terminal_from_array(char **term)
 	int i;
 
 	for (i = 0; terminals[i]; i++) {
-		if (is_prog(terminals[i])) {
+		if (isprog(terminals[i])) {
 			*term = strdup(terminals[i]);
 			break;
 		}

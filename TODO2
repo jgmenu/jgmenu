@@ -1,10 +1,6 @@
 SHORT TERM THINGS TO DO
 =======================
 
-Added:
-	- icon_margin_r (distance between icon and text)
-	- arrow_width   (width of area allocated for arrow)
-
 Add config options
 	- terminal
 	- terminal_args
