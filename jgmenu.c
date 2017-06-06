@@ -1123,15 +1123,17 @@ void build_tree(void)
 		walk_tagged_items(get_item_from_tag(item->tag), NULL);
 }
 
-void read_stdin(void)
+void read_csv_file(FILE *fp)
 {
 	char buf[BUFSIZ], *p;
 	size_t i;
 	struct item *item = NULL;
 	struct argv_buf argv_buf;
 
+	if (!fp)
+		die("no csv-file");
 	argv_set_delim(&argv_buf, ',');
-	for (i = 0; fgets(buf, sizeof(buf), stdin); i++) {
+	for (i = 0; fgets(buf, sizeof(buf), fp); i++) {
 		p = strchr(buf, '\n');
 		if (p)
 			*p = '\0';
@@ -1590,8 +1592,10 @@ int main(int argc, char *argv[])
 {
 	int i;
 	char *arg_checkout = NULL, *arg_config_file = NULL;
+	char *csv_file = NULL;
 	int arg_simple = 0, arg_vsimple = 0;
 	struct sigaction term_action, int_action;
+	FILE *fp = NULL;
 
 	memset(&term_action, 0, sizeof(struct sigaction));
 	memset(&int_action, 0, sizeof(struct sigaction));
@@ -1637,6 +1641,8 @@ int main(int argc, char *argv[])
 			config.hide_on_startup = 1;
 		} else if (!strncmp(argv[i], "--simple", 8)) {
 			arg_simple = 1;
+		} else if (!strncmp(argv[i], "--csv-file=", 11)) {
+			csv_file = argv[i] + 11;
 		}
 	}
 
@@ -1670,7 +1676,11 @@ int main(int argc, char *argv[])
 		tint2_align();
 	}
 
-	read_stdin();
+	if (csv_file)
+		fp = fopen(csv_file, "r");
+	if (!fp)
+		fp = stdin;
+	read_csv_file(fp);
 	build_tree();
 	hang_items_off_nodes();
 
