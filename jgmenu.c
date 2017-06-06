@@ -1596,7 +1596,7 @@ int main(int argc, char *argv[])
 {
 	int i;
 	char *arg_checkout = NULL, *arg_config_file = NULL;
-	char *csv_file = NULL;
+	char *csv_file = NULL, *csv_cmd = NULL;
 	int arg_simple = 0, arg_vsimple = 0;
 	struct sigaction term_action, int_action;
 	FILE *fp = NULL;
@@ -1648,6 +1648,8 @@ int main(int argc, char *argv[])
 			arg_simple = 1;
 		} else if (!strncmp(argv[i], "--csv-file=", 11)) {
 			csv_file = argv[i] + 11;
+		} else if (!strncmp(argv[i], "--csv-cmd=", 10)) {
+			csv_cmd = argv[i] + 10;
 		}
 	}
 
@@ -1683,6 +1685,8 @@ int main(int argc, char *argv[])
 
 	if (csv_file)
 		fp = fopen(csv_file, "r");
+	else if (csv_cmd)
+		fp = popen(csv_cmd, "r");
 	if (!fp)
 		fp = stdin;
 	read_csv_file(fp);
