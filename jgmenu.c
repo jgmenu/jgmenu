@@ -37,6 +37,7 @@
 #include "bl.h"
 #include "xsettings-helper.h"
 #include "terminal.h"
+#include "restart.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -869,6 +870,9 @@ void key_event(XKeyEvent *ev)
 			break;
 		action_cmd(menu.sel->cmd);
 		break;
+	case XK_F5:
+		restart();
+		break;
 	case XK_F10:
 		/* force exit even if in 'stay_alive' mode */
 		exit(0);
@@ -1597,6 +1601,7 @@ int main(int argc, char *argv[])
 	struct sigaction term_action, int_action;
 	FILE *fp = NULL;
 
+	restart_init(argv);
 	memset(&term_action, 0, sizeof(struct sigaction));
 	memset(&int_action, 0, sizeof(struct sigaction));
 	term_action.sa_handler = quit;
