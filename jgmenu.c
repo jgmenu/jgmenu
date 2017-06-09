@@ -12,6 +12,8 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
+#include <X11/Xresource.h>
+#include <X11/Xlocale.h>
 #include <pthread.h>
 #include <sys/select.h>
 #include <fcntl.h>
@@ -767,7 +769,7 @@ void key_event(XKeyEvent *ev)
 	Status status;
 	int isoutside;
 
-	len = XmbLookupString(ui->xic, ev, buf, sizeof(buf), &ksym, &status);
+	len = Xutf8LookupString(ui->xic, ev, buf, sizeof(buf), &ksym, &status);
 	if (status == XBufferOverflow)
 		return;
 	switch (ksym) {
@@ -1390,8 +1392,13 @@ void run(void)
 
 		if (XPending(ui->dpy)) {
 			XNextEvent(ui->dpy, &ev);
+			if (XFilterEvent(&ev, ui->win))
+				continue;
 
 			switch (ev.type) {
+			case MappingNotify:
+				XRefreshKeyboardMapping(&ev.xmapping);
+				break;
 			case ButtonRelease:
 				mouse_event(&ev);
 				break;
@@ -1603,6 +1610,13 @@ int main(int argc, char *argv[])
 	int arg_simple = 0, arg_vsimple = 0;
 	struct sigaction term_action, int_action;
 	FILE *fp = NULL;
+
+	if (!setlocale(LC_ALL, ""))
+		die("error setting locale");
+	if (!XSupportsLocale())
+		die("error setting locale");
+	if (!XSetLocaleModifiers("@im=none"))
+		die("error setting locale");
 
 	restart_init(argv);
 	memset(&term_action, 0, sizeof(struct sigaction));

@@ -1,6 +1,10 @@
 SHORT TERM THINGS TO DO
 =======================
 
+Make backspace understand UTF-8 (Issue #26)
+
+Add --csv-file= and --csv-cmd= to documentation
+
 Add config options
 	- terminal
 	- terminal_args
@@ -10,10 +14,9 @@ Sort out positioning (incl issue #20)
   - Add align CENTER
 
 Update examples/
+    - Read TINT2_CONFIG environment variable
     - Create README
     - Make ex??.sh self-sufficient
-
-Add locale and UTF-8 support to XKeyEvent loop (Issue #26)
 
 Support system wide configuration (Issue #27)
 
