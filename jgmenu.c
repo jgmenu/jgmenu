@@ -680,18 +680,18 @@ static void if_unity_run_hack(void)
 static void awake_menu(void)
 {
 	if_unity_run_hack();
-	filter_reset();
-	checkout_root();
-	XMapWindow(ui->dpy, ui->win);
-	grabkeyboard();
-	grabpointer();
 	if (config.at_pointer)
 		launch_menu_at_pointer();
+	/* for speed improvement, set tint2_button = 0 */
 	if (config.tint2_button && !config.at_pointer) {
 		tint2env_read_socket();
 		tint2_align();
+		update(1);
 	}
-	update(1);
+	XMapWindow(ui->dpy, ui->win);
+	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
+	grabkeyboard();
+	grabpointer();
 }
 
 static void hide_menu(void)
@@ -699,6 +699,9 @@ static void hide_menu(void)
 	XUngrabKeyboard(ui->dpy, CurrentTime);
 	XUngrabPointer(ui->dpy, CurrentTime);
 	XUnmapWindow(ui->dpy, ui->win);
+	filter_reset();
+	checkout_root();
+	update(1);
 }
 
 void hide_or_exit(void)
