@@ -231,7 +231,8 @@ void update_filtered_list(void)
 	if (config.search_all_items && filter_needle_length()) {
 		list_for_each_entry(item, &menu.master, master) {
 			if (!strncmp("^checkout(", item->cmd, 10) ||
-			    !strncmp("^tag(", item->cmd, 5))
+			    !strncmp("^tag(", item->cmd, 5) ||
+			    !strncmp("^back(", item->cmd, 6))
 				continue;
 			if (filter_ismatch(item->name) ||
 			    filter_ismatch(item->cmd))
