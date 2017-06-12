@@ -700,8 +700,10 @@ static void if_unity_run_hack(void)
 static void awake_menu(void)
 {
 	if_unity_run_hack();
-	if (config.at_pointer)
+	if (config.at_pointer) {
 		launch_menu_at_pointer();
+		resize();
+	}
 	/* for speed improvement, set tint2_button = 0 */
 	if (config.tint2_button && !config.at_pointer) {
 		tint2env_read_socket();
