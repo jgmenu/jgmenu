@@ -221,6 +221,23 @@ struct item *prev_selectable(struct item *cur, int *isoutside)
 	return p;
 }
 
+void add_if_unique(struct item *item)
+{
+	struct item *p;
+
+	if (!item->cmd)
+		return;
+	list_for_each_entry(p, &menu.filter, filter) {
+		if (!p->cmd)
+			continue;
+		if (!strcmp(item->cmd, p->cmd)) {
+			warn("DUPLICATE: cmd=%s; name=%s", p->cmd, p->name);
+			return;
+		}
+	}
+	list_add_tail(&item->filter, &menu.filter);
+}
+
 void update_filtered_list(void)
 {
 	struct item *item;
@@ -236,7 +253,7 @@ void update_filtered_list(void)
 				continue;
 			if (filter_ismatch(item->name) ||
 			    filter_ismatch(item->cmd))
-				list_add_tail(&item->filter, &menu.filter);
+				add_if_unique(item);
 		}
 	} else {
 		list_for_each_entry(item, &menu.master, master)
@@ -244,7 +261,7 @@ void update_filtered_list(void)
 				break;
 		list_for_each_entry_from(item, &menu.master, master) {
 			if (filter_ismatch(item->name) ||
-			    filter_ismatch(item->name))
+			    filter_ismatch(item->name)) /* FIXME: !! */
 				list_add_tail(&item->filter, &menu.filter);
 			if (item == menu.subtail)
 				break;
