@@ -230,10 +230,8 @@ void add_if_unique(struct item *item)
 	list_for_each_entry(p, &menu.filter, filter) {
 		if (!p->cmd)
 			continue;
-		if (!strcmp(item->cmd, p->cmd)) {
-			warn("DUPLICATE: cmd=%s; name=%s", p->cmd, p->name);
+		if (!strcmp(item->cmd, p->cmd))
 			return;
-		}
 	}
 	list_add_tail(&item->filter, &menu.filter);
 }
@@ -245,7 +243,7 @@ void update_filtered_list(void)
 
 	INIT_LIST_HEAD(&menu.filter);
 
-	if (config.search_all_items && filter_needle_length()) {
+	if (filter_needle_length()) {
 		list_for_each_entry(item, &menu.master, master) {
 			if (!strncmp("^checkout(", item->cmd, 10) ||
 			    !strncmp("^tag(", item->cmd, 5) ||
@@ -260,9 +258,7 @@ void update_filtered_list(void)
 			if (item == menu.subhead)
 				break;
 		list_for_each_entry_from(item, &menu.master, master) {
-			if (filter_ismatch(item->name) ||
-			    filter_ismatch(item->name)) /* FIXME: !! */
-				list_add_tail(&item->filter, &menu.filter);
+			list_add_tail(&item->filter, &menu.filter);
 			if (item == menu.subtail)
 				break;
 		}

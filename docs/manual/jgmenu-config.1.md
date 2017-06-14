@@ -203,12 +203,6 @@ arrow_show = __boolean__
 
     Show or hide the arrow indicating that a menu item is a "folder"  
 
-search_all_items = __boolean__  
-
-    Define "search_all_items" to include all submenus when searching.  
-    If set to 0, only the checked out submenu (or root-menu) will be  
-    searched.  
-
 color_menu_bg = __color__  
 color_menu_fg = __color__  
 color_menu_border = __color__  
