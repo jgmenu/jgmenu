@@ -5,46 +5,47 @@
 tmp_jgmenurc=$(mktemp)
 jgmenurc=~/.config/jgmenu/jgmenurc
 jgmenurc_bak=${jgmenurc}.$(date +%Y%m%d%H%M)
-regression_items="max_items min_items"
+regression_items="max_items min_items ignore_icon_cache color_noprog_fg \
+color_title_bg show_title search_all_items"
 
 populate_tmp_file () {
 cat <<'EOF' >>"${tmp_jgmenurc}"
-stay_alive	  = 1
-hide_on_startup	  = 0
-csv_cmd		  = jgmenu_run parse-pmenu
-tint2_look	  = 1
-tint2_button	  = 1
-tint2_rules	  = 1
-menu_margin_x	  = 0
-menu_margin_y	  = 32
-menu_width	  = 200
-menu_radius	  = 1
-menu_border	  = 0
-menu_halign	  = left
-menu_valign	  = bottom
-at_pointer	  = 0
-item_margin_x	  = 3
-item_margin_y	  = 3
-item_height	  = 25
-item_padding_x	  = 4
-item_radius	  = 1
-item_border	  = 0
-sep_height	  = 5
-font		  = Cantarell 10
-icon_size	  = 22
-icon_theme	  = Adwaita
+stay_alive        = 1
+hide_on_startup   = 0
+csv_cmd           = jgmenu_run parse-pmenu
+tint2_look        = 1
+tint2_button      = 1
+tint2_rules       = 1
+menu_margin_x     = 0
+menu_margin_y     = 32
+menu_width        = 200
+menu_radius       = 1
+menu_border       = 0
+menu_halign       = left
+menu_valign       = bottom
+at_pointer        = 0
+item_margin_x     = 3
+item_margin_y     = 3
+item_height       = 25
+item_padding_x    = 4
+item_radius       = 1
+item_border       = 0
+sep_height        = 5
+font              = Cantarell 10
+icon_size         = 22
+icon_theme        = Adwaita
 ignore_xsettings  = 0
-arrow_show	  = 1
+arrow_show        = 1
 search_all_items  = 1
-color_menu_bg	  = #000000 70
-color_menu_fg	  = #eeeeee 20
+color_menu_bg     = #000000 70
+color_menu_fg     = #eeeeee 20
 color_menu_border = #eeeeee 8
-color_norm_bg	  = #000000 00
-color_norm_fg	  = #eeeeee 100
-color_sel_bg	  = #ffffff 20
-color_sel_fg	  = #eeeeee 100
+color_norm_bg     = #000000 00
+color_norm_fg     = #eeeeee 100
+color_sel_bg      = #ffffff 20
+color_sel_fg      = #eeeeee 100
 color_sel_border  = #eeeeee 8
-color_sep_fg	  = #ffffff 20
+color_sep_fg      = #ffffff 20
 EOF
 }
 
