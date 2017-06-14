@@ -44,7 +44,6 @@ void config_set_defaults(void)
 	config.arrow_string	 = strdup("▸");
 	config.arrow_show	 = 1;
 	config.arrow_width	 = 15;	/* this refers to 'allocated' width */
-	config.search_all_items  = 1;
 
 	parse_hexstr("#000000 70", config.color_menu_bg);
 	parse_hexstr("#eeeeee 20", config.color_menu_fg);
@@ -130,8 +129,6 @@ static void process_line(char *line)
 		config.arrow_string = strdup(value);
 	} else if (!strncmp(option, "arrow_show", 10)) {
 		xatoi(&config.arrow_show, value, XATOI_NONNEG, "config.arrow_show");
-	} else if (!strncmp(option, "search_all_items", 16)) {
-		xatoi(&config.search_all_items, value, XATOI_NONNEG, "config.search_all_items");
 
 	} else if (!strncmp(option, "color_menu_bg", 13)) {
 		parse_hexstr(value, config.color_menu_bg);

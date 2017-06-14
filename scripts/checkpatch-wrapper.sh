@@ -93,6 +93,7 @@ do
 			-e 'CamelCase.*XDestroyWindow' \
 			-e 'CamelCase.*XErrorEvent' \
 			-e 'CamelCase.*XEvent' \
+			-e 'CamelCase.*XFilterEvent' \
 			-e 'CamelCase.*XFree' \
 			-e 'CamelCase.*XFreeGC' \
 			-e 'CamelCase.*XFreePixmap' \
@@ -127,11 +128,15 @@ do
 			-e 'CamelCase.*XPending' \
 			-e 'CamelCase.*XQueryPointer' \
 			-e 'CamelCase.*XQueryTree' \
+			-e 'CamelCase.*XRefreshKeyboardMapping' \
 			-e 'CamelCase.*XSetErrorHandler' \
 			-e 'CamelCase.*XSetIconName' \
+			-e 'CamelCase.*XSetLocaleModifiers' \
 			-e 'CamelCase.*XStoreName' \
+			-e 'CamelCase.*XSupportsLocale' \
 			-e 'CamelCase.*XUngrabKeyboard' \
 			-e 'CamelCase.*XUngrabPointer' \
+			-e 'CamelCase.*Xutf8LookupString' \
 			-e 'CamelCase.*XVisualInfo' \
 			-e 'CamelCase.*XWindowAttributes'
 	fi

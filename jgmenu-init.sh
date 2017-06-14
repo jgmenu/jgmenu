@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# `jgmenu_run init` creates/updates jgmenurc 
+# `jgmenu_run init` creates/updates jgmenurc
 
 tmp_jgmenurc=$(mktemp)
 jgmenurc=~/.config/jgmenu/jgmenurc
@@ -36,7 +36,6 @@ icon_size         = 22
 icon_theme        = Adwaita
 ignore_xsettings  = 0
 arrow_show        = 1
-search_all_items  = 1
 color_menu_bg     = #000000 70
 color_menu_fg     = #eeeeee 20
 color_menu_border = #eeeeee 8

@@ -221,6 +221,21 @@ struct item *prev_selectable(struct item *cur, int *isoutside)
 	return p;
 }
 
+void add_if_unique(struct item *item)
+{
+	struct item *p;
+
+	if (!item->cmd)
+		return;
+	list_for_each_entry(p, &menu.filter, filter) {
+		if (!p->cmd)
+			continue;
+		if (!strcmp(item->cmd, p->cmd))
+			return;
+	}
+	list_add_tail(&item->filter, &menu.filter);
+}
+
 void update_filtered_list(void)
 {
 	struct item *item;
@@ -228,7 +243,7 @@ void update_filtered_list(void)
 
 	INIT_LIST_HEAD(&menu.filter);
 
-	if (config.search_all_items && filter_needle_length()) {
+	if (filter_needle_length()) {
 		list_for_each_entry(item, &menu.master, master) {
 			if (!strncmp("^checkout(", item->cmd, 10) ||
 			    !strncmp("^tag(", item->cmd, 5) ||
@@ -236,16 +251,14 @@ void update_filtered_list(void)
 				continue;
 			if (filter_ismatch(item->name) ||
 			    filter_ismatch(item->cmd))
-				list_add_tail(&item->filter, &menu.filter);
+				add_if_unique(item);
 		}
 	} else {
 		list_for_each_entry(item, &menu.master, master)
 			if (item == menu.subhead)
 				break;
 		list_for_each_entry_from(item, &menu.master, master) {
-			if (filter_ismatch(item->name) ||
-			    filter_ismatch(item->name))
-				list_add_tail(&item->filter, &menu.filter);
+			list_add_tail(&item->filter, &menu.filter);
 			if (item == menu.subtail)
 				break;
 		}
@@ -683,8 +696,10 @@ static void if_unity_run_hack(void)
 static void awake_menu(void)
 {
 	if_unity_run_hack();
-	if (config.at_pointer)
+	if (config.at_pointer) {
 		launch_menu_at_pointer();
+		resize();
+	}
 	/* for speed improvement, set tint2_button = 0 */
 	if (config.tint2_button && !config.at_pointer) {
 		tint2env_read_socket();

@@ -37,8 +37,6 @@ ignore_xsettings  = 0
 arrow_string	  = ▸
 arrow_show	  = 1
 
-search_all_items  = 1
-
 color_menu_bg	  = #000000 70
 color_menu_fg	  = #eeeeee 20
 color_menu_border = #eeeeee 8
