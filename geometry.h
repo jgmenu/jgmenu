@@ -52,7 +52,7 @@
 void geo_update(void);
 void geo_init(void);
 int geo_get_item_coordinates(struct area *a);
-int geo_get_max_itemarea_that_fits_on_screen(void);
+struct point geo_get_max_itemarea_that_fits_on_screen(void);
 
 void geo_set_menu_width(int w);
 void geo_set_menu_width_from_itemarea_width(int w);

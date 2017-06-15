@@ -456,7 +456,7 @@ struct node *get_node_from_tag(const char *tag)
 	return NULL;
 }
 
-void set_submenu_width(void)
+int submenu_itemarea_width(void)
 {
 	struct item *p;
 	struct sbuf s;
@@ -481,12 +481,30 @@ void set_submenu_width(void)
 		point.x += config.icon_size + config.icon_margin_r;
 	if (config.arrow_show)
 		point.x += config.arrow_width;
-	/* point.x now holds the required 'itemarea width' */
-
-	if (geo_get_menu_width_from_itemarea_width(point.x) >
-	    config.menu_width)
-		geo_set_menu_width_from_itemarea_width(point.x);
 	free(s.buf);
+	return point.x;
+}
+
+void set_submenu_width(void)
+{
+	int reqw = geo_get_menu_width_from_itemarea_width(submenu_itemarea_width());
+	struct point maxarea = geo_get_max_itemarea_that_fits_on_screen();
+	int w;
+
+	w = reqw < maxarea.x ? reqw : maxarea.x;
+	if (w < config.menu_width)
+		w = config.menu_width;
+
+	if (!config.at_pointer)
+		goto set_width;
+	/* grow from right hand edge if too near it */
+	if (config.menu_halign == LEFT && reqw > maxarea.x) {
+		geo_set_menu_margin_x(geo_get_screen_width() - reqw);
+		w = reqw;
+	}
+
+set_width:
+	geo_set_menu_width(w);
 }
 
 int submenu_itemarea_height(void)
@@ -507,10 +525,10 @@ int submenu_itemarea_height(void)
 void set_submenu_height(void)
 {
 	int reqh = submenu_itemarea_height();
-	int maxh = geo_get_max_itemarea_that_fits_on_screen();
+	struct point maxarea = geo_get_max_itemarea_that_fits_on_screen();
 	int h;
 
-	h = reqh < maxh ? reqh : maxh;
+	h = reqh < maxarea.y ? reqh : maxarea.y;
 	geo_set_menu_height_from_itemarea_height(h);
 }
 
@@ -615,6 +633,7 @@ void launch_menu_at_pointer(void)
 		geo_set_menu_valign(BOTTOM);
 		geo_set_menu_margin_y(0);
 	}
+	set_submenu_width();
 }
 
 int tint2_getenv(int *var, const char *key)

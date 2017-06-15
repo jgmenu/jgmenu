@@ -81,13 +81,13 @@ out:
 	return 0;
 }
 
-/* FIXME: This should return a point */
-int geo_get_max_itemarea_that_fits_on_screen(void)
+struct point geo_get_max_itemarea_that_fits_on_screen(void)
 {
-	int h;
+	struct point p;
 
-	h = screen_height - menu_margin_y;
-	return h;
+	p.x = screen_width - menu_margin_x;
+	p.y = screen_height - menu_margin_y;
+	return p;
 }
 
 /*********************************************************************/
