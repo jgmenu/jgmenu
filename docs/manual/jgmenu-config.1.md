@@ -165,6 +165,12 @@ item_border = __integer__
 
     See equivalent `menu_` variable definitions.  
 
+item_halign = (left | right)  
+
+    Horizontal alignment of actual menu items. Items are left-aligned  
+    by default. If set to right, the option `arrow_string` should be  
+    changed too.  
+
 sep_height = __integer__  
 
     height of separator (defined by ^sep())

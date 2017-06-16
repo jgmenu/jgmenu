@@ -30,6 +30,7 @@ item_height       = 25
 item_padding_x    = 4
 item_radius       = 1
 item_border       = 0
+item_halign       = left
 sep_height        = 5
 font              = Cantarell 10
 icon_size         = 22

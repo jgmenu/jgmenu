@@ -347,7 +347,8 @@ void draw_item_sep_with_text(struct item *p)
 		text_x_coord += config.icon_size + config.item_padding_x;
 
 	ui_insert_text(parse_caret_action(p->name, "^sep("), text_x_coord,
-		       p->area.y, p->area.h, config.color_sep_fg);
+		       p->area.y, p->area.h, p->area.w, config.color_sep_fg,
+		       config.item_halign);
 }
 
 void draw_item_bg_norm(struct item *p)
@@ -373,23 +374,57 @@ void draw_item_text(struct item *p)
 {
 	int text_x_coord;
 
-	text_x_coord = p->area.x + config.item_padding_x;
-	if (config.icon_size)
-		text_x_coord += config.icon_size + config.item_padding_x;
+	if (config.item_halign != RIGHT) {
+		text_x_coord = p->area.x + config.item_padding_x;
+		if (config.icon_size)
+			text_x_coord += config.icon_size + config.item_padding_x;
+	} else {
+		text_x_coord = p->area.x - config.item_padding_x;
+		if (config.icon_size)
+			text_x_coord -= config.icon_size + config.item_padding_x;
+	}
 
 	if (p == menu.sel)
 		ui_insert_text(p->name, text_x_coord, p->area.y,
-			       p->area.h, config.color_sel_fg);
+			       p->area.h, p->area.w, config.color_sel_fg,
+			       config.item_halign);
 	else
 		ui_insert_text(p->name, text_x_coord, p->area.y,
-			       p->area.h, config.color_norm_fg);
+			       p->area.h, p->area.w, config.color_norm_fg,
+			       config.item_halign);
+}
+
+void draw_submenu_arrow(struct item *p)
+{
+	if (config.item_halign != RIGHT)
+		ui_insert_text(config.arrow_string, p->area.x + p->area.w -
+			       config.item_padding_x - (config.arrow_width * 0.7), p->area.y,
+			       p->area.h, p->area.w, config.color_norm_fg,
+			       config.item_halign);
+	else
+		ui_insert_text(config.arrow_string, p->area.x + config.item_padding_x,
+			       p->area.y, p->area.h, config.arrow_width * 0.7,
+			       config.color_norm_fg, config.item_halign);
+}
+
+void draw_icon(struct item *p)
+{
+	int icon_y_coord;
+
+	icon_y_coord = p->area.y + (config.item_height - config.icon_size) / 2;
+	if (config.item_halign != RIGHT)
+		ui_insert_image(p->icon, p->area.x + 1, icon_y_coord,
+				config.icon_size);
+	else
+		ui_insert_image(p->icon, p->area.x + p->area.w - config.icon_size - 1,
+				icon_y_coord, config.icon_size);
+
 }
 
 void draw_menu(void)
 {
 	struct item *p;
 	int w;
-	int icon_y_coord;
 
 	w = geo_get_menu_width();
 
@@ -416,9 +451,7 @@ void draw_menu(void)
 		/* Draw submenu arrow */
 		if (config.arrow_show && (!strncmp(p->cmd, "^checkout(", 10) ||
 					  !strncmp(p->cmd, "^sub(", 5)))
-			ui_insert_text(config.arrow_string, p->area.x + p->area.w -
-				       config.item_padding_x - (config.arrow_width * 0.7), p->area.y,
-				       p->area.h, config.color_norm_fg);
+			draw_submenu_arrow(p);
 
 		/* Draw menu items text */
 		if (p->selectable)
@@ -429,10 +462,8 @@ void draw_menu(void)
 			draw_item_sep_with_text(p);
 
 		/* Draw Icons */
-		if (config.icon_size && p->icon) {
-			icon_y_coord = p->area.y + (config.item_height - config.icon_size) / 2;
-			ui_insert_image(p->icon, p->area.x + 1, icon_y_coord, config.icon_size);
-		}
+		if (config.icon_size && p->icon)
+			draw_icon(p);
 
 		if (p == menu.last)
 			break;

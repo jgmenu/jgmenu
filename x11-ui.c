@@ -298,13 +298,18 @@ void ui_draw_line(double x0, double y0, double x1, double y1, double line_width,
 	cairo_stroke(ui->c);
 }
 
-void ui_insert_text(char *s, int x, int y, int h, double *rgba)
+void ui_insert_text(char *s, int x, int y, int h, int w, double *rgba,
+		    enum alignment align)
 {
 	/* Used to centre vertical alignment */
 	int offset;
 
 	offset = (h - ui->font_height_actual) / 2;
 
+	if (align == RIGHT) {
+		pango_layout_set_width(ui->pangolayout, w * PANGO_SCALE);
+		pango_layout_set_alignment(ui->pangolayout, PANGO_ALIGN_RIGHT);
+	}
 	pango_layout_set_text(ui->pangolayout, s, -1);
 	pango_layout_set_font_description(ui->pangolayout, ui->pangofont);
 	cairo_set_source_rgba(ui->c, rgba[0], rgba[1], rgba[2], rgba[3]);

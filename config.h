@@ -29,6 +29,7 @@ struct config {
 	int item_padding_x;
 	int item_radius;
 	int item_border;
+	enum alignment item_halign;
 	int sep_height;
 
 	char *font;

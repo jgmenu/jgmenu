@@ -33,6 +33,7 @@ void config_set_defaults(void)
 	config.item_padding_x	 = 4;
 	config.item_radius	 = 1;
 	config.item_border	 = 0;
+	config.item_halign	 = LEFT;
 	config.sep_height	 = 5;
 
 	config.font		 = NULL; /* Leave as NULL. Set in jgmenu.c */
@@ -113,6 +114,13 @@ static void process_line(char *line)
 		xatoi(&config.item_radius, value, XATOI_NONNEG, "config.item_radius");
 	} else if (!strncmp(option, "item_border", 11)) {
 		xatoi(&config.item_border, value, XATOI_NONNEG, "config.item_border");
+	} else if (!strncmp(option, "item_halign", 11)) {
+		if (!value)
+			return;
+		if (!strcasecmp(value, "left"))
+			config.item_halign = LEFT;
+		else if (!strcasecmp(value, "right"))
+			config.item_halign = RIGHT;
 	} else if (!strncmp(option, "sep_height", 10)) {
 		xatoi(&config.sep_height, value, XATOI_NONNEG, "config.sep_height");
 
