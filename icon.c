@@ -40,14 +40,13 @@ void icon_init(void)
 {
 	INIT_LIST_HEAD(&icon_cache);
 	sbuf_init(&icon_theme);
-	sbuf_cpy(&icon_theme, "default");
 	icon_size = 22;
 }
 
 void icon_set_theme(const char *theme)
 {
 	if (!theme)
-		return;
+		die("icon theme has to be set before icon_set_theme()");
 	sbuf_cpy(&icon_theme, theme);
 	cache_set_icon_theme(theme);
 }
@@ -134,6 +133,8 @@ void icon_load(void)
 	struct list_head icon_paths;
 	int nr_symlinks = 0;
 
+	if (!icon_theme.len)
+		die("icon theme has to be set before icon_load()");
 	if (DEBUG_THEMES)
 		fprintf(stderr, "%s:%d %s:\n", __FILE__, __LINE__, __FUNCTION__);
 	if (first_load) {

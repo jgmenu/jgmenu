@@ -1595,12 +1595,9 @@ void set_theme(void)
 
 	/* TODO: Get ~/.config/gtk-3.0/settings.ini icon_theme */
 
-	/*
-	 * If *theme is still NULL here, we will leave it.
-	 * The icon theme will be set to "default" in icon.c if a NULL pointer
-	 * is passed to it.
-	 */
-	warn("using default theme set in icon.c; consider using jgmenurc or tint2rc");
+	/* Fall-back if all else has failed. */
+	warn("set icon theme in jgmenurc or tint2rc");
+	config.icon_theme = strdup("Adwaita");
 }
 
 static char *tag_of_first_item(void)
