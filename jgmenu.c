@@ -40,6 +40,7 @@
 #include "xsettings-helper.h"
 #include "terminal.h"
 #include "restart.h"
+#include "theme.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -418,7 +419,6 @@ void draw_icon(struct item *p)
 	else
 		ui_insert_image(p->icon, p->area.x + p->area.w - config.icon_size - 1,
 				icon_y_coord, config.icon_size);
-
 }
 
 void draw_menu(void)
@@ -1356,10 +1356,6 @@ void run(void)
 	init_pipe_flags();
 
 	if (config.icon_size) {
-		icon_init();
-		icon_set_size(config.icon_size);
-		icon_set_theme(config.icon_theme);
-
 		/*
 		 * Get icons in top level menu (or the one specified with
 		 * --check-out=
@@ -1531,73 +1527,18 @@ void set_font(void)
 	fprintf(stderr, "info: font=%s\n", config.font);
 }
 
-static int get_xsettings_icon_theme(char **theme)
-{
-	int ret;
-	struct sbuf s;
-
-	sbuf_init(&s);
-	ret = xsettings_get(&s, "Net/IconThemeName");
-	if (ret == 0) {
-		if (config.icon_theme)
-			free(config.icon_theme);
-		config.icon_theme = strdup(s.buf);
-		fprintf(stderr, "info: set theme '%s' from xsettings\n", s.buf);
-	}
-	free(s.buf);
-	if (ret == 0)
-		return 1;
-	else
-		return 0;
-}
-
-/*
- * The icon theme is obtained in the following order or precedence:
- *   - xsettings
- *   - tint2rc
- *   - jgmenurc
- *   - set default ("Adwaita")
- *
- * The font name is first sought in jgmenurc and then xsettings.
- *
- * The reasons for this inconsistency is that it is anticipated that most
- * users will
- *   - change icon themes using gnome-settings, lxappearance or similar;
- *   - but will change font-settings in jgmenurc as this will be more specific
- *     to jgmenu (particularly the font size).
- */
 void set_theme(void)
 {
-	char *t = NULL;
+	struct sbuf theme;
 
-	/* config.icon_theme might already be set based on jgmenurc */
-	if (!config.ignore_xsettings && !t2conf_get_override_xsettings())
-		if (get_xsettings_icon_theme(&config.icon_theme))
-			return;
-
-	t2conf_get_icon_theme(&t);
-	if (t) {
-		if (config.icon_theme)
-			free(config.icon_theme);
-		config.icon_theme = strdup(t);
-		fprintf(stderr, "info: set theme '%s' from tint2rc\n", t);
+	if (!config.icon_size)
 		return;
-	}
-
-	/*
-	 * If xsettings and tint2rc gave nothing, the value from jgmenurc (if
-	 * there was one) will remain at this point.
-	 */
-	if (config.icon_theme) {
-		fprintf(stderr, "info: using theme '%s' from jgmenurc\n", config.icon_theme);
-		return;
-	}
-
-	/* TODO: Get ~/.config/gtk-3.0/settings.ini icon_theme */
-
-	/* Fall-back if all else has failed. */
-	warn("set icon theme in jgmenurc or tint2rc");
-	config.icon_theme = strdup("Adwaita");
+	sbuf_init(&theme);
+	theme_set(&theme);
+	icon_init();
+	icon_set_size(config.icon_size);
+	fprintf(stderr, "info: icon theme: %s\n", theme.buf);
+	icon_set_theme(theme.buf);
 }
 
 static char *tag_of_first_item(void)
