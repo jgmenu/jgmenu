@@ -1,6 +1,6 @@
 % JGMENU-CONFIG(1)  
 % Johan Malm  
-% 12 May, 2017
+% 19 June, 2017
 
 # NAME
 
@@ -69,7 +69,7 @@ integer
     interpreted as pixel values unless otherwise specified.  
 
 color  
-    When a variable take a color value, only the syntax described  
+    When a variable takes a color value, only the syntax described  
     below is recognised:  
 
     #rrggbb aaa  
@@ -174,6 +174,29 @@ item_halign = (left | right)
 sep_height = __integer__  
 
     height of separator (defined by ^sep())
+
+src_icon_theme = __string__ (default xtgj)  
+
+    Specifies the source of the icon theme in order of precedence,  
+    where the left-most letter designates the source with the  
+    highest precedence. The following are acceptable characters:  
+
+    x = xsettings  
+    t = tint2 config file  
+    g = gtk3.0 config file  
+    j = jgmenu config file  
+
+    Please note that the font name has a different order of  
+    precedence. The reason for this inconsistency is that it is  
+    anticipated that most users will:  
+      - change icon themes using gnome-settings, lxappearance,  
+        or similar;  
+      - but will change font-settings in jgmenurc as this will  
+        be more specific to jgmenu (particularly the font size).  
+
+    In order to increase consistency with tint2, the icon-theme  
+    will only be read from xsettings if the tint2rc variable  
+    launcher_icon_theme_override is zero.  
 
 font = __string__  
 

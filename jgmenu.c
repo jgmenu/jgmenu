@@ -1534,7 +1534,7 @@ void set_theme(void)
 	if (!config.icon_size)
 		return;
 	sbuf_init(&theme);
-	theme_set(&theme);
+	theme_set(&theme, config.src_icon_theme);
 	icon_init();
 	icon_set_size(config.icon_size);
 	fprintf(stderr, "info: icon theme: %s\n", theme.buf);

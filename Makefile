@@ -27,7 +27,8 @@ PROGS	 = jgmenu jgmenu-parse-xdg jgmenu-icon-find jgmenu-xsettings \
 OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
         icon.o xpm-loader.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o \
 	filter.o compat.o hashmap.o lockfile.o argv-buf.o t2conf.o t2env.o \
-	unix_sockets.o bl.o cache.o back.o terminal.o restart.o theme.o
+	unix_sockets.o bl.o cache.o back.o terminal.o restart.o theme.o \
+	gtkconf.o
 
 LIB_H = $(shell find . -name '*.h' -print)
 

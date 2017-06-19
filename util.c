@@ -7,6 +7,17 @@ static struct sigaction sigchld_action = {
 	.sa_flags = SA_NOCLDWAIT
 };
 
+void info(const char *err, ...)
+{
+	va_list params;
+
+	fprintf(stderr, "info: ");
+	va_start(params, err);
+	vfprintf(stderr, err, params);
+	va_end(params);
+	fprintf(stderr, "\n");
+}
+
 void warn(const char *err, ...)
 {
 	va_list params;
@@ -63,6 +74,14 @@ void spawn(const char *arg)
 	default:
 		break;
 	}
+}
+
+void safe_free(void **ptr)
+{
+	if (!ptr || !*ptr)
+		return;
+	free(*ptr);
+	*ptr = NULL;
 }
 
 void *xmalloc(size_t size)

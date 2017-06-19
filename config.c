@@ -36,9 +36,10 @@ void config_set_defaults(void)
 	config.item_halign	 = LEFT;
 	config.sep_height	 = 5;
 
+	config.src_icon_theme	 = strdup("xtgj");
 	config.font		 = NULL; /* Leave as NULL. Set in jgmenu.c */
 	config.icon_size	 = 22;
-	config.icon_theme	 = NULL; /* Leave as NULL. Set in jgmenu.c */
+	config.icon_theme	 = NULL; /* Leave as NULL (see theme.c) */
 	config.icon_margin_r	 = 25;	 /* distance between icon and text */
 	config.ignore_xsettings  = 0;
 
@@ -124,6 +125,9 @@ static void process_line(char *line)
 	} else if (!strncmp(option, "sep_height", 10)) {
 		xatoi(&config.sep_height, value, XATOI_NONNEG, "config.sep_height");
 
+	} else if (!strncmp(option, "src_icon_theme", 14)) {
+		xfree(config.src_icon_theme);
+		config.src_icon_theme = strdup(value);
 	} else if (!strncmp(option, "font", 4)) {
 		config.font = strdup(value);
 	} else if (!strncmp(option, "icon_size", 9)) {

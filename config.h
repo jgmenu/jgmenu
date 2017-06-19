@@ -32,6 +32,7 @@ struct config {
 	enum alignment item_halign;
 	int sep_height;
 
+	char *src_icon_theme;
 	char *font;
 	int icon_size;		/* if set to zero, icons won't show */
 	char *icon_theme;
