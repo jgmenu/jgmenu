@@ -33,6 +33,7 @@ struct config {
 	int sep_height;
 
 	char *src_icon_theme;
+	char *src_font;
 	char *font;
 	int icon_size;		/* if set to zero, icons won't show */
 	char *icon_theme;

@@ -368,17 +368,25 @@ sep_height = \f[B]integer\f[]
 \ \ \ \ height of separator (defined by ^sep())
 .PP
 src_icon_theme = \f[B]string\f[] (default xtgj)
+.PD 0
+.P
+.PD
+src_font = \f[B]string\f[] (default xtgj)
 .PP
-\ \ \ \ Specifies the source of the icon theme in order of precedence,
+\ \ \ \ Specifies the source of the icon theme and font in order of
 .PD 0
 .P
 .PD
-\ \ \ \ where the left\-most letter designates the source with the
+\ \ \ \ precedence, where the left\-most letter designates the source
 .PD 0
 .P
 .PD
-\ \ \ \ highest precedence.
-The following are acceptable characters:
+\ \ \ \ with the highest precedence.
+The following are acceptable
+.PD 0
+.P
+.PD
+\ \ \ \ characters:
 .PP
 \ \ \ \ x = xsettings
 .PD 0
@@ -394,38 +402,11 @@ The following are acceptable characters:
 .PD
 \ \ \ \ j = jgmenu config file
 .PP
-\ \ \ \ Please note that the font name has a different order of
+\ \ \ \ In order to increase consistency with tint2, xsettings
 .PD 0
 .P
 .PD
-\ \ \ \ precedence.
-The reason for this inconsistency is that it is
-.PD 0
-.P
-.PD
-\ \ \ \ anticipated that most users will:
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \- change icon themes using gnome\-settings, lxappearance,
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \ \ or similar;
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \- but will change font\-settings in jgmenurc as this will
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \ \ be more specific to jgmenu (particularly the font size).
-.PP
-\ \ \ \ In order to increase consistency with tint2, the icon\-theme
-.PD 0
-.P
-.PD
-\ \ \ \ will only be read from xsettings if the tint2rc variable
+\ \ \ \ variables will only be read if the tint2rc variable
 .PD 0
 .P
 .PD

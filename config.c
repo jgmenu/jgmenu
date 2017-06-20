@@ -37,15 +37,16 @@ void config_set_defaults(void)
 	config.sep_height	 = 5;
 
 	config.src_icon_theme	 = strdup("xtgj");
-	config.font		 = NULL; /* Leave as NULL. Set in jgmenu.c */
+	config.src_font		 = strdup("xtgj");
+	config.font		 = NULL; /* Leave as NULL (see font.c) */
 	config.icon_size	 = 22;
 	config.icon_theme	 = NULL; /* Leave as NULL (see theme.c) */
-	config.icon_margin_r	 = 25;	 /* distance between icon and text */
+	config.icon_margin_r	 = 25;
 	config.ignore_xsettings  = 0;
 
 	config.arrow_string	 = strdup("▸");
 	config.arrow_show	 = 1;
-	config.arrow_width	 = 15;	/* this refers to 'allocated' width */
+	config.arrow_width	 = 15;
 
 	parse_hexstr("#000000 70", config.color_menu_bg);
 	parse_hexstr("#eeeeee 20", config.color_menu_fg);
@@ -128,16 +129,22 @@ static void process_line(char *line)
 	} else if (!strncmp(option, "src_icon_theme", 14)) {
 		xfree(config.src_icon_theme);
 		config.src_icon_theme = strdup(value);
+	} else if (!strncmp(option, "src_font", 8)) {
+		xfree(config.src_font);
+		config.src_font = strdup(value);
 	} else if (!strncmp(option, "font", 4)) {
+		xfree(config.font);
 		config.font = strdup(value);
 	} else if (!strncmp(option, "icon_size", 9)) {
 		xatoi(&config.icon_size, value, XATOI_NONNEG, "config.icon_size");
 	} else if (!strncmp(option, "icon_theme", 10)) {
+		xfree(config.icon_theme);
 		config.icon_theme = strdup(value);
 	} else if (!strncmp(option, "ignore_xsettings", 16)) {
 		xatoi(&config.ignore_xsettings, value, XATOI_NONNEG, "config.ignore_xsettings");
 
 	} else if (!strncmp(option, "arrow_string", 11)) {
+		xfree(config.arrow_string);
 		config.arrow_string = strdup(value);
 	} else if (!strncmp(option, "arrow_show", 10)) {
 		xatoi(&config.arrow_show, value, XATOI_NONNEG, "config.arrow_show");

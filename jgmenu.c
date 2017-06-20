@@ -41,6 +41,7 @@
 #include "terminal.h"
 #include "restart.h"
 #include "theme.h"
+#include "font.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -503,7 +504,7 @@ int submenu_itemarea_width(void)
 		if (p == menu.subtail)
 			break;
 	}
-	point = ui_get_text_size(s.buf, config.font);
+	point = ui_get_text_size(s.buf, font_get());
 	/* point.x now holds the width of the widest 'line of text' */
 
 	point.x += config.item_padding_x * 2;
@@ -1495,36 +1496,10 @@ void init_geo_variables_from_config(void)
 	geo_set_item_height(config.item_height);
 }
 
-/* config.font might already be set by jgmenurc before set_font() is called */
 void set_font(void)
 {
-	char *f = NULL;
-
-	t2conf_get_font(&f);
-	if (f) {
-		if (config.font)
-			free(config.font);
-		config.font = strdup(f);
-	}
-
-	/* if not set by tint2rc or jgmenurc, we ask xsettings */
-	if (!config.font && !config.ignore_xsettings &&
-	    !t2conf_get_override_xsettings()) {
-		struct sbuf s;
-		int ret;
-
-		sbuf_init(&s);
-		ret = xsettings_get(&s, "Gtk/FontName");
-		if (ret == 0) {
-			config.font = strdup(s.buf);
-			fprintf(stderr, "info: using xsettings font\n");
-		}
-		free(s.buf);
-	}
-
-	if (!config.font)
-		config.font = strdup(JGMENU_DEFAULT_FONT);
-	fprintf(stderr, "info: font=%s\n", config.font);
+	font_set(config.src_font);
+	info("set font to '%s'", font_get());
 }
 
 void set_theme(void)
@@ -1537,7 +1512,7 @@ void set_theme(void)
 	theme_set(&theme, config.src_icon_theme);
 	icon_init();
 	icon_set_size(config.icon_size);
-	fprintf(stderr, "info: icon theme: %s\n", theme.buf);
+	info("set icon theme to '%s'", theme.buf);
 	icon_set_theme(theme.buf);
 }
 
@@ -1728,7 +1703,7 @@ int main(int argc, char *argv[])
 	ui_create_window(geo_get_menu_x0(), geo_get_menu_y0(),
 			 geo_get_menu_width(), geo_get_menu_height());
 	ui_init_canvas(geo_get_screen_width(), geo_get_screen_height());
-	ui_init_cairo(geo_get_screen_width(), geo_get_screen_height(), config.font);
+	ui_init_cairo(geo_get_screen_width(), geo_get_screen_height(), font_get());
 
 	init_empty_item();
 	filter_init();

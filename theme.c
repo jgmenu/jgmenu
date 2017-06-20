@@ -22,7 +22,7 @@ void theme_set(struct sbuf *theme, const char *src_icon_theme)
 			if (t2conf_get_override_xsettings())
 				break;
 			if (xsettings_get(theme, "Net/IconThemeName") == 0) {
-				info("set icon theme from xsettings");
+				info("got icon theme from xsettings");
 				return;
 			}
 			break;
@@ -31,7 +31,7 @@ void theme_set(struct sbuf *theme, const char *src_icon_theme)
 			t2conf_get_icon_theme(&t);
 			if (t) {
 				sbuf_cpy(theme, t);
-				info("set icon theme from tint2rc");
+				info("got icon theme from tint2rc");
 				return;
 			}
 			break;
@@ -39,14 +39,14 @@ void theme_set(struct sbuf *theme, const char *src_icon_theme)
 		case 'g':
 			gtkconf_get(theme, "gtk-icon-theme-name");
 			if (theme->len) {
-				info("set icon theme from gtk config file");
+				info("got icon theme from gtk config file");
 				return;
 			}
 			break;
 		case 'j':
 			if (config.icon_theme) {
 				sbuf_cpy(theme, config.icon_theme);
-				info("set icon theme from jgmenurc");
+				info("got icon theme from jgmenurc");
 				return;
 			}
 			break;
