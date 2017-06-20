@@ -42,7 +42,6 @@ void config_set_defaults(void)
 	config.icon_size	 = 22;
 	config.icon_theme	 = NULL; /* Leave as NULL (see theme.c) */
 	config.icon_margin_r	 = 25;
-	config.ignore_xsettings  = 0;
 
 	config.arrow_string	 = strdup("▸");
 	config.arrow_show	 = 1;
@@ -140,8 +139,6 @@ static void process_line(char *line)
 	} else if (!strncmp(option, "icon_theme", 10)) {
 		xfree(config.icon_theme);
 		config.icon_theme = strdup(value);
-	} else if (!strncmp(option, "ignore_xsettings", 16)) {
-		xatoi(&config.ignore_xsettings, value, XATOI_NONNEG, "config.ignore_xsettings");
 
 	} else if (!strncmp(option, "arrow_string", 11)) {
 		xfree(config.arrow_string);

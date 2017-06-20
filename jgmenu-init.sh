@@ -37,7 +37,6 @@ src_font          = xtgj
 font              = Cantarell 10
 icon_size         = 22
 icon_theme        = Adwaita
-ignore_xsettings  = 0
 arrow_string	  = ▸
 arrow_show        = 1
 color_menu_bg     = #000000 70

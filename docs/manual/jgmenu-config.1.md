@@ -214,8 +214,6 @@ icon_theme = __string__
     The behaviour described above can be over-ruled by defining the  
     following two:
 
-ignore_xsettings = __boolean__  
-
 arrow_string = __string__  
 
     The "arrow" indicates that a menu item points a submenu.  
