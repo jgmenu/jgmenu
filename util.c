@@ -2,11 +2,6 @@
 
 #include "util.h"
 
-static struct sigaction sigchld_action = {
-	.sa_handler = SIG_DFL,
-	.sa_flags = SA_NOCLDWAIT
-};
-
 void info(const char *err, ...)
 {
 	va_list params;
@@ -46,6 +41,10 @@ void die(const char *err, ...)
 static void set_no_child_wait(void)
 {
 	static int done;
+	static struct sigaction sigchld_action = {
+		.sa_handler = SIG_DFL,
+		.sa_flags = SA_NOCLDWAIT
+	};
 
 	if (done)
 		return;
@@ -84,12 +83,24 @@ void safe_free(void **ptr)
 	*ptr = NULL;
 }
 
+char *xstrdup(const char *s)
+{
+	char *ret = NULL;
+
+	if (!s)
+		return NULL;
+	ret = strdup(s);
+	if (!ret)
+		die("Out of memory; strdup failed");
+	return ret;
+}
+
 void *xmalloc(size_t size)
 {
 	void *ret = malloc(size);
 
 	if (!ret)
-		die("Out of memory, malloc failed");
+		die("Out of memory; malloc failed");
 	return ret;
 }
 
@@ -98,7 +109,7 @@ void *xrealloc(void *ptr, size_t size)
 	void *ret = realloc(ptr, size);
 
 	if (!ret)
-		die("Out of memory, realloc failed");
+		die("Out of memory; realloc failed");
 	return ret;
 }
 
@@ -107,7 +118,7 @@ void *xcalloc(size_t nb, size_t size)
 	void *ret = calloc(nb, size);
 
 	if (!ret)
-		die("Out of memory, calloc failed");
+		die("Out of memory; calloc failed");
 	return ret;
 }
 
