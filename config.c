@@ -10,42 +10,42 @@ struct config config;
 
 void config_set_defaults(void)
 {
-	config.spawn		 = 1;	/* not in jgmenurc */
-	config.stay_alive	 = 1;
-	config.hide_on_startup	 = 0;
+	config.spawn		   = 1;	/* not in jgmenurc */
+	config.stay_alive	   = 1;
+	config.hide_on_startup	   = 0;
 	/* jgmenurc has a csv_cmd variable here */
-	config.tint2_look	 = 1;
-	config.tint2_button	 = 1;
-	config.tint2_rules	 = 1;
+	config.tint2_look	   = 1;
+	config.tint2_button	   = 1;
+	config.tint2_rules	   = 1;
+	config.at_pointer	   = 0;
 
-	config.menu_margin_x	 = 0;
-	config.menu_margin_y	 = 31;
-	config.menu_width	 = 200;
-	config.menu_radius	 = 1;
-	config.menu_border	 = 0;
-	config.menu_halign	 = LEFT;
-	config.menu_valign	 = BOTTOM;
-	config.at_pointer	 = 0;
+	config.menu_margin_x	   = 0;
+	config.menu_margin_y	   = 31;
+	config.menu_width	   = 200;
+	config.menu_radius	   = 1;
+	config.menu_border	   = 0;
+	config.menu_halign	   = LEFT;
+	config.menu_valign	   = BOTTOM;
 
-	config.item_margin_x	 = 3;
-	config.item_margin_y	 = 3;
-	config.item_height	 = 25;
-	config.item_padding_x	 = 4;
-	config.item_radius	 = 1;
-	config.item_border	 = 0;
-	config.item_halign	 = LEFT;
-	config.sep_height	 = 5;
+	config.item_margin_x	   = 3;
+	config.item_margin_y	   = 3;
+	config.item_height	   = 25;
+	config.item_padding_x	   = 4;
+	config.item_radius	   = 1;
+	config.item_border	   = 0;
+	config.item_halign	   = LEFT;
+	config.sep_height	   = 5;
 
-	config.src_icon_theme	 = strdup("xtgj");
-	config.src_font		 = strdup("xtgj");
-	config.font		 = NULL; /* Leave as NULL (see font.c) */
-	config.icon_size	 = 22;
-	config.icon_theme	 = NULL; /* Leave as NULL (see theme.c) */
-	config.icon_margin_r	 = 25;
+	config.font		   = NULL; /* Leave as NULL (see font.c) */
+	config.font_fallback	   = xstrdup("xtg");
+	config.icon_size	   = 22;
+	config.icon_theme	   = NULL; /* Leave as NULL (see theme.c) */
+	config.icon_theme_fallback = xstrdup("xtg");
+	config.icon_margin_r	   = 25;
 
-	config.arrow_string	 = strdup("▸");
-	config.arrow_show	 = 1;
-	config.arrow_width	 = 15;
+	config.arrow_string	   = xstrdup("▸");
+	config.arrow_show	   = 1;
+	config.arrow_width	   = 15;
 
 	parse_hexstr("#000000 70", config.color_menu_bg);
 	parse_hexstr("#eeeeee 20", config.color_menu_fg);
@@ -75,6 +75,8 @@ static void process_line(char *line)
 		xatoi(&config.tint2_button, value, XATOI_NONNEG, "config.tint2_button");
 	} else if (!strncmp(option, "tint2_rules", 11)) {
 		xatoi(&config.tint2_rules, value, XATOI_NONNEG, "config.tint2_rules");
+	} else if (!strncmp(option, "at_pointer", 10)) {
+		xatoi(&config.at_pointer, value, XATOI_NONNEG, "config.at_pointer");
 
 	} else if (!strncmp(option, "menu_margin_x", 13)) {
 		xatoi(&config.menu_margin_x, value, XATOI_NONNEG, "config.margin_x");
@@ -100,8 +102,6 @@ static void process_line(char *line)
 			config.menu_valign = TOP;
 		else if (!strcasecmp(value, "bottom"))
 			config.menu_valign = BOTTOM;
-	} else if (!strncmp(option, "at_pointer", 10)) {
-		xatoi(&config.at_pointer, value, XATOI_NONNEG, "config.at_pointer");
 
 	} else if (!strncmp(option, "item_margin_x", 13)) {
 		xatoi(&config.item_margin_x, value, XATOI_NONNEG, "config.item_margin_x");
@@ -125,24 +125,24 @@ static void process_line(char *line)
 	} else if (!strncmp(option, "sep_height", 10)) {
 		xatoi(&config.sep_height, value, XATOI_NONNEG, "config.sep_height");
 
-	} else if (!strncmp(option, "src_icon_theme", 14)) {
-		xfree(config.src_icon_theme);
-		config.src_icon_theme = strdup(value);
-	} else if (!strncmp(option, "src_font", 8)) {
-		xfree(config.src_font);
-		config.src_font = strdup(value);
-	} else if (!strncmp(option, "font", 4)) {
+	} else if (!strcmp(option, "font")) {
 		xfree(config.font);
-		config.font = strdup(value);
+		config.font = xstrdup(value);
+	} else if (!strncmp(option, "font_fallback", 13)) {
+		xfree(config.font_fallback);
+		config.font_fallback = xstrdup(value);
 	} else if (!strncmp(option, "icon_size", 9)) {
 		xatoi(&config.icon_size, value, XATOI_NONNEG, "config.icon_size");
-	} else if (!strncmp(option, "icon_theme", 10)) {
+	} else if (!strcmp(option, "icon_theme")) {
 		xfree(config.icon_theme);
-		config.icon_theme = strdup(value);
+		config.icon_theme = xstrdup(value);
+	} else if (!strncmp(option, "icon_theme_fallback", 14)) {
+		xfree(config.icon_theme_fallback);
+		config.icon_theme_fallback = xstrdup(value);
 
 	} else if (!strncmp(option, "arrow_string", 11)) {
 		xfree(config.arrow_string);
-		config.arrow_string = strdup(value);
+		config.arrow_string = xstrdup(value);
 	} else if (!strncmp(option, "arrow_show", 10)) {
 		xatoi(&config.arrow_show, value, XATOI_NONNEG, "config.arrow_show");
 

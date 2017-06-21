@@ -131,6 +131,11 @@ tint2_rules = __boolean__
     If "tint2_rules = 0", jgmenurc can be used to overrule specific  
     tint2rc settings.  
 
+at_pointer = __boolean__  
+
+    If enabled, the menu is launched at the pointer position,  
+    ignoring `menu_margin_?` and `menu_?align` values.  
+
 menu_margin_x = __integer__  
 menu_margin_y = __integer__  
 menu_width = __integer__  
@@ -151,11 +156,6 @@ menu_valign = (top | bottom)
 
     Horizontal and vertical alignment respectively.  
 
-at_pointer = __boolean__  
-
-    If enabled, the menu is launched at the pointer position,  
-    ignoring `menu_margin_?` and `menu_?align` values.  
-
 item_margin_x = __integer__  
 item_margin_y = __integer__  
 item_height = __integer__  
@@ -173,24 +173,7 @@ item_halign = (left | right)
 
 sep_height = __integer__  
 
-    height of separator (defined by ^sep())
-
-src_icon_theme = __string__ (default xtgj)  
-src_font = __string__ (default xtgj)  
-
-    Specifies the source of the icon theme and font in order of  
-    precedence, where the left-most letter designates the source  
-    with the highest precedence. The following are acceptable  
-    characters:  
-
-    x = xsettings  
-    t = tint2 config file  
-    g = gtk3.0 config file  
-    j = jgmenu config file  
-
-    In order to increase consistency with tint2, xsettings  
-    variables will only be read if the tint2rc variable  
-    launcher_icon_theme_override is zero.  
+    height of separator (defined by ^sep())  
 
 font = __string__  
 
@@ -199,6 +182,10 @@ font = __string__
     interpreted as "points". If "px" is added, it will be read as  
     pixels. Using "points" enables consistency with other  
     applications.
+
+font_fallback = __string__ (default xtg)  
+
+    The same as 'icon_theme_fallback' (see below)  
 
 icon_size = __integer__  
 
@@ -213,6 +200,23 @@ icon_theme = __string__
 
     The behaviour described above can be over-ruled by defining the  
     following two:
+
+icon_theme_fallback = __string__ (default xtg)  
+
+    Specifies the fallback sources of the icon theme in order of  
+    precedence, where the left-most letter designates the source  
+    with the highest precedence. The following are acceptable  
+    characters:  
+
+    x = xsettings  
+    t = tint2 config file  
+    g = gtk3.0 config file  
+
+    'icon_theme' takes priority if set.  
+
+    In order to increase consistency with tint2, xsettings  
+    variables will only be read if the tint2rc variable  
+    launcher_icon_theme_override is zero.  
 
 arrow_string = __string__  
 

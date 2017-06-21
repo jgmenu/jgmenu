@@ -266,6 +266,14 @@ tint2_rules = \f[B]boolean\f[]
 .PD
 \ \ \ \ tint2rc settings.
 .PP
+at_pointer = \f[B]boolean\f[]
+.PP
+\ \ \ \ If enabled, the menu is launched at the pointer position,
+.PD 0
+.P
+.PD
+\ \ \ \ ignoring \f[C]menu_margin_?\f[] and \f[C]menu_?align\f[] values.
+.PP
 menu_margin_x = \f[B]integer\f[]
 .PD 0
 .P
@@ -317,14 +325,6 @@ menu_valign = (top | bottom)
 .PP
 \ \ \ \ Horizontal and vertical alignment respectively.
 .PP
-at_pointer = \f[B]boolean\f[]
-.PP
-\ \ \ \ If enabled, the menu is launched at the pointer position,
-.PD 0
-.P
-.PD
-\ \ \ \ ignoring \f[C]menu_margin_?\f[] and \f[C]menu_?align\f[] values.
-.PP
 item_margin_x = \f[B]integer\f[]
 .PD 0
 .P
@@ -367,51 +367,6 @@ sep_height = \f[B]integer\f[]
 .PP
 \ \ \ \ height of separator (defined by ^sep())
 .PP
-src_icon_theme = \f[B]string\f[] (default xtgj)
-.PD 0
-.P
-.PD
-src_font = \f[B]string\f[] (default xtgj)
-.PP
-\ \ \ \ Specifies the source of the icon theme and font in order of
-.PD 0
-.P
-.PD
-\ \ \ \ precedence, where the left\-most letter designates the source
-.PD 0
-.P
-.PD
-\ \ \ \ with the highest precedence.
-The following are acceptable
-.PD 0
-.P
-.PD
-\ \ \ \ characters:
-.PP
-\ \ \ \ x = xsettings
-.PD 0
-.P
-.PD
-\ \ \ \ t = tint2 config file
-.PD 0
-.P
-.PD
-\ \ \ \ g = gtk3.0 config file
-.PD 0
-.P
-.PD
-\ \ \ \ j = jgmenu config file
-.PP
-\ \ \ \ In order to increase consistency with tint2, xsettings
-.PD 0
-.P
-.PD
-\ \ \ \ variables will only be read if the tint2rc variable
-.PD 0
-.P
-.PD
-\ \ \ \ launcher_icon_theme_override is zero.
-.PP
 font = \f[B]string\f[]
 .PP
 \ \ \ \ "font" accepts a string such as "Cantarell 10"
@@ -432,6 +387,10 @@ If "px" is added, it will be read as
 .P
 .PD
 \ \ \ \ applications.
+.PP
+font_fallback = \f[B]string\f[] (default xtg)
+.PP
+\ \ \ \ The same as \[aq]icon_theme_fallback\[aq] (see below)
 .PP
 icon_size = \f[B]integer\f[]
 .PP
@@ -459,6 +418,45 @@ Otherwise, the variable above will be
 .P
 .PD
 \ \ \ \ following two:
+.PP
+icon_theme_fallback = \f[B]string\f[] (default xtg)
+.PP
+\ \ \ \ Specifies the fallback sources of the icon theme in order of
+.PD 0
+.P
+.PD
+\ \ \ \ precedence, where the left\-most letter designates the source
+.PD 0
+.P
+.PD
+\ \ \ \ with the highest precedence.
+The following are acceptable
+.PD 0
+.P
+.PD
+\ \ \ \ characters:
+.PP
+\ \ \ \ x = xsettings
+.PD 0
+.P
+.PD
+\ \ \ \ t = tint2 config file
+.PD 0
+.P
+.PD
+\ \ \ \ g = gtk3.0 config file
+.PP
+\ \ \ \ \[aq]icon_theme\[aq] takes priority if set.
+.PP
+\ \ \ \ In order to increase consistency with tint2, xsettings
+.PD 0
+.P
+.PD
+\ \ \ \ variables will only be read if the tint2rc variable
+.PD 0
+.P
+.PD
+\ \ \ \ launcher_icon_theme_override is zero.
 .PP
 arrow_string = \f[B]string\f[]
 .PP

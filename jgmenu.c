@@ -690,10 +690,8 @@ void tint2_align(void)
 	    tint2_getenv(&px1, "TINT2_BUTTON_PANEL_X1") == -1 ||
 	    tint2_getenv(&px2, "TINT2_BUTTON_PANEL_X2") == -1 ||
 	    tint2_getenv(&py1, "TINT2_BUTTON_PANEL_Y1") == -1 ||
-	    tint2_getenv(&py2, "TINT2_BUTTON_PANEL_Y2") == -1) {
-		fprintf(stderr, "info: tint2 button was not used\n");
+	    tint2_getenv(&py2, "TINT2_BUTTON_PANEL_Y2") == -1)
 		return;
-	}
 
 	if (t2conf_is_horizontal_panel() == -1) {
 		warn("invalid value for tint2 panel orientation");
@@ -1498,7 +1496,7 @@ void init_geo_variables_from_config(void)
 
 void set_font(void)
 {
-	font_set(config.src_font);
+	font_set();
 	info("set font to '%s'", font_get());
 }
 
@@ -1509,7 +1507,7 @@ void set_theme(void)
 	if (!config.icon_size)
 		return;
 	sbuf_init(&theme);
-	theme_set(&theme, config.src_icon_theme);
+	theme_set(&theme);
 	icon_init();
 	icon_set_size(config.icon_size);
 	info("set icon theme to '%s'", theme.buf);
@@ -1573,10 +1571,12 @@ static void read_tint2rc(void)
 	sbuf_init(&f);
 	bl_tint2file(&f);
 	if (f.len) {
-		fprintf(stderr, "info: using BunsenLabs tint2 session file '%s'\n", f.buf);
-		t2conf_parse(f.buf, geo_get_screen_width(), geo_get_screen_height());
+		info("using BunsenLabs tint2 session file");
+		t2conf_parse(f.buf, geo_get_screen_width(),
+			     geo_get_screen_height());
 	} else {
-		t2conf_parse(NULL, geo_get_screen_width(), geo_get_screen_height());
+		t2conf_parse(NULL, geo_get_screen_width(),
+			     geo_get_screen_height());
 	}
 	free(f.buf);
 }
@@ -1710,8 +1710,7 @@ int main(int argc, char *argv[])
 	update_filtered_list();
 	init_menuitem_coordinates();
 	if (config.hide_on_startup) {
-		fprintf(stderr, "info: menu started in 'hidden' mode; ");
-		fprintf(stderr, "show by `jgmenu_run`\n");
+		info("menu started in 'hidden' mode; show by `jgmenu_run`");
 		hide_menu();
 	} else {
 		XMapRaised(ui->dpy, ui->win);

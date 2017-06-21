@@ -3,8 +3,6 @@
 
 #include "align.h"
 
-#define JGMENU_DEFAULT_FONT "Cantarell 10"
-
 struct config {
 	int spawn;		/* 1:execute commands  0:print to stdout */
 	int stay_alive;
@@ -13,6 +11,7 @@ struct config {
 	int tint2_look;
 	int tint2_button;
 	int tint2_rules;
+	int at_pointer;
 
 	int menu_margin_x;
 	int menu_margin_y;
@@ -21,7 +20,6 @@ struct config {
 	int menu_border;
 	enum alignment menu_halign;
 	enum alignment menu_valign;
-	int at_pointer;
 
 	int item_margin_x;
 	int item_margin_y;
@@ -32,11 +30,11 @@ struct config {
 	enum alignment item_halign;
 	int sep_height;
 
-	char *src_icon_theme;
-	char *src_font;
 	char *font;
+	char *font_fallback;
 	int icon_size;		/* if set to zero, icons won't show */
 	char *icon_theme;
+	char *icon_theme_fallback;
 	int icon_margin_r;
 
 	char *arrow_string;

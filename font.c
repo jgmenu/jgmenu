@@ -18,20 +18,26 @@ char *font_get(void)
 	return font.buf;
 }
 
-void font_set(const char *src_font)
+void font_set(void)
 {
 	char *t = NULL;
 	int i;
+	char *fb = config.font_fallback;
 
 	if (font_has_been_set)
 		warn("font_set() is only meant to be run once");
 	font_has_been_set = 1;
-	if (!src_font)
-		die("src_font needs to be set");
 
 	sbuf_init(&font);
-	for (i = 0; src_font[i]; i++)
-		switch (src_font[i]) {
+	if (config.font && config.font[0]) {
+		sbuf_cpy(&font, config.font);
+		info("got font from jgmenurc");
+		return;
+	}
+
+	/* Use fall back options */
+	for (i = 0; fb[i]; i++)
+		switch (fb[i]) {
 		case 'x':
 			if (t2conf_get_override_xsettings())
 				break;
@@ -57,17 +63,10 @@ void font_set(const char *src_font)
 				return;
 			}
 			break;
-		case 'j':
-			if (config.font) {
-				sbuf_cpy(&font, config.font);
-				info("got font from jgmenurc");
-				return;
-			}
-			break;
 	}
 
 	warn("set font to 'Sans 11' because all else failed");
-	sbuf_cpy(&font, "Sans 11");
+	sbuf_cpy(&font, "Sans 10");
 }
 
 void font_cleanup(void)
