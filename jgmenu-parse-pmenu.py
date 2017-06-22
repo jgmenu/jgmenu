@@ -328,7 +328,7 @@ def get_cmd(app):
           pass
     cmd += exe
     if "Terminal" in app and app["Terminal"] == "true":
-      cmd = "^term(" + cmd + ")"
+      cmd = "^term(" + cmd.strip() + ")"
     return cmd
   return None
 
