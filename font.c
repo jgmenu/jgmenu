@@ -41,7 +41,7 @@ void font_set(void)
 		case 'x':
 			if (t2conf_get_override_xsettings())
 				break;
-			if (xsettings_get(&font, "Net/FontName") == 0) {
+			if (xsettings_get(&font, "Gtk/FontName") == 0) {
 				info("got font from xsettings");
 				return;
 			}
