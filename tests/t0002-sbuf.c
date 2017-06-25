@@ -92,6 +92,15 @@ int main(void)
 	printf("%d\n", get_first_num_from_str("axxx333"));
 	printf("%d\n", get_first_num_from_str("a4444xxx"));
 
+	sbuf_cpy(&s, "  xxxx  ");
+	sbuf_rtrim(&s);
+	printf("_%s_\n", s.buf);
+	sbuf_cpy(&s, "  xxxx  ");
+	sbuf_ltrim(&s);
+	printf("_%s_\n", s.buf);
+	sbuf_cpy(&s, "  xxxx  ");
+	sbuf_trim(&s);
+	printf("_%s_\n", s.buf);
 
 	return 0;
 }

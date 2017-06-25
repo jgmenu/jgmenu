@@ -1,15 +1,23 @@
 SHORT TERM THINGS TO DO
 =======================
+Finish adding
+  - icon_margin_r (distance between icon and text)
+    check jgmenu.c to make sure we're consistent
+  - arrow_width   (width of area allocated for arrow)
+  - Remove arrow_show (now replaced with arrow_width)
 
-Make backspace understand UTF-8 (Issue #26)
+Add default values to jgmenu-config.1.md
+
+Add config options
+	- terminal_exec = x-terminal-emulator
+	- terminal_args = -e
+  - Add to terminal.c, "st, sakura"
+  - Remove strdup("-e") from terinal.c
+  - In terminal.c, do an isprog() of config.terminal_exec
 
 Add --csv-file= and --csv-cmd= to documentation
 
-Add config options
-	- terminal
-	- terminal_args
-
-Sort out positioning (incl issue #20)
+Sort out positioning
   - Add menu_padding_{l,r,t,b}
   - Add align CENTER
 
@@ -18,25 +26,30 @@ Update examples/
     - Create README
     - Make ex??.sh self-sufficient
 
-Support system wide configuration (Issue #27)
-
 Add atexit()-cleanup() so that it's easier to spot potential run-time memory
-leaks with ASAN and Valgrind
+leaks with ASAN and Valgrind. (Also replace strdups+free with x-alternatives)
+
+Create arg.c for command line args. At the moment jgmenurc take precedence over
+cmd line args (which is wrong)
 
 === Upversion to 0.6 ===
 
+  - Add csv_cmd to config.c
+  - Add 'stdin' (i.e. =use csv cmd) config option (make stdin=0 default)
+  - Set stdin=1 when invoking --simple or --vsimple
+
+  - Re-factor jgmenu_run lx/pmenu/xdg/csv, etc. by using --csv-*
+
+  - Remove `jgmenu_run restart`
+
+  - Add watch.c
+	- Check tint2rc 'modified time' and re-read on change
+	- Consider the same for jgmenurc and tint2-sessionfile (bl)
+
+=== Upversion to 0.7 ===
 
 VARIOUS THINGS TO DO IN NO PARTICULAR ORDER
 ===========================================
-
-Refactor jgmenu.c to prepare for config file re-load
-	- create arg.c for command line args
-	- make sure we free strings in config.c
-
-Check tint2rc 'modified time' and re-read on change
-Consider the same for jgmenurc and tint2-sessionfile (bl)
-
-Add tint2_config_file (in case it's different to ~/.config/tint2/tint2rc)
 
 argv_buf delim
 
@@ -44,12 +57,7 @@ Add explaination on JGMENU_EXEC_PATH
 
 Remove XINERAMA ifdefs
 
-Rename filter list (as it clashes with filter_)
-
-Write jgmenu-config in C to expand ~ + $ to avoid "sh -c" in jgmenu-start.sh
-and jgmenu_run (it doesn't look nice in `top`)
-
-Add option to read fd other than STDIN (--menu-file=)
+Rename filter list (as it clashes with filter_) (maybe 'disp'?)
 
 Add shareness with symlinks
 
@@ -67,17 +75,9 @@ Add man-page for jgmenu_run ob
 
 Write jgmenu-init.sh --help message.
 
-Add jgmenuconf
-	Would need jgmenu_run init and jgmenu_run config
+Add jgmenu-setup
 
 Remove harded coded variables (such as 22, etc)
-
-Check if variable is number in shell script (=isnumeric())
-(needed in jgmenu-cache.sh)
-
-Add equivalent to ~/.config/gtk-3.0/settings.ini | grep... in theme.c
-
-Add rtrim, ltrim, trim, to sbuf.c
 
 ISSUES
 ======

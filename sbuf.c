@@ -75,6 +75,45 @@ void sbuf_expand_tilde(struct sbuf *s)
 	sbuf_prepend(s, getenv("HOME"));
 }
 
+void sbuf_ltrim(struct sbuf *s)
+{
+	char *p;
+	int i = 0;
+
+	if (!s || !s->buf || !s->len)
+		return;
+	p = s->buf;
+	while (i < s->len && isspace(*p++))
+		i++;
+	sbuf_shift_left(s, i);
+}
+
+void sbuf_rtrim(struct sbuf *s)
+{
+	char *p;
+	int i = 0;
+
+	if (!s || !s->buf || !s->len)
+		return;
+	p = s->buf + s->len - 1;
+	while (i < s->len) {
+		if (!isspace(*p))
+			break;
+		i++;
+		p--;
+	}
+	if (!i)
+		return;
+	s->len -= i;
+	*(++p) = '\0';
+}
+
+void sbuf_trim(struct sbuf *s)
+{
+	sbuf_ltrim(s);
+	sbuf_rtrim(s);
+}
+
 void sbuf_split(struct list_head *sl, const char *data, char field_separator)
 {
 	char *p, *str;
