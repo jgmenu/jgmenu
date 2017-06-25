@@ -816,7 +816,7 @@ void action_cmd(char *cmd)
 		if (!p)
 			return;
 		sbuf_init(&s);
-		term_build_terminal_cmd(&s, p, NULL, NULL);
+		term_build_terminal_cmd(&s, strstrip(p), NULL, NULL);
 		spawn(s.buf);
 		free(s.buf);
 		hide_or_exit();
