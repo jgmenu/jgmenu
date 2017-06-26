@@ -1,6 +1,6 @@
 % JGMENU-CONFIG(1)  
 % Johan Malm  
-% 19 June, 2017
+% 26 June, 2017
 
 # NAME
 
@@ -191,6 +191,10 @@ icon_size = __integer__
 
     If icon_size is set to 0, icons will not be searched for and  
     loaded.
+
+icon_text_spacing = __integer__ (default 10)  
+
+    Distance between icon and text.  
 
 icon_theme = __string__  
 

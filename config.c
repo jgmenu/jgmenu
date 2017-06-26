@@ -39,9 +39,9 @@ void config_set_defaults(void)
 	config.font		   = NULL; /* Leave as NULL (see font.c) */
 	config.font_fallback	   = xstrdup("xtg");
 	config.icon_size	   = 22;
+	config.icon_text_spacing   = 10;
 	config.icon_theme	   = NULL; /* Leave as NULL (see theme.c) */
 	config.icon_theme_fallback = xstrdup("xtg");
-	config.icon_margin_r	   = 25;
 
 	config.arrow_string	   = xstrdup("▸");
 	config.arrow_show	   = 1;

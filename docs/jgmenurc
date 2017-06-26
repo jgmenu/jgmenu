@@ -25,11 +25,13 @@ item_padding_x      = 4
 item_radius         = 1
 item_border         = 0
 item_halign         = left
+
 sep_height          = 5
 
 font		    =
 font_fallback       = xtg
 icon_size	    = 22
+icon_text_spacing   = 10
 icon_theme	    =
 icon_theme_fallback = xtg
 

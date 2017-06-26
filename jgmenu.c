@@ -379,11 +379,11 @@ void draw_item_text(struct item *p)
 	if (config.item_halign != RIGHT) {
 		text_x_coord = p->area.x + config.item_padding_x;
 		if (config.icon_size)
-			text_x_coord += config.icon_size + config.item_padding_x;
+			text_x_coord += config.icon_size + config.icon_text_spacing;
 	} else {
 		text_x_coord = p->area.x - config.item_padding_x;
 		if (config.icon_size)
-			text_x_coord -= config.icon_size + config.item_padding_x;
+			text_x_coord -= config.icon_size + config.icon_text_spacing;
 	}
 
 	if (p == menu.sel)
@@ -510,7 +510,7 @@ int submenu_itemarea_width(void)
 	point.x += config.item_padding_x * 2;
 	point.x += config.item_margin_x * 2;
 	if (config.icon_size)
-		point.x += config.icon_size + config.icon_margin_r;
+		point.x += config.icon_size + config.icon_text_spacing;
 	if (config.arrow_show)
 		point.x += config.arrow_width;
 	free(s.buf);

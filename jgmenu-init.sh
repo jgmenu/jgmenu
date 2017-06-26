@@ -35,6 +35,7 @@ sep_height          = 5
 font                =
 font_fallback       = xtg
 icon_size           = 22
+icon_text_spacing   = 10
 icon_theme          =
 icon_theme_fallback = xtg
 arrow_string	    = ▸

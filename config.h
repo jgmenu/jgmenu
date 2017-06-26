@@ -33,9 +33,9 @@ struct config {
 	char *font;
 	char *font_fallback;
 	int icon_size;		/* if set to zero, icons won't show */
+	int icon_text_spacing;
 	char *icon_theme;
 	char *icon_theme_fallback;
-	int icon_margin_r;
 
 	char *arrow_string;
 	int arrow_show;

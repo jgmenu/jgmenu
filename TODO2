@@ -1,8 +1,6 @@
 SHORT TERM THINGS TO DO
 =======================
 Finish adding
-  - icon_margin_r (distance between icon and text)
-    check jgmenu.c to make sure we're consistent
   - arrow_width   (width of area allocated for arrow)
   - Remove arrow_show (now replaced with arrow_width)
 
