@@ -99,13 +99,13 @@ static cairo_surface_t *get_svg_icon(const char *filename, int size)
 		scale = (double)size / dimensions.width;
 		surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, size, size / ratio);
 		cr = cairo_create(surface);
-		cairo_scale(cr, scale, scale / ratio);
+		cairo_scale(cr, scale, scale);
 	} else {
 		ratio = (double)dimensions.width / dimensions.height;
 		scale = (double)size / dimensions.height;
 		surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, size * ratio, size);
 		cr = cairo_create(surface);
-		cairo_scale(cr, scale * ratio, scale);
+		cairo_scale(cr, scale, scale);
 	}
 	rsvg_handle_render_cairo(svg, cr);
 	cairo_destroy(cr);

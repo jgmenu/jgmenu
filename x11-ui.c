@@ -399,14 +399,15 @@ void ui_insert_svg(RsvgHandle *svg, double x, double y, double size)
 
 void ui_insert_image(cairo_surface_t *image, double x, double y, double size)
 {
-	double w, h;
+	double w, h, max;
 
 	w = cairo_image_surface_get_width(image);
 	h = cairo_image_surface_get_height(image);
+	max = h > w ? h : w;
 
 	cairo_save(ui->c);
 	cairo_translate(ui->c, x, y);
-	cairo_scale(ui->c, size / w, size / h);
+	cairo_scale(ui->c, size / max, size / max);
 	cairo_set_source_surface(ui->c, image, 0, 0);
 	cairo_paint(ui->c);
 	cairo_restore(ui->c);
