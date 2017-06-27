@@ -12,7 +12,7 @@ item_radius	  = 0
 item_border	  = 0
 
 font		  = Ubuntu 30px
-icon_size	  = 48
+icon_size	  = 22
 icon_theme	  = theme1
 
 color_menu_bg	  = #76c7d7 80

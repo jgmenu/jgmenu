@@ -412,14 +412,21 @@ void draw_submenu_arrow(struct item *p)
 void draw_icon(struct item *p)
 {
 	int icon_y_coord;
+	int offsety, offsetx;
 
-	icon_y_coord = p->area.y + (config.item_height - config.icon_size) / 2;
+	offsety = cairo_image_surface_get_height(p->icon) < config.icon_size ?
+		  (config.icon_size - cairo_image_surface_get_height(p->icon)) / 2 : 0;
+	offsetx = cairo_image_surface_get_width(p->icon) < config.icon_size ?
+		  (config.icon_size - cairo_image_surface_get_width(p->icon)) / 2 : 0;
+
+	icon_y_coord = p->area.y + (config.item_height - config.icon_size) / 2 +
+		       offsety;
 	if (config.item_halign != RIGHT)
-		ui_insert_image(p->icon, p->area.x + 1, icon_y_coord,
+		ui_insert_image(p->icon, p->area.x + offsetx + 1, icon_y_coord,
 				config.icon_size);
 	else
-		ui_insert_image(p->icon, p->area.x + p->area.w - config.icon_size - 1,
-				icon_y_coord, config.icon_size);
+		ui_insert_image(p->icon, p->area.x + p->area.w - config.icon_size
+				+ offsetx - 1, icon_y_coord, config.icon_size);
 }
 
 void draw_menu(void)

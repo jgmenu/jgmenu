@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1" width="64" height="32" viewBox="0 0 64 32">
+  <style type="text/css">
+    .blue   { fill:#0000ff }
+    .yellow { fill:#ffff00 }
+  </style>
+  <rect width="64" height="32" x="0" y="0" class="blue"/>
+  <rect width="56" height="24" x="4" y="4" class="yellow"/>
+</svg>

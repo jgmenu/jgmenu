@@ -6,10 +6,10 @@ menu_width	= 24
 menu_radius	= 7
 menu_border	= 1
 
-item_margin_x	= 30
+item_margin_x	= 0
 item_margin_y	= 10
 item_height	= 30
-item_padding_x	= 8
+item_padding_x	= 1
 item_radius	= 10
 item_border	= 1
 sep_height	= 5
