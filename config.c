@@ -133,6 +133,8 @@ static void process_line(char *line)
 		config.font_fallback = xstrdup(value);
 	} else if (!strncmp(option, "icon_size", 9)) {
 		xatoi(&config.icon_size, value, XATOI_NONNEG, "config.icon_size");
+	} else if (!strncmp(option, "icon_text_spacing", 17)) {
+		xatoi(&config.icon_text_spacing, value, XATOI_NONNEG, "config.icon_text_spacing");
 	} else if (!strcmp(option, "icon_theme")) {
 		xfree(config.icon_theme);
 		config.icon_theme = xstrdup(value);
