@@ -6,7 +6,7 @@ tmp_jgmenurc=$(mktemp)
 jgmenurc=~/.config/jgmenu/jgmenurc
 jgmenurc_bak=${jgmenurc}.$(date +%Y%m%d%H%M)
 regression_items="max_items min_items ignore_icon_cache color_noprog_fg \
-color_title_bg show_title search_all_items"
+color_title_bg show_title search_all_items ignore_xsettings arrow_show"
 
 populate_tmp_file () {
 cat <<'EOF' >>"${tmp_jgmenurc}"
@@ -39,7 +39,7 @@ icon_text_spacing   = 10
 icon_theme          =
 icon_theme_fallback = xtg
 arrow_string	    = ▸
-arrow_show          = 1
+arrow_width         = 15
 color_menu_bg       = #000000 70
 color_menu_fg       = #eeeeee 20
 color_menu_border   = #eeeeee 8

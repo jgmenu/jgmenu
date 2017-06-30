@@ -44,7 +44,6 @@ void config_set_defaults(void)
 	config.icon_theme_fallback = xstrdup("xtg");
 
 	config.arrow_string	   = xstrdup("▸");
-	config.arrow_show	   = 1;
 	config.arrow_width	   = 15;
 
 	parse_hexstr("#000000 70", config.color_menu_bg);
@@ -145,8 +144,8 @@ static void process_line(char *line)
 	} else if (!strncmp(option, "arrow_string", 11)) {
 		xfree(config.arrow_string);
 		config.arrow_string = xstrdup(value);
-	} else if (!strncmp(option, "arrow_show", 10)) {
-		xatoi(&config.arrow_show, value, XATOI_NONNEG, "config.arrow_show");
+	} else if (!strncmp(option, "arrow_width", 11)) {
+		xatoi(&config.arrow_width, value, XATOI_NONNEG, "config.arrow_width");
 
 	} else if (!strncmp(option, "color_menu_bg", 13)) {
 		parse_hexstr(value, config.color_menu_bg);

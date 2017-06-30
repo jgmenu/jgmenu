@@ -36,7 +36,7 @@ icon_theme	    =
 icon_theme_fallback = xtg
 
 arrow_string        = ▸
-arrow_show          = 1
+arrow_width         = 15
 
 color_menu_bg       = #000000 70
 color_menu_fg       = #eeeeee 20

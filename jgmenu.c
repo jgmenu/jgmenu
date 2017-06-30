@@ -457,7 +457,7 @@ void draw_menu(void)
 			draw_item_bg_norm(p);
 
 		/* Draw submenu arrow */
-		if (config.arrow_show && (!strncmp(p->cmd, "^checkout(", 10) ||
+		if (config.width && (!strncmp(p->cmd, "^checkout(", 10) ||
 					  !strncmp(p->cmd, "^sub(", 5)))
 			draw_submenu_arrow(p);
 
@@ -518,8 +518,7 @@ int submenu_itemarea_width(void)
 	point.x += config.item_margin_x * 2;
 	if (config.icon_size)
 		point.x += config.icon_size + config.icon_text_spacing;
-	if (config.arrow_show)
-		point.x += config.arrow_width;
+	point.x += config.arrow_width;
 	free(s.buf);
 	return point.x;
 }

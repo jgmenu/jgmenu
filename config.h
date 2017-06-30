@@ -38,7 +38,6 @@ struct config {
 	char *icon_theme_fallback;
 
 	char *arrow_string;
-	int arrow_show;
 	int arrow_width;
 
 	double color_menu_bg[4];

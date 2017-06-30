@@ -1,6 +1,6 @@
 % JGMENU-CONFIG(1)  
 % Johan Malm  
-% 26 June, 2017
+% 30 June, 2017
 
 # NAME
 
@@ -228,9 +228,9 @@ arrow_string = __string__
     Suggested styles include:  
     → ▶ ➔ ➙ ➛ ➜ ➝ ➞ ➟ ➠ ➡ ➢ ➣ ➤ ➥ ➦ ↦ ⇒ ⇝ ⇢ ⇥ ⇨ ⇾ ➭ ➮ ➯ ➱ ➲ ➺ ➼ ➽ ➾  
 
-arrow_show = __boolean__  
+arrow_width = __integer__  
 
-    Show or hide the arrow indicating that a menu item is a "folder"  
+    Width of area allocated for arrow. Set to 0 to hide arrow.  
 
 color_menu_bg = __color__  
 color_menu_fg = __color__  

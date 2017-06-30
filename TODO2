@@ -1,9 +1,5 @@
 SHORT TERM THINGS TO DO
 =======================
-Finish adding
-  - arrow_width   (width of area allocated for arrow)
-  - Remove arrow_show (now replaced with arrow_width)
-
 Add default values to jgmenu-config.1.md
 
 Add config options
