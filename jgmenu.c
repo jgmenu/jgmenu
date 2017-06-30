@@ -1564,10 +1564,8 @@ static void read_jgmenurc(const char *filename)
 		sbuf_cpy(&f, "~/.config/jgmenu/jgmenurc");
 	sbuf_expand_tilde(&f);
 	initiated = 1;
-	if (stat(f.buf, &sb) != 0) {
-		warn("config file '%s' does not exist", f.buf);
+	if (stat(f.buf, &sb) != 0)
 		return;
-	}
 	config_parse_file(f.buf);
 }
 
