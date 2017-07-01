@@ -1,7 +1,5 @@
 SHORT TERM THINGS TO DO
 =======================
-Add default values to jgmenu-config.1.md
-
 Add config options
 	- terminal_exec = x-terminal-emulator
 	- terminal_args = -e
@@ -25,6 +23,8 @@ leaks with ASAN and Valgrind. (Also replace strdups+free with x-alternatives)
 
 Create arg.c for command line args. At the moment jgmenurc take precedence over
 cmd line args (which is wrong)
+
+Add menu_height config option
 
 === Upversion to 0.6 ===
 

@@ -1,6 +1,6 @@
 % JGMENU-CONFIG(1)  
 % Johan Malm  
-% 30 June, 2017
+% 1 July, 2017
 
 # NAME
 
@@ -91,7 +91,7 @@ pathname
 
 ## Variables
 
-stay_alive = __boolean__  
+stay_alive = __boolean__ (default 1)  
 
     If set to 1, the menu will "hide" rather than "exit" when the  
     following events occur:  
@@ -100,13 +100,13 @@ stay_alive = __boolean__
       - pressing escape  
     When in the hidden mode, a USR1 signal will "un-hide" the menu.  
 
-hide_on_startup = __boolean__  
+hide_on_startup = __boolean__ (default 0)  
 
     If set to 1, jgmenu start in "hidden" mode. This is useful for  
     starting jgmenu during the boot process and then sending a   
     `killall -SIGUSR1 jgmenu` to show the menu.  
 
-csv_cmd = __string__  
+csv_cmd = __string__ (default `jgmenu_run parse-pmenu`)  
 
     defines the command to produce the jgmenu flavoured CSV for  
     `jgmenu_run` (when run without argument). Examples include:  
@@ -114,33 +114,33 @@ csv_cmd = __string__
     csv_cmd = jgmenu_run parse-ob  
     csv_cmd = cat ~/mymenu.csv  
 
-tint2_look = __boolean__  
+tint2_look = __boolean__ (default 1)  
 
     Reads tint2rc and parse config options for colours, dimensions  
     and alignment.  
 
-tint2_button = __boolean__  
+tint2_button = __boolean__ (default 1)  
 
     Reads tint2 button environment position variables. These give  
     more accurate alignment along the length of the panel than what  
     the "tint2_look" option achieves.  
 
-tint2_rules = __boolean__  
+tint2_rules = __boolean__ (default 1)  
 
     Reads tint2rc variables in preference to jgmenurc.  
     If "tint2_rules = 0", jgmenurc can be used to overrule specific  
     tint2rc settings.  
 
-at_pointer = __boolean__  
+at_pointer = __boolean__ (default 0)  
 
     If enabled, the menu is launched at the pointer position,  
     ignoring `menu_margin_?` and `menu_?align` values.  
 
-menu_margin_x = __integer__  
-menu_margin_y = __integer__  
-menu_width = __integer__  
-menu_radius = __integer__  
-menu_border = __integer__  
+menu_margin_x = __integer__ (default 2)  
+menu_margin_y = __integer__ (default 32)  
+menu_width = __integer__ (default 200)  
+menu_radius = __integer__ (default 1)  
+menu_border = __integer__ (default 0)  
 
     "margin" refers to space outside an object  
     "padding" refers to space inside an object (between border and  
@@ -151,31 +151,31 @@ menu_border = __integer__
     The `menu_margin_*` variables refer to the distance between the  
     menu (=X11 window) and the edge of the screen.  
 
-menu_halign = (left | right)  
-menu_valign = (top | bottom)  
+menu_halign = (left | right) (default left)  
+menu_valign = (top | bottom) (default bottom)  
 
     Horizontal and vertical alignment respectively.  
 
-item_margin_x = __integer__  
-item_margin_y = __integer__  
-item_height = __integer__  
-item_padding_x = __integer__  
-item_radius = __integer__  
-item_border = __integer__  
+item_margin_x = __integer__ (default 3)  
+item_margin_y = __integer__ (default 3)  
+item_height = __integer__ (default 25)  
+item_padding_x = __integer__ (default 4)  
+item_radius = __integer__ (default 1)  
+item_border = __integer__ (default 0)  
 
     See equivalent `menu_` variable definitions.  
 
-item_halign = (left | right)  
+item_halign = (left | right) (default left)  
 
     Horizontal alignment of actual menu items. Items are left-aligned  
     by default. If set to right, the option `arrow_string` should be  
     changed too.  
 
-sep_height = __integer__  
+sep_height = __integer__ (default 5)  
 
     height of separator (defined by ^sep())  
 
-font = __string__  
+font = __string__ (unset by default)  
 
     "font" accepts a string such as "Cantarell 10"  
     The font description without a specified size unit is  
@@ -187,7 +187,7 @@ font_fallback = __string__ (default xtg)
 
     The same as 'icon_theme_fallback' (see below)  
 
-icon_size = __integer__  
+icon_size = __integer__ (default 22)  
 
     If icon_size is set to 0, icons will not be searched for and  
     loaded.
@@ -196,7 +196,7 @@ icon_text_spacing = __integer__ (default 10)
 
     Distance between icon and text.  
 
-icon_theme = __string__  
+icon_theme = __string__ (unset by default)  
 
     If an xsettings-daemon is running, the icon theme will be  
     obtained from that daemon. Otherwise, the variable above will be  
@@ -222,22 +222,22 @@ icon_theme_fallback = __string__ (default xtg)
     variables will only be read if the tint2rc variable  
     launcher_icon_theme_override is zero.  
 
-arrow_string = __string__  
+arrow_string = __string__ (default ▸)  
 
     The "arrow" indicates that a menu item points a submenu.  
     Suggested styles include:  
     → ▶ ➔ ➙ ➛ ➜ ➝ ➞ ➟ ➠ ➡ ➢ ➣ ➤ ➥ ➦ ↦ ⇒ ⇝ ⇢ ⇥ ⇨ ⇾ ➭ ➮ ➯ ➱ ➲ ➺ ➼ ➽ ➾  
 
-arrow_width = __integer__  
+arrow_width = __integer__ (default 15)  
 
     Width of area allocated for arrow. Set to 0 to hide arrow.  
 
-color_menu_bg = __color__  
-color_menu_fg = __color__  
-color_menu_border = __color__  
-color_norm_bg = __color__  
-color_norm_fg = __color__  
-color_sel_bg = __color__  
-color_sel_fg = __color__  
-color_sel_border = __color__  
-color_sep_fg = __color__  
+color_menu_bg = __color__ (default #000000 70)  
+color_menu_fg = __color__ (default #eeeeee 20)  
+color_menu_border = __color__ (default #eeeeee 8)  
+color_norm_bg = __color__ (default #000000 00)  
+color_norm_fg = __color__ (default #eeeeee 100)  
+color_sel_bg = __color__ (default #ffffff 20)  
+color_sel_fg = __color__ (default #eeeeee 100)  
+color_sel_border = __color__ (default #eeeeee 8)  
+color_sep_fg = __color__ (default #ffffff 20)  
