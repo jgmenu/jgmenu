@@ -12,6 +12,8 @@ struct config {
 	int tint2_button;
 	int tint2_rules;
 	int at_pointer;
+	char *terminal_exec;
+	char *terminal_args;
 
 	int menu_margin_x;
 	int menu_margin_y;

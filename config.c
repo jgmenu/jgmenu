@@ -18,6 +18,8 @@ void config_set_defaults(void)
 	config.tint2_button	   = 1;
 	config.tint2_rules	   = 1;
 	config.at_pointer	   = 0;
+	config.terminal_exec	   = xstrdup("x-terminal-emulator");
+	config.terminal_args	   = xstrdup("-e");
 
 	config.menu_margin_x	   = 0;
 	config.menu_margin_y	   = 31;
@@ -76,6 +78,12 @@ static void process_line(char *line)
 		xatoi(&config.tint2_rules, value, XATOI_NONNEG, "config.tint2_rules");
 	} else if (!strncmp(option, "at_pointer", 10)) {
 		xatoi(&config.at_pointer, value, XATOI_NONNEG, "config.at_pointer");
+	} else if (!strcmp(option, "terminal_exec")) {
+		xfree(config.terminal_exec);
+		config.terminal_exec = xstrdup(value);
+	} else if (!strcmp(option, "terminal_args")) {
+		xfree(config.terminal_args);
+		config.terminal_args = xstrdup(value);
 
 	} else if (!strncmp(option, "menu_margin_x", 13)) {
 		xatoi(&config.menu_margin_x, value, XATOI_NONNEG, "config.margin_x");

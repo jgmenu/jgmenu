@@ -8,7 +8,7 @@
 .PD 0
 .P
 .PD
-% 1 July, 2017" "" "" "" ""
+% 1 July, 2017
 .hy
 .SH NAME
 .PP
@@ -274,6 +274,31 @@ at_pointer = \f[B]boolean\f[] (default 0)
 .P
 .PD
 \ \ \ \ ignoring \f[C]menu_margin_?\f[] and \f[C]menu_?align\f[] values.
+.PP
+terminal_exec = \f[B]string\f[] (default x\-terminal\-emulator)
+.PD 0
+.P
+.PD
+terminal_args = \f[B]string\f[] (default \-e)
+.PP
+\ \ \ \ The values of these two variables are used to build a string to
+.PD 0
+.P
+.PD
+\ \ \ \ launch programs requiring a terminal to run.
+.PD 0
+.P
+.PD
+\ \ \ \ With the default values, the string would become:
+.PP
+\ \ \ \ x\-terminal\-emulator \-e \[aq]some_command with arguments\[aq]
+.PP
+\ \ \ \ terminal_args must finish with \[aq]\-e\[aq] or equivalent
+(where \[aq]\-e\[aq]
+.PD 0
+.P
+.PD
+\ \ \ \ refers to the meaning of \[aq]\-e\[aq] in \[aq]xterm \-e\[aq].
 .PP
 menu_margin_x = \f[B]integer\f[] (default 2)
 .PD 0

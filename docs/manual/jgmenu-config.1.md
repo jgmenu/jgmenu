@@ -136,6 +136,18 @@ at_pointer = __boolean__ (default 0)
     If enabled, the menu is launched at the pointer position,  
     ignoring `menu_margin_?` and `menu_?align` values.  
 
+terminal_exec = __string__ (default x-terminal-emulator)  
+terminal_args = __string__ (default -e)
+
+    The values of these two variables are used to build a string to  
+    launch programs requiring a terminal to run.  
+    With the default values, the string would become:  
+
+    x-terminal-emulator -e 'some_command with arguments'  
+
+    terminal_args must finish with '-e' or equivalent (where '-e'  
+    refers to the meaning of '-e' in 'xterm -e'.  
+
 menu_margin_x = __integer__ (default 2)  
 menu_margin_y = __integer__ (default 32)  
 menu_width = __integer__ (default 200)  

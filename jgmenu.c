@@ -458,7 +458,7 @@ void draw_menu(void)
 
 		/* Draw submenu arrow */
 		if (config.arrow_width && (!strncmp(p->cmd, "^checkout(", 10) ||
-					  !strncmp(p->cmd, "^sub(", 5)))
+					   !strncmp(p->cmd, "^sub(", 5)))
 			draw_submenu_arrow(p);
 
 		/* Draw menu items text */
@@ -822,7 +822,8 @@ void action_cmd(char *cmd)
 		if (!p)
 			return;
 		sbuf_init(&s);
-		term_build_terminal_cmd(&s, strstrip(p), NULL, NULL);
+		term_build_terminal_cmd(&s, strstrip(p), config.terminal_exec,
+					config.terminal_args);
 		spawn(s.buf);
 		free(s.buf);
 		hide_or_exit();

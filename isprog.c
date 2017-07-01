@@ -45,7 +45,7 @@ static int is_ixoth(char *filename)
 	return (stat(filename, &sb) == 0 && sb.st_mode & S_IXOTH);
 }
 
-int isprog(char *filename)
+int isprog(const char *filename)
 {
 	char prog[4096], *p;
 	struct path_segment *tmp;
