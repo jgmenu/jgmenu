@@ -457,7 +457,7 @@ void draw_menu(void)
 			draw_item_bg_norm(p);
 
 		/* Draw submenu arrow */
-		if (config.width && (!strncmp(p->cmd, "^checkout(", 10) ||
+		if (config.arrow_width && (!strncmp(p->cmd, "^checkout(", 10) ||
 					  !strncmp(p->cmd, "^sub(", 5)))
 			draw_submenu_arrow(p);
 
