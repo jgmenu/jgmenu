@@ -24,6 +24,10 @@ void config_set_defaults(void)
 	config.menu_margin_x	   = 0;
 	config.menu_margin_y	   = 31;
 	config.menu_width	   = 200;
+	config.menu_padding_top	   = 10;
+	config.menu_padding_right  = 10;
+	config.menu_padding_bottom = 10;
+	config.menu_padding_left   = 10;
 	config.menu_radius	   = 1;
 	config.menu_border	   = 0;
 	config.menu_halign	   = LEFT;
@@ -91,6 +95,14 @@ static void process_line(char *line)
 		xatoi(&config.menu_margin_y, value, XATOI_NONNEG, "config.margin_y");
 	} else if (!strncmp(option, "menu_width", 10)) {
 		xatoi(&config.menu_width, value, XATOI_GT_0, "config.menu_width");
+	} else if (!strcmp(option, "menu_padding_top")) {
+		xatoi(&config.menu_padding_top, value, XATOI_NONNEG, "config.menu_padding_top");
+	} else if (!strcmp(option, "menu_padding_right")) {
+		xatoi(&config.menu_padding_right, value, XATOI_NONNEG, "config.menu_padding_right");
+	} else if (!strcmp(option, "menu_padding_bottom")) {
+		xatoi(&config.menu_padding_bottom, value, XATOI_NONNEG, "config.menu_padding_bottom");
+	} else if (!strcmp(option, "menu_padding_left")) {
+		xatoi(&config.menu_padding_left, value, XATOI_NONNEG, "config.menu_padding_left");
 	} else if (!strncmp(option, "menu_radius", 11)) {
 		xatoi(&config.menu_radius, value, XATOI_NONNEG, "config.menu_radius");
 	} else if (!strncmp(option, "menu_border", 11)) {

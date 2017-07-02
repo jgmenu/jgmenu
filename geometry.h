@@ -52,8 +52,8 @@
 void geo_update(void);
 void geo_init(void);
 int geo_get_item_coordinates(struct area *a);
-struct point geo_get_max_itemarea_that_fits_on_screen(void);
-
+struct point geo_get_max_itemarea_that_fits(void);
+struct point geo_get_max_menuarea_that_fits(void);
 void geo_set_menu_width(int w);
 void geo_set_menu_width_from_itemarea_width(int w);
 void geo_set_menu_height(int h);
@@ -66,6 +66,10 @@ void geo_set_item_height(int h);
 void geo_set_nr_visible_items(int nr);
 void geo_set_item_margin_x(int margin);
 void geo_set_item_margin_y(int margin);
+void geo_set_menu_padding_top(int padding);
+void geo_set_menu_padding_right(int padding);
+void geo_set_menu_padding_bottom(int padding);
+void geo_set_menu_padding_left(int padding);
 
 int geo_get_menu_x0(void);
 int geo_get_menu_y0(void);

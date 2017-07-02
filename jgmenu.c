@@ -525,24 +525,24 @@ int submenu_itemarea_width(void)
 
 void set_submenu_width(void)
 {
+	int mw;
 	int reqw = geo_get_menu_width_from_itemarea_width(submenu_itemarea_width());
-	struct point maxarea = geo_get_max_itemarea_that_fits_on_screen();
-	int w;
+	struct point maxarea = geo_get_max_menuarea_that_fits();
 
-	w = reqw < maxarea.x ? reqw : maxarea.x;
-	if (w < config.menu_width)
-		w = config.menu_width;
+	mw = reqw < maxarea.x ? reqw : maxarea.x;
+	if (mw < config.menu_width)
+		mw = config.menu_width;
 
 	if (!config.at_pointer)
 		goto set_width;
 	/* grow from right hand edge if too near it */
 	if (config.menu_halign == LEFT && reqw > maxarea.x) {
 		geo_set_menu_margin_x(geo_get_screen_width() - reqw);
-		w = reqw;
+		mw = reqw;
 	}
 
 set_width:
-	geo_set_menu_width(w);
+	geo_set_menu_width(mw);
 }
 
 int submenu_itemarea_height(void)
@@ -563,7 +563,7 @@ int submenu_itemarea_height(void)
 void set_submenu_height(void)
 {
 	int reqh = submenu_itemarea_height();
-	struct point maxarea = geo_get_max_itemarea_that_fits_on_screen();
+	struct point maxarea = geo_get_max_itemarea_that_fits();
 	int h;
 
 	h = reqh < maxarea.y ? reqh : maxarea.y;
@@ -1495,6 +1495,10 @@ void init_geo_variables_from_config(void)
 	geo_set_menu_valign(config.menu_valign);
 	geo_set_menu_margin_x(config.menu_margin_x);
 	geo_set_menu_margin_y(config.menu_margin_y);
+	geo_set_menu_padding_top(config.menu_padding_top);
+	geo_set_menu_padding_right(config.menu_padding_right);
+	geo_set_menu_padding_bottom(config.menu_padding_bottom);
+	geo_set_menu_padding_left(config.menu_padding_left);
 	geo_set_menu_width(config.menu_width);
 	geo_set_item_margin_x(config.item_margin_x);
 	geo_set_item_margin_y(config.item_margin_y);

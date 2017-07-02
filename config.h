@@ -18,6 +18,10 @@ struct config {
 	int menu_margin_x;
 	int menu_margin_y;
 	int menu_width;
+	int menu_padding_top;
+	int menu_padding_right;
+	int menu_padding_bottom;
+	int menu_padding_left;
 	int menu_radius;
 	int menu_border;
 	enum alignment menu_halign;
