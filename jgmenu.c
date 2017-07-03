@@ -240,6 +240,20 @@ void add_if_unique(struct item *item)
 	list_add_tail(&item->filter, &menu.filter);
 }
 
+int isvisible(struct item *item)
+{
+	struct item *p;
+
+	p = menu.first;
+	list_for_each_entry_from(p, &menu.filter, filter) {
+		if (p == item)
+			return 1;
+		if (p == menu.last)
+			break;
+	}
+	return 0;
+}
+
 void update_filtered_list(void)
 {
 	struct item *item;
@@ -279,9 +293,12 @@ void update_filtered_list(void)
 	menu.first = filter_head();
 	menu.last = fill_from_top(menu.first);
 
+	/* select an item */
 	if (!filter_needle_length() && menu.current_node->last_sel) {
 		menu.sel = menu.current_node->last_sel;
 		menu.current_node->last_sel = NULL;
+		if (!isvisible(menu.sel))
+			menu.sel = menu.first;
 	} else {
 		menu.sel = menu.first;
 		if (!menu.sel->selectable)

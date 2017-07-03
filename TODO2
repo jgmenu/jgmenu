@@ -1,15 +1,9 @@
 SHORT TERM THINGS TO DO
 =======================
-Add --csv-file= and --csv-cmd= to documentation
-
-Set width when filter applied (long items don't currently fit)
-
-Deal with return_to_parent() when parent falls of the bottom of menu
-
 Update examples/
     - Read TINT2_CONFIG environment variable
     - Create README
-    - Make ex??.sh self-sufficient
+    - Rename ex* to ex??.sh
     - Add --file= type arg to jgmenu-init.sh to sort out config files
 
 Add atexit()-cleanup() so that it's easier to spot potential run-time memory
@@ -38,6 +32,8 @@ Add menu_height config option
 
 VARIOUS THINGS TO DO IN NO PARTICULAR ORDER
 ===========================================
+
+Set width when filter applied (long items don't currently fit)
 
 Add CENTER to menu_halign and menu_valign
 
