@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 16 May, 2017
+% 3 July, 2017
 
 # NAME
 
@@ -10,7 +10,8 @@ jgmenu - A simple X11 menu
 
 jgmenu \[\--no-spawn] \[\--checkout=<*tag*>] \[\--config-file=<*file*>]  
        \[\--icon-size=<*size*>] \[\--at-pointer] \[\--hide-on-startup]  
-       \[\--simple] \[\--vsimple]
+       \[\--simple] \[\--vsimple] \[\--csv-file<*file*>]  
+       \[\--csv-cmd=<*command*>]  
 
 # DESCRIPTION
 
@@ -27,7 +28,7 @@ their selection is executed as a new process.
 
 For example:
 
-    printf "Terminal,xterm\nWeb Browser,firefox" | jgmenu
+    printf "Terminal,xterm\nWeb Browser,firefox" | jgmenu --simple  
 
 The following mark-up is supported in the *description* field:
 
@@ -79,6 +80,13 @@ Icons will be displayed if the third field is populated; for example:
 \--vsimple
 :   same as --simple, but also disables icons and ignores jgmenurc
 
+\--csv-file=<*file*>
+:   specify menu file (in jgmenu flavoured CSV format)  
+       If file cannot be opened, input if reverted to *stdin*  
+
+\--csv-cmd=<*command*>
+:   specify command to produce menu data  
+       E.g. `jgmenu_run parse-pmenu`  
 
 # USER INTERFACE
 The user interface is generally pretty intuitive. Here follow mouse  

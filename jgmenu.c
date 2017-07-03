@@ -106,7 +106,9 @@ static const char jgmenu_usage[] =
 "    --simple              ignore tint2 settings and run in 'short-lived' mode\n"
 "                          (i.e. exit after mouse click or enter/escape)\n"
 "    --vsimple             same as --simple, but also disables icons and\n"
-"                          ignores jgmenurc\n";
+"                          ignores jgmenurc\n"
+"    --csv-file=<file>     specify menu file (in jgmenu flavoured CSV format)\n"
+"    --csv-cmd=<command>   specify command to producue menu data\n";
 
 void init_empty_item(void)
 {
