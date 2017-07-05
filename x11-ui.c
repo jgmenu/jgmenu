@@ -209,7 +209,7 @@ void ui_create_window(int x, int y, int w, int h)
 {
 	XIM xim;
 
-	ui->win = XCreateWindow(ui->dpy, ui->root, x, y, w, h, 1,
+	ui->win = XCreateWindow(ui->dpy, ui->root, x, y, w, h, 0,
 				ui->vinfo.depth, CopyFromParent,
 				ui->vinfo.visual,
 				CWOverrideRedirect | CWColormap | CWBackPixel | CWEventMask | CWBorderPixel, &ui->swa);

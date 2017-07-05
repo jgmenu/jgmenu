@@ -31,15 +31,15 @@ int item_height;	/* sg */
 void geo_update(void)
 {
 	if (menu_halign == LEFT)
-		menu_x0 = menu_margin_x - 1;
+		menu_x0 = menu_margin_x;
 	else if (menu_halign == RIGHT)
-		menu_x0 = screen_width - menu_width - menu_margin_x - 1;
+		menu_x0 = screen_width - menu_width - menu_margin_x;
 
 	if (menu_valign == BOTTOM)
 		menu_y0 = screen_y0 + screen_height - menu_height -
-			  menu_margin_y - 1;
+			  menu_margin_y;
 	else if (menu_valign == TOP)
-		menu_y0 = screen_y0 + menu_margin_y - 1;
+		menu_y0 = screen_y0 + menu_margin_y;
 }
 
 void geo_init(void)
