@@ -41,6 +41,12 @@ static int panel_margin_v;
 static char *font;
 static char *icon_theme;
 static int override_xsettings;
+static int taskbar_hpadding;
+static int taskbar_vpadding;
+static int taskbar_spacing;
+static int panel_hpadding;
+static int panel_vpadding;
+static int panel_spacing;
 
 static void say(const char *err, ...)
 {
@@ -224,6 +230,32 @@ static void process_line(char *line)
 		if (!field)
 			return;
 		panel_margin_v = atoi(field);
+	} else if (!strcmp(option, "taskbar_padding")) {
+		field = strtok(value, DELIM);
+		if (!field)
+			return;
+		taskbar_hpadding = atoi(field);
+		field = strtok(NULL, DELIM);
+		if (!field)
+			return;
+		taskbar_vpadding = atoi(field);
+		field = strtok(NULL, DELIM);
+		if (!field)
+			return;
+		taskbar_spacing = atoi(field);
+	} else if (!strcmp(option, "panel_padding")) {
+		field = strtok(value, DELIM);
+		if (!field)
+			return;
+		panel_hpadding = atoi(field);
+		field = strtok(NULL, DELIM);
+		if (!field)
+			return;
+		panel_vpadding = atoi(field);
+		field = strtok(NULL, DELIM);
+		if (!field)
+			return;
+		panel_spacing = atoi(field);
 	}
 }
 
@@ -310,6 +342,30 @@ static void vpanel_set_margin_y(void)
 	config.menu_margin_y = y;
 }
 
+static int max2(int a, int b)
+{
+	return (a > b) ? a : b;
+}
+
+static int max3(int a, int b, int c)
+{
+	return ((a > b) & (a > c)) ? a :
+	       ((b > a) & (b > c)) ? b : c;
+}
+
+static void set_padding_and_item_margin(void)
+{
+	int vspace = panel_vpadding + taskbar_vpadding;
+	int padding = max3(taskbar_hpadding, panel_spacing, panel_hpadding);
+
+	config.item_margin_y = vspace;
+	config.item_margin_x = 0;
+	config.menu_padding_right = padding;
+	config.menu_padding_left = padding;
+	config.menu_padding_top = max2(0, padding - vspace);
+	config.menu_padding_bottom = max2(0, padding - vspace);
+}
+
 static void set_alignment_and_position(void)
 {
 	int i;
@@ -345,6 +401,8 @@ static void set_alignment_and_position(void)
 		vpanel_set_margin_x();
 		vpanel_set_margin_y();
 	}
+
+	set_padding_and_item_margin();
 }
 
 static void t2conf_cleanup(void)
