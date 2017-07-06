@@ -1594,19 +1594,28 @@ static void read_jgmenurc(const char *filename)
 
 static void read_tint2rc(void)
 {
-	struct sbuf f;
+	char *t;
+	struct sbuf bl;
 
-	sbuf_init(&f);
-	bl_tint2file(&f);
-	if (f.len) {
+	sbuf_init(&bl);
+	t = getenv("TINT2_CONFIG");
+	if (t) {
+		t2conf_parse(t, geo_get_screen_width(),
+			     geo_get_screen_height());
+		goto out;
+	}
+
+	bl_tint2file(&bl);
+	if (bl.len) {
 		info("using BunsenLabs tint2 session file");
-		t2conf_parse(f.buf, geo_get_screen_width(),
+		t2conf_parse(bl.buf, geo_get_screen_width(),
 			     geo_get_screen_height());
 	} else {
 		t2conf_parse(NULL, geo_get_screen_width(),
 			     geo_get_screen_height());
 	}
-	free(f.buf);
+out:
+	free(bl.buf);
 }
 
 int main(int argc, char *argv[])
