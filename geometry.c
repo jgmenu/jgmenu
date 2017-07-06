@@ -53,10 +53,10 @@ void geo_init(void)
 	menu_margin_y = 30;
 	menu_width = 200;
 	menu_height = 500;
-	menu_padding_top = 10;
-	menu_padding_right = 10;
-	menu_padding_bottom = 10;
-	menu_padding_left = 10;
+	menu_padding_top = 5;
+	menu_padding_right = 5;
+	menu_padding_bottom = 5;
+	menu_padding_left = 5;
 	menu_valign = BOTTOM;
 	menu_halign = LEFT;
 

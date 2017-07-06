@@ -24,10 +24,10 @@ void config_set_defaults(void)
 	config.menu_margin_x	   = 0;
 	config.menu_margin_y	   = 31;
 	config.menu_width	   = 200;
-	config.menu_padding_top	   = 10;
-	config.menu_padding_right  = 10;
-	config.menu_padding_bottom = 10;
-	config.menu_padding_left   = 10;
+	config.menu_padding_top	   = 5;
+	config.menu_padding_right  = 5;
+	config.menu_padding_bottom = 5;
+	config.menu_padding_left   = 5;
 	config.menu_radius	   = 1;
 	config.menu_border	   = 0;
 	config.menu_halign	   = LEFT;

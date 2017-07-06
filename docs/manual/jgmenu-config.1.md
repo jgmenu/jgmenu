@@ -1,6 +1,6 @@
 % JGMENU-CONFIG(1)  
 % Johan Malm  
-% 1 July, 2017
+% 6 July, 2017
 
 # NAME
 
@@ -151,10 +151,10 @@ terminal_args = __string__ (default -e)
 menu_margin_x = __integer__ (default 2)  
 menu_margin_y = __integer__ (default 32)  
 menu_width = __integer__ (default 200)  
-menu_padding_top = __integer__ (default 10)  
-menu_padding_right = __integer__ (default 10)  
-menu_padding_bottom = __integer__ (default 10)  
-menu_padding_left = __integer__ (default 10)  
+menu_padding_top = __integer__ (default 5)  
+menu_padding_right = __integer__ (default 5)  
+menu_padding_bottom = __integer__ (default 5)  
+menu_padding_left = __integer__ (default 5)  
 menu_radius = __integer__ (default 1)  
 menu_border = __integer__ (default 0)  
 
