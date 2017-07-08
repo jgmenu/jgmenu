@@ -277,7 +277,7 @@ static void parse_file(char *filename)
 		return;
 	}
 
-	printf("info: config variables set based on '%s':\n", filename);
+	info("parsing tint2 config file '%s'", filename);
 	read_file(fp);
 	fclose(fp);
 }

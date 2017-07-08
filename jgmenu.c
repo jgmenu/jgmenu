@@ -723,7 +723,7 @@ void tint2_align(void)
 		return;
 	}
 	if (t2conf_is_horizontal_panel()) {
-		printf("info: aligning to tint2 button variables in horizontal panel mode\n");
+		info("aligning to tint2 horizontal panel env vars");
 		if (bx1 < px2 - geo_get_menu_width()) {
 			geo_set_menu_margin_x(bx1);
 			geo_set_menu_halign(LEFT);
@@ -736,7 +736,7 @@ void tint2_align(void)
 		else
 			geo_set_menu_margin_y(py2);
 	} else {
-		printf("info: aligning to tint2 button variables in vertical panel mode\n");
+		info("aligning to tint2 vertical panel env vars\n");
 		if (by1 < py2 - geo_get_menu_height()) {
 			geo_set_menu_margin_y(by1);
 			geo_set_menu_valign(TOP);
