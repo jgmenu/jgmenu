@@ -1,8 +1,15 @@
 #!/bin/sh
 
+menu_file=$(mktemp)
+
+cat >${menu_file} <<EOF
+xterm,xterm
+firefox,firefox
+EOF
+
 if test $# -lt 1
 then
-	cmd="./jgmenu --die-when-loaded"
+	cmd="./jgmenu --die-when-loaded --vsimple --csv-file=${menu_file}"
 else
 	cmd="$@"
 fi
@@ -16,3 +23,5 @@ valgrind --leak-check=full \
 	 ${cmd}
 
 printf "nr_lines="; cat valgrind.log | wc -l
+
+rm -f ${menu_file}
