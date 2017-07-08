@@ -1,8 +1,18 @@
 #!/bin/sh
 
-tint2dir="/usr/share/tint2"
+tint2dirs="/usr/share/tint2 /usr/local/share/tint2"
+tint2dir=
 
-test -d ${tint2dir} ||  { echo "cannot find directory with tint2rc files"; exit 1; }
+for d in ${tint2dirs}
+do
+	if test -d ${d}
+	then
+		tint2dir=${d}
+		break;
+	fi
+done
+echo ${tint2dir}
+test -z ${tint2dir} && { echo "fatal: cannot find tint2rc files"; exit 1; }
 cd ${tint2dir}
 
 unset TINT2_BUTTON_ALIGNED_X1
@@ -31,4 +41,7 @@ do
 				 --config-file=i_dont_exist 2>/dev/null
 done
 
+
+killall tint2 2>/dev/null
+killall jgmenu 2>/dev/null
 nohup tint2 &
