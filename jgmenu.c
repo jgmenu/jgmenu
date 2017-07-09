@@ -365,7 +365,7 @@ void draw_item_sep_with_text(struct item *p)
 
 	text_x_coord = p->area.x + config.item_padding_x;
 	if (config.icon_size)
-		text_x_coord += config.icon_size + config.item_padding_x;
+		text_x_coord += config.icon_size + config.icon_text_spacing;
 
 	ui_insert_text(parse_caret_action(p->name, "^sep("), text_x_coord,
 		       p->area.y, p->area.h, p->area.w, config.color_sep_fg,
@@ -398,11 +398,13 @@ void draw_item_text(struct item *p)
 	if (config.item_halign != RIGHT) {
 		text_x_coord = p->area.x + config.item_padding_x;
 		if (config.icon_size)
-			text_x_coord += config.icon_size + config.icon_text_spacing;
+			text_x_coord += config.icon_size +
+					config.icon_text_spacing;
 	} else {
 		text_x_coord = p->area.x - config.item_padding_x;
 		if (config.icon_size)
-			text_x_coord -= config.icon_size + config.icon_text_spacing;
+			text_x_coord -= config.icon_size +
+					config.icon_text_spacing;
 	}
 
 	if (p == menu.sel)
@@ -441,11 +443,11 @@ void draw_icon(struct item *p)
 	icon_y_coord = p->area.y + (config.item_height - config.icon_size) / 2 +
 		       offsety;
 	if (config.item_halign != RIGHT)
-		ui_insert_image(p->icon, p->area.x + offsetx + 1, icon_y_coord,
-				config.icon_size);
+		ui_insert_image(p->icon, p->area.x + config.item_padding_x +
+				offsetx, icon_y_coord, config.icon_size);
 	else
-		ui_insert_image(p->icon, p->area.x + p->area.w - config.icon_size
-				+ offsetx - 1, icon_y_coord, config.icon_size);
+		ui_insert_image(p->icon, p->area.x + p->area.w - config.icon_size -
+				config.item_padding_x + offsetx - 1, icon_y_coord, config.icon_size);
 }
 
 void draw_menu(void)

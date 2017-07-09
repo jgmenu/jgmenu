@@ -1,7 +1,5 @@
 SHORT TERM THINGS TO DO
 =======================
-Check item_padding_x (looks like it's only applied to text and misses icons)
-
 Add atexit()-cleanup() so that it's easier to spot potential run-time memory
 leaks with ASAN and Valgrind. (Also replace strdups+free with x-alternatives)
 
