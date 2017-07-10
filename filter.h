@@ -9,5 +9,6 @@ void filter_backspace(void);
 void filter_reset(void);
 int filter_needle_length(void);
 int filter_ismatch(const char *haystack);
+void filter_cleanup(void);
 
 #endif /* FILTER_H */

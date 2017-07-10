@@ -207,15 +207,13 @@ void ui_init_canvas(int max_width, int max_height)
 
 void ui_create_window(int x, int y, int w, int h)
 {
-	XIM xim;
-
 	ui->win = XCreateWindow(ui->dpy, ui->root, x, y, w, h, 0,
 				ui->vinfo.depth, CopyFromParent,
 				ui->vinfo.visual,
 				CWOverrideRedirect | CWColormap | CWBackPixel | CWEventMask | CWBorderPixel, &ui->swa);
 
-	xim = XOpenIM(ui->dpy, NULL, NULL, NULL);
-	ui->xic = XCreateIC(xim, XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
+	ui->xim = XOpenIM(ui->dpy, NULL, NULL, NULL);
+	ui->xic = XCreateIC(ui->xim, XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
 			    XNClientWindow, ui->win, XNFocusWindow, ui->win, NULL);
 
 	ui->gc = XCreateGC(ui->dpy, ui->win, 0, NULL);
@@ -364,6 +362,8 @@ void ui_cleanup(void)
 	XDestroyWindow(ui->dpy, ui->win);
 	XUngrabKeyboard(ui->dpy, CurrentTime);
 	XUngrabPointer(ui->dpy, CurrentTime);
+	XDestroyIC(ui->xic);
+	XCloseIM(ui->xim);
 
 	if (ui->canvas)
 		XFreePixmap(ui->dpy, ui->canvas);
@@ -371,14 +371,13 @@ void ui_cleanup(void)
 		XFreeGC(ui->dpy, ui->gc);
 	if (ui->dpy)
 		XCloseDisplay(ui->dpy);
-	if (ui)
-		free(ui);
 
 	/* cairo_surface_destroy(ICONS); */
 
 	/* TODO: Free cairo stuff */
 	pango_font_description_free(ui->pangofont);
 	g_object_unref(ui->pangolayout);
+	xfree(ui);
 }
 
 /*

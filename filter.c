@@ -86,3 +86,8 @@ int filter_ismatch(const char *haystack)
 
 	return ret;
 }
+
+void filter_cleanup(void)
+{
+	xfree(needle.buf);
+}

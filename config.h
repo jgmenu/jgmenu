@@ -60,6 +60,7 @@ struct config {
 extern struct config config;
 
 void config_set_defaults(void);
+void config_cleanup(void);
 void config_parse_file(char *filename);
 
 #endif /* CONFIG_H */

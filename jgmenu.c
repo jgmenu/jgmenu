@@ -70,7 +70,7 @@ struct node {
 	struct item *item;	   /* item that node points to		  */
 	struct item *last_sel;	   /* used when returning to node	  */
 	struct node *parent;
-	struct list_head items;	   /* menu-items having off node	  */
+	struct list_head items;	   /* menu-items hanging off node	  */
 	struct list_head node;
 };
 
@@ -112,13 +112,19 @@ static const char jgmenu_usage[] =
 
 void init_empty_item(void)
 {
-	empty_item.name = strdup("<empty>");
-	empty_item.cmd = strdup(":");
+	empty_item.name = xstrdup("<empty>");
+	empty_item.cmd = xstrdup(":");
 	empty_item.iconname = NULL;
 	empty_item.tag = NULL;
 	empty_item.icon = NULL;
 	empty_item.selectable = 1;
 	empty_item.area.h = config.item_height;
+}
+
+void delete_empty_item(void)
+{
+	xfree(empty_item.name);
+	xfree(empty_item.cmd);
 }
 
 void usage(void)
@@ -1208,6 +1214,17 @@ void walk_tagged_items(struct item *this, struct node *parent)
 	}
 }
 
+void destroy_node_tree(void)
+{
+	struct node *n, *tmp_n;
+
+	list_for_each_entry_safe(n, tmp_n, &menu.nodes, node) {
+		xfree(n->tag);
+		list_del(&n->node);
+		xfree(n);
+	}
+}
+
 void build_tree(void)
 {
 	struct item *item;
@@ -1279,6 +1296,17 @@ void read_csv_file(FILE *fp)
 		if (strncmp("^tag(", item->cmd, 5))
 			continue;
 		item->tag = parse_caret_action(item->cmd, "^tag(");
+	}
+}
+
+void destroy_master_list(void)
+{
+	struct item *item, *tmp_item;
+
+	list_for_each_entry_safe(item, tmp_item, &menu.master, master) {
+		xfree(item->name);
+		list_del(&item->master);
+		xfree(item);
 	}
 }
 
@@ -1620,6 +1648,19 @@ out:
 	free(bl.buf);
 }
 
+static void cleanup(void)
+{
+	info("cleaning up...");
+	ui_cleanup();
+	config_cleanup();
+	filter_cleanup();
+	font_cleanup();
+
+	delete_empty_item();
+	destroy_node_tree();
+	destroy_master_list();
+}
+
 int main(int argc, char *argv[])
 {
 	int i;
@@ -1756,9 +1797,8 @@ int main(int argc, char *argv[])
 	}
 	draw_menu();
 
+	atexit(cleanup);
 	run();
-
-	ui_cleanup();
 
 	return 0;
 }

@@ -63,6 +63,17 @@ void config_set_defaults(void)
 	parse_hexstr("#ffffff 20", config.color_sep_fg);
 }
 
+void config_cleanup(void)
+{
+	xfree(config.terminal_exec);
+	xfree(config.terminal_args);
+	xfree(config.font);
+	xfree(config.font_fallback);
+	xfree(config.icon_theme);
+	xfree(config.icon_theme_fallback);
+	xfree(config.arrow_string);
+}
+
 static void process_line(char *line)
 {
 	char *option, *value;

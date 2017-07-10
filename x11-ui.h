@@ -26,6 +26,7 @@ struct UI {
 	Window win;
 	Window root;
 	XSetWindowAttributes swa;
+	XIM xim;
 	XIC xic;
 	Pixmap canvas;
 	XVisualInfo vinfo;
