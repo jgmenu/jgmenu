@@ -23,9 +23,61 @@
 }
 
 {
+   <libpango>
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libpango-1.0.so.*
+   ...
+}
+
+{
    <libcairo>
    Memcheck:Leak
    ...
-   obj:/usr/lib/x86_64-linux-gnu/libpango-1.0.so.0.3600.8
+   obj:/usr/lib/x86_64-linux-gnu/libcairo.so.*
+   ...
+}
+
+{
+   <xsupportslocale>
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.*
+   ...
+   fun:XSupportsLocale
+   ...
+}
+
+{
+   <pixman>
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libpixman-1.so.*
+   ...
+}
+
+{
+   <xcreatefontcursor>
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.*
+   ...
+   fun:XCreateFontCursor
+   ...
+}
+
+{
+   <ximopenim>
+   Memcheck:Leak
+   ...
+   fun:_XimOpenIM
+   ...
+}
+
+{
+   <xsetlocalemodifiers>
+   Memcheck:Leak
+   ...
+   fun:XSetLocaleModifiers
    ...
 }

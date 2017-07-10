@@ -16,6 +16,7 @@ fi
 
 valgrind --leak-check=full \
 	 --leak-resolution=high \
+	 --show-leak-kinds=all \
 	 --num-callers=20 \
 	 --log-file=valgrind.log \
 	 --suppressions=scripts/valgrind.supp \
