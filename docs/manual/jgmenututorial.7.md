@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 1 Jun, 2017  
+% 15 Jul, 2017  
 
 # NAME
 
@@ -253,26 +253,6 @@ by:
 Lesson 8
 --------
 
-This one is just for a bit of fun:
-
-    IFS=:
-    (
-    for d in $PATH
-    do
-            cd $d
-            find . -maxdepth 1 -type f -executable | sed "s|^\./||"
-    done
-    ) | jgmenu --vsimple
-
-If you have dmenu installed, the following should be the same:
-
-```
-dmenu_path | jgmenu
-```
-
-Lesson 9
---------
-
 Let's go back to pmenu.
 
 If you create the files append.csv and/or prepend.csv in  
@@ -298,21 +278,3 @@ For example, you could do:
     jgmenu_run pmenu
 
 ^sep() inserts a horizontal separator line
-
-Lesson 10
----------
-
-If you run on a slow computer, you could speed up the start-up time  
-by "caching" the menu data. For example:
-
-    jgmenu_run parse-pmenu >foo.csv
-    jgmenu <foo.csv
-
-Or if you do
-
-    jgmenu_run parse-pmenu >$HOME/.config/jgmenu/default.csv
-
-you could simply invoke this menu by:
-
-    jgmenu_run csv
-
