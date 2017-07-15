@@ -1680,6 +1680,8 @@ static void cleanup(void)
 	config_cleanup();
 	filter_cleanup();
 	font_cleanup();
+	if (config.icon_size)
+		icon_cleanup();
 
 	delete_empty_item();
 	destroy_node_tree();

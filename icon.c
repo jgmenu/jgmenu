@@ -231,3 +231,14 @@ cairo_surface_t *icon_get_surface(const char *name)
 
 	return NULL;
 }
+
+void icon_cleanup(void)
+{
+	struct icon *icon, *tmp_icon;
+
+	list_for_each_entry_safe(icon, tmp_icon, &icon_cache, list) {
+		cairo_surface_destroy(icon->surface);
+		list_del(&icon->list);
+		xfree(icon);
+	}
+}

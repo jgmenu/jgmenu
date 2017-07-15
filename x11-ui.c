@@ -372,9 +372,8 @@ void ui_cleanup(void)
 	if (ui->dpy)
 		XCloseDisplay(ui->dpy);
 
-	/* cairo_surface_destroy(ICONS); */
-
-	/* TODO: Free cairo stuff */
+	cairo_destroy(ui->c);
+	cairo_surface_destroy(ui->cs);
 	pango_font_description_free(ui->pangofont);
 	g_object_unref(ui->pangolayout);
 	xfree(ui);

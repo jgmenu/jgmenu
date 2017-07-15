@@ -11,5 +11,6 @@ extern void icon_set_size(int size);
 extern void icon_set_name(const char *name);
 extern void icon_load(void);
 extern cairo_surface_t *icon_get_surface(const char *name);
+extern void icon_cleanup(void);
 
 #endif /* ICON_H */
