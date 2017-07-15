@@ -6,12 +6,12 @@ menu_border	  = 0
 
 item_margin_x	  = 4
 item_margin_y	  = 4
-item_height	  = 56
+item_height	  = 24
 item_padding_x	  = 3
 item_radius	  = 0
 item_border	  = 0
 
-font		  = Ubuntu 30px
+font		  = Ubuntu 14
 icon_size	  = 22
 icon_theme	  = theme1
 

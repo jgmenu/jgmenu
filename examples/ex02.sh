@@ -61,4 +61,4 @@ printf "%b\n" 'item29,xterm'
 printf "%b\n" 'item30,xterm'
 printf "%b\n" 'item31,xterm'
 printf "%b\n" 'item32 (last),xterm'
-) | ../jgmenu --simple --config-file=./ex02-jgmenurc
+) | ../jgmenu --simple --config-file=./ex02/jgmenurc

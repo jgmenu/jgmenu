@@ -39,4 +39,4 @@ printf "%b\n" 'ccccc1 - abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcd
 printf "%b\n" 'cccccc,^tag(cccccc)'
 printf "%b\n" 'cccccc1 - abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz,^checkout(cccccc)'
 
-) | ../jgmenu --simple --config-file=./ex03-jgmenurc
+) | ../jgmenu --simple --config-file=./ex03/jgmenurc

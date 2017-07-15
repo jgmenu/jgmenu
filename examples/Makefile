@@ -1,5 +1,5 @@
 all:
 	@./ex01.sh
-	@./ex02-config-fun.sh
-	@./ex03-tree.sh
-	@./ex04-local-svg.sh
+	@./ex02.sh
+	@./ex03.sh
+	@./ex04.sh
