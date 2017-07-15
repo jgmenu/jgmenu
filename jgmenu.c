@@ -456,6 +456,26 @@ void draw_icon(struct item *p)
 				config.item_padding_x + offsetx - 1, icon_y_coord, config.icon_size);
 }
 
+void draw_items_below_indicator(void) {
+	if (config.menu_padding_bottom < 1)
+		return;
+	ui_draw_line(config.menu_padding_left,
+		     geo_get_menu_height() - config.menu_padding_bottom - 0.5,
+		     geo_get_menu_width() - config.menu_padding_right,
+		     geo_get_menu_height() - config.menu_padding_bottom - 0.5,
+		     1.0, config.color_norm_fg);
+}
+
+void draw_items_above_indicator(void) {
+	if (config.menu_padding_top < 1)
+		return;
+	ui_draw_line(config.menu_padding_left,
+		     config.menu_padding_top + 0.5,
+		     geo_get_menu_width() - config.menu_padding_right,
+		     config.menu_padding_top + 0.5,
+		     1.0, config.color_norm_fg);
+}
+
 void draw_menu(void)
 {
 	struct item *p;
@@ -503,6 +523,11 @@ void draw_menu(void)
 		if (p == menu.last)
 			break;
 	}
+
+	if (filter_tail() != menu.last)
+		draw_items_below_indicator();
+	if (filter_head() != menu.first)
+		draw_items_above_indicator();
 
 	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
 }
