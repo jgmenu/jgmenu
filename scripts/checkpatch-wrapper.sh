@@ -82,6 +82,7 @@ do
 			-e 'CamelCase.*XButtonPressedEvent' \
 			-e 'CamelCase.*XButtonReleasedEvent' \
 			-e 'CamelCase.*XCloseDisplay' \
+			-e 'CamelCase.*XCloseIM' \
 			-e 'CamelCase.*XCopyArea' \
 			-e 'CamelCase.*XCreateColormap' \
 			-e 'CamelCase.*XCreateFontCursor' \
@@ -90,6 +91,7 @@ do
 			-e 'CamelCase.*XCreatePixmap' \
 			-e 'CamelCase.*XCreateWindow' \
 			-e 'CamelCase.*XDefineCursor' \
+			-e 'CamelCase.*XDestroyIC' \
 			-e 'CamelCase.*XDestroyWindow' \
 			-e 'CamelCase.*XErrorEvent' \
 			-e 'CamelCase.*XEvent' \

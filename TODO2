@@ -1,12 +1,10 @@
 SHORT TERM THINGS TO DO
 =======================
-Add atexit()-cleanup() so that it's easier to spot potential run-time memory
-leaks with ASAN and Valgrind. (Also replace strdups+free with x-alternatives)
-
-Create arg.c for command line args. At the moment jgmenurc take precedence over
-cmd line args (which is wrong)
+Remove spawn from config (make it args_ instead).
 
 === Upversion to 0.6 ===
+
+  - Draw diagrams of variables
 
   - Add csv_cmd to config.c
   - If csv_cmd unset/empty, read from 'stdin' (csv_cmd=...parse-pmenu by default)
@@ -24,6 +22,8 @@ cmd line args (which is wrong)
 
 VARIOUS THINGS TO DO IN NO PARTICULAR ORDER
 ===========================================
+
+Also replace strdups+free with x-alternatives
 
 Add menu_height config option
 

@@ -3,7 +3,7 @@
  *
  * Copyright (C) Johan Malm 2014
  *
- * jgmenu is a stand-alone menu which reads the menu items from stdin
+ * jgmenu is a stand-alone menu which reads the menu items from a CSV file
  */
 
 #include <stdio.h>
@@ -42,12 +42,12 @@
 #include "restart.h"
 #include "theme.h"
 #include "font.h"
+#include "args.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
 static pthread_t thread;	   /* worker thread for loading icons	  */
 static int pipe_fds[2];		   /* talk between threads + catch sig    */
-static int die_when_loaded;	   /* Used for performance testing	  */
 
 struct item {
 	char *name;
@@ -130,6 +130,12 @@ void delete_empty_item(void)
 void usage(void)
 {
 	printf("%s", jgmenu_usage);
+	exit(0);
+}
+
+void version(void)
+{
+	printf("%s\n", VERSION);
 	exit(0);
 }
 
@@ -456,7 +462,8 @@ void draw_icon(struct item *p)
 				config.item_padding_x + offsetx - 1, icon_y_coord, config.icon_size);
 }
 
-void draw_items_below_indicator(void) {
+void draw_items_below_indicator(void)
+{
 	if (config.menu_padding_bottom < 1)
 		return;
 	ui_draw_line(config.menu_padding_left,
@@ -466,7 +473,8 @@ void draw_items_below_indicator(void) {
 		     1.0, config.color_norm_fg);
 }
 
-void draw_items_above_indicator(void) {
+void draw_items_above_indicator(void)
+{
 	if (config.menu_padding_top < 1)
 		return;
 	ui_draw_line(config.menu_padding_left,
@@ -1415,7 +1423,7 @@ void run(void)
 	struct sigaction sa;
 
 	/* for performance testing */
-	if (die_when_loaded && !config.icon_size)
+	if (args_die_when_loaded() && !config.icon_size)
 		exit(0);
 
 	FD_ZERO(&readfds);
@@ -1500,7 +1508,7 @@ void run(void)
 					continue;
 
 				/* for performance testing */
-				if (die_when_loaded && all_icons_have_been_requested)
+				if (args_die_when_loaded() && all_icons_have_been_requested)
 					exit(0);
 
 				if (DEBUG_ICONS_LOADED_NOTIFICATION &&
@@ -1673,6 +1681,28 @@ out:
 	free(bl.buf);
 }
 
+static void init_locale(void)
+{
+	if (!setlocale(LC_ALL, ""))
+		die("error setting locale");
+	if (!XSupportsLocale())
+		die("error setting locale");
+	if (!XSetLocaleModifiers("@im=none"))
+		die("error setting locale");
+}
+
+static void init_sigactions(void)
+{
+	struct sigaction term_action, int_action;
+
+	memset(&term_action, 0, sizeof(struct sigaction));
+	memset(&int_action, 0, sizeof(struct sigaction));
+	term_action.sa_handler = quit;
+	int_action.sa_handler = quit;
+	sigaction(SIGTERM, &term_action, NULL);
+	sigaction(SIGINT, &int_action, NULL);
+}
+
 static void cleanup(void)
 {
 	info("cleaning up...");
@@ -1691,28 +1721,15 @@ static void cleanup(void)
 int main(int argc, char *argv[])
 {
 	int i;
-	char *arg_checkout = NULL, *arg_config_file = NULL;
-	char *csv_file = NULL, *csv_cmd = NULL;
-	int arg_simple = 0, arg_vsimple = 0;
-	struct sigaction term_action, int_action;
+	char *arg_config_file = NULL;
+	int arg_vsimple = 0;
 	FILE *fp = NULL;
 
-	if (!setlocale(LC_ALL, ""))
-		die("error setting locale");
-	if (!XSupportsLocale())
-		die("error setting locale");
-	if (!XSetLocaleModifiers("@im=none"))
-		die("error setting locale");
-
+	init_locale();
 	restart_init(argv);
-	memset(&term_action, 0, sizeof(struct sigaction));
-	memset(&int_action, 0, sizeof(struct sigaction));
-	term_action.sa_handler = quit;
-	int_action.sa_handler = quit;
-	sigaction(SIGTERM, &term_action, NULL);
-	sigaction(SIGINT, &int_action, NULL);
-
+	init_sigactions();
 	config_set_defaults();
+
 	menu.current_node = NULL;
 	INIT_LIST_HEAD(&menu.master);
 	INIT_LIST_HEAD(&menu.filter);
@@ -1723,40 +1740,18 @@ int main(int argc, char *argv[])
 			arg_config_file = argv[i] + 14;
 		else if (!strncmp(argv[i], "--vsimple", 9))
 			arg_vsimple = 1;
+		else if (!strncmp(argv[i], "--version", 9))
+			version();
+		else if (!strncmp(argv[i], "--help", 6) ||
+			 !strncmp(argv[i], "-h", 2))
+			usage();
 	}
 	if (!arg_vsimple)
 		read_jgmenurc(arg_config_file);
 
-	for (i = 1; i < argc; i++) {
-		if (!strncmp(argv[i], "--version", 9)) {
-			printf("%s\n", VERSION);
-			exit(0);
-		} else if (!strncmp(argv[i], "--help", 6) ||
-			   !strncmp(argv[i], "-h", 2)) {
-			usage();
-		} else if (!strncmp(argv[i], "--no-spawn", 10)) {
-			config.spawn = 0;
-		} else if (!strncmp(argv[i], "--checkout=", 11)) {
-			arg_checkout = argv[i] + 11;
-		} else if (!strncmp(argv[i], "--icon-size=", 12)) {
-			xatoi(&config.icon_size, argv[i] + 12, XATOI_NONNEG,
-			      "config.icon_size");
-		} else if (!strncmp(argv[i], "--die-when-loaded", 17)) {
-			die_when_loaded = 1;
-		} else if (!strncmp(argv[i], "--at-pointer", 12)) {
-			config.at_pointer = 1;
-		} else if (!strncmp(argv[i], "--hide-on-startup", 17)) {
-			config.hide_on_startup = 1;
-		} else if (!strncmp(argv[i], "--simple", 8)) {
-			arg_simple = 1;
-		} else if (!strncmp(argv[i], "--csv-file=", 11)) {
-			csv_file = argv[i] + 11;
-		} else if (!strncmp(argv[i], "--csv-cmd=", 10)) {
-			csv_cmd = argv[i] + 10;
-		}
-	}
+	args_parse(argc, argv);
 
-	if (arg_simple || arg_vsimple)
+	if (args_simple() || arg_vsimple)
 		set_simple_mode();
 	if (arg_vsimple)
 		config.icon_size = 0;
@@ -1786,18 +1781,18 @@ int main(int argc, char *argv[])
 		tint2_align();
 	}
 
-	if (csv_file)
-		fp = fopen(csv_file, "r");
-	else if (csv_cmd)
-		fp = popen(csv_cmd, "r");
+	if (args_csv_file())
+		fp = fopen(args_csv_file(), "r");
+	else if (args_csv_cmd())
+		fp = popen(args_csv_cmd(), "r");
 	if (!fp)
 		fp = stdin;
 	read_csv_file(fp);
 	build_tree();
 	hang_items_off_nodes();
 
-	if (arg_checkout)
-		checkout_submenu(arg_checkout);
+	if (args_checkout())
+		checkout_submenu(args_checkout());
 	else
 		checkout_submenu(tag_of_first_item());
 
