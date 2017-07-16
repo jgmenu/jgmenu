@@ -192,5 +192,4 @@ See also
   - [JGMENU-CONFIG(1)](docs/manual/jgmenu-config.1.md)
   - [JGMENU-PMENU(1)](docs/manual/jgmenu-pmenu.1.md)
   - [JGMENU-XDG(1)](docs/manual/jgmenu-xdg.1.md)
-  - [JGMENU-CSV(1)](docs/manual/jgmenu-csv.1.md)
 

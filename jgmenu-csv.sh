@@ -4,7 +4,10 @@ default_menu_file="${HOME}/.config/jgmenu/default.csv"
 menu_file=""
 
 usage () {
-	printf "%s\n" "Usage: jgmenu_run csv [<options>] [<menu-file>]"
+	printf "%b\n" "Usage: jgmenu_run csv [<options>] [<menu-file>]"
+	printf "\n"
+	printf "%b\n" "Generate menu based on a CSV file"
+	printf "%b\n" "By default, `~/.config/jgmenu/default.csv` is be used"
 }
 
 check_file_exists () {
@@ -19,16 +22,9 @@ check_file_exists () {
 # START OF SCRIPT
 #
 
-add_pmenu=f
-add_xdg=f
-
 while test $# != 0
 do
 	case "$1" in
-	--add-pmenu)
-		add_pmenu=t ;;
-	--add-xdg)
-		add_xdg=t ;;
 	--help)
 		usage
 		exit 0
@@ -51,17 +47,4 @@ fi
 
 check_file_exists "${menu_file}"
 
-if test ${add_pmenu} = "t" || test ${add_xdg} = "t"
-then
-	tmp_file=$(mktemp)
-	cat ${menu_file} > ${tmp_file}
-	test ${add_pmenu} = "t" && jgmenu-parse-pmenu.py >> ${tmp_file}
-
-	# TODO: Use jgmenu_run xdg here for clever selection of .menu file
-	xdg_cmd="jgmenu-parse-xdg /etc/xdg/menus/gnome-applications.menu"
-	test ${add_xdg} = "t" &&  ${xdg_cmd} >> ${tmp_file}
-
-	cat ${tmp_file} | jgmenu
-else
-	cat ${menu_file} | jgmenu
-fi
+cat "${menu_file}" | jgmenu
