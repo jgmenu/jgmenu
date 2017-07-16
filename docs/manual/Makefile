@@ -4,7 +4,7 @@ css     = jg.css
 
 man1pages  = jgmenu.1 jgmenu_run.1
 
-man1pages += jgmenu-pmenu.1 jgmenu-xdg.1 jgmenu-csv.1 jgmenu-config.1
+man1pages += jgmenu-pmenu.1 jgmenu-xdg.1 jgmenu-config.1
 
 man7pages  = jgmenututorial.7
 

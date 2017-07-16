@@ -1,0 +1,54 @@
+jgmenu v0.6 release notes
+=========================
+
+Updates since v0.5.2
+--------------------
+
+  - Add support for 'Terminal=true' applications
+
+  - Read TINT2_CONFIG environment variable to establish which tint2 config
+    file to use
+
+  - Support non-English search
+
+  - Filter out duplicate entries and ^back() items from search
+
+  - Add support for parsing gtk3.0 config file for font and icon-theme
+
+  - Take into account item_padding_x when positioning icons
+
+  - Draw non-square icons correctly
+
+  - Change font and icon-theme fallbacks
+
+  - Improve menu width calculation based on item text
+
+  - Add the following config options (see JGMENU-CONFIG(1)):
+
+	menu_padding_top
+	menu_padding_right
+	menu_padding_bottom
+	menu_padding_left
+	terminal_exec
+	terminal_args
+	arrow_width
+	icon_text_spacing
+	font_fallback
+	icon_theme_fallback
+	item_halign
+
+  - Remove the following config options:
+
+	arrow_show
+	ignore_xsettings
+	search_all_items
+
+  - Add the following command line options (see JGMENU(1)):
+
+	--csv-file
+	--csv-cmd
+
+  - Remove the following command line options from 'jgmenu_run csv'
+
+	--add-pmenu
+	--add-xdg

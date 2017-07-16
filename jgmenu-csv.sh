@@ -4,10 +4,9 @@ default_menu_file="${HOME}/.config/jgmenu/default.csv"
 menu_file=""
 
 usage () {
-	printf "%b\n" "Usage: jgmenu_run csv [<options>] [<menu-file>]"
-	printf "\n"
+	printf "%b\n" "Usage: jgmenu_run csv [<menu-file>]"
 	printf "%b\n" "Generate menu based on a CSV file"
-	printf "%b\n" "By default, `~/.config/jgmenu/default.csv` is be used"
+	printf "%b\n" "By default, '~/.config/jgmenu/default.csv' will be used"
 }
 
 check_file_exists () {
