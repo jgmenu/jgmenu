@@ -4,6 +4,7 @@
 #include "compat.h"
 
 void filter_init(void);
+char *filter_strdup_needle(void);
 void filter_addstr(const char *str, size_t n);
 void filter_backspace(void);
 void filter_reset(void);

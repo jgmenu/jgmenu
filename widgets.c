@@ -1,0 +1,131 @@
+/*
+ * widgets.c
+ *
+ * Copyright (C) Johan Malm 2017
+ *
+ * A very simple widget implementation
+ *
+ * This file is very 'alpha' and the API might change at any time.
+ *
+ * We read lines beginning with '@' from jgmenu flavoured CSV file and parses in
+ * accordance with the following syntax:
+ *
+ * @type-action-x-y-w-h-r-halign-valign-fgcol-bgcol-content
+ *
+ * where
+ *	- action = what to do when clicked
+ *	- (x, y) = margin
+ *	- (w, h) = size
+ *	- r = corner radius
+ *	- content = icon_path or text
+ * note
+ *	- For RECT, a 1px thick border will be drawn using fgcol
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "util.h"
+#include "list.h"
+#include "argv-buf.h"
+#include "align.h"
+#include "x11-ui.h"
+#include "config.h"
+#include "geometry.h"
+#include "sbuf.h"
+#include "filter.h"
+
+enum widget_type { WIDGET_ERROR, ICON, RECT, TEXT, SEARCH };
+
+LIST_HEAD(widgets);
+
+struct widget {
+	enum widget_type type;
+	char *action;
+	int x;
+	int y;
+	int w;
+	int h;
+	int r;
+	enum alignment halign;
+	enum alignment valign;
+	double fgcol[4];
+	double bgcol[4];
+	char *content;
+	struct list_head list;
+};
+
+static enum widget_type parse_type(const char *field)
+{
+	if (!field || !field[0])
+		return WIDGET_ERROR;
+	if (!strcmp(field, "search"))
+		return SEARCH;
+	return TEXT;
+}
+
+static void draw_search(struct widget **w)
+{
+	char *t;
+	int padding_left = 4;
+	char search_prompt[] = "Type to search...";
+
+	ui_draw_rectangle((*w)->x, (*w)->y, (*w)->w, (*w)->h, (*w)->r,
+			  1.0, 0, (*w)->fgcol);
+	ui_draw_rectangle((*w)->x, (*w)->y, (*w)->w, (*w)->h, (*w)->r,
+			  0.0, 1, (*w)->bgcol);
+	if (filter_needle_length())
+		t = filter_strdup_needle();
+	else
+		t = xstrdup(search_prompt);
+	ui_insert_text(t, (*w)->x + padding_left, (*w)->y, (*w)->h, (*w)->w,
+		       (*w)->fgcol, LEFT);
+	xfree(t);
+}
+
+void widgets_draw(void)
+{
+	struct widget *w;
+
+	if (list_empty(&widgets))
+		return;
+	list_for_each_entry(w, &widgets, list) {
+		if (w->type == SEARCH)
+			draw_search(&w);
+		else
+			warn("widget type not recognised");
+	}
+}
+
+void widgets_add(const char *s)
+{
+	struct argv_buf argv_buf;
+	struct widget *w;
+
+	w = xmalloc(sizeof(struct widget));
+	argv_init(&argv_buf);
+	argv_set_delim(&argv_buf, '-');
+	argv_strdup(&argv_buf, s);
+	argv_parse(&argv_buf);
+	if (argv_buf.argc != 12)
+		warn("widget did not contain 12 fields");
+	w->type = parse_type(argv_buf.argv[0] + 1);
+	w->action = argv_buf.argv[1];
+	xatoi(&w->x, argv_buf.argv[2], XATOI_NONNEG, "w->x");
+	xatoi(&w->y, argv_buf.argv[3], XATOI_NONNEG, "w->y");
+	xatoi(&w->w, argv_buf.argv[4], XATOI_NONNEG, "w->w");
+	xatoi(&w->h, argv_buf.argv[5], XATOI_NONNEG, "w->h");
+	xatoi(&w->r, argv_buf.argv[6], XATOI_NONNEG, "w->r");
+//	enum alignment halign;
+//	enum alignment valign;
+	parse_hexstr(argv_buf.argv[9], w->fgcol);
+	parse_hexstr(argv_buf.argv[10], w->bgcol);
+//	char *content;
+	list_add_tail(&w->list, &widgets);
+}
+
+void widgets_cleanup(void)
+{
+	;
+}

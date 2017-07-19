@@ -15,6 +15,11 @@ void filter_init(void)
 	has_been_inited = 1;
 }
 
+char *filter_strdup_needle(void)
+{
+	return xstrdup(needle.buf);
+}
+
 void filter_addstr(const char *str, size_t n)
 {
 	size_t i;

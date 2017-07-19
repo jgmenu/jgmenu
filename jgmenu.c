@@ -43,6 +43,7 @@
 #include "theme.h"
 #include "font.h"
 #include "args.h"
+#include "widgets.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -501,6 +502,8 @@ void draw_menu(void)
 		ui_draw_rectangle(0, 0, w, geo_get_menu_height(),
 				  config.menu_radius, config.menu_border,
 				  0, config.color_menu_border);
+
+	widgets_draw();
 
 	/* Draw menu items */
 	p = menu.first;
@@ -1293,6 +1296,10 @@ void read_csv_file(FILE *fp)
 		    (buf[0] == '\n') ||
 		    (buf[0] == '\0')) {
 			i--;
+			continue;
+		}
+		if (buf[0] == '@') {
+			widgets_add(buf);
 			continue;
 		}
 		argv_init(&argv_buf);

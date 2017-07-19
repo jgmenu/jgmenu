@@ -1,8 +1,6 @@
 SHORT TERM THINGS TO DO
 =======================
-Remove spawn from config (make it args_ instead).
-
-=== Upversion to 0.6 ===
+  - Remove spawn from config (make it args_ instead).
 
   - Draw diagrams of variables
 
@@ -41,15 +39,6 @@ Rename filter list (as it clashes with filter_) (maybe 'disp'?)
 
 Add shareness with symlinks
 
-widgets.c
----------
-	enum fixed_type {ICON, RECT, TEXT, SEARCH};
-	@type-action-x-y-w-h-r-halign-valign-fgcol-bgcol-content
-		NOTES:
-		  - x, y: distance from edge
-		  - 'content' is icon_path or text
-		  - For RECT, a 1px thick border will be drawn using fgcol
-		  - 'action' = what to do when clicked
 Add scroll_bar
 
 Add man-page for jgmenu_run ob

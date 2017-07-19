@@ -1,10 +1,6 @@
 HIGH-LEVEL ROADMAP
 ==================
 
-v0.6	- XDG menu parser based on libmenu-cache ("jgmenu_run lx")
-	- Icon cache on the fly
-	- tint2 integration
-
 v0.7	- On wake-up, check changes to .desktop files, tint2, xsettings,
 	  jgmenurc, etc.
 
@@ -33,5 +29,5 @@ v0.2	17-May-2016	Transparency			1353	0
 v0.3	20-Jul-2016	Icons				1995	0
 v0.4	03-Oct-2016	pmenu, xsettings		2899	159
 v0.5	21-Feb-2017	Search, long-running mode	4817	250
+v0.6	16-Jul-2017	tint2 integration, 'lx'		6681	406
 
-v0.6	??-Jun-2017	tint2 integration, 'lx'		6k+?	406?
