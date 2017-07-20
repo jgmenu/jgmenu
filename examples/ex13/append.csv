@@ -1,0 +1,11 @@
+^sep()
+Run,dmenu_run -fn "-*-dejavu sans-medium-r-*-*-*-*-*-*-*-*-*-*",system-run
+Lock,i3lock -c 000000,system-lock-screen
+Exit,^checkout(exit),system-shutdown
+
+exit,^tag(exit)
+Back,^back(),go-previous
+Exit to prompt,openbox --exit,system-log-out
+Suspend,systemctl -i suspend,system-log-out
+Reboot,systemctl -i reboot,system-reboot
+Poweroff,systemctl -i poweroff,system-shutdown
