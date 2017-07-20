@@ -1013,6 +1013,10 @@ void key_event(XKeyEvent *ev)
 	case XK_F5:
 		restart();
 		break;
+	case XK_F9:
+		/* Useful for stopping Makefile during tests/ or examples/ */
+		exit(1);
+		break;
 	case XK_F10:
 		/* force exit even if in 'stay_alive' mode */
 		exit(0);

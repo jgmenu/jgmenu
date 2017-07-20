@@ -17,17 +17,19 @@ echo ${tint2dir}
 test -z ${tint2dir} && { echo "fatal: cannot find tint2rc files"; exit 1; }
 cd ${tint2dir}
 
-printf "%b\n" "Use F10 to exit menus"
+printf "%b\n" "########################"
+printf "%b\n" "#  F10=next; F9=abort  #"
+printf "%b\n" "########################"
 
 for f in ./*.tint2rc
 do
 	printf "%b\n" "${tint2dir}/${f##./}"
-	printf "%b\n" "Press ENTER to run tint2+jgmenu, or CTRL+C to abort"
-	read a
+#	printf "%b\n" "Press ENTER to run tint2+jgmenu, or CTRL+C to abort"
+#	read a
 	restart_tint2 "${f}"
 	killall jgmenu 2>/dev/null
 	TINT2_CONFIG=${f} jgmenu --csv-cmd="jgmenu_run parse-pmenu" \
-				 --config-file=i_dont_exist 2>/dev/null
+				 --config-file= 2>/dev/null || exit 1
 done
 
 restart_tint2
