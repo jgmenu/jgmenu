@@ -21,15 +21,16 @@ printf "%b\n" "########################"
 printf "%b\n" "#  F10=next; F9=abort  #"
 printf "%b\n" "########################"
 
+# Disable ASAN leak checks in order for F9 to abort
+export ASAN_OPTIONS=detect_leaks=0
+
 for f in ./*.tint2rc
 do
 	printf "%b\n" "${tint2dir}/${f##./}"
-#	printf "%b\n" "Press ENTER to run tint2+jgmenu, or CTRL+C to abort"
-#	read a
 	restart_tint2 "${f}"
 	killall jgmenu 2>/dev/null
-	TINT2_CONFIG=${f} jgmenu --csv-cmd="jgmenu_run parse-pmenu" \
-				 --config-file= 2>/dev/null || exit 1
+	export TINT2_CONFIG=${f}
+	jgmenu --csv-cmd="jgmenu_run parse-pmenu" --config-file= || exit 1
 done
 
 restart_tint2
