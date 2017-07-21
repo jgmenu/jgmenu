@@ -1,10 +1,10 @@
 get_theme () {
-	theme=$(sh -c 'ls -1 /usr/share/icons | jgmenu --vsimple --no-spawn 2>/dev/null')
+	export theme=$(sh -c 'ls -1 /usr/share/icons | jgmenu --vsimple --no-spawn 2>/dev/null')
 }
 
 get_LANG () {
 	lang=$(sh -c 'locale -a | grep _ | jgmenu --vsimple --no-spawn 2>/dev/null')
-	test -z ${lang} || LANG=${lang}
+	test -z ${lang} || export LANG=${lang}
 }
 
 restart_tint2 () {

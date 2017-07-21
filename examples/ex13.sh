@@ -5,6 +5,9 @@ test -e $PWD/ex-sh-setup.sh && . ${PWD}/ex-sh-setup.sh 2>/dev/null || { echo "fa
 get_LANG
 get_theme
 
+icon=$(sh -c "jgmenu_run icon-find --theme=$theme --icon-size=48 system-users 2>/dev/null")
+echo $icon
+
 cp ex13/append.csv /tmp/jgmenu/
 cp ex13/prepend.csv /tmp/jgmenu/
 

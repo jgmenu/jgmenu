@@ -41,6 +41,7 @@ enum widget_type { WIDGET_ERROR, ICON, RECT, TEXT, SEARCH };
 LIST_HEAD(widgets);
 
 struct widget {
+	char *buf;
 	enum widget_type type;
 	char *action;
 	int x;
@@ -60,25 +61,30 @@ static enum widget_type parse_type(const char *field)
 {
 	if (!field || !field[0])
 		return WIDGET_ERROR;
+	if (!strcmp(field, "rect"))
+		return RECT;
 	if (!strcmp(field, "search"))
 		return SEARCH;
 	return TEXT;
+}
+
+static void draw_rect(struct widget **w)
+{
+	ui_draw_rectangle((*w)->x, (*w)->y, (*w)->w, (*w)->h, (*w)->r,
+			  1.0, 0, (*w)->fgcol);
+	ui_draw_rectangle((*w)->x, (*w)->y, (*w)->w, (*w)->h, (*w)->r,
+			  0.0, 1, (*w)->bgcol);
 }
 
 static void draw_search(struct widget **w)
 {
 	char *t;
 	int padding_left = 4;
-	char search_prompt[] = "Type to search...";
 
-	ui_draw_rectangle((*w)->x, (*w)->y, (*w)->w, (*w)->h, (*w)->r,
-			  1.0, 0, (*w)->fgcol);
-	ui_draw_rectangle((*w)->x, (*w)->y, (*w)->w, (*w)->h, (*w)->r,
-			  0.0, 1, (*w)->bgcol);
 	if (filter_needle_length())
 		t = filter_strdup_needle();
 	else
-		t = xstrdup(search_prompt);
+		t = xstrdup((*w)->content);
 	ui_insert_text(t, (*w)->x + padding_left, (*w)->y, (*w)->h, (*w)->w,
 		       (*w)->fgcol, LEFT);
 	xfree(t);
@@ -91,7 +97,9 @@ void widgets_draw(void)
 	if (list_empty(&widgets))
 		return;
 	list_for_each_entry(w, &widgets, list) {
-		if (w->type == SEARCH)
+		if (w->type == RECT)
+			draw_rect(&w);
+		else if (w->type == SEARCH)
 			draw_search(&w);
 		else
 			warn("widget type not recognised");
@@ -121,11 +129,17 @@ void widgets_add(const char *s)
 //	enum alignment valign;
 	parse_hexstr(argv_buf.argv[9], w->fgcol);
 	parse_hexstr(argv_buf.argv[10], w->bgcol);
-//	char *content;
+	w->content = argv_buf.argv[11];
 	list_add_tail(&w->list, &widgets);
 }
 
 void widgets_cleanup(void)
 {
-	;
+	struct widget *w, *tmp_w;
+
+	list_for_each_entry_safe(w, tmp_w, &widgets, list) {
+		xfree(w->buf);
+		list_del(&w->list);
+		xfree(w);
+	}
 }

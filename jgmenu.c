@@ -1723,6 +1723,7 @@ static void cleanup(void)
 	font_cleanup();
 	if (config.icon_size)
 		icon_cleanup();
+	widgets_cleanup();
 
 	delete_empty_item();
 	destroy_node_tree();
