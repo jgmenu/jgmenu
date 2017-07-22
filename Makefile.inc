@@ -5,7 +5,7 @@ prefix     = $(HOME)
 bindir     = $(prefix)/bin
 libexecdir = $(prefix)/lib/jgmenu
 
-CFLAGS   = -g -Wall -Os -std=gnu89
+CFLAGS  += -g -Wall -Os -std=gnu89
 CFLAGS  += -Wextra -Wdeclaration-after-statement -Wno-format-zero-length \
 	   -Wold-style-definition -Woverflow -Wpointer-arith \
 	   -Wstrict-prototypes -Wunused -Wvla -Wunused-result
@@ -16,7 +16,7 @@ CFLAGS  += `pkg-config cairo pango pangocairo librsvg-2.0 --cflags`
 CFLAGS  += `xml2-config --cflags`
 CFLAGS  += `pkg-config --cflags glib-2.0 libmenu-cache`
 
-LIBS  = `pkg-config x11 xinerama cairo pango pangocairo librsvg-2.0 --libs`
+LIBS += `pkg-config x11 xinerama cairo pango pangocairo librsvg-2.0 --libs`
 LIBS += `xml2-config --libs`
 LIBS += `pkg-config --libs glib-2.0 libmenu-cache`
 LIBS += -pthread
