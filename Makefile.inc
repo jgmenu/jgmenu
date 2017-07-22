@@ -16,12 +16,12 @@ CFLAGS  += `pkg-config cairo pango pangocairo librsvg-2.0 --cflags`
 CFLAGS  += `xml2-config --cflags`
 CFLAGS  += `pkg-config --cflags glib-2.0 libmenu-cache`
 
-LIBS += `pkg-config x11 xinerama cairo pango pangocairo librsvg-2.0 --libs`
+LIBS  = `pkg-config x11 xinerama cairo pango pangocairo librsvg-2.0 --libs`
 LIBS += `xml2-config --libs`
 LIBS += `pkg-config --libs glib-2.0 libmenu-cache`
 LIBS += -pthread
 
-LDFLAGS  = $(LIBS)
+LDFLAGS += $(LIBS)
 
 ifdef ASAN
 ASAN_FLAGS = -O0 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic
