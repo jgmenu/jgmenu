@@ -1,0 +1,3 @@
+^sep()
+Run,gmrun,system-run
+Exit,bl-exit,system-shutdown
