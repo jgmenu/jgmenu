@@ -29,8 +29,6 @@ void filter_addstr(const char *str, size_t n)
 
 	for (i = 0; i < n; i++)
 		sbuf_addch(&needle, str[i]);
-
-	printf("%s\n", needle.buf);
 }
 
 /* byte1 refers to the first byte in a UTF-8 sequence of 1-4 bytes */
@@ -56,18 +54,15 @@ void filter_backspace(void)
 	if (!has_been_inited)
 		die("filter has not been initiated");
 	if (!needle.len)
-		goto out;
+		return;
 	needle.len -= 1;
 	if (utf8_is_byte1(needle.buf[needle.len]))
 		byte1 = 1;
 	needle.buf[needle.len] = '\0';
 	if (byte1 || !needle.len)
-		goto out;
+		return;
 	/* keep deleting if it's not byte1 of a UTF-8 sequence */
 	filter_backspace();
-out:
-	if (byte1)
-		printf("%s\n", needle.buf);
 }
 
 void filter_reset(void)
