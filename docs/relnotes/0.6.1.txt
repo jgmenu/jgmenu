@@ -1,0 +1,7 @@
+jgmenu v0.6.1 release notes
+===========================
+
+Updates since v0.6
+------------------
+
+  - Allow CFLAGS and LDFLAGS to be pre-set (e.g. with hardening flags)
