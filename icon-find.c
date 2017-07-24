@@ -401,3 +401,22 @@ void icon_find(struct sbuf *name, int size)
 	list_del(&path->list);
 	free(path);
 }
+
+void icon_find_cleanup(void)
+{
+	struct sbuf *theme, *tmp_theme;
+	struct sbuf *pmpath, *tmp_pmpath;
+	if (!has_been_inited)
+		return;
+
+	list_for_each_entry_safe(theme, tmp_theme, &theme_list, list) {
+		xfree(theme->buf);
+		list_del(&theme->list);
+		xfree(theme);
+	}
+	list_for_each_entry_safe(pmpath, tmp_pmpath, &pixmap_dirs, list) {
+		xfree(pmpath->buf);
+		list_del(&pmpath->list);
+		xfree(pmpath);
+	}
+}

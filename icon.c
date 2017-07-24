@@ -241,4 +241,5 @@ void icon_cleanup(void)
 		list_del(&icon->list);
 		xfree(icon);
 	}
+	icon_find_cleanup();
 }
