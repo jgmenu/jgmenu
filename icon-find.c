@@ -102,7 +102,7 @@ void icon_find_add_theme(const char *theme)
 {
 	struct sbuf *t;
 	struct list_head parent_themes;
-	struct sbuf *tmp;
+	struct sbuf *tmp, *tmp_tmp;
 
 	/* ignore duplicates */
 	list_for_each_entry(t, &theme_list, list)
@@ -118,6 +118,11 @@ void icon_find_add_theme(const char *theme)
 
 	list_for_each_entry(tmp, &parent_themes, list)
 		icon_find_add_theme(tmp->buf);
+	list_for_each_entry_safe(tmp, tmp_tmp, &parent_themes, list) {
+		xfree(tmp->buf);
+		list_del(&tmp->list);
+		xfree(tmp);
+	}
 }
 
 void icon_find_print_themes(void)
