@@ -44,6 +44,7 @@
 #include "font.h"
 #include "args.h"
 #include "widgets.h"
+#include "pm.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -516,6 +517,7 @@ void draw_menu(void)
 
 		/* Draw submenu arrow */
 		if (config.arrow_width && (!strncmp(p->cmd, "^checkout(", 10) ||
+					   !strncmp(p->cmd, "^pipe(", 6) ||
 					   !strncmp(p->cmd, "^sub(", 5)))
 			draw_submenu_arrow(p);
 
@@ -830,320 +832,6 @@ static void awake_menu(void)
 	grabpointer();
 }
 
-static void hide_menu(void)
-{
-	XUngrabKeyboard(ui->dpy, CurrentTime);
-	XUngrabPointer(ui->dpy, CurrentTime);
-	XUnmapWindow(ui->dpy, ui->win);
-	filter_reset();
-	checkout_root();
-	update(1);
-}
-
-void hide_or_exit(void)
-{
-	if (config.stay_alive)
-		hide_menu();
-	else
-		exit(0);
-}
-
-void checkout_parent(void)
-{
-	if (!menu.current_node->parent)
-		return;
-	checkout_submenu(menu.current_node->parent->tag);
-}
-
-void action_cmd(char *cmd)
-{
-	char *p = NULL;
-
-	if (!cmd)
-		return;
-
-	if (!strncmp(cmd, "^checkout(", 10)) {
-		p = parse_caret_action(cmd, "^checkout(");
-		if (!p)
-			return;
-		menu.current_node->last_sel = menu.sel;
-		checkout_submenu(p);
-		update(1);
-	} else if (!strncmp(cmd, "^sub(", 5)) {
-		p = parse_caret_action(cmd, "^sub(");
-		if (!p)
-			return;
-		spawn(p);
-		hide_or_exit();
-	} else if (!strncmp(cmd, "^back(", 6)) {
-		checkout_parent();
-		update(1);
-	} else if (!strncmp(cmd, "^term(", 6)) {
-		struct sbuf s;
-
-		p = parse_caret_action(cmd, "^term(");
-		if (!p)
-			return;
-		sbuf_init(&s);
-		term_build_terminal_cmd(&s, strstrip(p), config.terminal_exec,
-					config.terminal_args);
-		spawn(s.buf);
-		free(s.buf);
-		hide_or_exit();
-	} else {
-		spawn(cmd);
-		hide_or_exit();
-	}
-}
-
-void key_event(XKeyEvent *ev)
-{
-	char buf[32];
-	int len;
-	KeySym ksym = NoSymbol;
-	Status status;
-	int isoutside;
-
-	len = Xutf8LookupString(ui->xic, ev, buf, sizeof(buf), &ksym, &status);
-	if (status == XBufferOverflow)
-		return;
-	switch (ksym) {
-	case XK_End:
-		if (filter_head() == &empty_item)
-			break;
-		menu.last = filter_tail();
-		menu.first = fill_from_bottom(menu.last);
-		menu.sel = menu.last;
-		init_menuitem_coordinates();
-		draw_menu();
-		break;
-	case XK_Escape:
-		if (filter_needle_length()) {
-			filter_reset();
-			update(0);
-		} else {
-			hide_or_exit();
-		}
-		break;
-	case XK_Home:
-		if (filter_head() == &empty_item)
-			break;
-		menu.first = filter_head();
-		menu.last = fill_from_top(menu.first);
-		menu.sel = menu.first;
-		init_menuitem_coordinates();
-		draw_menu();
-		break;
-	case XK_Up:
-		if (filter_head() == &empty_item ||
-		    menu.sel == filter_head())
-			break;
-		menu.sel = prev_selectable(menu.sel, &isoutside);
-		if (isoutside) {
-			menu.first = menu.sel;
-			menu.last = fill_from_top(menu.first);
-		}
-		init_menuitem_coordinates();
-		draw_menu();
-		break;
-	case XK_Next:	/* PageDown */
-		if (filter_head() == &empty_item)
-			break;
-		menu.first = menu.last;
-		if (menu.first != filter_tail())
-			step_fwd(&menu.first, 1);
-		menu.last = fill_from_top(menu.first);
-		if (menu.last == filter_tail())
-			menu.first = fill_from_bottom(menu.last);
-		init_menuitem_coordinates();
-		menu.sel = menu.last;
-		if (!menu.last->selectable)
-			menu.sel = prev_selectable(menu.last, &isoutside);
-		draw_menu();
-		break;
-	case XK_Prior:	/* PageUp */
-		if (filter_head() == &empty_item)
-			break;
-		menu.last = menu.first;
-		if (menu.last != filter_head())
-			step_back(&menu.last, 1);
-		menu.first = fill_from_bottom(menu.last);
-		if (menu.first == filter_head())
-			menu.last = fill_from_top(menu.first);
-		init_menuitem_coordinates();
-		menu.sel = menu.first;
-		if (!menu.sel->selectable)
-			menu.sel = next_selectable(menu.first, &isoutside);
-		draw_menu();
-		break;
-	case XK_Return:
-	case XK_KP_Enter:
-		if (!menu.sel->selectable)
-			break;
-		if (config.spawn) {
-			action_cmd(menu.sel->cmd);
-		} else {
-			printf("%s", menu.sel->cmd);
-			hide_or_exit();
-		}
-		break;
-	case XK_Down:
-		if (filter_head() == &empty_item ||
-		    menu.sel == filter_tail())
-			break;
-		menu.sel = next_selectable(menu.sel, &isoutside);
-		if (isoutside) {
-			menu.last = menu.sel;
-			menu.first = fill_from_bottom(menu.last);
-		}
-		init_menuitem_coordinates();
-		draw_menu();
-		break;
-	case XK_Left:
-		if (!menu.current_node->parent)
-			break;
-		checkout_parent();
-		update(1);
-		break;
-	case XK_Right:
-		if (strncmp(menu.sel->cmd, "^checkout(", 10))
-			break;
-		action_cmd(menu.sel->cmd);
-		break;
-	case XK_F5:
-		restart();
-		break;
-	case XK_F9:
-		/* Useful for stopping Makefile during tests/ or examples/ */
-		exit(1);
-		break;
-	case XK_F10:
-		/* force exit even if in 'stay_alive' mode */
-		exit(0);
-		break;
-	case XK_BackSpace:
-		if (filter_needle_length()) {
-			filter_backspace();
-			update(0);
-		} else {
-			checkout_parent();
-			update(1);
-		}
-		break;
-	default:
-		filter_addstr(buf, len);
-		update(0);
-		break;
-	}
-}
-
-struct point mousexy(void)
-{
-	Window dw;
-	int di;
-	unsigned int du;
-	struct point coords;
-
-	XQueryPointer(ui->dpy, ui->win, &dw, &dw, &di, &di, &coords.x,
-		      &coords.y, &du);
-
-	return coords;
-}
-
-/* Pointer vertical offset (not sure why this is needed) */
-#define MOUSE_FUDGE 3
-void mouse_event(XEvent *e)
-{
-	struct item *item;
-	XButtonReleasedEvent *ev = &e->xbutton;
-	struct point mouse_coords;
-
-	mouse_coords = mousexy();
-	mouse_coords.y -= MOUSE_FUDGE;
-
-	/* Die if mouse clicked outside window */
-	if (ev->button == Button1 &&
-	    (ev->x < geo_get_menu_x0() ||
-	    ev->x > geo_get_menu_x0() + geo_get_menu_width() ||
-	    ev->y < geo_get_menu_y0() ||
-	    ev->y > geo_get_menu_y0() + geo_get_menu_height()))
-		hide_or_exit();
-
-	/* right-click */
-	if (ev->button == Button3) {
-		checkout_parent();
-		update(1);
-	}
-
-	/* scroll up */
-	if (ev->button == Button4 && menu.first != filter_head()) {
-		step_back(&menu.first, 1);
-		menu.last = fill_from_top(menu.first);
-		step_back(&menu.sel, 1);
-		init_menuitem_coordinates();
-		draw_menu();
-		return;
-	}
-
-	/* scroll down */
-	if (ev->button == Button5 && menu.last != filter_tail()) {
-		step_fwd(&menu.last, 1);
-		menu.first = fill_from_bottom(menu.last);
-		step_fwd(&menu.sel, 1);
-		init_menuitem_coordinates();
-		draw_menu();
-		return;
-	}
-
-	/* left-click */
-	if (ev->button == Button1) {
-		item = menu.first;
-		list_for_each_entry_from(item, &menu.master, master) {
-			if (ui_is_point_in_area(mouse_coords, item->area)) {
-				if (!item->selectable)
-					break;
-				if (config.spawn) {
-					action_cmd(item->cmd);
-					break;
-				}
-				puts(item->cmd);
-				hide_or_exit();
-			}
-			if (item == menu.last)
-				break;
-		}
-	}
-}
-
-static double timespec_to_sec(struct timespec *ts)
-{
-	return (double)ts->tv_sec + (double)ts->tv_nsec / 1000000000.0;
-}
-
-/*
- * This function is loaded in the background under a new pthread
- * X11 is not thread-safe, so load_icons() must not call any X functions.
- */
-void *load_icons(void *arg)
-{
-	struct timespec ts_start;
-	struct timespec ts_end;
-	double duration;
-
-	clock_gettime(CLOCK_MONOTONIC, &ts_start);
-	icon_load();
-	clock_gettime(CLOCK_MONOTONIC, &ts_end);
-	if (DEBUG_ICONS_LOADED_NOTIFICATION) {
-		duration = timespec_to_sec(&ts_end) - timespec_to_sec(&ts_start);
-		fprintf(stderr, "Icons loaded in %f seconds\n", duration);
-	}
-
-	if (write(pipe_fds[1], "x", 1) == -1)
-		die("error writing to icon_pipe");
-
-	return NULL;
-}
-
 struct item *get_item_from_tag(const char *tag)
 {
 	struct item *item;
@@ -1341,6 +1029,390 @@ void read_csv_file(FILE *fp)
 			continue;
 		item->tag = parse_caret_action(item->cmd, "^tag(");
 	}
+}
+
+void pipemenu_add(const char *s)
+{
+	FILE *fp = NULL;
+	struct item *pipe_head;
+	struct node *parent_node;
+
+	if (!s)
+		die("pipemenu_add(): *s must be set");
+	fp = popen(s, "r");
+	if (!fp) {
+		warn("could not open pipe '%s'", s);
+		return;
+	}
+
+	/* FIXME: how do we handle pipemenu without tag? */
+	pipe_head = list_last_entry(&menu.master, struct item, master);
+	read_csv_file(fp);
+	pipe_head = container_of(pipe_head->master.next, struct item, master);
+	/* FIXME: walk_tag_items means 'add new nodes' - consider renaming */
+	parent_node = menu.current_node;
+	walk_tagged_items(pipe_head, parent_node);
+	hang_items_off_nodes();
+	checkout_submenu(pipe_head->tag);
+	pm_push(menu.current_node, parent_node);
+}
+
+void pipemenu_del(struct node *node)
+{
+	struct item *i, *i_tmp;
+	struct node *n_tmp;
+
+	pm_pop();
+	i = node->item;
+	list_for_each_entry_safe_from(i, i_tmp, &menu.master, master) {
+		xfree(i->name);
+		list_del(&i->master);
+		xfree(i);
+	}
+	list_for_each_entry_safe_from(node, n_tmp, &menu.nodes, node) {
+		xfree(node->tag);
+		list_del(&node->node);
+		xfree(node);
+	}
+}
+
+void pipemenu_del_all(void)
+{
+	struct node *n;
+
+	n = (struct node *)pm_first_pipemenu_node();
+	if (!n)
+		return;
+	info("deleting pipemenu at node->name=%s", n->tag);
+	pipemenu_del(n);
+	pm_cleanup();
+}
+
+void checkout_parent(void)
+{
+	struct node *parent;
+
+	if (!menu.current_node->parent)
+		return;
+	parent = menu.current_node->parent;
+	if (pm_is_outside(parent))
+		pipemenu_del(menu.current_node);
+	checkout_submenu(parent->tag);
+}
+
+static void hide_menu(void)
+{
+	XUngrabKeyboard(ui->dpy, CurrentTime);
+	XUngrabPointer(ui->dpy, CurrentTime);
+	XUnmapWindow(ui->dpy, ui->win);
+	filter_reset();
+	checkout_root();
+	pipemenu_del_all();
+	update(1);
+}
+
+void hide_or_exit(void)
+{
+	if (config.stay_alive)
+		hide_menu();
+	else
+		exit(0);
+}
+
+void action_cmd(char *cmd)
+{
+	char *p = NULL;
+
+	if (!cmd)
+		return;
+
+	if (!strncmp(cmd, "^checkout(", 10)) {
+		p = parse_caret_action(cmd, "^checkout(");
+		if (!p)
+			return;
+		menu.current_node->last_sel = menu.sel;
+		checkout_submenu(p);
+		update(1);
+	} else if (!strncmp(cmd, "^sub(", 5)) {
+		p = parse_caret_action(cmd, "^sub(");
+		if (!p)
+			return;
+		spawn(p);
+		hide_or_exit();
+	} else if (!strncmp(cmd, "^back(", 6)) {
+		checkout_parent();
+		update(1);
+	} else if (!strncmp(cmd, "^term(", 6)) {
+		struct sbuf s;
+
+		p = parse_caret_action(cmd, "^term(");
+		if (!p)
+			return;
+		sbuf_init(&s);
+		term_build_terminal_cmd(&s, strstrip(p), config.terminal_exec,
+					config.terminal_args);
+		spawn(s.buf);
+		free(s.buf);
+		hide_or_exit();
+	} else if (!strncmp(cmd, "^pipe(", 6)) {
+		p = parse_caret_action(cmd, "^pipe(");
+		if (!p)
+			return;
+		menu.current_node->last_sel = menu.sel;
+		pipemenu_add(p);
+		update(1);
+	} else {
+		spawn(cmd);
+		hide_or_exit();
+	}
+}
+
+void key_event(XKeyEvent *ev)
+{
+	char buf[32];
+	int len;
+	KeySym ksym = NoSymbol;
+	Status status;
+	int isoutside;
+
+	len = Xutf8LookupString(ui->xic, ev, buf, sizeof(buf), &ksym, &status);
+	if (status == XBufferOverflow)
+		return;
+	switch (ksym) {
+	case XK_End:
+		if (filter_head() == &empty_item)
+			break;
+		menu.last = filter_tail();
+		menu.first = fill_from_bottom(menu.last);
+		menu.sel = menu.last;
+		init_menuitem_coordinates();
+		draw_menu();
+		break;
+	case XK_Escape:
+		if (filter_needle_length()) {
+			filter_reset();
+			update(0);
+		} else {
+			hide_or_exit();
+		}
+		break;
+	case XK_Home:
+		if (filter_head() == &empty_item)
+			break;
+		menu.first = filter_head();
+		menu.last = fill_from_top(menu.first);
+		menu.sel = menu.first;
+		init_menuitem_coordinates();
+		draw_menu();
+		break;
+	case XK_Up:
+		if (filter_head() == &empty_item ||
+		    menu.sel == filter_head())
+			break;
+		menu.sel = prev_selectable(menu.sel, &isoutside);
+		if (isoutside) {
+			menu.first = menu.sel;
+			menu.last = fill_from_top(menu.first);
+		}
+		init_menuitem_coordinates();
+		draw_menu();
+		break;
+	case XK_Next:	/* PageDown */
+		if (filter_head() == &empty_item)
+			break;
+		menu.first = menu.last;
+		if (menu.first != filter_tail())
+			step_fwd(&menu.first, 1);
+		menu.last = fill_from_top(menu.first);
+		if (menu.last == filter_tail())
+			menu.first = fill_from_bottom(menu.last);
+		init_menuitem_coordinates();
+		menu.sel = menu.last;
+		if (!menu.last->selectable)
+			menu.sel = prev_selectable(menu.last, &isoutside);
+		draw_menu();
+		break;
+	case XK_Prior:	/* PageUp */
+		if (filter_head() == &empty_item)
+			break;
+		menu.last = menu.first;
+		if (menu.last != filter_head())
+			step_back(&menu.last, 1);
+		menu.first = fill_from_bottom(menu.last);
+		if (menu.first == filter_head())
+			menu.last = fill_from_top(menu.first);
+		init_menuitem_coordinates();
+		menu.sel = menu.first;
+		if (!menu.sel->selectable)
+			menu.sel = next_selectable(menu.first, &isoutside);
+		draw_menu();
+		break;
+	case XK_Return:
+	case XK_KP_Enter:
+		if (!menu.sel->selectable)
+			break;
+		if (config.spawn) {
+			action_cmd(menu.sel->cmd);
+		} else {
+			printf("%s", menu.sel->cmd);
+			hide_or_exit();
+		}
+		break;
+	case XK_Down:
+		if (filter_head() == &empty_item ||
+		    menu.sel == filter_tail())
+			break;
+		menu.sel = next_selectable(menu.sel, &isoutside);
+		if (isoutside) {
+			menu.last = menu.sel;
+			menu.first = fill_from_bottom(menu.last);
+		}
+		init_menuitem_coordinates();
+		draw_menu();
+		break;
+	case XK_Left:
+		if (!menu.current_node->parent)
+			break;
+		checkout_parent();
+		update(1);
+		break;
+	case XK_Right:
+		if (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
+		    !strncmp(menu.sel->cmd, "^pipe(", 6))
+			action_cmd(menu.sel->cmd);
+		break;
+	case XK_F5:
+		restart();
+		break;
+	case XK_F9:
+		/* Useful for stopping Makefile during tests/ or examples/ */
+		exit(1);
+		break;
+	case XK_F10:
+		/* force exit even if in 'stay_alive' mode */
+		exit(0);
+		break;
+	case XK_BackSpace:
+		if (filter_needle_length()) {
+			filter_backspace();
+			update(0);
+		} else {
+			checkout_parent();
+			update(1);
+		}
+		break;
+	default:
+		filter_addstr(buf, len);
+		update(0);
+		break;
+	}
+}
+
+struct point mousexy(void)
+{
+	Window dw;
+	int di;
+	unsigned int du;
+	struct point coords;
+
+	XQueryPointer(ui->dpy, ui->win, &dw, &dw, &di, &di, &coords.x,
+		      &coords.y, &du);
+
+	return coords;
+}
+
+/* Pointer vertical offset (not sure why this is needed) */
+#define MOUSE_FUDGE 3
+void mouse_event(XEvent *e)
+{
+	struct item *item;
+	XButtonReleasedEvent *ev = &e->xbutton;
+	struct point mouse_coords;
+
+	mouse_coords = mousexy();
+	mouse_coords.y -= MOUSE_FUDGE;
+
+	/* Die if mouse clicked outside window */
+	if (ev->button == Button1 &&
+	    (ev->x < geo_get_menu_x0() ||
+	    ev->x > geo_get_menu_x0() + geo_get_menu_width() ||
+	    ev->y < geo_get_menu_y0() ||
+	    ev->y > geo_get_menu_y0() + geo_get_menu_height()))
+		hide_or_exit();
+
+	/* right-click */
+	if (ev->button == Button3) {
+		checkout_parent();
+		update(1);
+	}
+
+	/* scroll up */
+	if (ev->button == Button4 && menu.first != filter_head()) {
+		step_back(&menu.first, 1);
+		menu.last = fill_from_top(menu.first);
+		step_back(&menu.sel, 1);
+		init_menuitem_coordinates();
+		draw_menu();
+		return;
+	}
+
+	/* scroll down */
+	if (ev->button == Button5 && menu.last != filter_tail()) {
+		step_fwd(&menu.last, 1);
+		menu.first = fill_from_bottom(menu.last);
+		step_fwd(&menu.sel, 1);
+		init_menuitem_coordinates();
+		draw_menu();
+		return;
+	}
+
+	/* left-click */
+	if (ev->button == Button1) {
+		item = menu.first;
+		list_for_each_entry_from(item, &menu.master, master) {
+			if (ui_is_point_in_area(mouse_coords, item->area)) {
+				if (!item->selectable)
+					break;
+				if (config.spawn) {
+					action_cmd(item->cmd);
+					break;
+				}
+				puts(item->cmd);
+				hide_or_exit();
+			}
+			if (item == menu.last)
+				break;
+		}
+	}
+}
+
+static double timespec_to_sec(struct timespec *ts)
+{
+	return (double)ts->tv_sec + (double)ts->tv_nsec / 1000000000.0;
+}
+
+/*
+ * This function is loaded in the background under a new pthread
+ * X11 is not thread-safe, so load_icons() must not call any X functions.
+ */
+void *load_icons(void *arg)
+{
+	struct timespec ts_start;
+	struct timespec ts_end;
+	double duration;
+
+	clock_gettime(CLOCK_MONOTONIC, &ts_start);
+	icon_load();
+	clock_gettime(CLOCK_MONOTONIC, &ts_end);
+	if (DEBUG_ICONS_LOADED_NOTIFICATION) {
+		duration = timespec_to_sec(&ts_end) - timespec_to_sec(&ts_start);
+		fprintf(stderr, "Icons loaded in %f seconds\n", duration);
+	}
+
+	if (write(pipe_fds[1], "x", 1) == -1)
+		die("error writing to icon_pipe");
+
+	return NULL;
 }
 
 void destroy_master_list(void)
