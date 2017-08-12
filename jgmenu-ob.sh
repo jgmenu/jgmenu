@@ -1,5 +1,8 @@
 #!/bin/sh
 
+f=$(mktemp)
+widgets=~/.config/jgmenu/widgets
+
 usage () {
 	printf "usage: jgmenu_run ob\n\n"
 	printf "Generate menu based on Openbox menu-file located at:\n\n"
@@ -9,4 +12,4 @@ usage () {
 
 test "$1" = "--help" && usage
 
-jgmenu_run parse-ob "$@" | jgmenu --simple --icon-size=0 "$@"
+jgmenu --icon-size=0 --csv-cmd="jgmenu_run parse-ob"

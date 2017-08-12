@@ -17,8 +17,7 @@
 static const char jgmenu_parse_ob_usage[] =
 "Usage: jgmenu_run parse-ob\n";
 
-static const char *root_menu = "root-menu";
-static char *return_cmd;
+static char *root_menu;
 
 struct tag {
 	char *label;
@@ -54,14 +53,12 @@ static void print_it(struct tag *tag)
 		return;
 	printf("%s,^tag(%s)\n", tag->label, tag->id);
 	if (tag->parent)
-		printf("Go back,^checkout(%s)\n", tag->parent->id);
-	else if (return_cmd)
-		printf("Go back,%s\n", return_cmd);
+		printf("Back,^back()\n");
 	list_for_each_entry(item, &tag->items, list) {
 		if (item->pipe)
-			printf("%s,^sub(f=/tmp/jgmenu-pipe; %s >$f; "
-			       "jgmenu_run ob --return-cmd='jgmenu_run ob' $f; rm -f $f)\n",
-			       item->label, item->cmd);
+			printf("%s,^pipe(f=/tmp/jgmenu-pipe; %s >$f; "
+			       "jgmenu_run parse-ob --tag='%s' $f; rm -f $f)\n",
+			       item->label, item->cmd, item->label);
 		else if (item->checkout)
 			printf("%s,^checkout(%s)\n", item->label, item->cmd);
 		else
@@ -338,11 +335,13 @@ int main(int argc, char **argv)
 			break;
 		} else if (!strncmp(argv[i], "--help", 6)) {
 			usage();
-		} else if (!strncmp(argv[i], "--return-cmd=", 13)) {
-			return_cmd = strdup(argv[i] + 13);
+		} else if (!strncmp(argv[i], "--tag=", 6)) {
+			root_menu = strdup(argv[i] + 6);
 		}
 		i++;
 	}
+	if (!root_menu)
+		root_menu = strdup("root-menu");
 
 	sbuf_init(&default_file);
 	if (!file_name) {
