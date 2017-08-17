@@ -18,6 +18,7 @@ void config_set_defaults(void)
 	config.tint2_button	   = 1;
 	config.tint2_rules	   = 1;
 	config.at_pointer	   = 0;
+	config.multi_window	   = 1;
 	config.terminal_exec	   = xstrdup("x-terminal-emulator");
 	config.terminal_args	   = xstrdup("-e");
 
@@ -93,6 +94,8 @@ static void process_line(char *line)
 		xatoi(&config.tint2_rules, value, XATOI_NONNEG, "config.tint2_rules");
 	} else if (!strncmp(option, "at_pointer", 10)) {
 		xatoi(&config.at_pointer, value, XATOI_NONNEG, "config.at_pointer");
+	} else if (!strcmp(option, "multi_window")) {
+		xatoi(&config.multi_window, value, XATOI_NONNEG, "config.multi_window");
 	} else if (!strcmp(option, "terminal_exec")) {
 		xfree(config.terminal_exec);
 		config.terminal_exec = xstrdup(value);

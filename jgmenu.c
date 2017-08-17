@@ -349,10 +349,8 @@ char *parse_caret_action(char *s, char *token)
 
 	p = NULL;
 	q = NULL;
-
 	if (!s)
 		return NULL;
-
 	if (!strncmp(s, token, strlen(token))) {
 		p = strdup(s);
 		p += strlen(token);
@@ -360,7 +358,6 @@ char *parse_caret_action(char *s, char *token)
 		if (q)
 			*q = '\0';
 	}
-
 	return p;
 }
 
@@ -648,11 +645,8 @@ int tag_exists(const char *tag)
 	return 0;
 }
 
-void checkout_submenu(char *tag)
+void find_subhead(const char *tag)
 {
-	struct item *item;
-
-	/* Find head of submenu */
 	if (!tag || !strncmp(tag, "__root__", 8)) {
 		menu.current_node = list_first_entry_or_null(&menu.nodes, struct node, node);
 		menu.subhead = list_first_entry_or_null(&menu.master, struct item, master);
@@ -669,8 +663,12 @@ void checkout_submenu(char *tag)
 		if (!menu.subhead)
 			die("no menu.subhead");
 	}
+}
 
-	/* Find tail of submenu */
+void find_subtail(const char *tag)
+{
+	struct item *item;
+
 	menu.subtail = menu.subhead;
 	item = menu.subhead;
 	list_for_each_entry_from(item, &menu.master, master) {
@@ -678,21 +676,53 @@ void checkout_submenu(char *tag)
 			break;
 		menu.subtail = item;
 	}
+}
 
+void checkout_tag(const char *tag)
+{
+	find_subhead(tag);
+	find_subtail(tag);
+}
+
+void checkout_submenu(char *tag)
+{
+	checkout_tag(tag);
+	if (config.multi_window)
+		geo_win_add(menu.sel->area);
 	set_submenu_height();
 	set_submenu_width();
 }
 
-void checkout_root(void)
+void checkout_parentmenu(char *tag)
+{
+	checkout_tag(tag);
+	if (config.multi_window) {
+		geo_win_del();
+	} else {
+		set_submenu_height();
+		set_submenu_width();
+	}
+}
+
+void checkout_rootmenu(char *tag)
+{
+	checkout_tag(tag);
+	if (config.multi_window)
+		geo_win_goto_root();
+	set_submenu_height();
+	set_submenu_width();
+}
+
+void checkout_rootnode(void)
 {
 	while (menu.current_node->parent)
 		menu.current_node = menu.current_node->parent;
-	checkout_submenu(menu.current_node->tag);
+	checkout_rootmenu(menu.current_node->tag);
 }
 
 void resize(void)
 {
-	XMoveResizeWindow(ui->dpy, ui->win, geo_get_menu_x0(),
+	XMoveResizeWindow(ui->dpy, ui->w[ui->cur].win, geo_get_menu_x0(),
 			  geo_get_menu_y0(), geo_get_menu_width(),
 			  geo_get_menu_height());
 }
@@ -826,7 +856,7 @@ static void awake_menu(void)
 		tint2_align();
 		update(1);
 	}
-	XMapWindow(ui->dpy, ui->win);
+	XMapWindow(ui->dpy, ui->w[ui->cur].win);
 	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
 	grabkeyboard();
 	grabpointer();
@@ -1097,16 +1127,16 @@ void checkout_parent(void)
 	parent = menu.current_node->parent;
 	if (pm_is_outside(parent))
 		pipemenu_del(menu.current_node);
-	checkout_submenu(parent->tag);
+	checkout_parentmenu(parent->tag);
 }
 
 static void hide_menu(void)
 {
 	XUngrabKeyboard(ui->dpy, CurrentTime);
 	XUngrabPointer(ui->dpy, CurrentTime);
-	XUnmapWindow(ui->dpy, ui->win);
+	XUnmapWindow(ui->dpy, ui->w[ui->cur].win);
 	filter_reset();
-	checkout_root();
+	checkout_rootnode();
 	pipemenu_del_all();
 	update(1);
 }
@@ -1175,7 +1205,7 @@ void key_event(XKeyEvent *ev)
 	Status status;
 	int isoutside;
 
-	len = Xutf8LookupString(ui->xic, ev, buf, sizeof(buf), &ksym, &status);
+	len = Xutf8LookupString(ui->w[ui->cur].xic, ev, buf, sizeof(buf), &ksym, &status);
 	if (status == XBufferOverflow)
 		return;
 	switch (ksym) {
@@ -1281,6 +1311,10 @@ void key_event(XKeyEvent *ev)
 		    !strncmp(menu.sel->cmd, "^pipe(", 6))
 			action_cmd(menu.sel->cmd);
 		break;
+	case XK_F3:
+		geo_win_add(menu.sel->area);
+		update(1);
+		break;
 	case XK_F5:
 		restart();
 		break;
@@ -1315,7 +1349,7 @@ struct point mousexy(void)
 	unsigned int du;
 	struct point coords;
 
-	XQueryPointer(ui->dpy, ui->win, &dw, &dw, &di, &di, &coords.x,
+	XQueryPointer(ui->dpy, ui->w[ui->cur].win, &dw, &dw, &di, &di, &coords.x,
 		      &coords.y, &du);
 
 	return coords;
@@ -1625,7 +1659,7 @@ void run(void)
 
 		if (XPending(ui->dpy)) {
 			XNextEvent(ui->dpy, &ev);
-			if (XFilterEvent(&ev, ui->win))
+			if (XFilterEvent(&ev, ui->w[ui->cur].win))
 				continue;
 
 			switch (ev.type) {
@@ -1645,7 +1679,7 @@ void run(void)
 				break;
 			case VisibilityNotify:
 				if (ev.xvisibility.state != VisibilityUnobscured)
-					XRaiseWindow(ui->dpy, ui->win);
+					XRaiseWindow(ui->dpy, ui->w[ui->cur].win);
 				break;
 			}
 
@@ -1876,9 +1910,9 @@ int main(int argc, char *argv[])
 	hang_items_off_nodes();
 
 	if (args_checkout())
-		checkout_submenu(args_checkout());
+		checkout_rootmenu(args_checkout());
 	else
-		checkout_submenu(tag_of_first_item());
+		checkout_rootmenu(tag_of_first_item());
 
 	grabkeyboard();
 	grabpointer();
@@ -1899,7 +1933,7 @@ int main(int argc, char *argv[])
 		info("menu started in 'hidden' mode; show by `jgmenu_run`");
 		hide_menu();
 	} else {
-		XMapRaised(ui->dpy, ui->win);
+		XMapRaised(ui->dpy, ui->w[ui->cur].win);
 	}
 	draw_menu();
 
