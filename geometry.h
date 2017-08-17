@@ -39,8 +39,6 @@
  *   - Call geo_init()
  *   - All the geo_get_* can now be used (default values set up geo_init)
  *   - Set variables using the geo_set_* functions.
- *     These all call geo_update() which updates all "geometry" variables.
- *
  */
 
 #ifndef GEOMETRY_H
@@ -49,11 +47,16 @@
 #include "x11-ui.h"
 #include "align.h"
 
-void geo_update(void);
 void geo_init(void);
 int geo_get_item_coordinates(struct area *a);
 struct point geo_get_max_itemarea_that_fits(void);
 struct point geo_get_max_menuarea_that_fits(void);
+
+int geo_cur(void);
+void geo_win_add(struct area parent_item);
+void geo_win_del(void);
+void geo_win_goto_root(void);
+
 void geo_set_menu_width(int w);
 void geo_set_menu_width_from_itemarea_width(int w);
 void geo_set_menu_height(int h);
