@@ -19,22 +19,27 @@ struct point {
 	int x, y;
 };
 
-struct UI {
-	Display *dpy;
-	int screen;
-	GC gc;
+struct window_data {
 	Window win;
-	Window root;
-	XSetWindowAttributes swa;
-	XIM xim;
 	XIC xic;
 	Pixmap canvas;
-	XVisualInfo vinfo;
+	XSetWindowAttributes swa;
 	cairo_surface_t *cs;
 	cairo_t *c;
-	int font_height_actual;		/* used to centre text vertically */
+	GC gc;
 	PangoLayout *pangolayout;
 	PangoFontDescription *pangofont;
+};
+
+struct UI {
+	int cur;
+	struct window_data w[MAX_NR_WINDOWS];
+	Display *dpy;
+	int screen;
+	Window root;
+	XIM xim;
+	XVisualInfo vinfo;
+	int font_height_actual;		/* used to centre text vertically */
 };
 
 extern struct UI *ui;
