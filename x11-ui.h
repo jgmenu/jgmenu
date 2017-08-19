@@ -22,11 +22,11 @@ struct point {
 struct window_data {
 	Window win;
 	XIC xic;
-	Pixmap canvas;
 	XSetWindowAttributes swa;
+	GC gc;
+	Pixmap canvas;
 	cairo_surface_t *cs;
 	cairo_t *c;
-	GC gc;
 	PangoLayout *pangolayout;
 	PangoFontDescription *pangofont;
 };
@@ -35,9 +35,9 @@ struct UI {
 	int cur;
 	struct window_data w[MAX_NR_WINDOWS];
 	Display *dpy;
+	XIM xim;
 	int screen;
 	Window root;
-	XIM xim;
 	XVisualInfo vinfo;
 	int font_height_actual;		/* used to centre text vertically */
 };
@@ -47,11 +47,14 @@ extern struct UI *ui;
 void ui_clear_canvas(void);
 void grabkeyboard(void);
 void grabpointer(void);
-void ui_init_cairo(int canvas_width, int canvas_height, const char *font);
 void ui_init(void);
 void ui_get_screen_res(int *x0, int *y0, int *width, int *height);
-void ui_init_canvas(int max_width, int max_height);
 void ui_create_window(int x, int y, int w, int h);
+void ui_init_canvas(int max_width, int max_height);
+void ui_init_cairo(int canvas_width, int canvas_height, const char *font);
+void ui_win_init(int x, int y, int w, int h, int max_w, int max_h, const char *font);
+void ui_win_add(int x, int y, int w, int h, int max_w, int max_h, const char *font);
+void ui_win_del(void);
 void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h, double radius,
 				      double line_width, int fill, double *rgba);
 void ui_draw_rectangle(double x, double y, double w, double h, double radius, double line_width,

@@ -691,6 +691,11 @@ void checkout_submenu(char *tag)
 		geo_win_add(menu.sel->area);
 	set_submenu_height();
 	set_submenu_width();
+	if (config.multi_window)
+		ui_win_add(geo_get_menu_x0(), geo_get_menu_y0(),
+			   geo_get_menu_width(), geo_get_menu_height(),
+			   geo_get_screen_width(), geo_get_screen_height(),
+			   font_get());
 }
 
 void checkout_parentmenu(char *tag)
@@ -698,6 +703,7 @@ void checkout_parentmenu(char *tag)
 	checkout_tag(tag);
 	if (config.multi_window) {
 		geo_win_del();
+		ui_win_del();
 	} else {
 		set_submenu_height();
 		set_submenu_width();
@@ -1920,10 +1926,9 @@ int main(int argc, char *argv[])
 	if (config.at_pointer)
 		launch_menu_at_pointer();
 
-	ui_create_window(geo_get_menu_x0(), geo_get_menu_y0(),
-			 geo_get_menu_width(), geo_get_menu_height());
-	ui_init_canvas(geo_get_screen_width(), geo_get_screen_height());
-	ui_init_cairo(geo_get_screen_width(), geo_get_screen_height(), font_get());
+	ui_win_init(geo_get_menu_x0(), geo_get_menu_y0(),
+		    geo_get_menu_width(), geo_get_menu_height(),
+		    geo_get_screen_width(), geo_get_screen_height(), font_get());
 
 	init_empty_item();
 	filter_init();

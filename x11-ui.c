@@ -84,24 +84,6 @@ void grabpointer(void)
 	die("cannot grab pointer");
 }
 
-void ui_init_cairo(int canvas_width, int canvas_height, const char *font)
-{
-	struct point p;
-
-	ui->w[ui->cur].cs = cairo_xlib_surface_create(ui->dpy, ui->w[ui->cur].canvas, ui->vinfo.visual, canvas_width, canvas_height);
-	ui->w[ui->cur].c = cairo_create(ui->w[ui->cur].cs);
-
-	/*
-	 * pango-font-description-from-string() interprets the size without
-	 * a suffix as "points". If "px" is added, it will be read as pixels.
-	 */
-	ui->w[ui->cur].pangolayout = pango_cairo_create_layout(ui->w[ui->cur].c);
-	ui->w[ui->cur].pangofont = pango_font_description_from_string(font);
-
-	p = ui_get_text_size("abcfghjklABC", font);
-	ui->font_height_actual = p.y;
-}
-
 void ui_init(void)
 {
 	/*
@@ -118,15 +100,8 @@ void ui_init(void)
 	if (!ui->dpy)
 		die("cannot open display");
 
+	ui->xim = XOpenIM(ui->dpy, NULL, NULL, NULL);
 	XMatchVisualInfo(ui->dpy, DefaultScreen(ui->dpy), 32, TrueColor, &ui->vinfo);
-
-	ui->cur = 0;
-	ui->w[ui->cur].swa.override_redirect = True;
-	ui->w[ui->cur].swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask | ButtonPressMask;
-	ui->w[ui->cur].swa.colormap = XCreateColormap(ui->dpy, DefaultRootWindow(ui->dpy), ui->vinfo.visual, AllocNone);
-	ui->w[ui->cur].swa.background_pixel = 0;
-	ui->w[ui->cur].swa.border_pixel = 0;
-	ui->w[ui->cur].swa.event_mask = StructureNotifyMask;
 
 	ui->screen = DefaultScreen(ui->dpy);
 	ui->root = RootWindow(ui->dpy, ui->screen);
@@ -196,32 +171,30 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
 	}
 }
 
-/*
- * max_height is that associated with the longest submenu
- */
-void ui_init_canvas(int max_width, int max_height)
-{
-	if (ui->w[ui->cur].canvas)
-		XFreePixmap(ui->dpy, ui->w[ui->cur].canvas);
-	ui->w[ui->cur].canvas = XCreatePixmap(ui->dpy, ui->root, max_width, max_height, 32);
-}
-
 void ui_create_window(int x, int y, int w, int h)
 {
-	ui->w[ui->cur].win = XCreateWindow(ui->dpy, ui->root, x, y, w, h, 0,
-				ui->vinfo.depth, CopyFromParent,
-				ui->vinfo.visual,
-				CWOverrideRedirect | CWColormap | CWBackPixel | CWEventMask | CWBorderPixel, &ui->w[ui->cur].swa);
+	ui->w[ui->cur].swa.override_redirect = True;
+	ui->w[ui->cur].swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask | ButtonPressMask;
+	ui->w[ui->cur].swa.colormap = XCreateColormap(ui->dpy, DefaultRootWindow(ui->dpy), ui->vinfo.visual, AllocNone);
+	ui->w[ui->cur].swa.background_pixel = 0;
+	ui->w[ui->cur].swa.border_pixel = 0;
 
-	ui->xim = XOpenIM(ui->dpy, NULL, NULL, NULL);
+	ui->w[ui->cur].win = XCreateWindow(ui->dpy, ui->root, x, y, w, h, 0,
+					   ui->vinfo.depth, CopyFromParent,
+					   ui->vinfo.visual,
+					   CWOverrideRedirect | CWColormap |
+					   CWBackPixel | CWEventMask |
+					   CWBorderPixel,
+					   &ui->w[ui->cur].swa);
 	ui->w[ui->cur].xic = XCreateIC(ui->xim, XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
 			    XNClientWindow, ui->w[ui->cur].win, XNFocusWindow, ui->w[ui->cur].win, NULL);
 
 	ui->w[ui->cur].gc = XCreateGC(ui->dpy, ui->w[ui->cur].win, 0, NULL);
 
-// FIXME!!
-//	XStoreName(ui->dpy, ui->w[ui->cur].win, "jgmenu");
-//	XSetIconName(ui->dpy, ui->w[ui->cur].win, "jgmenu");
+	/* FIXME!!
+	 * XStoreName(ui->dpy, ui->w[ui->cur].win, "jgmenu");
+	 * XSetIconName(ui->dpy, ui->w[ui->cur].win, "jgmenu");
+	 */
 
 	/*
 	 * XDefineCursor required to prevent blindly inheriting cursor from parent
@@ -230,6 +203,68 @@ void ui_create_window(int x, int y, int w, int h)
 	 * http://tronche.com/gui/x/xlib/appendix/b/
 	 */
 	XDefineCursor(ui->dpy, ui->w[ui->cur].win, XCreateFontCursor(ui->dpy, 68));
+}
+
+/*
+ * max_height is that associated with the longest submenu
+ */
+void ui_init_canvas(int max_width, int max_height)
+{
+	ui->w[ui->cur].canvas = XCreatePixmap(ui->dpy, ui->root, max_width,
+					      max_height, 32);
+}
+
+void ui_init_cairo(int canvas_width, int canvas_height, const char *font)
+{
+	struct point p;
+
+	ui->w[ui->cur].cs = cairo_xlib_surface_create(ui->dpy,
+						      ui->w[ui->cur].canvas,
+						      ui->vinfo.visual,
+						      canvas_width,
+						      canvas_height);
+	ui->w[ui->cur].c = cairo_create(ui->w[ui->cur].cs);
+
+	/*
+	 * pango-font-description-from-string() interprets the size without
+	 * a suffix as "points". If "px" is added, it will be read as pixels.
+	 */
+	ui->w[ui->cur].pangolayout = pango_cairo_create_layout(ui->w[ui->cur].c);
+	ui->w[ui->cur].pangofont = pango_font_description_from_string(font);
+
+	p = ui_get_text_size("abcfghjklABC", font);
+	ui->font_height_actual = p.y;
+}
+
+void ui_win_init(int x, int y, int w, int h, int max_w, int max_h, const char *font)
+{
+	ui->cur = 0;
+	ui_create_window(x, y, w, h);
+	ui_init_canvas(max_w, max_h);
+	ui_init_cairo(max_w, max_h, font);
+}
+
+void ui_win_add(int x, int y, int w, int h, int max_w, int max_h, const char *font)
+{
+	ui->cur++;
+	ui_create_window(x, y, w, h);
+	ui_init_canvas(max_w, max_h);
+	ui_init_cairo(max_w, max_h, font);
+	XMapWindow(ui->dpy, ui->w[ui->cur].win);
+}
+
+void ui_win_del(void)
+{
+	XMapWindow(ui->dpy, ui->w[ui->cur].win);
+	XDestroyWindow(ui->dpy, ui->w[ui->cur].win);
+	XDestroyIC(ui->w[ui->cur].xic);
+	XFreePixmap(ui->dpy, ui->w[ui->cur].canvas);
+	XFreeGC(ui->dpy, ui->w[ui->cur].gc);
+	cairo_destroy(ui->w[ui->cur].c);
+	cairo_surface_destroy(ui->w[ui->cur].cs);
+	pango_font_description_free(ui->w[ui->cur].pangofont);
+	g_object_unref(ui->w[ui->cur].pangolayout);
+	ui->cur--;
 }
 
 void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h,
@@ -364,7 +399,7 @@ void ui_cleanup(void)
 	XDestroyWindow(ui->dpy, ui->w[ui->cur].win);
 	XUngrabKeyboard(ui->dpy, CurrentTime);
 	XUngrabPointer(ui->dpy, CurrentTime);
-	XDestroyIC(ui->w[ui->cur].xic);
+	XDestroyIC(ui->w[0].xic);
 	XCloseIM(ui->xim);
 
 	if (ui->w[ui->cur].canvas)

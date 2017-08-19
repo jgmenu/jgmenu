@@ -1,5 +1,26 @@
 SHORT TERM THINGS TO DO
 =======================
+  - multiwin:
+	- check we don't go beyond MAX_NR_WINDOWS
+	- improve geometry.c (take into account padding and margin_y)
+	- remove "^back(" items from menu.master list when in multi_window mode
+	- handle hide/awake properly
+	- handle submenus when searching
+	- support action_cmd when hovering over submenu item
+	- handle mouse event when clicking outside submenu (e.g. root menu)
+	- add sub_padding_{l,r,t,b} to avoid inheriting root padding
+
+  - Pipemenu - check duplicate tag names
+
+  - parse-ob.c: remove return_cmd
+		Read JGMENU_PREPEND_FILE env var (and read ~/.config/jgmenu/prepend.csv by default)
+		Read stdin >>>  exec in jgmenu_run
+				stdin -> mkstemp /tmp/jgmenu-XXXXXX
+
+  - Automatically add ^tag() to root menu if missing
+
+  - Put dependencies in table
+
   - Remove spawn from config (make it args_ instead).
 
   - Draw diagrams of variables

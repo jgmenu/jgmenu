@@ -18,7 +18,7 @@ void config_set_defaults(void)
 	config.tint2_button	   = 1;
 	config.tint2_rules	   = 1;
 	config.at_pointer	   = 0;
-	config.multi_window	   = 1;
+	config.multi_window	   = 0;
 	config.terminal_exec	   = xstrdup("x-terminal-emulator");
 	config.terminal_args	   = xstrdup("-e");
 
