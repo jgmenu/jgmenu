@@ -686,6 +686,10 @@ void checkout_tag(const char *tag)
 
 void checkout_submenu(char *tag)
 {
+	if (config.multi_window && geo_cur() >= MAX_NR_WINDOWS - 1) {
+		warn("Maximum number of windows reached ('%d')", MAX_NR_WINDOWS);
+		return;
+	}
 	checkout_tag(tag);
 	if (config.multi_window)
 		geo_win_add(menu.sel->area);
@@ -1067,6 +1071,18 @@ void read_csv_file(FILE *fp)
 	}
 }
 
+void rm_back_items(void)
+{
+	struct item *i, *tmp;
+
+	list_for_each_entry_safe(i, tmp, &menu.master, master)
+		if (!strncmp(i->cmd, "^back()", 7)) {
+			xfree(i->name);
+			list_del(&i->master);
+			xfree(i);
+		}
+}
+
 void pipemenu_add(const char *s)
 {
 	FILE *fp = NULL;
@@ -1085,6 +1101,8 @@ void pipemenu_add(const char *s)
 	pipe_head = list_last_entry(&menu.master, struct item, master);
 	read_csv_file(fp);
 	pipe_head = container_of(pipe_head->master.next, struct item, master);
+	if (config.multi_window)
+		rm_back_items();
 	/* FIXME: walk_tag_items means 'add new nodes' - consider renaming */
 	parent_node = menu.current_node;
 	walk_tagged_items(pipe_head, parent_node);
@@ -1912,6 +1930,8 @@ int main(int argc, char *argv[])
 	if (!fp)
 		fp = stdin;
 	read_csv_file(fp);
+	if (config.multi_window)
+		rm_back_items();
 	build_tree();
 	hang_items_off_nodes();
 
