@@ -47,30 +47,42 @@ static void update_root(void)
 		win[cur].menu_y0 = screen_y0 + menu_margin_y;
 }
 
+#define config_sm_spacing (1)
 static void update_sub_window(void)
 {
 	if (menu_halign == LEFT)
 		win[cur].menu_x0 = win[cur - 1].menu_x0 +
-				   win[cur - 1].parent_item.x +
-				   win[cur - 1].parent_item.w;
+				   win[cur - 1].menu_width +
+				   config_sm_spacing;
 	else if (menu_halign == RIGHT)
-		win[cur].menu_x0 = win[cur - 1].menu_x0 +
-				   win[cur - 1].parent_item.x -
-				   win[cur].menu_width;
+		win[cur].menu_x0 = win[cur - 1].menu_x0 -
+				   win[cur].menu_width -
+				   config_sm_spacing;
 
 	/* We're assuming here that all submenu windows will be TOP aligned */
 	if (cur) {
+		int max_y0 = screen_height - menu_margin_y - win[cur].menu_height;
+
 		win[cur].menu_y0 = win[cur - 1].menu_y0 +
-				   win[cur - 1].parent_item.y;
+				   win[cur - 1].parent_item.y -
+				   item_margin_y -
+				   menu_padding_top;
+		/* FIXME: Needs to be sm_padding_top later */
+
 		/* Do not go off the screen */
-		if (win[cur].menu_y0 > screen_height - win[cur].menu_height)
-			win[cur].menu_y0 = screen_height - win[cur].menu_height;
-	} else if (menu_valign == BOTTOM) {
-		win[cur].menu_y0 = screen_y0 + screen_height -
-				   win[cur].menu_height -
-				   menu_margin_y;
-	} else if (menu_valign == TOP) {
-		win[cur].menu_y0 = screen_y0 + menu_margin_y;
+		if (win[cur].menu_y0 > max_y0) {
+			if (menu_valign == TOP)
+				win[cur].menu_y0 = screen_y0 + menu_margin_y;
+			else
+				win[cur].menu_y0 = max_y0;
+		}
+	} else {
+		if (menu_valign == BOTTOM)
+			win[cur].menu_y0 = screen_y0 + screen_height -
+					   win[cur].menu_height -
+					   menu_margin_y;
+		else if (menu_valign == TOP)
+			win[cur].menu_y0 = screen_y0 + menu_margin_y;
 	}
 }
 
