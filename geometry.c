@@ -170,6 +170,11 @@ int geo_cur(void)
 	return cur;
 }
 
+void geo_set_cur(int c)
+{
+	cur = c;
+}
+
 void geo_win_add(struct area parent_item)
 {
 	win[cur].parent_item.x = parent_item.x;
@@ -186,11 +191,6 @@ void geo_win_del(void)
 		fprintf(stderr, "%s:%d - %s:  cannot delete root window\n",
 			__FILE__, __LINE__, __func__);
 	cur--;
-}
-
-void geo_win_goto_root(void)
-{
-	cur = 0;
 }
 
 /*********************************************************************/

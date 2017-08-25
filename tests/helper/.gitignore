@@ -1,2 +1,3 @@
 *.a
 test-hashmap
+test-argv-buf

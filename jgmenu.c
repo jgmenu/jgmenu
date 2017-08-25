@@ -718,7 +718,7 @@ void checkout_rootmenu(char *tag)
 {
 	checkout_tag(tag);
 	if (config.multi_window)
-		geo_win_goto_root();
+		geo_set_cur(0);
 	set_submenu_height();
 	set_submenu_width();
 }
@@ -1158,6 +1158,10 @@ static void hide_menu(void)
 {
 	XUngrabKeyboard(ui->dpy, CurrentTime);
 	XUngrabPointer(ui->dpy, CurrentTime);
+	if (config.multi_window) {
+		ui_win_del_beyond(0);
+		geo_set_cur(0);
+	}
 	XUnmapWindow(ui->dpy, ui->w[ui->cur].win);
 	filter_reset();
 	checkout_rootnode();

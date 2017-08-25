@@ -267,6 +267,16 @@ void ui_win_del(void)
 	ui->cur--;
 }
 
+void ui_win_del_beyond(int w)
+{
+	if (w < 0)
+		die("%s: 'w' cannot be less than zero", __func__);
+	while (w < ui->cur) {
+		info("deleting window %d", ui->cur);
+		ui_win_del();
+	}
+}
+
 void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h,
 				      double radius, double line_width, int fill, double *rgba)
 {

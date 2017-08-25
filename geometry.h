@@ -53,9 +53,9 @@ struct point geo_get_max_itemarea_that_fits(void);
 struct point geo_get_max_menuarea_that_fits(void);
 
 int geo_cur(void);
+void geo_set_cur(int c);
 void geo_win_add(struct area parent_item);
 void geo_win_del(void);
-void geo_win_goto_root(void);
 
 void geo_set_menu_width(int w);
 void geo_set_menu_width_from_itemarea_width(int w);
