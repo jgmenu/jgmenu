@@ -1,4 +1,5 @@
 #include "argv-buf.h"
+#include "util.h"
 
 void argv_init(struct argv_buf *buf)
 {
@@ -20,10 +21,43 @@ void argv_strdup(struct argv_buf *buf, const char *s)
 	buf->argc = 1;
 }
 
+static int is_triple_quote(char **s)
+{
+	if (!s || !*s)
+		return 0;
+	if (**s == '\0' || *(*s + 1) == '\0' || *(*s + 2) == '\0')
+		return 0;
+	return ((*s)[0] == '"' && (*s)[1] == '"' && (*s)[2] == '"');
+}
+
+static void traverse_triple_quote(char **s)
+{
+	(*s) += 3;
+	while (!is_triple_quote(s)) {
+		if (**s == '\0')
+			die("no closing triple quote");
+		(*s)++;
+	}
+	(*s) += 3;
+}
+
+static void rm_next_triple_quote(char **s)
+{
+	while (!is_triple_quote(s)) {
+		if (**s == '\0')
+			die("no closing triple quote");
+		(*s)++;
+	}
+	**s = '\0';
+	(*s) += 3;
+}
+
 static char *next(char *str, char delim)
 {
 	char *tmp;
 
+	if (is_triple_quote(&str))
+		traverse_triple_quote(&str);
 	tmp = strchr(str, delim);
 	if (tmp)
 		tmp++;
@@ -35,6 +69,10 @@ void argv_parse(struct argv_buf *buf)
 	char *q;
 	int j;
 
+	if (!buf->argv[0]) {
+		warn("cannot parse empty argv buffer");
+		return;
+	}
 	for (j = 0; j < MAX_FIELDS - 1; j++) {
 		if (!buf->argv[j])
 			break;
@@ -42,8 +80,23 @@ void argv_parse(struct argv_buf *buf)
 		if (buf->argv[j + 1])
 			buf->argc++;
 	}
-	while ((q = strrchr(buf->argv[0], buf->delim)))
-		*q = '\0';
+
+	/* Change delims to '\0' */
+	for (j = buf->argc - 1; j >= 0; j--) {
+		q = buf->argv[j];
+		while (*q != '\0') {
+			if (is_triple_quote(&q)) {
+				buf->argv[j] += 3;
+				q += 3;
+				rm_next_triple_quote(&q);
+			}
+			if (*q == buf->delim) {
+				*q = '\0';
+				break;
+			}
+			q++;
+		}
+	}
 }
 
 void argv_free(struct argv_buf *buf)

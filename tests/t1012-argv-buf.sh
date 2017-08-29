@@ -19,12 +19,31 @@ argc" "aaa@bbb@ccc
 
 '
 
-test_expect_success 'complicated parse' '
+test_expect_success 'complex parse' '
 
 test_argvbuf "strdup@a,b,,d d, e ,f-f
 parse
 print
 argc" "a@b@@d d@ e @f-f
 6"
+
+'
+
+test_expect_success 'simple triple quote' '
+
+test_argvbuf "strdup@aaa,\"\"\"b,bb\"\"\",ccc
+parse
+print
+argc" "aaa@b,bb@ccc
+3"
+
+'
+
+test_expect_failure 'triple quote with missing end quotes' '
+
+test_argvbuf "strdup@aaa,\"\"\"b,bb,ccc
+parse
+print
+argc"
 
 '

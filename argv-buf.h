@@ -4,7 +4,16 @@
  * Copyright (C) Johan Malm 2017
  *
  *   - argv[0] points to the beginning of the buffer
- *   - argv[1..MAX_FIELDS] point to each 'delim' separated field
+ *   - argv[0..MAX_FIELDS-1] point to each 'delim' separated field
+ *
+ * It understands the following syntaxes:
+ *
+ * 1. a,b,c where no fields contain commas.
+ *    This covers most cases.
+ *
+ * 2. a,"""b""",c where b can contain commas but not triple quotes.
+ *    This is useful for scripting (paricularly for pipes) where commas and quotes
+ *    are used.
  */
 
 #ifndef ARGV_BUF_H
