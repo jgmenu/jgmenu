@@ -67,6 +67,7 @@ clean:
 
 test: $(OBJS)
 	@$(RM) $(JGMENU_LIB)
+	@$(MAKE) --no-print-directory -C tests/helper/ clean
 	@echo '     AR    libjgmenu.a';$(AR) rcs $(JGMENU_LIB) $(OBJS)
 	@$(MAKE) --no-print-directory -C tests/helper/ all
 	@$(MAKE) --no-print-directory -C tests/ all
