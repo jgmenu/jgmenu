@@ -31,7 +31,6 @@ void pm_push(void *pipe_node, void *parent_node)
 	pm->pipe_node = pipe_node;
 	pm->parent_node = parent_node;
 	list_add(&pm->list, &pipe_stack);
-	info("pipemenu level=%d", level);
 }
 
 int pm_is_outside(void *parent_node)

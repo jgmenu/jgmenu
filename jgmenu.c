@@ -1225,6 +1225,19 @@ void action_cmd(char *cmd)
 	}
 }
 
+struct point mousexy(void)
+{
+	Window dw;
+	int di;
+	unsigned int du;
+	struct point coords;
+
+	XQueryPointer(ui->dpy, ui->w[ui->cur].win, &dw, &dw, &di, &di, &coords.x,
+		      &coords.y, &du);
+
+	return coords;
+}
+
 void key_event(XKeyEvent *ev)
 {
 	char buf[32];
@@ -1340,7 +1353,7 @@ void key_event(XKeyEvent *ev)
 			action_cmd(menu.sel->cmd);
 		break;
 	case XK_F3:
-		geo_win_add(menu.sel->area);
+		info("x=%d; y=%d", mousexy().x, mousexy().y);
 		update(1);
 		break;
 	case XK_F5:
@@ -1368,19 +1381,6 @@ void key_event(XKeyEvent *ev)
 		update(0);
 		break;
 	}
-}
-
-struct point mousexy(void)
-{
-	Window dw;
-	int di;
-	unsigned int du;
-	struct point coords;
-
-	XQueryPointer(ui->dpy, ui->w[ui->cur].win, &dw, &dw, &di, &di, &coords.x,
-		      &coords.y, &du);
-
-	return coords;
 }
 
 /* Pointer vertical offset (not sure why this is needed) */
@@ -1508,30 +1508,28 @@ void init_pipe_flags(void)
 }
 
 /*
- * Move highlighting with mouse
- *
- * Get mouse coordinates using XQueryPointer()
- * ev.xbutton.x and ev.xbutton.y work most of the time,
- * but occasionally throw in odd values.
+ * Returns the window index (as used by geometry.c and x11-ui.c) of the menu
+ * window which the pointer is currently over.
  */
-void process_pointer_position(void)
+static int mouseover_win(XMotionEvent **e)
+{
+	int i;
+
+	for (i = 0; i <= geo_cur(); i++)
+		if ((*e)->subwindow == ui->w[i].win)
+			return i;
+	return -1;
+}
+
+static void move_selection_with_mouse(struct point *mouse_coord)
 {
 	struct item *item;
-	struct point mouse_coords;
-	static int oldy;
-	static int oldx;
-
-	mouse_coords = mousexy();
-	mouse_coords.y -= MOUSE_FUDGE;
-
-	if ((mouse_coords.x == oldx) && (mouse_coords.y == oldy))
-		return;
 
 	item = menu.first;
 	list_for_each_entry_from(item, &menu.filter, filter) {
 		if (!item->selectable)
 			continue;
-		if (ui_is_point_in_area(mouse_coords, item->area)) {
+		if (ui_is_point_in_area(*mouse_coord, item->area)) {
 			if (menu.sel != item) {
 				menu.sel = item;
 				draw_menu();
@@ -1541,9 +1539,59 @@ void process_pointer_position(void)
 		if (item == menu.last)
 			break;
 	}
+}
 
-	oldx = mouse_coords.x;
-	oldy = mouse_coords.y;
+static int is_mouseover_parent_item(struct point *pr)
+{
+	struct area a;
+
+	if (!geo_cur())
+		return 0;
+	a = menu.current_node->parent->last_sel->area;
+	geo_set_cur(geo_cur() - 1);
+	a.x += geo_get_menu_x0();
+	a.w += config.menu_padding_left + config.item_margin_x;
+	a.y += geo_get_menu_y0() - config.item_margin_y;
+	a.h += 2 * config.item_margin_y;
+	geo_set_cur(geo_cur() + 1);
+	return ui_is_point_in_area(*pr, a);
+}
+
+void process_pointer_position(XEvent *ev)
+{
+	struct point pw;
+	struct point pr;
+	static int oldy;
+	static int oldx;
+	XMotionEvent *e = (XMotionEvent *)ev;
+	int w = mouseover_win(&e);
+
+	/*
+	 * We get the mouse coordinates using XQueryPointer() as
+	 * ev.xbutton.{x,y} sometimes returns peculiar values.
+	 */
+	pw = mousexy();
+	pw.y -= MOUSE_FUDGE;
+	if ((pw.x == oldx) && (pw.y == oldy))
+		return;
+	pr.x = e->x_root;
+	pr.y = e->y_root - MOUSE_FUDGE;
+
+	if (e->subwindow == ui->w[ui->cur].win) {
+		move_selection_with_mouse(&pw);
+		if (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
+		    !strncmp(menu.sel->cmd, "^pipe(", 6))
+			action_cmd(menu.sel->cmd);
+	} else if (w < 0) {
+		;
+	} else if (is_mouseover_parent_item(&pr)) {
+		;
+	} else {
+		checkout_parent();
+		update(1);
+	}
+	oldx = pw.x;
+	oldy = pw.y;
 }
 
 static void signal_handler(int sig)
@@ -1687,6 +1735,8 @@ void run(void)
 
 		if (XPending(ui->dpy)) {
 			XNextEvent(ui->dpy, &ev);
+
+			/* UTF-8 support */
 			if (XFilterEvent(&ev, ui->w[ui->cur].win))
 				continue;
 
@@ -1709,9 +1759,10 @@ void run(void)
 				if (ev.xvisibility.state != VisibilityUnobscured)
 					XRaiseWindow(ui->dpy, ui->w[ui->cur].win);
 				break;
+			case MotionNotify:
+				process_pointer_position(&ev);
+				break;
 			}
-
-			process_pointer_position();
 		}
 	}
 }

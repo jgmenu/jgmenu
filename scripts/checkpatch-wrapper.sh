@@ -121,6 +121,7 @@ do
 			-e 'CamelCase.*xmlNode' \
 			-e 'CamelCase.*xmlReadFile' \
 			-e 'CamelCase.*xmlGetProp' \
+			-e 'CamelCase.*XMotionEvent' \
 			-e 'CamelCase.*XNClientWindow' \
 			-e 'CamelCase.*XNextEvent' \
 			-e 'CamelCase.*XNFocusWindow' \
