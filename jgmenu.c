@@ -918,11 +918,9 @@ int node_exists(const char *name)
 
 	if (!name)
 		die("node_exists was called without name");
-
 	list_for_each_entry(n, &menu.nodes, node)
 		if (!strcmp(name, n->tag))
 			return 1;
-
 	return 0;
 }
 
@@ -1010,12 +1008,53 @@ void build_tree(void)
 		walk_tagged_items(get_item_from_tag(item->tag), NULL);
 }
 
+/*
+ * The first item of a rootmenu or pipe must be a ^tag() item. If the user has not
+ * provided it, we tag care of it here.
+ */
+#define UTAG_BIG_NR (99999)
+#define UTAG_BUFSIZ (18)
+static void get_unique_tag_item(char *utag)
+{
+	int i;
+
+	for (i = 0; i < UTAG_BIG_NR; i++) {
+		snprintf(utag, UTAG_BUFSIZ, "%d", i);
+		if (!node_exists(utag))
+			break;
+	}
+	snprintf(utag, UTAG_BUFSIZ, "%d,^tag(%d)", i, i);
+}
+
+static void insert_tag_item(void)
+{
+	struct item *item = NULL;
+	struct argv_buf argv_buf;
+	char utag[UTAG_BUFSIZ];
+
+	get_unique_tag_item(utag);
+	argv_set_delim(&argv_buf, ',');
+	argv_init(&argv_buf);
+	argv_strdup(&argv_buf, utag);
+	argv_parse(&argv_buf);
+	item = xmalloc(sizeof(struct item));
+	item->name = argv_buf.argv[0];
+	item->cmd = argv_buf.argv[1];
+	item->iconname = argv_buf.argv[2];
+	item->icon = NULL;
+	item->tag = NULL;
+	item->selectable = 1;
+	item->area.h = config.item_height;
+	list_add_tail(&item->master, &menu.master);
+}
+
 void read_csv_file(FILE *fp)
 {
 	char buf[BUFSIZ], *p;
 	size_t i;
 	struct item *item = NULL;
 	struct argv_buf argv_buf;
+	int first_item = 1;
 
 	if (!fp)
 		die("no csv-file");
@@ -1043,6 +1082,11 @@ void read_csv_file(FILE *fp)
 		item->iconname = argv_buf.argv[2];
 		if (!item->cmd)
 			item->cmd = item->name;
+		if (first_item) {
+			if (item->cmd && strncmp(item->cmd, "^tag(", 5))
+				insert_tag_item();
+			first_item = 0;
+		}
 		list_add_tail(&item->master, &menu.master);
 	}
 
