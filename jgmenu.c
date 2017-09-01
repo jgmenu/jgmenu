@@ -1623,8 +1623,9 @@ void process_pointer_position(XEvent *ev)
 
 	if (e->subwindow == ui->w[ui->cur].win) {
 		move_selection_with_mouse(&pw);
-		if (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
-		    !strncmp(menu.sel->cmd, "^pipe(", 6))
+		if (config.multi_window &&
+		    (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
+		     !strncmp(menu.sel->cmd, "^pipe(", 6)))
 			action_cmd(menu.sel->cmd);
 	} else if (w < 0) {
 		;
