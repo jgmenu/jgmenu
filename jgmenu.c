@@ -50,6 +50,7 @@
 
 static pthread_t thread;	   /* worker thread for loading icons	  */
 static int pipe_fds[2];		   /* talk between threads + catch sig    */
+static timer_t tmr_mouseover;
 
 struct item {
 	char *name;
@@ -1601,6 +1602,72 @@ static int is_mouseover_parent_item(struct point *pr)
 	return ui_is_point_in_area(*pr, a);
 }
 
+#define TMR_MOUSEOVER_SIG SIGRTMAX
+
+static void mouseover_handler(int sig, siginfo_t *si, void *uc)
+{
+	int saved_errno;
+
+	saved_errno = errno;
+	if (write(pipe_fds[1], "t", 1) == -1)
+		die("error writing to pipe for onmouseover timer");
+	errno = saved_errno;
+}
+
+static void tmr_mouseover_init(void)
+{
+	struct sigaction  sa;
+	struct sigevent   se;
+
+	sa.sa_flags = SA_SIGINFO;
+	sa.sa_sigaction = mouseover_handler;
+	sigemptyset(&sa.sa_mask);
+	if (sigaction(TMR_MOUSEOVER_SIG, &sa, NULL) == -1)
+		die("sigaction");
+	se.sigev_notify = SIGEV_SIGNAL;
+	se.sigev_signo = TMR_MOUSEOVER_SIG;
+	if (timer_create(CLOCK_REALTIME, &se, &tmr_mouseover) == -1)
+		die("timer_create");
+}
+
+void tmr_mouseover_set(int msec)
+{
+	struct itimerspec ts;
+	static int run_once;
+
+	if (!run_once) {
+		tmr_mouseover_init();
+		run_once = 1;
+	}
+	ts.it_value.tv_sec = 0;
+	ts.it_value.tv_nsec = msec * 1000000;
+	ts.it_interval.tv_sec = 0;
+	ts.it_interval.tv_nsec = 0;
+	if (timer_settime(tmr_mouseover, 0, &ts, NULL) == -1)
+		die("timer_settime");
+}
+
+#define TMR_MOUSEOVER_DELAY_MSEC (250)
+
+void tmr_mouseover_start(void)
+{
+	tmr_mouseover_set(TMR_MOUSEOVER_DELAY_MSEC);
+}
+
+void tmr_mouseover_stop(void)
+{
+	tmr_mouseover_set(0);
+}
+
+void hover(void)
+{
+	if (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
+	    !strncmp(menu.sel->cmd, "^pipe(", 6))
+		tmr_mouseover_start();
+	else
+		tmr_mouseover_stop();
+}
+
 void process_pointer_position(XEvent *ev)
 {
 	struct point pw;
@@ -1623,11 +1690,11 @@ void process_pointer_position(XEvent *ev)
 
 	if (e->subwindow == ui->w[ui->cur].win) {
 		move_selection_with_mouse(&pw);
-		if (config.multi_window &&
-		    (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
-		     !strncmp(menu.sel->cmd, "^pipe(", 6)))
-			action_cmd(menu.sel->cmd);
+		if (config.multi_window)
+			hover();
 	} else if (w < 0) {
+		/* outside menu windows */
+		tmr_mouseover_stop();
 		;
 	} else if (is_mouseover_parent_item(&pr)) {
 		;
@@ -1738,6 +1805,12 @@ void run(void)
 				/* Caught SIGUSR1 */
 				if (ch == '1') {
 					awake_menu();
+					continue;
+				}
+
+				/* mouse over signal */
+				if (ch == 't') {
+					action_cmd(menu.sel->cmd);
 					continue;
 				}
 

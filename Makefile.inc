@@ -20,6 +20,7 @@ LIBS  = `pkg-config x11 xinerama cairo pango pangocairo librsvg-2.0 --libs`
 LIBS += `xml2-config --libs`
 LIBS += `pkg-config --libs glib-2.0 libmenu-cache`
 LIBS += -pthread
+LIBS += -lrt
 
 LDFLAGS += $(LIBS)
 
