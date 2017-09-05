@@ -28,6 +28,12 @@ struct config {
 	enum alignment menu_halign;
 	enum alignment menu_valign;
 
+	int sub_spacing;
+	int sub_padding_top;
+	int sub_padding_right;
+	int sub_padding_bottom;
+	int sub_padding_left;
+
 	int item_margin_x;
 	int item_margin_y;
 	int item_height;	/* set to font height if greater */

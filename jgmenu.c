@@ -1896,6 +1896,7 @@ void init_geo_variables_from_config(void)
 	geo_set_menu_padding_bottom(config.menu_padding_bottom);
 	geo_set_menu_padding_left(config.menu_padding_left);
 	geo_set_menu_width(config.menu_width);
+	geo_set_sub_spacing(config.sub_spacing);
 	geo_set_item_margin_x(config.item_margin_x);
 	geo_set_item_margin_y(config.item_margin_y);
 	geo_set_item_height(config.item_height);

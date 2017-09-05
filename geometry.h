@@ -67,6 +67,7 @@ void geo_set_menu_halign(enum alignment pos);
 void geo_set_menu_valign(enum alignment pos);
 void geo_set_item_height(int h);
 void geo_set_nr_visible_items(int nr);
+void geo_set_sub_spacing(int spacing);
 void geo_set_item_margin_x(int margin);
 void geo_set_item_margin_y(int margin);
 void geo_set_menu_padding_top(int padding);

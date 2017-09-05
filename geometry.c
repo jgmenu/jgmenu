@@ -23,6 +23,7 @@ static int menu_padding_bottom;		/* s  */
 static int menu_padding_left;		/* s  */
 static enum alignment menu_valign;
 static enum alignment menu_halign;
+static int sub_spacing;			/* s  */
 static int item_margin_x;		/* s  */
 static int item_margin_y;		/* s  */
 static int item_height;			/* sg */
@@ -47,17 +48,16 @@ static void update_root(void)
 		win[cur].menu_y0 = screen_y0 + menu_margin_y;
 }
 
-#define config_sm_spacing (1)
 static void update_sub_window(void)
 {
 	if (menu_halign == LEFT)
 		win[cur].menu_x0 = win[cur - 1].menu_x0 +
 				   win[cur - 1].menu_width +
-				   config_sm_spacing;
+				   sub_spacing;
 	else if (menu_halign == RIGHT)
 		win[cur].menu_x0 = win[cur - 1].menu_x0 -
 				   win[cur].menu_width -
-				   config_sm_spacing;
+				   sub_spacing;
 
 	/* We're assuming here that all submenu windows will be TOP aligned */
 	if (cur) {
@@ -246,6 +246,11 @@ void geo_set_menu_valign(enum alignment pos)
 void geo_set_item_height(int h)
 {
 	item_height = h;
+}
+
+void geo_set_sub_spacing(int spacing)
+{
+	sub_spacing = spacing;
 }
 
 void geo_set_item_margin_x(int margin)

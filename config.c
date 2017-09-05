@@ -34,6 +34,12 @@ void config_set_defaults(void)
 	config.menu_halign	   = LEFT;
 	config.menu_valign	   = BOTTOM;
 
+	config.sub_spacing	   = 1;
+	config.sub_padding_top	   = 5;
+	config.sub_padding_right   = 5;
+	config.sub_padding_bottom  = 5;
+	config.sub_padding_left	   = 5;
+
 	config.item_margin_x	   = 3;
 	config.item_margin_y	   = 3;
 	config.item_height	   = 25;
@@ -135,6 +141,9 @@ static void process_line(char *line)
 			config.menu_valign = TOP;
 		else if (!strcasecmp(value, "bottom"))
 			config.menu_valign = BOTTOM;
+
+	} else if (!strcmp(option, "sub_spacing")) {
+		xatoi(&config.sub_spacing, value, 0, "config.sub_spacing");
 
 	} else if (!strncmp(option, "item_margin_x", 13)) {
 		xatoi(&config.item_margin_x, value, XATOI_NONNEG, "config.item_margin_x");
