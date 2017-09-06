@@ -1,0 +1,2 @@
+this is root
+goto pipe1,^pipe(cat ex05/pipe1.csv)

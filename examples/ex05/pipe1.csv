@@ -1,0 +1,2 @@
+this is pipe1
+goto pipe2,^pipe(cat ex05/pipe2.csv)

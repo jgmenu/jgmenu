@@ -90,6 +90,8 @@ void argv_parse(struct argv_buf *buf)
 				q += 3;
 				rm_next_triple_quote(&q);
 			}
+			if (*q == '\0')
+				break;
 			if (*q == buf->delim) {
 				*q = '\0';
 				break;
