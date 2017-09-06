@@ -2034,24 +2034,6 @@ static void cleanup(void)
 	destroy_master_list();
 }
 
-void set_floor(int *var, int floor)
-{
-	if (floor > *var)
-		*var = floor;
-}
-
-void sanity_check_config(void)
-{
-	/*
-	 * The menu-border is drawn 'inside' the menu. Therefore, padding_* has
-	 * to allow for the border thickness.
-	 */
-	set_floor(&config.menu_padding_bottom, config.menu_border);
-	set_floor(&config.menu_padding_left, config.menu_border);
-	set_floor(&config.menu_padding_right, config.menu_border);
-	set_floor(&config.menu_padding_top, config.menu_border);
-}
-
 int main(int argc, char *argv[])
 {
 	int i;
@@ -2106,7 +2088,7 @@ int main(int argc, char *argv[])
 	if (!config.tint2_rules && !arg_vsimple)
 		read_jgmenurc(arg_config_file);
 
-	sanity_check_config();
+	config_post_process();
 	set_font();
 	set_theme();
 	init_geo_variables_from_config();

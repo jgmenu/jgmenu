@@ -88,17 +88,17 @@ static void process_line(char *line)
 	if (!parse_config_line(line, &option, &value))
 		return;
 
-	if (!strncmp(option, "stay_alive", 10)) {
+	if (!strcmp(option, "stay_alive")) {
 		xatoi(&config.stay_alive, value, XATOI_NONNEG, "config.stay_alive");
-	} else if (!strncmp(option, "hide_on_startup", 15)) {
+	} else if (!strcmp(option, "hide_on_startup")) {
 		xatoi(&config.hide_on_startup, value, XATOI_NONNEG, "config.hide_on_startup");
-	} else if (!strncmp(option, "tint2_look", 10)) {
+	} else if (!strcmp(option, "tint2_look")) {
 		xatoi(&config.tint2_look, value, XATOI_NONNEG, "config.tint2_look");
-	} else if (!strncmp(option, "tint2_button", 12)) {
+	} else if (!strcmp(option, "tint2_button")) {
 		xatoi(&config.tint2_button, value, XATOI_NONNEG, "config.tint2_button");
-	} else if (!strncmp(option, "tint2_rules", 11)) {
+	} else if (!strcmp(option, "tint2_rules")) {
 		xatoi(&config.tint2_rules, value, XATOI_NONNEG, "config.tint2_rules");
-	} else if (!strncmp(option, "at_pointer", 10)) {
+	} else if (!strcmp(option, "at_pointer")) {
 		xatoi(&config.at_pointer, value, XATOI_NONNEG, "config.at_pointer");
 	} else if (!strcmp(option, "multi_window")) {
 		xatoi(&config.multi_window, value, XATOI_NONNEG, "config.multi_window");
@@ -109,11 +109,11 @@ static void process_line(char *line)
 		xfree(config.terminal_args);
 		config.terminal_args = xstrdup(value);
 
-	} else if (!strncmp(option, "menu_margin_x", 13)) {
+	} else if (!strcmp(option, "menu_margin_x")) {
 		xatoi(&config.menu_margin_x, value, XATOI_NONNEG, "config.margin_x");
-	} else if (!strncmp(option, "menu_margin_y", 13)) {
+	} else if (!strcmp(option, "menu_margin_y")) {
 		xatoi(&config.menu_margin_y, value, XATOI_NONNEG, "config.margin_y");
-	} else if (!strncmp(option, "menu_width", 10)) {
+	} else if (!strcmp(option, "menu_width")) {
 		xatoi(&config.menu_width, value, XATOI_GT_0, "config.menu_width");
 	} else if (!strcmp(option, "menu_padding_top")) {
 		xatoi(&config.menu_padding_top, value, XATOI_NONNEG, "config.menu_padding_top");
@@ -123,18 +123,18 @@ static void process_line(char *line)
 		xatoi(&config.menu_padding_bottom, value, XATOI_NONNEG, "config.menu_padding_bottom");
 	} else if (!strcmp(option, "menu_padding_left")) {
 		xatoi(&config.menu_padding_left, value, XATOI_NONNEG, "config.menu_padding_left");
-	} else if (!strncmp(option, "menu_radius", 11)) {
+	} else if (!strcmp(option, "menu_radius")) {
 		xatoi(&config.menu_radius, value, XATOI_NONNEG, "config.menu_radius");
-	} else if (!strncmp(option, "menu_border", 11)) {
+	} else if (!strcmp(option, "menu_border")) {
 		xatoi(&config.menu_border, value, XATOI_NONNEG, "config.menu_border");
-	} else if (!strncmp(option, "menu_halign", 11)) {
+	} else if (!strcmp(option, "menu_halign")) {
 		if (!value)
 			return;
 		if (!strcasecmp(value, "left"))
 			config.menu_halign = LEFT;
 		else if (!strcasecmp(value, "right"))
 			config.menu_halign = RIGHT;
-	} else if (!strncmp(option, "menu_valign", 11)) {
+	} else if (!strcmp(option, "menu_valign")) {
 		if (!value)
 			return;
 		if (!strcasecmp(value, "top"))
@@ -145,68 +145,68 @@ static void process_line(char *line)
 	} else if (!strcmp(option, "sub_spacing")) {
 		xatoi(&config.sub_spacing, value, 0, "config.sub_spacing");
 
-	} else if (!strncmp(option, "item_margin_x", 13)) {
+	} else if (!strcmp(option, "item_margin_x")) {
 		xatoi(&config.item_margin_x, value, XATOI_NONNEG, "config.item_margin_x");
-	} else if (!strncmp(option, "item_margin_y", 13)) {
+	} else if (!strcmp(option, "item_margin_y")) {
 		xatoi(&config.item_margin_y, value, XATOI_NONNEG, "config.item_margin_y");
-	} else if (!strncmp(option, "item_height", 11)) {
+	} else if (!strcmp(option, "item_height")) {
 		xatoi(&config.item_height, value, XATOI_GT_0, "config.item_height");
-	} else if (!strncmp(option, "item_padding_x", 14)) {
+	} else if (!strcmp(option, "item_padding_x")) {
 		xatoi(&config.item_padding_x, value, XATOI_NONNEG, "config.item_padding_x");
-	} else if (!strncmp(option, "item_radius", 11)) {
+	} else if (!strcmp(option, "item_radius")) {
 		xatoi(&config.item_radius, value, XATOI_NONNEG, "config.item_radius");
-	} else if (!strncmp(option, "item_border", 11)) {
+	} else if (!strcmp(option, "item_border")) {
 		xatoi(&config.item_border, value, XATOI_NONNEG, "config.item_border");
-	} else if (!strncmp(option, "item_halign", 11)) {
+	} else if (!strcmp(option, "item_halign")) {
 		if (!value)
 			return;
 		if (!strcasecmp(value, "left"))
 			config.item_halign = LEFT;
 		else if (!strcasecmp(value, "right"))
 			config.item_halign = RIGHT;
-	} else if (!strncmp(option, "sep_height", 10)) {
+	} else if (!strcmp(option, "sep_height")) {
 		xatoi(&config.sep_height, value, XATOI_NONNEG, "config.sep_height");
 
 	} else if (!strcmp(option, "font")) {
 		xfree(config.font);
 		config.font = xstrdup(value);
-	} else if (!strncmp(option, "font_fallback", 13)) {
+	} else if (!strcmp(option, "font_fallback")) {
 		xfree(config.font_fallback);
 		config.font_fallback = xstrdup(value);
-	} else if (!strncmp(option, "icon_size", 9)) {
+	} else if (!strcmp(option, "icon_size")) {
 		xatoi(&config.icon_size, value, XATOI_NONNEG, "config.icon_size");
-	} else if (!strncmp(option, "icon_text_spacing", 17)) {
+	} else if (!strcmp(option, "icon_text_spacing")) {
 		xatoi(&config.icon_text_spacing, value, XATOI_NONNEG, "config.icon_text_spacing");
 	} else if (!strcmp(option, "icon_theme")) {
 		xfree(config.icon_theme);
 		config.icon_theme = xstrdup(value);
-	} else if (!strncmp(option, "icon_theme_fallback", 14)) {
+	} else if (!strcmp(option, "icon_theme_fallback")) {
 		xfree(config.icon_theme_fallback);
 		config.icon_theme_fallback = xstrdup(value);
 
-	} else if (!strncmp(option, "arrow_string", 11)) {
+	} else if (!strcmp(option, "arrow_string")) {
 		xfree(config.arrow_string);
 		config.arrow_string = xstrdup(value);
-	} else if (!strncmp(option, "arrow_width", 11)) {
+	} else if (!strcmp(option, "arrow_width")) {
 		xatoi(&config.arrow_width, value, XATOI_NONNEG, "config.arrow_width");
 
-	} else if (!strncmp(option, "color_menu_bg", 13)) {
+	} else if (!strcmp(option, "color_menu_bg")) {
 		parse_hexstr(value, config.color_menu_bg);
-	} else if (!strncmp(option, "color_menu_fg", 13)) {
+	} else if (!strcmp(option, "color_menu_fg")) {
 		parse_hexstr(value, config.color_menu_fg);
-	} else if (!strncmp(option, "color_menu_border", 17)) {
+	} else if (!strcmp(option, "color_menu_border")) {
 		parse_hexstr(value, config.color_menu_border);
-	} else if (!strncmp(option, "color_norm_bg", 13)) {
+	} else if (!strcmp(option, "color_norm_bg")) {
 		parse_hexstr(value, config.color_norm_bg);
-	} else if (!strncmp(option, "color_norm_fg", 13)) {
+	} else if (!strcmp(option, "color_norm_fg")) {
 		parse_hexstr(value, config.color_norm_fg);
-	} else if (!strncmp(option, "color_sel_bg", 12)) {
+	} else if (!strcmp(option, "color_sel_bg")) {
 		parse_hexstr(value, config.color_sel_bg);
-	} else if (!strncmp(option, "color_sel_fg", 12)) {
+	} else if (!strcmp(option, "color_sel_fg")) {
 		parse_hexstr(value, config.color_sel_fg);
-	} else if (!strncmp(option, "color_sel_border", 16)) {
+	} else if (!strcmp(option, "color_sel_border")) {
 		parse_hexstr(value, config.color_sel_border);
-	} else if (!strncmp(option, "color_sep_fg", 12)) {
+	} else if (!strcmp(option, "color_sep_fg")) {
 		parse_hexstr(value, config.color_sep_fg);
 	}
 }
@@ -231,4 +231,22 @@ void config_parse_file(char *filename)
 
 	read_file(fp);
 	fclose(fp);
+}
+
+void set_floor(int *var, int floor)
+{
+	if (floor > *var)
+		*var = floor;
+}
+
+void config_post_process(void)
+{
+	/*
+	 * The menu-border is drawn 'inside' the menu. Therefore, padding_* has
+	 * to allow for the border thickness.
+	 */
+	set_floor(&config.menu_padding_bottom, config.menu_border);
+	set_floor(&config.menu_padding_left, config.menu_border);
+	set_floor(&config.menu_padding_right, config.menu_border);
+	set_floor(&config.menu_padding_top, config.menu_border);
 }

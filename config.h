@@ -69,5 +69,6 @@ extern struct config config;
 void config_set_defaults(void);
 void config_cleanup(void);
 void config_parse_file(char *filename);
+void config_post_process(void);
 
 #endif /* CONFIG_H */
