@@ -1,25 +1,32 @@
 SHORT TERM THINGS TO DO
 =======================
-  - multiwin:
-	- check we don't go beyond MAX_NR_WINDOWS
-	- improve geometry.c (take into account padding and margin_y)
-	- remove "^back(" items from menu.master list when in multi_window mode
-	- handle hide/awake properly
-	- handle submenus when searching
-	- support action_cmd when hovering over submenu item
-	- handle mouse event when clicking outside submenu (e.g. root menu)
-	- add sub_padding_{l,r,t,b} to avoid inheriting root padding
 
-  - Pipemenu - check duplicate tag names
+  - multiwin:
+	- add sub_padding_{l,r,t,b} to avoid inheriting root padding (default -1)
+	- handle submenus when searching
+	- Sort out sub-window alignment and handle edge cases
+	- Make sub-window stay open until timer times out on another parent item
+
+  - Comment out # in jgmenurc
+
+  - Update documentation with triple quote and ^pipe()
+
+  - Refactor around read_csv_file and creating items
+
+  - '\0' terminate read_csv_file if no '\n'  present
+
+  - Pipemenu
+	- check duplicate tag names
+	- load icons for pipes
 
   - parse-ob.c: remove return_cmd
 		Read JGMENU_PREPEND_FILE env var (and read ~/.config/jgmenu/prepend.csv by default)
-		Read stdin >>>  exec in jgmenu_run
+		Read stdin -->  exec in jgmenu_run
 				stdin -> mkstemp /tmp/jgmenu-XXXXXX
 
-  - Automatically add ^tag() to root menu if missing
+=== Upversion to 0.7 ===
 
-  - Put dependencies in table
+  - Put build/runtime dependencies in table
 
   - Remove spawn from config (make it args_ instead).
 
@@ -37,7 +44,7 @@ SHORT TERM THINGS TO DO
 	- Check tint2rc 'modified time' and re-read on change
 	- Consider the same for jgmenurc and tint2-sessionfile (bl)
 
-=== Upversion to 0.7 ===
+=== Upversion to 0.8 ===
 
 VARIOUS THINGS TO DO IN NO PARTICULAR ORDER
 ===========================================

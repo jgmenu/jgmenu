@@ -9,6 +9,7 @@
 #tint2_button        = 1
 tint2_rules         = 0
 #at_pointer          = 0
+multi_window         = 1
 #terminal_exec       = x-terminal-emulator
 #terminal_args       = -e
 #

@@ -1,15 +1,14 @@
 HIGH-LEVEL ROADMAP
 ==================
 
-v0.7	- On wake-up, check changes to .desktop files, tint2, xsettings,
+v0.7	- Enable pipemenu support and openbox menus
+	- Create multi-window mode where submenus open in separate windows
+
+v0.8	- On wake-up, check changes to .desktop files, tint2, xsettings,
 	  jgmenurc, etc.
 
-v0.8	- Add support for "fixed-position" items such as icons/images and
+v0.9	- Add support for "fixed-position" items such as icons/images and
 	  shapes (incl search box)
-
-v0.9	- Enable pipemenu support and openbox menus
-
-v1.0	- Create multi-window mode where submenus open in separate windows
 
 
 AFTER v1.0
