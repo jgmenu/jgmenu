@@ -1594,8 +1594,8 @@ static int is_mouseover_parent_item(struct point *pr)
 		return 0;
 	a = menu.current_node->parent->last_sel->area;
 	geo_set_cur(geo_cur() - 1);
-	a.x += geo_get_menu_x0();
-	a.w += config.menu_padding_left + config.item_margin_x;
+	a.x += geo_get_menu_x0() - config.menu_padding_left - config.item_margin_x;
+	a.w += 2 * (config.menu_padding_left + config.item_margin_x);
 	a.y += geo_get_menu_y0() - config.item_margin_y;
 	a.h += 2 * config.item_margin_y;
 	geo_set_cur(geo_cur() + 1);
