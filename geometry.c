@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "geometry.h"
+#include "util.h"
 
 struct win {
 	int menu_x0;			/*  g */
@@ -48,8 +49,32 @@ static void update_root(void)
 		win[cur].menu_y0 = screen_y0 + menu_margin_y;
 }
 
+/* FIXME: Needs to be sub_padding_* */
 static void update_sub_window(void)
 {
+	if (!cur)
+		die("update_sub_window() should not be called for root window");
+
+	if (menu_valign == TOP) {
+		int max_y0 = screen_height - win[cur].menu_height;
+
+		win[cur].menu_y0 = win[cur - 1].menu_y0 +
+				   win[cur - 1].parent_item.y -
+				   item_margin_y -
+				   menu_padding_top;
+		if (win[cur].menu_y0 > max_y0)
+				win[cur].menu_y0 = max_y0;
+	} else if (menu_valign == BOTTOM) {
+		win[cur].menu_y0 = win[cur - 1].menu_y0 +
+				   win[cur - 1].parent_item.y +
+				   win[cur - 1].parent_item.h +
+				   item_margin_y +
+				   menu_padding_top -
+				   win[cur].menu_height;
+		if (win[cur].menu_y0 < screen_y0)
+			win[cur].menu_y0 = screen_y0;
+	}
+
 	if (menu_halign == LEFT)
 		win[cur].menu_x0 = win[cur - 1].menu_x0 +
 				   win[cur - 1].menu_width +
@@ -58,32 +83,6 @@ static void update_sub_window(void)
 		win[cur].menu_x0 = win[cur - 1].menu_x0 -
 				   win[cur].menu_width -
 				   sub_spacing;
-
-	/* We're assuming here that all submenu windows will be TOP aligned */
-	if (cur) {
-		int max_y0 = screen_height - menu_margin_y - win[cur].menu_height;
-
-		win[cur].menu_y0 = win[cur - 1].menu_y0 +
-				   win[cur - 1].parent_item.y -
-				   item_margin_y -
-				   menu_padding_top;
-		/* FIXME: Needs to be sm_padding_top later */
-
-		/* Do not go off the screen */
-		if (win[cur].menu_y0 > max_y0) {
-			if (menu_valign == TOP)
-				win[cur].menu_y0 = screen_y0 + menu_margin_y;
-			else
-				win[cur].menu_y0 = max_y0;
-		}
-	} else {
-		if (menu_valign == BOTTOM)
-			win[cur].menu_y0 = screen_y0 + screen_height -
-					   win[cur].menu_height -
-					   menu_margin_y;
-		else if (menu_valign == TOP)
-			win[cur].menu_y0 = screen_y0 + menu_margin_y;
-	}
 }
 
 /* Update window's (x,y) co-ordinates */
