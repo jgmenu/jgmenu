@@ -828,8 +828,8 @@ void tint2_align(void)
 			geo_set_menu_margin_y(by1);
 			geo_set_menu_valign(TOP);
 		} else {
-			geo_set_menu_margin_y(geo_get_screen_height() - py2);
-			geo_set_menu_valign(TOP);
+			geo_set_menu_margin_y(geo_get_screen_height() - by2);
+			geo_set_menu_valign(BOTTOM);
 		}
 		if (config.menu_halign == LEFT)
 			geo_set_menu_margin_x(px2);
