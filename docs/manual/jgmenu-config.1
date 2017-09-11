@@ -6,7 +6,7 @@
 .PD 0
 .P
 .PD
-% 11 September, 2017" "" "" "" ""
+% 11 September, 2017
 .SH NAME
 .PP
 jgmenu\-config \- gets and sets jgmenu options
@@ -233,24 +233,20 @@ csv_cmd\ =\ cat\ ~/mymenu.csv\ \
 .PP
 tint2_look = \f[B]boolean\f[] (default 1)
 .PP
-\ \ \ \ Reads tint2rc and parse config options for colours,\ dimensions
+\ \ \ \ Reads tint2rc and parses config options for colours,\ dimensions
 .PD 0
 .P
 .PD
 \ \ \ \ and alignment.
+Also reads tint2 button environment variables.
 .PD 0
 .P
 .PD
-\ \ \ \ Reads tint2 button environment position variables.
-These give
+\ \ \ \ These give more accurate alignment along the length of the panel
 .PD 0
 .P
 .PD
-\ \ \ \ more accurate alignment along the length of the panel than what
-.PD 0
-.P
-.PD
-\ \ \ \ the "tint2_look" option achieves.
+\ \ \ \ than what parsing the tint2 config file can achieve.
 .PP
 at_pointer = \f[B]boolean\f[] (default 0)
 .PP

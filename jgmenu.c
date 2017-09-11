@@ -1944,30 +1944,6 @@ static void set_simple_mode(void)
 	config.tint2_look = 0;
 }
 
-static void read_jgmenurc(const char *filename)
-{
-	struct stat sb;
-	static struct sbuf f;
-	static int initiated;
-
-	if (initiated) {
-		if (stat(f.buf, &sb) != 0)
-			return;
-		config_parse_file(f.buf);
-		return;
-	}
-	sbuf_init(&f);
-	if (filename)
-		sbuf_cpy(&f, filename);
-	if (!f.len)
-		sbuf_cpy(&f, "~/.config/jgmenu/jgmenurc");
-	sbuf_expand_tilde(&f);
-	initiated = 1;
-	if (stat(f.buf, &sb) != 0)
-		return;
-	config_parse_file(f.buf);
-}
-
 static void read_tint2rc(void)
 {
 	char *t;
@@ -2061,7 +2037,7 @@ int main(int argc, char *argv[])
 			usage();
 	}
 	if (!arg_vsimple)
-		read_jgmenurc(arg_config_file);
+		config_read_jgmenurc(arg_config_file);
 
 	args_parse(argc, argv);
 
@@ -2084,7 +2060,7 @@ int main(int argc, char *argv[])
 
 	/* Parse jgmenurc again to overrule tint2rc values */
 	if (config.tint2_look && !arg_vsimple)
-		read_jgmenurc(arg_config_file);
+		config_read_jgmenurc(arg_config_file);
 
 	config_post_process();
 	set_font();

@@ -114,11 +114,10 @@ csv_cmd = __string__ (default `jgmenu_run parse-pmenu`)
 
 tint2_look = __boolean__ (default 1)  
 
-    Reads tint2rc and parse config options for colours, dimensions  
-    and alignment.  
-    Reads tint2 button environment position variables. These give  
-    more accurate alignment along the length of the panel than what  
-    the "tint2_look" option achieves.  
+    Reads tint2rc and parses config options for colours, dimensions  
+    and alignment. Also reads tint2 button environment variables.  
+    These give more accurate alignment along the length of the panel  
+    than what parsing the tint2 config file can achieve.  
 
 at_pointer = __boolean__ (default 0)  
 

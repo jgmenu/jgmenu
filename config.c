@@ -2,11 +2,17 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #include "util.h"
 #include "config.h"
+#include "list.h"
+#include "sbuf.h"
+#include "xdgdirs.h"
 
 struct config config;
+static struct sbuf jgmenurc_file;
 
 void config_set_defaults(void)
 {
@@ -77,6 +83,7 @@ void config_cleanup(void)
 	xfree(config.icon_theme);
 	xfree(config.icon_theme_fallback);
 	xfree(config.arrow_string);
+	xfree(jgmenurc_file.buf);
 }
 
 static void process_line(char *line)
@@ -213,21 +220,61 @@ static void read_file(FILE *fp)
 		process_line(line);
 }
 
-void config_parse_file(char *filename)
+static void parse_file(char *filename)
 {
 	FILE *fp;
 
 	fp = fopen(filename, "r");
-	if (!fp) {
-		fprintf(stderr, "warning: could not open config file %s\n", filename);
+	if (!fp)
 		return;
-	}
-
 	read_file(fp);
 	fclose(fp);
 }
 
-void set_floor(int *var, int floor)
+void config_read_jgmenurc(const char *filename)
+{
+	struct stat sb;
+	static int initiated;
+	LIST_HEAD(config_dirs);
+	struct sbuf *tmp, *tmp2;
+
+	if (initiated)
+		goto parse;
+	sbuf_init(&jgmenurc_file);
+	if (filename) {
+		sbuf_cpy(&jgmenurc_file, filename);
+		sbuf_expand_tilde(&jgmenurc_file);
+	}
+	/*
+	 * We look for jgmenurc in the following order:
+	 *   --config-file=
+	 *   ${XDG_CONFIG_HOME:-$HOME/.config}
+	 *   ${XDG_CONFIG_DIRS:-/etc/xdg}
+	 */
+	xdgdirs_get_configdirs(&config_dirs);
+	if (!jgmenurc_file.len) {
+		list_for_each_entry(tmp, &config_dirs, list) {
+			sbuf_addstr(tmp, "/jgmenu/jgmenurc");
+			if (!stat(tmp->buf, &sb)) {
+				sbuf_cpy(&jgmenurc_file, tmp->buf);
+				break;
+			}
+		}
+		list_for_each_entry_safe(tmp, tmp2, &config_dirs, list) {
+			xfree(tmp->buf);
+			list_del(&tmp->list);
+			xfree(tmp);
+		}
+	}
+	initiated = 1;
+	if (stat(jgmenurc_file.buf, &sb) < 0)
+		return;
+	info("using config file %s", jgmenurc_file.buf);
+parse:
+	parse_file(jgmenurc_file.buf);
+}
+
+static void set_floor(int *var, int floor)
 {
 	if (floor > *var)
 		*var = floor;
