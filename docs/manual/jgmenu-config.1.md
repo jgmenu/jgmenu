@@ -1,6 +1,6 @@
 % JGMENU-CONFIG(1)  
 % Johan Malm  
-% 6 July, 2017
+% 11 September, 2017
 
 # NAME
 
@@ -33,13 +33,11 @@ affect its behavior. It is stored at
 Global config variables are set in the following order (i.e. bottom  
 of list has higher precedence):  
 
-  - default (config.c)  
-  - jgmenurc (or as specified by --config-file=)  
+  - built-in defaults (config.c)  
+  - tint2rc config file (can be specified by `TINT2_CONFIG`  
+    environment variable  
+  - jgmenurc config file (can be specified by --config-file=)  
   - command line arguments  
-  - tint2rc  
-
-Values obtained from tint2rc can be overridden by setting  
-"tint2_rules = 0".
 
 ## Syntax
 
@@ -118,18 +116,9 @@ tint2_look = __boolean__ (default 1)
 
     Reads tint2rc and parse config options for colours, dimensions  
     and alignment.  
-
-tint2_button = __boolean__ (default 1)  
-
     Reads tint2 button environment position variables. These give  
     more accurate alignment along the length of the panel than what  
     the "tint2_look" option achieves.  
-
-tint2_rules = __boolean__ (default 1)  
-
-    Reads tint2rc variables in preference to jgmenurc.  
-    If "tint2_rules = 0", jgmenurc can be used to overrule specific  
-    tint2rc settings.  
 
 at_pointer = __boolean__ (default 0)  
 

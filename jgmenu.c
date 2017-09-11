@@ -861,8 +861,8 @@ static void awake_menu(void)
 		launch_menu_at_pointer();
 		resize();
 	}
-	/* for speed improvement, set tint2_button = 0 */
-	if (config.tint2_button && !config.at_pointer) {
+	/* for speed improvement, set tint2_look = 0 */
+	if (config.tint2_look && !config.at_pointer) {
 		tint2env_read_socket();
 		tint2_align();
 		update(1);
@@ -1942,8 +1942,6 @@ static void set_simple_mode(void)
 {
 	config.stay_alive = 0;
 	config.tint2_look = 0;
-	config.tint2_button = 0;
-	config.tint2_rules = 0;
 }
 
 static void read_jgmenurc(const char *filename)
@@ -2085,7 +2083,7 @@ int main(int argc, char *argv[])
 		read_tint2rc();
 
 	/* Parse jgmenurc again to overrule tint2rc values */
-	if (!config.tint2_rules && !arg_vsimple)
+	if (config.tint2_look && !arg_vsimple)
 		read_jgmenurc(arg_config_file);
 
 	config_post_process();
@@ -2093,7 +2091,7 @@ int main(int argc, char *argv[])
 	set_theme();
 	init_geo_variables_from_config();
 
-	if (config.tint2_button) {
+	if (config.tint2_look) {
 		tint2env_init_socket();
 		tint2_align();
 	}

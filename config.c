@@ -15,8 +15,6 @@ void config_set_defaults(void)
 	config.hide_on_startup	   = 0;
 	/* jgmenurc has a csv_cmd variable here */
 	config.tint2_look	   = 1;
-	config.tint2_button	   = 1;
-	config.tint2_rules	   = 1;
 	config.at_pointer	   = 0;
 	config.multi_window	   = 0;
 	config.terminal_exec	   = xstrdup("x-terminal-emulator");
@@ -94,10 +92,6 @@ static void process_line(char *line)
 		xatoi(&config.hide_on_startup, value, XATOI_NONNEG, "config.hide_on_startup");
 	} else if (!strcmp(option, "tint2_look")) {
 		xatoi(&config.tint2_look, value, XATOI_NONNEG, "config.tint2_look");
-	} else if (!strcmp(option, "tint2_button")) {
-		xatoi(&config.tint2_button, value, XATOI_NONNEG, "config.tint2_button");
-	} else if (!strcmp(option, "tint2_rules")) {
-		xatoi(&config.tint2_rules, value, XATOI_NONNEG, "config.tint2_rules");
 	} else if (!strcmp(option, "at_pointer")) {
 		xatoi(&config.at_pointer, value, XATOI_NONNEG, "config.at_pointer");
 	} else if (!strcmp(option, "multi_window")) {

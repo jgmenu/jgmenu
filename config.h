@@ -9,8 +9,6 @@ struct config {
 	int hide_on_startup;
 	/* jgmenurc has a csv_cmd variable here */
 	int tint2_look;
-	int tint2_button;
-	int tint2_rules;
 	int at_pointer;
 	int multi_window;
 	char *terminal_exec;

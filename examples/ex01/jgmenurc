@@ -1,3 +1,5 @@
+menu_halign     = right
+menu_valign     = top
 item_halign     = right
 arrow_string    = <
 color_menu_bg	= #eeeeee 100
@@ -6,3 +8,4 @@ color_norm_bg	= #000000 0
 color_norm_fg	= #111111 100
 color_sel_bg	= #2222dd 80
 color_sel_fg	= #eeeeee 100
+multi_window    = 1

@@ -5,9 +5,7 @@
 #stay_alive          = 1
 #hide_on_startup     = 0
 #csv_cmd             = jgmenu_run parse-pmenu
-#tint2_look          = 1
-#tint2_button        = 1
-tint2_rules         = 0
+tint2_look          = 0
 #at_pointer          = 0
 multi_window         = 1
 #terminal_exec       = x-terminal-emulator
