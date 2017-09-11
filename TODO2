@@ -2,27 +2,31 @@ SHORT TERM THINGS TO DO
 =======================
 
   - multiwin:
-	- add sub_padding_{l,r,t,b} to avoid inheriting root padding (default -1)
+	- add another timer to let mouse 'short-cut' from parent to child
 	- handle submenus when searching
-	- Sort out sub-window alignment and handle edge cases
-	- Make sub-window stay open until timer times out on another parent item
-
-  - Comment out # in jgmenurc
-
-  - Update documentation with triple quote and ^pipe()
-
-  - Refactor around read_csv_file and creating items
-
-  - '\0' terminate read_csv_file if no '\n'  present
+	- if first item selected and then entering padding area, strange behaviour
+	- if clicking parent item when sub-window open - menu.sel opens (not right).
+	- add sub_padding_*
+	- Sort out sub-window edge cases (Create valign+halign for each subwindow)
+	- Add sub_valign config option (default = copy_parent).
 
   - Pipemenu
 	- check duplicate tag names
 	- load icons for pipes
+	- checked memory is freed on 'return to parent'
 
   - parse-ob.c: remove return_cmd
 		Read JGMENU_PREPEND_FILE env var (and read ~/.config/jgmenu/prepend.csv by default)
 		Read stdin -->  exec in jgmenu_run
 				stdin -> mkstemp /tmp/jgmenu-XXXXXX
+
+  - Move struct item/node code to data.c.
+    Refactor to remove 'struct node'
+    Refactor all the checkout_* functions. They're confusing.
+
+  - Refactor around read_csv_file and creating items
+
+  - '\0' terminate read_csv_file if no '\n'  present
 
 === Upversion to 0.7 ===
 
