@@ -51,6 +51,7 @@
 static pthread_t thread;	   /* worker thread for loading icons	  */
 static int pipe_fds[2];		   /* talk between threads + catch sig    */
 static timer_t tmr_mouseover;
+static int sw_close_pending;
 
 struct item {
 	char *name;
@@ -73,6 +74,7 @@ struct node {
 	struct item *item;	   /* item that node points to		  */
 	struct item *last_sel;	   /* used when returning to node	  */
 	struct node *parent;
+	Window wid;
 	struct list_head items;	   /* menu-items hanging off node	  */
 	struct list_head node;
 };
@@ -701,6 +703,7 @@ void checkout_submenu(char *tag)
 			   geo_get_menu_width(), geo_get_menu_height(),
 			   geo_get_screen_width(), geo_get_screen_height(),
 			   font_get());
+	menu.current_node->wid = ui->w[ui->cur].win;
 }
 
 void checkout_parentmenu(char *tag)
@@ -940,6 +943,7 @@ void create_node(const char *name, struct node *parent)
 		n->item = get_item_from_tag(name);
 	n->last_sel = NULL;
 	n->parent = parent;
+	n->wid = 0;
 	INIT_LIST_HEAD(&n->items);
 	list_add_tail(&n->node, &menu.nodes);
 }
@@ -1552,18 +1556,16 @@ void init_pipe_flags(void)
 		die("error setting pipe flags");
 }
 
-/*
- * Returns the window index (as used by geometry.c and x11-ui.c) of the menu
- * window which the pointer is currently over.
- */
-static int mouseover_win(XMotionEvent **e)
+static int is_outside_menu_windows(XMotionEvent **e)
 {
-	int i;
+	struct node *n;
 
-	for (i = 0; i <= geo_cur(); i++)
-		if ((*e)->subwindow == ui->w[i].win)
-			return i;
-	return -1;
+	if (!(*e)->subwindow)
+		return 1;
+	list_for_each_entry(n, &menu.nodes, node)
+		if ((*e)->subwindow == n->wid)
+			return 0;
+	return 1;
 }
 
 static void move_selection_with_mouse(struct point *mouse_coord)
@@ -1584,22 +1586,6 @@ static void move_selection_with_mouse(struct point *mouse_coord)
 		if (item == menu.last)
 			break;
 	}
-}
-
-static int is_mouseover_parent_item(struct point *pr)
-{
-	struct area a;
-
-	if (!geo_cur())
-		return 0;
-	a = menu.current_node->parent->last_sel->area;
-	geo_set_cur(geo_cur() - 1);
-	a.x += geo_get_menu_x0() - config.menu_padding_left - config.item_margin_x;
-	a.w += 2 * (config.menu_padding_left + config.item_margin_x);
-	a.y += geo_get_menu_y0() - config.item_margin_y;
-	a.h += 2 * config.item_margin_y;
-	geo_set_cur(geo_cur() + 1);
-	return ui_is_point_in_area(*pr, a);
 }
 
 #define TMR_MOUSEOVER_SIG SIGRTMAX
@@ -1662,44 +1648,70 @@ void tmr_mouseover_stop(void)
 void hover(void)
 {
 	if (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
-	    !strncmp(menu.sel->cmd, "^pipe(", 6))
+	    !strncmp(menu.sel->cmd, "^pipe(", 6)) {
 		tmr_mouseover_start();
-	else
+		sw_close_pending = 0;
+		return;
+	}
+	if (!sw_close_pending)
 		tmr_mouseover_stop();
+}
+
+static struct node *get_node_from_wid(Window w)
+{
+	struct node *n;
+
+	if (!w)
+		return NULL;
+	list_for_each_entry(n, &menu.nodes, node)
+		if (w == n->wid)
+			return n;
+	return NULL;
+}
+
+void set_focus(Window w)
+{
+	struct node *n;
+
+	n = get_node_from_wid(w);
+	menu.current_node->last_sel = menu.sel;
+	ui_win_activate(w);
+	geo_set_cur(ui->cur);
+	checkout_tag(n->tag);
+	menu.sel = n->last_sel;
+	menu.current_node = n;
 }
 
 void process_pointer_position(XEvent *ev)
 {
 	struct point pw;
-	struct point pr;
 	static int oldy;
 	static int oldx;
 	XMotionEvent *e = (XMotionEvent *)ev;
-	int w = mouseover_win(&e);
 
 	/*
 	 * We get the mouse coordinates using XQueryPointer() as
 	 * ev.xbutton.{x,y} sometimes returns peculiar values.
+	 * If we ever need the coordinates relative to the root window, use
+	 * e->x_root and e->y_root
 	 */
 	pw = mousexy();
 	pw.y -= MOUSE_FUDGE;
 	if ((pw.x == oldx) && (pw.y == oldy))
 		return;
-	pr.x = e->x_root;
-	pr.y = e->y_root - MOUSE_FUDGE;
-
 	if (e->subwindow == ui->w[ui->cur].win) {
 		move_selection_with_mouse(&pw);
 		if (config.multi_window)
 			hover();
-	} else if (w < 0) {
-		/* outside menu windows */
+	} else if (is_outside_menu_windows(&e)) {
 		tmr_mouseover_stop();
-		;
-	} else if (is_mouseover_parent_item(&pr)) {
-		;
 	} else {
-		checkout_parent();
+		set_focus(e->subwindow);
+		if (!ui_win_is_youngest(e->subwindow)) {
+			warn("start shut timer");
+			sw_close_pending = 1;
+			tmr_mouseover_start();
+		}
 		update(1);
 	}
 	oldx = pw.x;
@@ -1810,7 +1822,10 @@ void run(void)
 
 				/* mouse over signal */
 				if (ch == 't') {
-					action_cmd(menu.sel->cmd);
+					ui_win_del_beyond(ui->cur);
+					if (!sw_close_pending)
+						action_cmd(menu.sel->cmd);
+					sw_close_pending = 0;
 					continue;
 				}
 
@@ -2112,6 +2127,7 @@ int main(int argc, char *argv[])
 	draw_menu();
 
 	atexit(cleanup);
+	menu.current_node->wid = ui->w[ui->cur].win;
 	run();
 
 	return 0;

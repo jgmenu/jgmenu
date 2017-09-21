@@ -253,17 +253,54 @@ void ui_win_add(int x, int y, int w, int h, int max_w, int max_h, const char *fo
 	XMapWindow(ui->dpy, ui->w[ui->cur].win);
 }
 
+void ui_win_goto_parent(void)
+{
+	ui->cur--;
+}
+
+void ui_win_activate(Window w)
+{
+	int i;
+
+	for (i = 0; ui->w[i].c; i++)
+		if (w == ui->w[i].win)
+			goto out;
+	die("badness: %s", __func__);
+out:
+	ui->cur = i;
+}
+
+int ui_win_is_youngest(Window w)
+{
+	int i;
+
+	for (i = 0; ui->w[i].c; i++)
+		if (w == ui->w[i].win)
+			break;
+	if (ui->w[i + 1].c)
+		return 0;
+	return 1;
+}
+
+static void del_win(int win_index)
+{
+	if (!ui->w[win_index].c)
+		die("there is not a window to delete");
+	XMapWindow(ui->dpy, ui->w[win_index].win);
+	XDestroyWindow(ui->dpy, ui->w[win_index].win);
+	XDestroyIC(ui->w[win_index].xic);
+	XFreePixmap(ui->dpy, ui->w[win_index].canvas);
+	XFreeGC(ui->dpy, ui->w[win_index].gc);
+	cairo_destroy(ui->w[win_index].c);
+	ui->w[win_index].c = NULL;
+	cairo_surface_destroy(ui->w[win_index].cs);
+	pango_font_description_free(ui->w[win_index].pangofont);
+	g_object_unref(ui->w[win_index].pangolayout);
+}
+
 void ui_win_del(void)
 {
-	XMapWindow(ui->dpy, ui->w[ui->cur].win);
-	XDestroyWindow(ui->dpy, ui->w[ui->cur].win);
-	XDestroyIC(ui->w[ui->cur].xic);
-	XFreePixmap(ui->dpy, ui->w[ui->cur].canvas);
-	XFreeGC(ui->dpy, ui->w[ui->cur].gc);
-	cairo_destroy(ui->w[ui->cur].c);
-	cairo_surface_destroy(ui->w[ui->cur].cs);
-	pango_font_description_free(ui->w[ui->cur].pangofont);
-	g_object_unref(ui->w[ui->cur].pangolayout);
+	del_win(ui->cur);
 	ui->cur--;
 }
 
@@ -271,9 +308,11 @@ void ui_win_del_beyond(int w)
 {
 	if (w < 0)
 		die("%s: 'w' cannot be less than zero", __func__);
-	while (w < ui->cur) {
-		info("deleting window %d", ui->cur);
-		ui_win_del();
+	w++;
+	while (ui->w[w].c) {
+		info("deleting window %d", w);
+		del_win(w);
+		w++;
 	}
 }
 
