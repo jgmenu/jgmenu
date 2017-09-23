@@ -270,7 +270,7 @@ out:
 	ui->cur = i;
 }
 
-int ui_win_is_youngest(Window w)
+int ui_win_has_child(Window w)
 {
 	int i;
 
@@ -280,6 +280,27 @@ int ui_win_is_youngest(Window w)
 	if (ui->w[i + 1].c)
 		return 0;
 	return 1;
+}
+
+void ui_win_print(void)
+{
+	int i;
+
+	for (i = 0; ui->w[i].c; i++)
+		fprintf(stderr, "w%d=%lu; ", i, ui->w[i].win);
+	fprintf(stderr, "\n");
+}
+
+Window ui_win_child_wid(Window w)
+{
+	int i;
+
+	for (i = 0; ui->w[i].c; i++)
+		if (w == ui->w[i].win)
+			break;
+	if (!ui->w[i + 1].c)
+		return 0;
+	return ui->w[i + 1].win;
 }
 
 static void del_win(int win_index)
@@ -306,14 +327,16 @@ void ui_win_del(void)
 
 void ui_win_del_beyond(int w)
 {
+	int i;
+
 	if (w < 0)
 		die("%s: 'w' cannot be less than zero", __func__);
-	w++;
-	while (ui->w[w].c) {
-		info("deleting window %d", w);
-		del_win(w);
-		w++;
-	}
+	for (i = 0; ui->w[i].c; i++)
+		;
+	i--;
+	while (i > w)
+		del_win(i--);
+	ui->cur = w;
 }
 
 void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h,

@@ -1238,6 +1238,7 @@ void action_cmd(char *cmd)
 		if (!p)
 			return;
 		menu.current_node->last_sel = menu.sel;
+//		info("at checkout, last_sel=%p", menu.sel);
 		checkout_submenu(p);
 		update(1);
 	} else if (!strncmp(cmd, "^sub(", 5)) {
@@ -1404,6 +1405,9 @@ void key_event(XKeyEvent *ev)
 	case XK_F3:
 		info("x=%d; y=%d", mousexy().x, mousexy().y);
 		update(1);
+		break;
+	case XK_F4:
+		ui_win_print();
 		break;
 	case XK_F5:
 		restart();
@@ -1645,18 +1649,6 @@ void tmr_mouseover_stop(void)
 	tmr_mouseover_set(0);
 }
 
-void hover(void)
-{
-	if (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
-	    !strncmp(menu.sel->cmd, "^pipe(", 6)) {
-		tmr_mouseover_start();
-		sw_close_pending = 0;
-		return;
-	}
-	if (!sw_close_pending)
-		tmr_mouseover_stop();
-}
-
 static struct node *get_node_from_wid(Window w)
 {
 	struct node *n;
@@ -1667,6 +1659,45 @@ static struct node *get_node_from_wid(Window w)
 		if (w == n->wid)
 			return n;
 	return NULL;
+}
+
+static struct item *subwin_parent_item(Window w)
+{
+	struct node *n;
+	Window child = ui_win_child_wid(w);
+
+	if (!child)
+		return NULL;
+//	fprintf(stderr, "parent=%lu; child=%lu\n", w, child);
+	n = get_node_from_wid(child);
+	if (!n)
+		die("badness at %s:%d", __func__, __LINE__);
+	return n->last_sel;
+}
+
+void hover(void)
+{
+//	struct item *open_item;
+
+//	open_item = subwin_parent_item(menu.current_node->wid);
+	if (!ui_win_has_child(menu.current_node->wid) &&
+	    subwin_parent_item(menu.current_node->wid) == menu.sel)
+		return;
+
+	if (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
+	    !strncmp(menu.sel->cmd, "^pipe(", 6)) {
+		tmr_mouseover_start();
+		sw_close_pending = 0;
+		return;
+	}
+	if (!sw_close_pending)
+		tmr_mouseover_stop();
+
+	if (!ui_win_has_child(menu.current_node->wid) &&
+	    subwin_parent_item(menu.current_node->wid) != menu.sel) {
+		sw_close_pending = 1;
+		tmr_mouseover_start();
+	}
 }
 
 void set_focus(Window w)
@@ -1707,11 +1738,6 @@ void process_pointer_position(XEvent *ev)
 		tmr_mouseover_stop();
 	} else {
 		set_focus(e->subwindow);
-		if (!ui_win_is_youngest(e->subwindow)) {
-			warn("start shut timer");
-			sw_close_pending = 1;
-			tmr_mouseover_start();
-		}
 		update(1);
 	}
 	oldx = pw.x;
