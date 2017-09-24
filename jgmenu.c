@@ -84,7 +84,7 @@ struct menu {
 	struct item *head;	   /* first item in linked list		  */
 	struct item *subhead;	   /* first item in checked out submenu	  */
 	struct item *subtail;	   /* last item in checked out submenu	  */
-	struct item *first;	   /* first visible item			  */
+	struct item *first;	   /* first visible item		  */
 	struct item *last;	   /* last visible item			  */
 	struct item *sel;	   /* currently selected item		  */
 	struct list_head master;   /* all items				  */
@@ -1386,24 +1386,38 @@ void key_event(XKeyEvent *ev)
 	}
 }
 
+static int is_outside_menu_windows(XMotionEvent **e)
+{
+	struct node *n;
+
+	if (!(*e)->subwindow)
+		return 1;
+	list_for_each_entry(n, &menu.nodes, node)
+		if ((*e)->subwindow == n->wid)
+			return 0;
+	return 1;
+}
+
 /* Pointer vertical offset (not sure why this is needed) */
 #define MOUSE_FUDGE 3
+
 void mouse_event(XEvent *e)
 {
-	struct item *item;
-	XButtonReleasedEvent *ev = &e->xbutton;
+	XMotionEvent *xme;
+	XButtonReleasedEvent *ev;
 	struct point mouse_coords;
 
 	mouse_coords = mousexy();
 	mouse_coords.y -= MOUSE_FUDGE;
 
 	/* Die if mouse clicked outside window */
-	if (ev->button == Button1 &&
-	    (ev->x < geo_get_menu_x0() ||
-	    ev->x > geo_get_menu_x0() + geo_get_menu_width() ||
-	    ev->y < geo_get_menu_y0() ||
-	    ev->y > geo_get_menu_y0() + geo_get_menu_height()))
+	xme = (XMotionEvent *)e;
+	if (is_outside_menu_windows(&xme)) {
 		hide_or_exit();
+		return;
+	}
+
+	ev = &e->xbutton;
 
 	/* right-click */
 	if (ev->button == Button3) {
@@ -1433,20 +1447,17 @@ void mouse_event(XEvent *e)
 
 	/* left-click */
 	if (ev->button == Button1) {
-		item = menu.first;
-		list_for_each_entry_from(item, &menu.master, master) {
-			if (ui_is_point_in_area(mouse_coords, item->area)) {
-				if (!item->selectable)
-					break;
-				if (config.spawn) {
-					action_cmd(item->cmd);
-					break;
-				}
-				puts(item->cmd);
-				hide_or_exit();
-			}
-			if (item == menu.last)
-				break;
+		if (!menu.sel->selectable)
+			return;
+		if (config.multi_window &&
+		    (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
+		     !strncmp(menu.sel->cmd, "^pipe(", 6)))
+			return;
+		if (config.spawn) {
+			action_cmd(menu.sel->cmd);
+		} else {
+			puts(menu.sel->cmd);
+			hide_or_exit();
 		}
 	}
 }
@@ -1508,18 +1519,6 @@ void init_pipe_flags(void)
 	flags |= O_NONBLOCK;
 	if (fcntl(pipe_fds[1], F_SETFL, flags) == -1)
 		die("error setting pipe flags");
-}
-
-static int is_outside_menu_windows(XMotionEvent **e)
-{
-	struct node *n;
-
-	if (!(*e)->subwindow)
-		return 1;
-	list_for_each_entry(n, &menu.nodes, node)
-		if ((*e)->subwindow == n->wid)
-			return 0;
-	return 1;
 }
 
 static void move_selection_with_mouse(struct point *mouse_coord)
@@ -1802,8 +1801,10 @@ void run(void)
 				/* mouse over signal */
 				if (ch == 't') {
 					ui_win_del_beyond(ui->cur);
-					if (!sw_close_pending)
+					if (!sw_close_pending) {
 						action_cmd(menu.sel->cmd);
+						menu.sel = menu.current_node->parent->last_sel;
+					}
 					sw_close_pending = 0;
 					continue;
 				}
