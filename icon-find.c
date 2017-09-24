@@ -406,9 +406,9 @@ void icon_find_cleanup(void)
 {
 	struct sbuf *theme, *tmp_theme;
 	struct sbuf *pmpath, *tmp_pmpath;
+
 	if (!has_been_inited)
 		return;
-
 	list_for_each_entry_safe(theme, tmp_theme, &theme_list, list) {
 		xfree(theme->buf);
 		list_del(&theme->list);

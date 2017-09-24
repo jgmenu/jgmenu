@@ -5,3 +5,4 @@ all:
 	@./ex02.sh
 	@./ex03.sh
 	@./ex04.sh
+	@./ex05.sh

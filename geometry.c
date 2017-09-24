@@ -63,7 +63,7 @@ static void update_sub_window(void)
 				   item_margin_y -
 				   menu_padding_top;
 		if (win[cur].menu_y0 > max_y0)
-				win[cur].menu_y0 = max_y0;
+			win[cur].menu_y0 = max_y0;
 	} else if (menu_valign == BOTTOM) {
 		win[cur].menu_y0 = win[cur - 1].menu_y0 +
 				   win[cur - 1].parent_item.y +

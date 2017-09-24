@@ -270,7 +270,7 @@ out:
 	ui->cur = i;
 }
 
-int ui_win_has_child(Window w)
+int ui_has_child_window_open(Window w)
 {
 	int i;
 
@@ -278,17 +278,8 @@ int ui_win_has_child(Window w)
 		if (w == ui->w[i].win)
 			break;
 	if (ui->w[i + 1].c)
-		return 0;
-	return 1;
-}
-
-void ui_win_print(void)
-{
-	int i;
-
-	for (i = 0; ui->w[i].c; i++)
-		fprintf(stderr, "w%d=%lu; ", i, ui->w[i].win);
-	fprintf(stderr, "\n");
+		return 1;
+	return 0;
 }
 
 Window ui_win_child_wid(Window w)

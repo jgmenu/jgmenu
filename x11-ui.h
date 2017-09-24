@@ -56,8 +56,7 @@ void ui_win_init(int x, int y, int w, int h, int max_w, int max_h, const char *f
 void ui_win_add(int x, int y, int w, int h, int max_w, int max_h, const char *font);
 void ui_win_goto_parent(void);
 void ui_win_activate(Window w);
-int ui_win_has_child(Window w);
-void ui_win_print(void);
+int ui_has_child_window_open(Window w);
 Window ui_win_child_wid(Window w);
 void ui_win_del(void);
 void ui_win_del_beyond(int w);

@@ -313,7 +313,6 @@ void update_filtered_list(void)
 	/* select an item */
 	if (!filter_needle_length() && menu.current_node->last_sel) {
 		menu.sel = menu.current_node->last_sel;
-		menu.current_node->last_sel = NULL;
 		if (!isvisible(menu.sel))
 			menu.sel = menu.first;
 	} else {
@@ -1238,7 +1237,6 @@ void action_cmd(char *cmd)
 		if (!p)
 			return;
 		menu.current_node->last_sel = menu.sel;
-//		info("at checkout, last_sel=%p", menu.sel);
 		checkout_submenu(p);
 		update(1);
 	} else if (!strncmp(cmd, "^sub(", 5)) {
@@ -1401,13 +1399,6 @@ void key_event(XKeyEvent *ev)
 		if (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
 		    !strncmp(menu.sel->cmd, "^pipe(", 6))
 			action_cmd(menu.sel->cmd);
-		break;
-	case XK_F3:
-		info("x=%d; y=%d", mousexy().x, mousexy().y);
-		update(1);
-		break;
-	case XK_F4:
-		ui_win_print();
 		break;
 	case XK_F5:
 		restart();
@@ -1668,35 +1659,34 @@ static struct item *subwin_parent_item(Window w)
 
 	if (!child)
 		return NULL;
-//	fprintf(stderr, "parent=%lu; child=%lu\n", w, child);
 	n = get_node_from_wid(child);
 	if (!n)
 		die("badness at %s:%d", __func__, __LINE__);
-	return n->last_sel;
+	return n->parent->last_sel;
 }
 
 void hover(void)
 {
-//	struct item *open_item;
+	struct item *open_item;
 
-//	open_item = subwin_parent_item(menu.current_node->wid);
-	if (!ui_win_has_child(menu.current_node->wid) &&
-	    subwin_parent_item(menu.current_node->wid) == menu.sel)
+	/* submenu item */
+	open_item = subwin_parent_item(menu.current_node->wid);
+	if (menu.sel == open_item)
 		return;
-
 	if (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
 	    !strncmp(menu.sel->cmd, "^pipe(", 6)) {
 		tmr_mouseover_start();
 		sw_close_pending = 0;
 		return;
 	}
-	if (!sw_close_pending)
-		tmr_mouseover_stop();
 
-	if (!ui_win_has_child(menu.current_node->wid) &&
-	    subwin_parent_item(menu.current_node->wid) != menu.sel) {
-		sw_close_pending = 1;
-		tmr_mouseover_start();
+	/* non-submenu item */
+	if (!sw_close_pending) {
+		tmr_mouseover_stop();
+		if (ui_has_child_window_open(menu.current_node->wid)) {
+			sw_close_pending = 1;
+			tmr_mouseover_start();
+		}
 	}
 }
 
@@ -1737,6 +1727,11 @@ void process_pointer_position(XEvent *ev)
 	} else if (is_outside_menu_windows(&e)) {
 		tmr_mouseover_stop();
 	} else {
+		/*
+		 * NOTE: When sub window has just opened, we end up here on
+		 * the next event (once). I.e. we re-set the focus on the item
+		 * that triggered the subwindow to open.
+		 */
 		set_focus(e->subwindow);
 		update(1);
 	}
