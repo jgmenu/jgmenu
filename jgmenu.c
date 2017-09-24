@@ -63,7 +63,6 @@ struct item {
 	int selectable;
 	struct list_head master;
 	struct list_head filter;
-	struct list_head list;	   /* submenu list under each node	  */
 };
 
 static struct item empty_item;
@@ -75,7 +74,6 @@ struct node {
 	struct item *last_sel;	   /* used when returning to node	  */
 	struct node *parent;
 	Window wid;
-	struct list_head items;	   /* menu-items hanging off node	  */
 	struct list_head node;
 };
 
@@ -888,28 +886,6 @@ struct item *get_item_from_tag(const char *tag)
 	return NULL;
 }
 
-void hang_items_off_nodes(void)
-{
-	struct node *n;
-	struct item *p;
-
-	list_for_each_entry(n, &menu.nodes, node) {
-		BUG_ON(!n->tag);
-		if (n->item)
-			p = container_of((n->item)->master.next,
-					 struct item, master);
-		else
-			p = list_first_entry_or_null(&menu.master,
-						     struct item, master);
-
-		list_for_each_entry_from(p, &menu.master, master) {
-			if (p->tag)
-				break;
-			list_add_tail(&p->list, &n->items);
-		}
-	}
-}
-
 int node_exists(const char *name)
 {
 	struct node *n;
@@ -936,7 +912,7 @@ void create_node(const char *name, struct node *parent)
 	n->last_sel = NULL;
 	n->parent = parent;
 	n->wid = 0;
-	INIT_LIST_HEAD(&n->items);
+//	INIT_LIST_HEAD(&n->items);
 	list_add_tail(&n->node, &menu.nodes);
 }
 
@@ -1144,7 +1120,6 @@ void pipemenu_add(const char *s)
 	/* FIXME: walk_tag_items means 'add new nodes' - consider renaming */
 	parent_node = menu.current_node;
 	walk_tagged_items(pipe_head, parent_node);
-	hang_items_off_nodes();
 	checkout_submenu(pipe_head->tag);
 	pm_push(menu.current_node, parent_node);
 }
@@ -2107,7 +2082,6 @@ int main(int argc, char *argv[])
 	if (config.multi_window)
 		rm_back_items();
 	build_tree();
-	hang_items_off_nodes();
 
 	if (args_checkout())
 		checkout_rootmenu(args_checkout());
