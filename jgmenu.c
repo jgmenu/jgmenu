@@ -69,7 +69,6 @@ static struct item empty_item;
 
 /* A node is marked by a ^tag() and denotes the start of a submenu */
 struct node {
-	char *tag;
 	struct item *item;	   /* item that node points to		  */
 	struct item *last_sel;	   /* used when returning to node	  */
 	struct node *parent;
@@ -550,7 +549,7 @@ struct node *get_node_from_tag(const char *tag)
 		return NULL;
 
 	list_for_each_entry(n, &menu.nodes, node) {
-		if (!strcmp(tag, n->tag))
+		if (!strcmp(tag, n->item->tag))
 			return n;
 	}
 
@@ -639,7 +638,7 @@ int tag_exists(const char *tag)
 	if (!tag)
 		return 0;
 	list_for_each_entry(n, &menu.nodes, node) {
-		if (!strcmp(tag, n->tag))
+		if (!strcmp(tag, n->item->tag))
 			return 1;
 	}
 	return 0;
@@ -728,7 +727,7 @@ void checkout_rootnode(void)
 {
 	while (menu.current_node->parent)
 		menu.current_node = menu.current_node->parent;
-	checkout_rootmenu(menu.current_node->tag);
+	checkout_rootmenu(menu.current_node->item->tag);
 }
 
 void resize(void)
@@ -892,7 +891,7 @@ int node_exists(const char *name)
 
 	BUG_ON(!name);
 	list_for_each_entry(n, &menu.nodes, node)
-		if (!strcmp(name, n->tag))
+		if (!strcmp(name, n->item->tag))
 			return 1;
 	return 0;
 }
@@ -903,7 +902,6 @@ void create_node(const char *name, struct node *parent)
 
 	n = xmalloc(sizeof(struct node));
 	BUG_ON(!name);
-	n->tag = strdup(name);
 	if (!strcmp(name, "__root__"))
 		n->item = list_first_entry_or_null(&menu.master,
 						   struct item, master);
@@ -912,7 +910,6 @@ void create_node(const char *name, struct node *parent)
 	n->last_sel = NULL;
 	n->parent = parent;
 	n->wid = 0;
-//	INIT_LIST_HEAD(&n->items);
 	list_add_tail(&n->node, &menu.nodes);
 }
 
@@ -958,7 +955,6 @@ void destroy_node_tree(void)
 	struct node *n, *tmp_n;
 
 	list_for_each_entry_safe(n, tmp_n, &menu.nodes, node) {
-		xfree(n->tag);
 		list_del(&n->node);
 		xfree(n);
 	}
@@ -1137,7 +1133,6 @@ void pipemenu_del(struct node *node)
 		xfree(i);
 	}
 	list_for_each_entry_safe_from(node, n_tmp, &menu.nodes, node) {
-		xfree(node->tag);
 		list_del(&node->node);
 		xfree(node);
 	}
@@ -1150,7 +1145,6 @@ void pipemenu_del_all(void)
 	n = (struct node *)pm_first_pipemenu_node();
 	if (!n)
 		return;
-	info("deleting pipemenu at node->name=%s", n->tag);
 	pipemenu_del(n);
 	pm_cleanup();
 }
@@ -1164,7 +1158,7 @@ void checkout_parent(void)
 	parent = menu.current_node->parent;
 	if (pm_is_outside(parent))
 		pipemenu_del(menu.current_node);
-	checkout_parentmenu(parent->tag);
+	checkout_parentmenu(parent->item->tag);
 }
 
 static void hide_menu(void)
@@ -1662,7 +1656,7 @@ void set_focus(Window w)
 	menu.current_node->last_sel = menu.sel;
 	ui_win_activate(w);
 	geo_set_cur(ui->cur);
-	checkout_tag(n->tag);
+	checkout_tag(n->item->tag);
 	menu.sel = n->last_sel;
 	menu.current_node = n;
 }
