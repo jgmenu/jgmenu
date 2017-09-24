@@ -16,6 +16,13 @@
 #define XATOI_NONNEG (01)
 #define XATOI_GT_0   (02)
 
+#define BUG_ON(condition) do { \
+	if ((condition) != 0) { \
+		fprintf(stderr, "Badness in %s() at %s:%d\n", __func__, __FILE__, \
+			__LINE__); \
+	} \
+} while (0)
+
 void info(const char *err, ...);
 void warn(const char *err, ...);
 void die(const char *err, ...);

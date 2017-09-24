@@ -879,13 +879,10 @@ struct item *get_item_from_tag(const char *tag)
 {
 	struct item *item;
 
-	if (!tag)
-		die("tag=(null) in get_item_from_tag()");
-
+	BUG_ON(!tag);
 	list_for_each_entry(item, &menu.master, master)
 		if (item->tag && !strcmp(tag, item->tag))
 			return item;
-
 	if (tag && strncmp(tag, "root", 4))
 		fprintf(stderr, "warning: could not find tag '%s'\n", tag);
 	return NULL;
@@ -897,9 +894,7 @@ void hang_items_off_nodes(void)
 	struct item *p;
 
 	list_for_each_entry(n, &menu.nodes, node) {
-		if (!n->tag)
-			die("node has no tag");
-
+		BUG_ON(!n->tag);
 		if (n->item)
 			p = container_of((n->item)->master.next,
 					 struct item, master);
@@ -919,8 +914,7 @@ int node_exists(const char *name)
 {
 	struct node *n;
 
-	if (!name)
-		die("node_exists was called without name");
+	BUG_ON(!name);
 	list_for_each_entry(n, &menu.nodes, node)
 		if (!strcmp(name, n->tag))
 			return 1;
@@ -932,8 +926,7 @@ void create_node(const char *name, struct node *parent)
 	struct node *n;
 
 	n = xmalloc(sizeof(struct node));
-	if (!name)
-		die("cannot create node without name");
+	BUG_ON(!name);
 	n->tag = strdup(name);
 	if (!strcmp(name, "__root__"))
 		n->item = list_first_entry_or_null(&menu.master,
@@ -999,11 +992,9 @@ void build_tree(void)
 {
 	struct item *item;
 
-	if (list_empty(&menu.master))
-		die("cannot build tree on empty menu.master list");
+	BUG_ON(list_empty(&menu.master));
 	item = list_first_entry_or_null(&menu.master, struct item, master);
-	if (item->tag && list_is_singular(&menu.master))
-		die("cannot build a menu on a single tag item");
+	BUG_ON(item->tag && list_is_singular(&menu.master));
 
 	/* consider case when first item is not a ^tag() item */
 	if (!item->tag)
@@ -1137,8 +1128,7 @@ void pipemenu_add(const char *s)
 	struct item *pipe_head;
 	struct node *parent_node;
 
-	if (!s)
-		die("pipemenu_add(): *s must be set");
+	BUG_ON(!s);
 	fp = popen(s, "r");
 	if (!fp) {
 		warn("could not open pipe '%s'", s);
@@ -1660,8 +1650,7 @@ static struct item *subwin_parent_item(Window w)
 	if (!child)
 		return NULL;
 	n = get_node_from_wid(child);
-	if (!n)
-		die("badness at %s:%d", __func__, __LINE__);
+	BUG_ON(!n);
 	return n->parent->last_sel;
 }
 
