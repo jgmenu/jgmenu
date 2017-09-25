@@ -25,6 +25,10 @@ static int menu_padding_left;		/* s  */
 static enum alignment menu_valign;
 static enum alignment menu_halign;
 static int sub_spacing;			/* s  */
+static int sub_padding_top;		/* s  */
+static int sub_padding_right;		/* s  */
+static int sub_padding_bottom;		/* s  */
+static int sub_padding_left;		/* s  */
 static int item_margin_x;		/* s  */
 static int item_margin_y;		/* s  */
 static int item_height;			/* sg */
@@ -49,7 +53,6 @@ static void update_root(void)
 		win[cur].menu_y0 = screen_y0 + menu_margin_y;
 }
 
-/* FIXME: Needs to be sub_padding_* */
 static void update_sub_window(void)
 {
 	if (!cur)
@@ -61,7 +64,7 @@ static void update_sub_window(void)
 		win[cur].menu_y0 = win[cur - 1].menu_y0 +
 				   win[cur - 1].parent_item.y -
 				   item_margin_y -
-				   menu_padding_top;
+				   sub_padding_top;
 		if (win[cur].menu_y0 > max_y0)
 			win[cur].menu_y0 = max_y0;
 	} else if (menu_valign == BOTTOM) {
@@ -69,7 +72,7 @@ static void update_sub_window(void)
 				   win[cur - 1].parent_item.y +
 				   win[cur - 1].parent_item.h +
 				   item_margin_y +
-				   menu_padding_top -
+				   sub_padding_bottom -
 				   win[cur].menu_height;
 		if (win[cur].menu_y0 < screen_y0)
 			win[cur].menu_y0 = screen_y0;
@@ -132,11 +135,15 @@ int geo_get_item_coordinates(struct area *a)
 		goto out;
 	}
 	if (!h)
-		h = item_margin_y + menu_padding_top;
+		h = !cur ? item_margin_y + menu_padding_top :
+		    item_margin_y + sub_padding_top;
 	a->y = h;
-	a->x = menu_padding_left + item_margin_x;
-	a->w = win[cur].menu_width - (item_margin_x * 2) - menu_padding_left -
-	       menu_padding_right;
+	a->x = !cur ? menu_padding_left + item_margin_x :
+	       sub_padding_left + item_margin_x;
+	a->w = !cur ? win[cur].menu_width - (item_margin_x * 2) -
+	       menu_padding_left - menu_padding_right :
+	       win[cur].menu_width - (item_margin_x * 2) -
+	       sub_padding_left - sub_padding_right;
 	h += a->h + item_margin_y;
 out:
 	return 0;
@@ -146,10 +153,12 @@ struct point geo_get_max_itemarea_that_fits(void)
 {
 	struct point p;
 
-	p.x = screen_width - menu_margin_x - menu_padding_left -
-	      menu_padding_right;
-	p.y = screen_height - menu_margin_y - menu_padding_top -
-	      menu_padding_bottom;
+	p.x = !cur ? screen_width - menu_margin_x -
+	      menu_padding_left - menu_padding_right :
+	      screen_width - menu_margin_x - sub_padding_left - sub_padding_right;
+	p.y = !cur ? screen_height - menu_margin_y -
+	      menu_padding_top - menu_padding_bottom :
+	      screen_height - menu_margin_y - sub_padding_top - sub_padding_bottom;
 	return p;
 }
 
@@ -202,7 +211,9 @@ void geo_set_menu_width(int width)
 
 void geo_set_menu_width_from_itemarea_width(int width)
 {
-	win[cur].menu_width = width + menu_padding_left + menu_padding_right;
+	win[cur].menu_width = !cur ? width + menu_padding_left +
+			      menu_padding_right :
+			      width + sub_padding_left + sub_padding_right;
 	geo_update();
 }
 
@@ -214,7 +225,8 @@ void geo_set_menu_height(int h)
 
 void geo_set_menu_height_from_itemarea_height(int h)
 {
-	win[cur].menu_height = h + menu_padding_top + menu_padding_bottom;
+	win[cur].menu_height = !cur ? h + menu_padding_top + menu_padding_bottom :
+			       h + sub_padding_top + sub_padding_bottom;
 	geo_update();
 }
 
@@ -250,6 +262,26 @@ void geo_set_item_height(int h)
 void geo_set_sub_spacing(int spacing)
 {
 	sub_spacing = spacing;
+}
+
+void geo_set_sub_padding_top(int padding)
+{
+	sub_padding_top = padding;
+}
+
+void geo_set_sub_padding_right(int padding)
+{
+	sub_padding_right = padding;
+}
+
+void geo_set_sub_padding_bottom(int padding)
+{
+	sub_padding_bottom = padding;
+}
+
+void geo_set_sub_padding_left(int padding)
+{
+	sub_padding_left = padding;
 }
 
 void geo_set_item_margin_x(int margin)
@@ -301,7 +333,9 @@ int geo_get_menu_height(void)
 
 int geo_get_itemarea_height(void)
 {
-	return win[cur].menu_height - menu_padding_top - menu_padding_bottom;
+	return !cur ? win[cur].menu_height - menu_padding_top -
+	       menu_padding_bottom :
+	       win[cur].menu_height - sub_padding_top - sub_padding_bottom;
 }
 
 int geo_get_menu_width(void)
@@ -311,7 +345,8 @@ int geo_get_menu_width(void)
 
 int geo_get_menu_width_from_itemarea_width(int width)
 {
-	return width + menu_padding_right + menu_padding_left;
+	return !cur ? width + menu_padding_right + menu_padding_left :
+	       width + sub_padding_right + sub_padding_left;
 }
 
 int geo_get_item_height(void)

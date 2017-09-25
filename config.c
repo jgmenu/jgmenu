@@ -39,10 +39,10 @@ void config_set_defaults(void)
 	config.menu_valign	   = BOTTOM;
 
 	config.sub_spacing	   = 1;
-	config.sub_padding_top	   = 5;
-	config.sub_padding_right   = 5;
-	config.sub_padding_bottom  = 5;
-	config.sub_padding_left	   = 5;
+	config.sub_padding_top	   = -1;
+	config.sub_padding_right   = -1;
+	config.sub_padding_bottom  = -1;
+	config.sub_padding_left	   = -1;
 
 	config.item_margin_x	   = 3;
 	config.item_margin_y	   = 3;
@@ -145,6 +145,14 @@ static void process_line(char *line)
 
 	} else if (!strcmp(option, "sub_spacing")) {
 		xatoi(&config.sub_spacing, value, 0, "config.sub_spacing");
+	} else if (!strcmp(option, "sub_padding_top")) {
+		xatoi(&config.sub_padding_top, value, XATOI_NONNEG, "config.sub_padding_top");
+	} else if (!strcmp(option, "sub_padding_right")) {
+		xatoi(&config.sub_padding_right, value, XATOI_NONNEG, "config.sub_padding_right");
+	} else if (!strcmp(option, "sub_padding_bottom")) {
+		xatoi(&config.sub_padding_bottom, value, XATOI_NONNEG, "config.sub_padding_bottom");
+	} else if (!strcmp(option, "sub_padding_left")) {
+		xatoi(&config.sub_padding_left, value, XATOI_NONNEG, "config.sub_padding_left");
 
 	} else if (!strcmp(option, "item_margin_x")) {
 		xatoi(&config.item_margin_x, value, XATOI_NONNEG, "config.item_margin_x");
@@ -290,4 +298,13 @@ void config_post_process(void)
 	set_floor(&config.menu_padding_left, config.menu_border);
 	set_floor(&config.menu_padding_right, config.menu_border);
 	set_floor(&config.menu_padding_top, config.menu_border);
+
+	if (config.sub_padding_top < 0)
+		config.sub_padding_top = config.menu_padding_top;
+	if (config.sub_padding_right < 0)
+		config.sub_padding_right = config.menu_padding_right;
+	if (config.sub_padding_bottom < 0)
+		config.sub_padding_bottom  = config.menu_padding_bottom;
+	if (config.sub_padding_left < 0)
+		config.sub_padding_left = config.menu_padding_left;
 }

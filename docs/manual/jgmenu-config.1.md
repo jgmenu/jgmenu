@@ -1,6 +1,6 @@
 % JGMENU-CONFIG(1)  
 % Johan Malm  
-% 11 September, 2017
+% 25 September, 2017
 
 # NAME
 
@@ -159,6 +159,20 @@ menu_halign = (left | right) (default left)
 menu_valign = (top | bottom) (default bottom)  
 
     Horizontal and vertical alignment respectively.  
+
+sub_spacing = __integer__ (default 1)
+
+    Horizontal space between windows. A negative value results in  
+    each submenu window overlapping its parent window.
+
+sub_padding_top = __integer__ (default -1)  
+sub_padding_right = __integer__ (default -1)  
+sub_padding_bottom = __integer__ (default -1)  
+sub_padding_left = __integer__ (default -1)  
+
+    The same as `menu_padding_*` but applies to submenu windows  
+    only. If set to a negative value, the `menu_padding_*`  
+    equivalent will be used.  
 
 item_margin_x = __integer__ (default 3)  
 item_margin_y = __integer__ (default 3)  

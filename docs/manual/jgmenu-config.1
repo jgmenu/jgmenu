@@ -6,7 +6,7 @@
 .PD 0
 .P
 .PD
-% 11 September, 2017
+% 25 September, 2017
 .SH NAME
 .PP
 jgmenu\-config \- gets and sets jgmenu options
@@ -347,6 +347,41 @@ menu_halign = (left | right) (default left)
 menu_valign = (top | bottom) (default bottom)
 .PP
 \ \ \ \ Horizontal and vertical alignment respectively.
+.PP
+sub_spacing = \f[B]integer\f[] (default 1)
+.PP
+\ \ \ \ Horizontal space between windows.
+A negative value results in
+.PD 0
+.P
+.PD
+\ \ \ \ each submenu window overlapping its parent window.
+.PP
+sub_padding_top = \f[B]integer\f[] (default \-1)
+.PD 0
+.P
+.PD
+sub_padding_right = \f[B]integer\f[] (default \-1)
+.PD 0
+.P
+.PD
+sub_padding_bottom = \f[B]integer\f[] (default \-1)
+.PD 0
+.P
+.PD
+sub_padding_left = \f[B]integer\f[] (default \-1)
+.PP
+\ \ \ \ The same as \f[C]menu_padding_*\f[] but applies to submenu
+windows
+.PD 0
+.P
+.PD
+\ \ \ \ only.
+If set to a negative value, the \f[C]menu_padding_*\f[]
+.PD 0
+.P
+.PD
+\ \ \ \ equivalent will be used.
 .PP
 item_margin_x = \f[B]integer\f[] (default 3)
 .PD 0
