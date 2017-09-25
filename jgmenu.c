@@ -1628,8 +1628,10 @@ void hover(void)
 
 	/* submenu item */
 	open_item = subwin_parent_item(menu.current_node->wid);
-	if (menu.sel == open_item)
+	if (menu.sel == open_item) {
+		tmr_mouseover_stop();
 		return;
+	}
 	if (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
 	    !strncmp(menu.sel->cmd, "^pipe(", 6)) {
 		tmr_mouseover_start();
