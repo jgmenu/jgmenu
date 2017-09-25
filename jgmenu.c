@@ -1416,18 +1416,23 @@ void mouse_event(XEvent *e)
 	XMotionEvent *xme;
 	XButtonReleasedEvent *ev;
 	struct point mouse_coords;
+	int outside_menu_windows = 0;
 
 	mouse_coords = mousexy();
 	mouse_coords.y -= MOUSE_FUDGE;
 
-	/* Die if mouse clicked outside window */
 	xme = (XMotionEvent *)e;
-	if (is_outside_menu_windows(&xme)) {
+	if (is_outside_menu_windows(&xme))
+		outside_menu_windows = 1;
+
+	ev = &e->xbutton;
+
+	/* left/right-click outside menu windows */
+	if ((ev->button == Button1 || ev->button == Button3) &&
+	    outside_menu_windows) {
 		hide_or_exit();
 		return;
 	}
-
-	ev = &e->xbutton;
 
 	/* right-click */
 	if (ev->button == Button3) {
