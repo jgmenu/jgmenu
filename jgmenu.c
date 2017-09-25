@@ -509,7 +509,8 @@ void draw_menu(void)
 				  config.menu_radius, config.menu_border,
 				  0, config.color_menu_border);
 
-	widgets_draw();
+	if (!menu.current_node->parent)
+		widgets_draw();
 
 	/* Draw menu items */
 	p = menu.first;
