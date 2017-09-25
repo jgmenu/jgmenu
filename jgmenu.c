@@ -112,6 +112,9 @@ static const char jgmenu_usage[] =
 "    --csv-file=<file>     specify menu file (in jgmenu flavoured CSV format)\n"
 "    --csv-cmd=<command>   specify command to producue menu data\n";
 
+static void checkout_rootnode(void);
+static void pipemenu_del_all(void);
+
 void init_empty_item(void)
 {
 	empty_item.name = xstrdup("<empty>");
@@ -276,6 +279,12 @@ void update_filtered_list(void)
 	INIT_LIST_HEAD(&menu.filter);
 
 	if (filter_needle_length()) {
+		if (config.multi_window) {
+			ui_win_del_beyond(0);
+			geo_set_cur(0);
+			checkout_rootnode();
+			pipemenu_del_all();
+		}
 		list_for_each_entry(item, &menu.master, master) {
 			if (!strncmp("^checkout(", item->cmd, 10) ||
 			    !strncmp("^tag(", item->cmd, 5) ||
