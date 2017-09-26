@@ -188,7 +188,7 @@ struct point geo_get_max_itemarea_that_fits(void)
 	      screen_width - menu_margin_x - sub_padding_left - sub_padding_right;
 	p.y = !cur ? screen_height - menu_margin_y -
 	      menu_padding_top - menu_padding_bottom :
-	      screen_height - menu_margin_y - sub_padding_top - sub_padding_bottom;
+	      screen_height - sub_padding_top - sub_padding_bottom;
 	return p;
 }
 
