@@ -10,6 +10,8 @@ struct win {
 	int menu_y0;			/*  g */
 	int menu_height;		/* sg */
 	int menu_width;			/* sg */
+	enum alignment menu_valign;	/* s  */
+	enum alignment menu_halign;	/* s  */
 	struct area parent_item;
 };
 
@@ -22,8 +24,6 @@ static int menu_padding_top;		/* s  */
 static int menu_padding_right;		/* s  */
 static int menu_padding_bottom;		/* s  */
 static int menu_padding_left;		/* s  */
-static enum alignment menu_valign;
-static enum alignment menu_halign;
 static int sub_spacing;			/* s  */
 static int sub_padding_top;		/* s  */
 static int sub_padding_right;		/* s  */
@@ -40,25 +40,53 @@ static int screen_y0;
 
 static void update_root(void)
 {
-	if (menu_halign == LEFT)
+	if (win[cur].menu_halign == LEFT)
 		win[cur].menu_x0 = menu_margin_x;
-	else if (menu_halign == RIGHT)
+	else if (win[cur].menu_halign == RIGHT)
 		win[cur].menu_x0 = screen_width - win[cur].menu_width -
 				   menu_margin_x;
 
-	if (menu_valign == BOTTOM)
+	if (win[cur].menu_valign == BOTTOM)
 		win[cur].menu_y0 = screen_y0 + screen_height -
 				   win[cur].menu_height - menu_margin_y;
-	else if (menu_valign == TOP)
+	else if (win[cur].menu_valign == TOP)
 		win[cur].menu_y0 = screen_y0 + menu_margin_y;
+}
+
+static void left_align(void)
+{
+	win[cur].menu_halign = LEFT;
+	win[cur].menu_x0 = win[cur - 1].menu_x0 + win[cur - 1].menu_width +
+			   sub_spacing;
+}
+
+static void right_align(void)
+{
+	win[cur].menu_halign = RIGHT;
+	win[cur].menu_x0 = win[cur - 1].menu_x0 - win[cur].menu_width -
+			   sub_spacing;
+}
+
+static void left_align_and_adjust(void)
+{
+	int max_x0 = screen_x0 + screen_width - win[cur].menu_width;
+
+	left_align();
+	if (win[cur].menu_x0 > max_x0)
+		win[cur].menu_x0 = max_x0;
+}
+
+static void right_align_and_adjust(void)
+{
+	right_align();
+	if (win[cur].menu_x0 < screen_x0)
+		win[cur].menu_x0 = screen_x0;
 }
 
 static void update_sub_window(void)
 {
-	if (!cur)
-		die("update_sub_window() should not be called for root window");
-
-	if (menu_valign == TOP) {
+	BUG_ON(!cur);
+	if (win[cur].menu_valign == TOP) {
 		int max_y0 = screen_height - win[cur].menu_height;
 
 		win[cur].menu_y0 = win[cur - 1].menu_y0 +
@@ -67,7 +95,7 @@ static void update_sub_window(void)
 				   sub_padding_top;
 		if (win[cur].menu_y0 > max_y0)
 			win[cur].menu_y0 = max_y0;
-	} else if (menu_valign == BOTTOM) {
+	} else if (win[cur].menu_valign == BOTTOM) {
 		win[cur].menu_y0 = win[cur - 1].menu_y0 +
 				   win[cur - 1].parent_item.y +
 				   win[cur - 1].parent_item.h +
@@ -78,14 +106,16 @@ static void update_sub_window(void)
 			win[cur].menu_y0 = screen_y0;
 	}
 
-	if (menu_halign == LEFT)
-		win[cur].menu_x0 = win[cur - 1].menu_x0 +
-				   win[cur - 1].menu_width +
-				   sub_spacing;
-	else if (menu_halign == RIGHT)
-		win[cur].menu_x0 = win[cur - 1].menu_x0 -
-				   win[cur].menu_width -
-				   sub_spacing;
+	if (win[cur].menu_halign == LEFT) {
+		left_align();
+		if (screen_x0 + screen_width - win[cur].menu_width <
+		    win[cur].menu_x0)
+			right_align_and_adjust();
+	} else if (win[cur].menu_halign == RIGHT) {
+		right_align();
+		if (screen_x0 > win[cur].menu_x0)
+			left_align_and_adjust();
+	}
 }
 
 /* Update window's (x,y) co-ordinates */
@@ -112,8 +142,8 @@ void geo_init(void)
 	menu_padding_right = 5;
 	menu_padding_bottom = 5;
 	menu_padding_left = 5;
-	menu_valign = BOTTOM;
-	menu_halign = LEFT;
+	win[cur].menu_valign = BOTTOM;
+	win[cur].menu_halign = LEFT;
 
 	item_height = 20;
 	item_margin_x = 4;
@@ -190,6 +220,8 @@ void geo_win_add(struct area parent_item)
 	win[cur].parent_item.w = parent_item.w;
 	win[cur].parent_item.h = parent_item.h;
 	cur++;
+	win[cur].menu_valign = win[cur - 1].menu_valign;
+	win[cur].menu_halign = win[cur - 1].menu_halign;
 	geo_update();
 }
 
@@ -244,13 +276,13 @@ void geo_set_menu_margin_y(int y)
 
 void geo_set_menu_halign(enum alignment pos)
 {
-	menu_halign = pos;
+	win[cur].menu_halign = pos;
 	geo_update();
 }
 
 void geo_set_menu_valign(enum alignment pos)
 {
-	menu_valign = pos;
+	win[cur].menu_valign = pos;
 	geo_update();
 }
 
