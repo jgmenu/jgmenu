@@ -16,6 +16,7 @@ cat <<'EOF' >>"${tmp_jgmenurc}"
 #csv_cmd             = jgmenu_run parse-pmenu
 #tint2_look          = 1
 #at_pointer          = 0
+#multi_window        = 1
 #terminal_exec       = x-terminal-emulator
 #terminal_args       = -e
 #menu_margin_x       = 0

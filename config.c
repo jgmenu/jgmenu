@@ -22,7 +22,7 @@ void config_set_defaults(void)
 	/* jgmenurc has a csv_cmd variable here */
 	config.tint2_look	   = 1;
 	config.at_pointer	   = 0;
-	config.multi_window	   = 0;
+	config.multi_window	   = 1;
 	config.terminal_exec	   = xstrdup("x-terminal-emulator");
 	config.terminal_args	   = xstrdup("-e");
 

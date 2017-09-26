@@ -2,7 +2,6 @@ SHORT TERM THINGS TO DO
 =======================
 
   - multiwin:
-	- Sort out sub-window edge cases (Create valign+halign for each subwindow)
 	- Add sub_valign config option (default = copy_parent).
 
 === Earliest point we can upversion to 0.7 ===
