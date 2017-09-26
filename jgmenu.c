@@ -471,24 +471,40 @@ void draw_icon(struct item *p)
 
 void draw_items_below_indicator(void)
 {
-	if (config.menu_padding_bottom < 1)
+	int b, r, l;
+
+	if (!menu.current_node->parent) {
+		b = config.menu_padding_bottom;
+		r = config.menu_padding_right;
+		l = config.menu_padding_left;
+	} else {
+		b = config.sub_padding_bottom;
+		r = config.sub_padding_right;
+		l = config.sub_padding_left;
+	}
+	if (b < 1)
 		return;
-	ui_draw_line(config.menu_padding_left,
-		     geo_get_menu_height() - config.menu_padding_bottom - 0.5,
-		     geo_get_menu_width() - config.menu_padding_right,
-		     geo_get_menu_height() - config.menu_padding_bottom - 0.5,
-		     1.0, config.color_norm_fg);
+	ui_draw_line(l, geo_get_menu_height() - b - 0.5, geo_get_menu_width() - r,
+		     geo_get_menu_height() - b - 0.5, 1.0, config.color_norm_fg);
 }
 
 void draw_items_above_indicator(void)
 {
-	if (config.menu_padding_top < 1)
+	int t, r, l;
+
+	if (!menu.current_node->parent) {
+		t = config.menu_padding_top;
+		r = config.menu_padding_right;
+		l = config.menu_padding_left;
+	} else {
+		t = config.sub_padding_top;
+		r = config.sub_padding_right;
+		l = config.sub_padding_left;
+	}
+	if (t < 1)
 		return;
-	ui_draw_line(config.menu_padding_left,
-		     config.menu_padding_top + 0.5,
-		     geo_get_menu_width() - config.menu_padding_right,
-		     config.menu_padding_top + 0.5,
-		     1.0, config.color_norm_fg);
+	ui_draw_line(l, t + 0.5, geo_get_menu_width() - r, t + 0.5, 1.0,
+		     config.color_norm_fg);
 }
 
 void draw_menu(void)
