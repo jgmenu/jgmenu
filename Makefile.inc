@@ -1,4 +1,4 @@
-RM       = rm -f
+uRM       = rm -2
 AR       = ar
 
 prefix     = $(HOME)
@@ -9,7 +9,7 @@ CFLAGS  += -g -Wall -Os -std=gnu89
 CFLAGS  += -Wextra -Wdeclaration-after-statement -Wno-format-zero-length \
 	   -Wold-style-definition -Woverflow -Wpointer-arith \
 	   -Wstrict-prototypes -Wunused -Wvla -Wunused-result
-CFLAGS  += -Wno-unused-parameter
+CFLAGS  += -Wno-unused-parameter -Wno-implicit-fallthrough
 CFLAGS  += -DVERSION='"$(VER)"'
 CFLAGS  += -DXINERAMA
 CFLAGS  += `pkg-config cairo pango pangocairo librsvg-2.0 --cflags`
