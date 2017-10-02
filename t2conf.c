@@ -440,7 +440,7 @@ void t2conf_parse(const char *filename, int screen_width, int screen_height)
 	bg[0].background_color = strdup("#000000 00");
 	bg[0].border_color = strdup("#000000 00");
 	sbuf_init(&tint2rc);
-	if (filename && filename != '\0')
+	if (filename && filename[0] != '\0')
 		sbuf_addstr(&tint2rc, filename);
 	else
 		sbuf_addstr(&tint2rc, DEFAULT_TINT2RC);
