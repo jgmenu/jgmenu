@@ -6,180 +6,39 @@ Introduction
 
 jgmenu is a simple X11 menu intended to be used with tint2 and openbox.
 
-  - To install, see the rest of this document  
+  - To install, see [INSTALL.md](INSTALL.mc)  
 
   - To run, see [JGMENUTUTORIAL(7)](docs/manual/jgmenututorial.7.md)  
 
-  - [Screenshots](docs/screenshots.md)  
+  - See [WIKI](https://github.com/johanmalm/jgmenu/wiki) for screenshots,  
+    notes on integration with window managers and panels, timeline, etc.
 
-  - [High level road map](TODO)  
-
-  - [Low level road map](TODO2)  
+  - [TODO](TODO)  
 
   - [Example config file](docs/jgmenurc)  
 
 ### Key Features
 
-  - It is a stand-alone, simple and contemporary-looking menu  
-  - It is hackable with a clean, small code base  
-  - Although written to be used with tint2 and openbox, it runs with other  
-    panels and window managers  
-  - It has a config file to set alignment, margins, padding, transparency, etc  
-  - It can synchronise with tint2's settings  
-  - It does not depend on any toolkits such as GTK and Qt   
-  - It uses cairo and pango to render the menu directly onto an X11 window  
+  - It is a stand-alone, simple and contemporary-looking menu.  
+    Although it was originally written to be used with openbox and tint2,  
+    it is not in any way dependent on these and runs well with other panels  
+    and window managers.  
+
+  - It is hackable with a clean, small code base.  
+
+  - It has a config file to set alignment, margins, padding, transparency, etc.  
+
+  - It can synchronise with tint2's settings.  
+
+  - It does not depend on any toolkits such as GTK and Qt.  
+
+  - It uses cairo and pango to render the menu directly onto an X11 window.  
+
   - It reads menu items from stdin in a similar way to dmenu and dzen2, but  
-    parses comma seperated fields for the name, command and icon  
+    parses comma seperated fields for the name, command and icon.  
 
 It has been compiled and run on OpenBSD, FreeBSD and various Linux  
-distributions including Bunsenlabs, Arch, Ubuntu, Alpine and Mint.
-
-Build and Install
------------------
-
-### In simple steps
-
-For Arch Linux users, there is an AUR package named "jgmenu".
-
-On Debian based systems such as Bunsenlabs and Ubuntu, do:
-
-```bash
-mkdir ~/src && cd ~/src
-git clone https://github.com/johanmalm/jgmenu.git
-cd jgmenu
-./scripts/install-debian-dependencies.sh
-make
-make install
-```
-
-For subsequent updates, do:
-
-```bash
-git pull
-make clean
-make
-make install
-```
-
-A user has written some alternative installation notes
-[here](https://forums.bunsenlabs.org/viewtopic.php?id=3100)  
-
-### Furter details on build and installation
-
-By default, `make install` will install jgmenu in your $HOME-directory, thus  
-avoiding the need for root-privilegies. You will need `$HOME/bin` in your  
-`$PATH` to run from there.
-
-The build process installs files under:  
-
-  - bin/
-  - lib/jgmenu/
-  - share/man/
-
-Use `prefix` to specify a different target location. For example,  
-if you wish to keep your $HOME top-level directory clean, you could do:  
-
-```bash
-make prefix=$HOME/.local install
-```
-
-Or, to do a system-wide installation use '/usr' or '/usr/local'.  
-For example: 
-
-```bash
-sudo make prefix=/usr install
-```
-
-In addition to `prefix`, there are a number of build variables which can be  
-defined. These are described in the Makefile. Create a config.mk to override  
-build settings without making your tree dirty or having to re-type them every  
-time. 
-
-There is no "uninstall" target in the Makefile. To tidy up, delete the  
-following:
-
-  - $prefix/bin/jgmenu*  
-  - $prefix/lib/jgmenu/  
-  - $prefix/share/man/man1/jgmenu*  
-  - $prefix/share/man/man7/jgmenu*  
-
-Although it is recommended to do a `make install`, it is possible to run  
-`./jgmenu_run` from the source directory by setting `JGMENU_EXEC_PATH`.
-
-Dependencies
-------------
-
-### Build dependencies
-
-  - libx11
-  - libxinerama
-  - cairo
-  - pango
-  - librsvg
-  - libxml2 (for xdg and ob modules)
-  - glib (for lx module)
-  - libmenu-cache (for lx module)
-
-
-### Run-time dependencies:
-
-  - A *menu* package  is required for "`jgmenu_run pmenu`",  
-    "`jgmenu_run xdg`" and "`jgmenu_run lx`"  
-    Examples of *menu* packages include: lxmenu-data, gnome-menus  
-    and libgarcon-common (xfce))  
-  - python3 is required by "`jgmenu_run pmenu`"  
-
-To enable menu transparency, you need to have a Composite Manager such as  
-`compton`. Most Desktop Environments already have one installed.
-
-### Development dependencies
-
-To build the man pages, you need to have `pandoc` installed. However, as many  
-users do not have this package, the man pages are commited in the git repo.  
-(i.e. you only need pandoc if you want to contribute to or change the man  
-pages.)
-
-Desktop File and Panel Integration
-----------------------------------
-
-`make install` creates a desktop-file in `~/.local/share/applications` or  
-`$prefix/share/applications` if $prefix is specified.
-
-This file can be used in panels such as tint2, plank and unity.
-
-To add this .desktop-file to tint2, add the line below to the launcher  
-section in `~/.config/tint2/tint2rc`:
-
-```bash
-launcher_item_app = jgmenu.desktop
-```
-
-N.B. On some older versions of tint2, the full path to the desktop file  
-is required.
-
-If you are using plank, just drag the icon onto the panel. Note that in  
-plank, `JGMENU_DESKTOP_ICON` needs to contain the full path to the icon.
-
-The build-script for the .desktop-file reads config.mk and respects the  
-following options:
-
-  - `JGMENU_DESKTOP_EXEC`   
-  - `JGMENU_DESKTOP_ICON`  
-  - `JGMENU_UNITY`  
-
-For example:
-
-```bash
-JGMENU_DESKTOP_ICON="distributor-logo"
-```
-
-If you are using Ubuntu's Unity, prepend the `Exec` command with  
-`env JGMENU_UNITY=1`. This prevents the Unity Launcher from flashing  
-for 5+ seconds after the menu has been opened. For example:
-
-```bash
-JGMENU_DESKTOP_EXEC="env JGMENU_UNITY=1 jgmenu_run"
-```
+distributions including Bunsenlabs, Arch, Ubuntu, Alpine, Void and Mint.
 
 See also
 --------

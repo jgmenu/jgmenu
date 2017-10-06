@@ -1,33 +1,87 @@
-HIGH-LEVEL ROADMAP
-==================
+TODO
+====
 
-v0.7	- Enable pipemenu support and openbox menus
-	- Create multi-window mode where submenus open in separate windows
+multiwin: Add sub_valign config option (default = copy_parent).
 
-v0.8	- Add support for "fixed-position" items such as icons/images and
-	  shapes (incl search box)
+Add ex20.sh openbox style
 
-v0.9	- On wake-up, check changes to .desktop files, tint2, xsettings,
-	  jgmenurc, etc.
+Simplify geometry.c by enabling access to config.h variables
 
-v1.0	- Tidy up, fine-tune, update documentation, freeze config options
+Re-write init.sh in python and add support for specifying file
+
+in x11-ui.c, create
+	- linked list of windows
+	- 'static Window active_window' (instead of ui->w[ui->cur].win)
+
+Pipemenu
+	- check duplicate tag names
+	- load icons for pipes
+
+parse-ob.c: remove return_cmd
+		Read JGMENU_PREPEND_FILE env var (and read ~/.config/jgmenu/prepend.csv by default)
+		Read stdin -->  exec in jgmenu_run
+				stdin -> mkstemp /tmp/jgmenu-XXXXXX
+
+Move struct item/node code to data.c.
+	  - Refactor all the checkout_* functions. They're confusing.
+
+The first item in master list is always a tag-item, so remove old code which
+handles exceptions
+
+Refactor around read_csv_file and creating items
+
+'\0' terminate read_csv_file if no '\n'  present
+
+Put build/runtime dependencies in table
+
+Remove spawn from config (make it args_ instead).
+
+Draw diagrams of variables
+
+Add csv_cmd to config.c
+  - If csv_cmd unset/empty, read from 'stdin' (csv_cmd=...parse-pmenu by default)
+  - Set csv_cmd=NULL when --simple or --vsimple invoked
+
+Re-factor jgmenu_run lx/pmenu/xdg/csv, etc. by using --csv-*
+
+Remove `jgmenu_run restart`
+
+Add watch.c
+	- Check tint2rc 'modified time' and re-read on change
+	- Consider the same for jgmenurc and tint2-sessionfile (bl)
+
+Also replace strdups+free with x-alternatives
+
+Add menu_height config option
+
+Set width when filter applied (long items don't currently fit)
+
+Add CENTER to menu_halign and menu_valign
+
+Set by argv_buf delim by default to make it 'safer'
+
+Add explaination on JGMENU_EXEC_PATH
+
+Remove XINERAMA ifdefs
+
+Rename filter list (as it clashes with filter_) (maybe 'disp'?)
+
+Add shareness with symlinks
+
+Add scroll_bar
+
+Add man-page for jgmenu_run ob
+
+Write jgmenu-init.sh --help message.
+
+Add jgmenu-setup.py
+
+Remove harded coded variables (such as 22, etc)
+
 
 AFTER v1.0
 ----------
-  - Support for adding favourites in real-time (e.g. keyboard shortcut for
-    locking menu-item onto the root menu - or similar)
+Support for adding favourites in real-time (e.g. keyboard shortcut for
+locking menu-item onto the root menu - or similar)
 
-  - Consider "hover" features and "inline expansion" of menus
-
-
-HISTORY
-=======
-	Date		New key feature(s)		loc .c	loc .py
-
-v0.1	26-Jan-2015	working menu			638	0
-v0.2	17-May-2016	transparency			1353	0
-v0.3	20-Jul-2016	icons				1995	0
-v0.4	03-Oct-2016	pmenu, xsettings		2899	159
-v0.5	21-Feb-2017	search, long-running mode	4817	250
-v0.6	16-Jul-2017	tint2 integration, lx		6681	406
-v0.7	08-Oct-2017	pipemenus, sub-windows
+Consider "hover" features and "inline expansion" of menus
