@@ -1,0 +1,26 @@
+jgmenu v0.7 release notes
+=========================
+
+Updates since v0.6.1
+--------------------
+
+  - Add multi-window mode where submenus open in new window
+
+  - Support standard XDG-based config. Global config is read from
+    ${XDG_CONFIG_DIRS:-/etc/xdg} with an optional user config override
+    in ${XDG_CONFIG_HOME:-$HOME/.config}
+
+  - Add the following config options:
+
+	multi_window
+	sub_padding_{top,bottom,left,right}
+	sub_spacing
+
+  - Remove the following config options:
+
+	tint2_rules
+	tint2_button
+
+  - Add pipemenu support using ^pipe() in the command field.
+
+  - Add triple quote syntax to enable commas in fields (see JGMENU(1))
