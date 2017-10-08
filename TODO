@@ -50,6 +50,11 @@ Add watch.c
 	- Check tint2rc 'modified time' and re-read on change
 	- Consider the same for jgmenurc and tint2-sessionfile (bl)
 
+Add support for "fixed-position" items such as icons/images and
+shapes (incl search box)
+
+On wake-up, check changes to .desktop files, tint2, xsettings, jgmenurc, etc.
+
 Also replace strdups+free with x-alternatives
 
 Add menu_height config option
