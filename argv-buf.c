@@ -6,6 +6,7 @@ void argv_init(struct argv_buf *buf)
 	int i;
 
 	buf->argc = 0;
+	buf->buf = NULL;
 	for (i = 0; i < MAX_FIELDS; i++)
 		buf->argv[i] = NULL;
 }
@@ -17,7 +18,8 @@ void argv_set_delim(struct argv_buf *buf, char delim)
 
 void argv_strdup(struct argv_buf *buf, const char *s)
 {
-	buf->argv[0] = strdup(s);
+	buf->buf = strdup(s);
+	buf->argv[0] = buf->buf;
 	buf->argc = 1;
 }
 
@@ -105,6 +107,6 @@ void argv_free(struct argv_buf *buf)
 {
 	if (!buf)
 		return;
-	if (buf->argv[0])
-		free(buf->argv[0]);
+	if (buf->buf)
+		free(buf->buf);
 }

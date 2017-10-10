@@ -3,7 +3,7 @@
  *
  * Copyright (C) Johan Malm 2017
  *
- *   - argv[0] points to the beginning of the buffer
+ *   - buf points to the beginning of the buffer
  *   - argv[0..MAX_FIELDS-1] point to each 'delim' separated field
  *
  * It understands the following syntaxes:
@@ -26,6 +26,7 @@
 #define MAX_FIELDS (16)
 
 struct argv_buf {
+	char *buf;
 	int argc;
 	char *argv[MAX_FIELDS];
 	char delim;

@@ -54,6 +54,7 @@ static timer_t tmr_mouseover;
 static int sw_close_pending;
 
 struct item {
+	char *buf;
 	char *name;
 	char *cmd;
 	char *iconname;
@@ -1031,6 +1032,7 @@ static void insert_tag_item(void)
 	argv_strdup(&argv_buf, utag);
 	argv_parse(&argv_buf);
 	item = xmalloc(sizeof(struct item));
+	item->buf = argv_buf.buf;
 	item->name = argv_buf.argv[0];
 	item->cmd = argv_buf.argv[1];
 	item->iconname = argv_buf.argv[2];
@@ -1070,6 +1072,7 @@ void read_csv_file(FILE *fp)
 		argv_strdup(&argv_buf, buf);
 		argv_parse(&argv_buf);
 		item = xmalloc(sizeof(struct item));
+		item->buf = argv_buf.buf;
 		item->name = argv_buf.argv[0];
 		item->cmd = argv_buf.argv[1];
 		item->iconname = argv_buf.argv[2];
@@ -1527,7 +1530,7 @@ void destroy_master_list(void)
 	struct item *item, *tmp_item;
 
 	list_for_each_entry_safe(item, tmp_item, &menu.master, master) {
-		xfree(item->name);
+		xfree(item->buf);
 		list_del(&item->master);
 		xfree(item);
 	}

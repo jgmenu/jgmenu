@@ -118,7 +118,7 @@ void widgets_add(const char *s)
 	argv_parse(&argv_buf);
 	if (argv_buf.argc != 12)
 		warn("widget did not contain 12 fields");
-	w->buf = argv_buf.argv[0];
+	w->buf = argv_buf.buf;
 	w->type = parse_type(argv_buf.argv[0] + 1);
 	w->action = argv_buf.argv[1];
 	xatoi(&w->x, argv_buf.argv[2], XATOI_NONNEG, "w->x");

@@ -31,10 +31,10 @@ argc" "a@b@@d d@ e @f-f
 
 test_expect_success 'simple triple quote' '
 
-test_argvbuf "strdup@aaa,\"\"\"b,bb\"\"\",ccc
+test_argvbuf "strdup@\"\"\"a,aa\"\"\",\"\"\"b,bb\"\"\",\"\"\"c,cc\"\"\"
 parse
 print
-argc" "aaa@b,bb@ccc
+argc" "a,aa@b,bb@c,cc
 3"
 
 '
