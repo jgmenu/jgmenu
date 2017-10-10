@@ -1,0 +1,7 @@
+jgmenu v0.7.1 release notes
+===========================
+
+Updates since v0.7
+------------------
+
+  - Fix triple quote bug
