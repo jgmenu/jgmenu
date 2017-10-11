@@ -171,6 +171,15 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
 	}
 }
 
+void set_wm_class(void)
+{
+	XClassHint *classhint = XAllocClassHint();
+	classhint->res_name = (char *)"jgmenu";
+	classhint->res_class = (char *)"jgmenu";
+	XSetClassHint(ui->dpy, ui->w[ui->cur].win, classhint);
+	XFree(classhint);
+}
+
 void ui_create_window(int x, int y, int w, int h)
 {
 	ui->w[ui->cur].swa.override_redirect = True;
@@ -191,10 +200,9 @@ void ui_create_window(int x, int y, int w, int h)
 
 	ui->w[ui->cur].gc = XCreateGC(ui->dpy, ui->w[ui->cur].win, 0, NULL);
 
-	/* FIXME!!
-	 * XStoreName(ui->dpy, ui->w[ui->cur].win, "jgmenu");
-	 * XSetIconName(ui->dpy, ui->w[ui->cur].win, "jgmenu");
-	 */
+	XStoreName(ui->dpy, ui->w[ui->cur].win, "jgmenu");
+	XSetIconName(ui->dpy, ui->w[ui->cur].win, "jgmenu");
+	set_wm_class();
 
 	/*
 	 * XDefineCursor required to prevent blindly inheriting cursor from parent
