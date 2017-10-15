@@ -381,32 +381,19 @@ static const char *file_buffer(enum buf_op op, void *handle)
 {
 	struct file_handle *h = (struct file_handle *)handle;
 
-	switch (op) {
-	case op_header:
+	if (op == op_header) {
 		if (xpm_seek_string(h->infile, "XPM") != 1)
-			break;
-
+			goto out;
 		if (xpm_seek_char(h->infile, '{') != 1)
-			break;
-	/* Fall through to the next xpm_seek_char. */
-	/* Avoid implicit-fallthrough warning in GCC 7+ */
-	__attribute__((fallthrough));
-
-	case op_cmap:
+			goto out;
+	}
+	if (op == op_cmap || op == op_header) {
 		xpm_seek_char(h->infile, '"');
 		fseek(h->infile, -1, SEEK_CUR);
-	/* Fall through to the xpm_read_string. */
-	__attribute__((fallthrough));
-
-	case op_body:
-		if (!xpm_read_string(h->infile, &h->buffer, &h->buffer_size))
-			return NULL;
-		return h->buffer;
-
-	default:
-		assert(0); /* should not reach this point */
 	}
-
+	if (xpm_read_string(h->infile, &h->buffer, &h->buffer_size))
+		return h->buffer;
+out:
 	return NULL;
 }
 
