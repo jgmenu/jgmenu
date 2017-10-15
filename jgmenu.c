@@ -1837,10 +1837,8 @@ void run(void)
 				/* mouse over signal */
 				if (ch == 't') {
 					ui_win_del_beyond(ui->cur);
-					if (!sw_close_pending) {
+					if (!sw_close_pending)
 						action_cmd(menu.sel->cmd);
-						menu.sel = menu.current_node->parent->last_sel;
-					}
 					sw_close_pending = 0;
 					continue;
 				}
