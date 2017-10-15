@@ -66,6 +66,7 @@ void spawn(const char *arg)
 	switch (fork()) {
 	case -1:
 		die("unable to fork()");
+		break;
 	case 0:
 		setsid();
 		execl(shell, shell, "-c", arg, (char *)NULL);

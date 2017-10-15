@@ -389,11 +389,14 @@ static const char *file_buffer(enum buf_op op, void *handle)
 		if (xpm_seek_char(h->infile, '{') != 1)
 			break;
 	/* Fall through to the next xpm_seek_char. */
+	/* Avoid implicit-fallthrough warning in GCC 7+ */
+	__attribute__((fallthrough));
 
 	case op_cmap:
 		xpm_seek_char(h->infile, '"');
 		fseek(h->infile, -1, SEEK_CUR);
 	/* Fall through to the xpm_read_string. */
+	__attribute__((fallthrough));
 
 	case op_body:
 		if (!xpm_read_string(h->infile, &h->buffer, &h->buffer_size))
