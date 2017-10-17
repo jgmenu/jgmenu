@@ -1,6 +1,6 @@
 % JGMENU_RUN(1)  
 % Johan Malm  
-% 1 Jun, 2017
+% 15 Oct, 2017
 
 # NAME
 
@@ -35,10 +35,6 @@ Valid `commands` include:
 
 start  
         Start the menu is hidden mode
-
-restart  
-        Re-start the menu in order to read the config file or load  
-        newly installed apps.
 
 init  
         Create or amend configuration file  

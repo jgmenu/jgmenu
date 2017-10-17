@@ -44,8 +44,6 @@ Add csv_cmd to config.c
 
 Re-factor jgmenu_run lx/pmenu/xdg/csv, etc. by using --csv-*
 
-Remove `jgmenu_run restart`
-
 Add watch.c
 	- Check tint2rc 'modified time' and re-read on change
 	- Consider the same for jgmenurc and tint2-sessionfile (bl)

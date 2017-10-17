@@ -20,7 +20,6 @@ usage () {
 	printf "    using pmenu unless otherwise specified by 'csv_cmd' in jgmenurc\n\n"
 	printf "Valid 'commands' include:\n"
 	printf "    start           Start menu in 'hidden' mode\n"
-	printf "    re-start        Re-start jgmenu to read config file and load new apps\n"
 	printf "    init            Create or amend config file\n"
 	printf "    pmenu           Run menu based on .desktop and .directory files\n"
 	printf "    xdg             Run menu based on .desktop, .directory and .menu files\n"
