@@ -1,0 +1,13 @@
+jgmenu v0.7.2 release notes
+===========================
+
+Updates since v0.7.1
+--------------------
+
+  - Fix bug relating to multi-window mode
+
+  - Add debian packaging files
+
+  - Set WM_NAME and WM_CLASS
+
+  - Remove jgmenu-restart.sh
