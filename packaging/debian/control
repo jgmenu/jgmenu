@@ -15,5 +15,5 @@ Build-Depends: debhelper (>= 9),
 
 Package: jgmenu
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, python3
 Description: simple X11 menu intended to be used with tint2 and openbox

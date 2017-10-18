@@ -1,5 +1,5 @@
-jgmenu (0.7.1-1) UNRELEASED; urgency=medium
+jgmenu (0.7.2-1) UNRELEASED; urgency=medium
 
-  * Initial release. (Closes: #XXXXXX)
+  * Initial release
 
- -- johan <jgm323@gmail.com>  Fri, 13 Oct 2017 23:11:23 +0100
+ -- Johan Malm <jgm323@gmail.com>  Wed, 18 Oct 2017 21:00:23 +0100
