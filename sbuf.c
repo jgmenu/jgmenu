@@ -155,3 +155,14 @@ void sbuf_list_prepend(struct list_head *sl, const char *data)
 
 	list_add(&new_string->list, sl);
 }
+
+void sbuf_list_free(struct list_head *sl)
+{
+	struct sbuf *s, *tmp;
+
+	list_for_each_entry_safe(s, tmp, sl, list) {
+		xfree(s->buf);
+		list_del(&s->list);
+		xfree(s);
+	}
+}

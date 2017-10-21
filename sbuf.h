@@ -51,5 +51,6 @@ extern void sbuf_trim(struct sbuf *s);
 extern void sbuf_split(struct list_head *sl, const char *data, char field_separator);
 extern void sbuf_list_append(struct list_head *sl, const char *data);
 extern void sbuf_list_prepend(struct list_head *sl, const char *data);
+extern void sbuf_list_free(struct list_head *sl);
 
 #endif /* SBUF_H */
