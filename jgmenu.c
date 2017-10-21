@@ -362,7 +362,7 @@ char *parse_caret_action(char *s, char *token)
 	if (!s)
 		return NULL;
 	if (!strncmp(s, token, strlen(token))) {
-		p = strdup(s);
+		p = s;
 		p += strlen(token);
 		q = strrchr(p, ')');
 		if (q)
