@@ -115,6 +115,7 @@ static const char jgmenu_usage[] =
 
 static void checkout_rootnode(void);
 static void pipemenu_del_all(void);
+void tmr_mouseover_stop(void);
 
 void init_empty_item(void)
 {
@@ -1192,6 +1193,7 @@ void checkout_parent(void)
 
 static void hide_menu(void)
 {
+	tmr_mouseover_stop();
 	XUngrabKeyboard(ui->dpy, CurrentTime);
 	XUngrabPointer(ui->dpy, CurrentTime);
 	if (config.multi_window) {
