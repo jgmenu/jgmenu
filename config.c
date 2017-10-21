@@ -244,7 +244,7 @@ void config_read_jgmenurc(const char *filename)
 	struct stat sb;
 	static int initiated;
 	LIST_HEAD(config_dirs);
-	struct sbuf *tmp, *tmp2;
+	struct sbuf *tmp;
 
 	if (initiated)
 		goto parse;
@@ -259,8 +259,8 @@ void config_read_jgmenurc(const char *filename)
 	 *   ${XDG_CONFIG_HOME:-$HOME/.config}
 	 *   ${XDG_CONFIG_DIRS:-/etc/xdg}
 	 */
-	xdgdirs_get_configdirs(&config_dirs);
 	if (!jgmenurc_file.len) {
+		xdgdirs_get_configdirs(&config_dirs);
 		list_for_each_entry(tmp, &config_dirs, list) {
 			sbuf_addstr(tmp, "/jgmenu/jgmenurc");
 			if (!stat(tmp->buf, &sb)) {
@@ -268,11 +268,7 @@ void config_read_jgmenurc(const char *filename)
 				break;
 			}
 		}
-		list_for_each_entry_safe(tmp, tmp2, &config_dirs, list) {
-			xfree(tmp->buf);
-			list_del(&tmp->list);
-			xfree(tmp);
-		}
+		sbuf_list_free(&config_dirs);
 	}
 	initiated = 1;
 	if (stat(jgmenurc_file.buf, &sb) < 0)
