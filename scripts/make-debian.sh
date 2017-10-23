@@ -1,4 +1,3 @@
-#!/bin/sh
 #
 # This assumes you have build-essential, devscripts, debhelper, git
 #
@@ -10,7 +9,7 @@ test -d "debian" || { echo "fatal: need to run from packacking/"; exit 1; }
 
 ver=$(../scripts/version-gen.sh | sed -e 's/^jgmenu v//' | cut -f1 -d"-")
 dest_dir="jgmenu-${ver}"
-rm -rf jgmenu*
+#rm -rf jgmenu*
 echo "version ${ver}"
 #git describe --exact-match HEAD 2>/dev/null || echo "warn: not at tag"
 cd ..
