@@ -419,4 +419,6 @@ void icon_find_cleanup(void)
 		list_del(&pmpath->list);
 		xfree(pmpath);
 	}
+	sbuf_list_free(&icon_dirs);
+	sbuf_list_free(&pixmap_dirs);
 }

@@ -78,9 +78,11 @@ do
 			-e 'CamelCase.*Window' \
 			-e 'CamelCase.*VisibilityChangeMask' \
 			-e 'CamelCase.*VisibilityUnobscured' \
+			-e 'CamelCase.*XAllocClassHint' \
 			-e 'CamelCase.*XBufferOverflow' \
 			-e 'CamelCase.*XButtonPressedEvent' \
 			-e 'CamelCase.*XButtonReleasedEvent' \
+			-e 'CamelCase.*XClassHint' \
 			-e 'CamelCase.*XCloseDisplay' \
 			-e 'CamelCase.*XCloseIM' \
 			-e 'CamelCase.*XCopyArea' \
@@ -132,6 +134,7 @@ do
 			-e 'CamelCase.*XQueryPointer' \
 			-e 'CamelCase.*XQueryTree' \
 			-e 'CamelCase.*XRefreshKeyboardMapping' \
+			-e 'CamelCase.*XSetClassHint' \
 			-e 'CamelCase.*XSetErrorHandler' \
 			-e 'CamelCase.*XSetIconName' \
 			-e 'CamelCase.*XSetLocaleModifiers' \

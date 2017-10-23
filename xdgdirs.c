@@ -50,11 +50,12 @@ static void expand_env_vars(struct sbuf *s)
 	p = getenv(env_name.buf + 1);
 	if (!p) {
 		sbuf_cpy(s, "");
-		return;
+		goto cleanup;
 	}
 	sbuf_shift_left(s, strlen(env_name.buf));
 	sbuf_prepend(s, p);
-	free(env_name.buf);
+cleanup:
+	xfree(env_name.buf);
 }
 
 void xdgdirs_get_basedirs(struct list_head *dir_list)

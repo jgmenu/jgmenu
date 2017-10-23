@@ -115,7 +115,7 @@ static const char jgmenu_usage[] =
 
 static void checkout_rootnode(void);
 static void pipemenu_del_all(void);
-void tmr_mouseover_stop(void);
+static void tmr_mouseover_stop(void);
 
 void init_empty_item(void)
 {
