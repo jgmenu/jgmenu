@@ -1,9 +1,9 @@
 RM       = rm -f
 AR       = ar
 
-prefix     = $(HOME)
-bindir     = $(prefix)/bin
-libexecdir = $(prefix)/lib/jgmenu
+PREFIX    ?= /usr/local
+bindir     = $(PREFIX)/bin
+libexecdir = $(PREFIX)/lib/jgmenu
 
 CFLAGS  += -g -Wall -Os -std=gnu89
 CFLAGS  += -Wextra -Wdeclaration-after-statement -Wno-format-zero-length \
