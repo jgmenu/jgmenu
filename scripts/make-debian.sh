@@ -1,21 +1,33 @@
+#!/bin/sh
+
 #
 # This assumes you have build-essential, devscripts, debhelper, git
 #
 
-printf "%b" "This script still experimental. Are you sure you want to continue [yN] "
-read answer
-test "$answer" = "y" || exit 1
-test -d "debian" || { echo "fatal: need to run from packacking/"; exit 1; }
+test -d "debian" || { echo "fatal: need to run from project root"; exit 1; }
+test -f "jgmenu.c" || { echo "fatal: need to run from project root"; exit 1; }
 
-ver=$(../scripts/version-gen.sh | sed -e 's/^jgmenu v//' | cut -f1 -d"-")
-dest_dir="jgmenu-${ver}"
-#rm -rf jgmenu*
-echo "version ${ver}"
+ver=$(./scripts/version-gen.sh | sed -e 's/^jgmenu v//' | cut -f1 -d"-")
 #git describe --exact-match HEAD 2>/dev/null || echo "warn: not at tag"
-cd ..
-git archive --format=tar --prefix="${dest_dir}/" v${ver} | gzip >packaging/jgmenu_${ver}.orig.tar.gz
-cd packaging
-tar -xf jgmenu_${ver}.orig.tar.gz
-cp -a debian/ ${dest_dir}
-cd ${dest_dir}
+
+rm ../jgmenu_*
+dh_make -p jgmenu_${ver} --createorig --addmissing
+
+rm -f debian/watch.ex
+rm -f debian/prerm.ex
+rm -f debian/preinst.ex
+rm -f debian/postrm.ex
+rm -f debian/postinst.ex
+rm -f debian/package.doc-base.EX
+rm -f debian/package.default.ex
+rm -f debian/package.cron.d.ex
+rm -f debian/menu.ex
+rm -f debian/manpage.xml.ex
+rm -f debian/manpage.sgml.ex
+rm -f debian/manpage.1.ex
+rm -f debian/jgmenu.doc-base.EX
+rm -f debian/jgmenu.default.ex
+rm -f debian/jgmenu.cron.d.ex
+rm -f debian/init.d.ex
+
 debuild -us -uc
