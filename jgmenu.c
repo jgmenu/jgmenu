@@ -1287,6 +1287,8 @@ void key_event(XKeyEvent *ev)
 	len = Xutf8LookupString(ui->w[ui->cur].xic, ev, buf, sizeof(buf), &ksym, &status);
 	if (status == XBufferOverflow)
 		return;
+	if (ui_has_child_window_open(menu.current_node->wid))
+		ui_win_del_beyond(ui->cur);
 	switch (ksym) {
 	case XK_End:
 		if (filter_head() == &empty_item)
@@ -1463,6 +1465,8 @@ void mouse_event(XEvent *e)
 
 	/* scroll up */
 	if (ev->button == Button4 && menu.first != filter_head()) {
+		if (ui_has_child_window_open(menu.current_node->wid))
+			ui_win_del_beyond(ui->cur);
 		step_back(&menu.first, 1);
 		menu.last = fill_from_top(menu.first);
 		step_back(&menu.sel, 1);
@@ -1473,6 +1477,8 @@ void mouse_event(XEvent *e)
 
 	/* scroll down */
 	if (ev->button == Button5 && menu.last != filter_tail()) {
+		if (ui_has_child_window_open(menu.current_node->wid))
+			ui_win_del_beyond(ui->cur);
 		step_fwd(&menu.last, 1);
 		menu.first = fill_from_bottom(menu.last);
 		step_fwd(&menu.sel, 1);
@@ -1698,7 +1704,7 @@ void set_focus(Window w)
 	menu.current_node = n;
 }
 
-void process_pointer_position(XEvent *ev)
+void process_pointer_position(XEvent *ev, int force)
 {
 	struct point pw;
 	static int oldy;
@@ -1713,7 +1719,7 @@ void process_pointer_position(XEvent *ev)
 	 */
 	pw = mousexy();
 	pw.y -= MOUSE_FUDGE;
-	if ((pw.x == oldx) && (pw.y == oldy))
+	if (!force && (pw.x == oldx) && (pw.y == oldy))
 		return;
 	if (e->subwindow == ui->w[ui->cur].win) {
 		move_selection_with_mouse(&pw);
@@ -1842,6 +1848,7 @@ void run(void)
 					if (!sw_close_pending)
 						action_cmd(menu.sel->cmd);
 					sw_close_pending = 0;
+					process_pointer_position(&ev, 1);
 					continue;
 				}
 
@@ -1909,7 +1916,7 @@ void run(void)
 					XRaiseWindow(ui->dpy, ui->w[ui->cur].win);
 				break;
 			case MotionNotify:
-				process_pointer_position(&ev);
+				process_pointer_position(&ev, 0);
 				break;
 			}
 		}
