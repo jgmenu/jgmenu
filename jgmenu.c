@@ -291,6 +291,7 @@ void update_filtered_list(void)
 		list_for_each_entry(item, &menu.master, master) {
 			if (!strncmp("^checkout(", item->cmd, 10) ||
 			    !strncmp("^tag(", item->cmd, 5) ||
+			    !strncmp("^pipe(", item->cmd, 6) ||
 			    !strncmp("^back(", item->cmd, 6))
 				continue;
 			if (filter_ismatch(item->name) ||
