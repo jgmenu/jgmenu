@@ -72,6 +72,7 @@ static struct item empty_item;
 struct node {
 	struct item *item;	   /* item that node points to		  */
 	struct item *last_sel;	   /* used when returning to node	  */
+	struct item *last_first;   /* used when returning to node	  */
 	struct node *parent;
 	Window wid;
 	struct list_head node;
@@ -315,7 +316,10 @@ void update_filtered_list(void)
 		return;
 	}
 
-	menu.first = filter_head();
+	if (!filter_needle_length() && menu.current_node->last_first)
+		menu.first = menu.current_node->last_first;
+	else
+		menu.first = filter_head();
 	menu.last = fill_from_top(menu.first);
 
 	/* select an item */
@@ -936,6 +940,7 @@ void create_node(const char *name, struct node *parent)
 	else
 		n->item = get_item_from_tag(name);
 	n->last_sel = NULL;
+	n->last_first = NULL;
 	n->parent = parent;
 	n->wid = 0;
 	list_add_tail(&n->node, &menu.nodes);
@@ -1227,6 +1232,7 @@ void action_cmd(char *cmd)
 		if (!p)
 			return;
 		menu.current_node->last_sel = menu.sel;
+		menu.current_node->last_first = menu.first;
 		checkout_submenu(p);
 		update(1);
 	} else if (!strncmp(cmd, "^sub(", 5)) {
@@ -1255,6 +1261,7 @@ void action_cmd(char *cmd)
 		if (!p)
 			return;
 		menu.current_node->last_sel = menu.sel;
+		menu.current_node->last_first = menu.first;
 		pipemenu_add(p);
 		update(1);
 	} else {

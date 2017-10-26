@@ -30,4 +30,5 @@ rm -f debian/jgmenu.default.ex
 rm -f debian/jgmenu.cron.d.ex
 rm -f debian/init.d.ex
 
-debuild -us -uc
+echo "======================================="
+echo "Now run 'debuild -us -uc' or 'pdebuild'"
