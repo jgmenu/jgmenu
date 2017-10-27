@@ -83,7 +83,7 @@ amend_jgmenurc () {
 	do
 		v=$(echo ${line%%=*} | tr -d ' ')
 		test -z "${v}" && continue
-		if ! grep "^${v}\|^#${v}" "${jgmenurc}" >/dev/null
+		if ! grep "^${v}[\ =]\|[\ #]${v}[\ =]" "${jgmenurc}" >/dev/null
 		then
 			print_start_msg
 			printf "${prefix}%b\n" "${line}"
