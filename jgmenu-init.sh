@@ -5,9 +5,20 @@
 tmp_jgmenurc=$(mktemp)
 jgmenurc=~/.config/jgmenu/jgmenurc
 jgmenurc_bak=${jgmenurc}.$(date +%Y%m%d%H%M)
+
 regression_items="max_items min_items ignore_icon_cache color_noprog_fg \
 color_title_bg show_title search_all_items ignore_xsettings arrow_show \
 read_tint2rc tint2_rules tint2_button"
+
+usage () {
+	printf "usage: jgmenu_run init [<options>]\n\n"
+	printf "Create or amend jgmenu config file\n\n"
+	printf "If no 'option' is specified, a jgmenurc config file will be\n"
+	printf "  - created if it does not already exist\n"
+	printf "  - amended with any missing variables\n\n"
+	printf "Options include:\n"
+	printf "    --config-file=<file>  specify config file\n\n"
+}
 
 populate_tmp_file () {
 cat <<'EOF' >>"${tmp_jgmenurc}"
@@ -94,6 +105,26 @@ amend_jgmenurc () {
 
 # START OF SCRIPT
 
+while test $# != 0
+do
+	case "$1" in
+	--config-file=*)
+		jgmenurc="${1#--config-file=}" ;;
+	--help)
+		usage
+		exit 0
+		;;
+	*)
+		printf "fatal: unknown option: \`%s\'\n" $1
+		usage
+		exit 1
+		;;
+	esac
+	shift
+done
+
+
+
 mkdir -p ~/.config/jgmenu
 
 populate_tmp_file
@@ -117,3 +148,4 @@ do
 		printf "%b\n" "warning: ${r} is no longer a valid key"
 	fi
 done
+
