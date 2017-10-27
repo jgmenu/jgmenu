@@ -1227,9 +1227,11 @@ void action_cmd(char *cmd)
 
 	if (!cmd)
 		return;
-	if (!config.spawn) {
+	if (!config.spawn && strncmp("^checkout(", cmd, 10) &&
+	    strncmp("^sub(", cmd, 5) && strncmp("^back(", cmd, 6) &&
+	    strncmp("^pipe(", cmd, 6)) {
 		printf("%s\n", menu.sel->cmd);
-		hide_or_exit();
+		exit(0);
 	}
 	if (!strncmp(cmd, "^checkout(", 10)) {
 		p = parse_caret_action(cmd, "^checkout(");
