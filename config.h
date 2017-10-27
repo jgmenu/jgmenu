@@ -31,6 +31,7 @@ struct config {
 	int sub_padding_right;
 	int sub_padding_bottom;
 	int sub_padding_left;
+	int sub_hover_action;
 
 	int item_margin_x;
 	int item_margin_y;

@@ -1227,7 +1227,10 @@ void action_cmd(char *cmd)
 
 	if (!cmd)
 		return;
-
+	if (!config.spawn) {
+		printf("%s\n", menu.sel->cmd);
+		hide_or_exit();
+	}
 	if (!strncmp(cmd, "^checkout(", 10)) {
 		p = parse_caret_action(cmd, "^checkout(");
 		if (!p)
@@ -1368,14 +1371,8 @@ void key_event(XKeyEvent *ev)
 		break;
 	case XK_Return:
 	case XK_KP_Enter:
-		if (!menu.sel->selectable)
-			break;
-		if (config.spawn) {
+		if (menu.sel->selectable)
 			action_cmd(menu.sel->cmd);
-		} else {
-			printf("%s", menu.sel->cmd);
-			hide_or_exit();
-		}
 		break;
 	case XK_Down:
 		if (filter_head() == &empty_item ||
@@ -1500,15 +1497,13 @@ void mouse_event(XEvent *e)
 		if (!menu.sel->selectable)
 			return;
 		if (config.multi_window &&
+		    config.sub_hover_action &&
 		    (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
 		     !strncmp(menu.sel->cmd, "^pipe(", 6)))
 			return;
-		if (config.spawn) {
-			action_cmd(menu.sel->cmd);
-		} else {
-			puts(menu.sel->cmd);
-			hide_or_exit();
-		}
+		if (ui_has_child_window_open(menu.current_node->wid))
+			ui_win_del_beyond(ui->cur);
+		action_cmd(menu.sel->cmd);
 	}
 }
 
@@ -1731,7 +1726,7 @@ void process_pointer_position(XEvent *ev, int force)
 		return;
 	if (e->subwindow == ui->w[ui->cur].win) {
 		move_selection_with_mouse(&pw);
-		if (config.multi_window)
+		if (config.multi_window && config.sub_hover_action)
 			hover();
 	} else if (is_outside_menu_windows(&e)) {
 		tmr_mouseover_stop();

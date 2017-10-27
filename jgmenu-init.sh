@@ -30,11 +30,12 @@ cat <<'EOF' >>"${tmp_jgmenurc}"
 #menu_border         = 0
 #menu_halign         = left
 #menu_valign         = bottom
-#sub_spacing         = 1;
-#sub_padding_top     = -1;
-#sub_padding_right   = -1;
-#sub_padding_bottom  = -1;
-#sub_padding_left    = -1;
+#sub_spacing         = 1
+#sub_padding_top     = -1
+#sub_padding_right   = -1
+#sub_padding_bottom  = -1
+#sub_padding_left    = -1
+#sub_hover_action    = 1
 #item_margin_x       = 3
 #item_margin_y       = 3
 #item_height         = 25

@@ -43,6 +43,7 @@ void config_set_defaults(void)
 	config.sub_padding_right   = -1;
 	config.sub_padding_bottom  = -1;
 	config.sub_padding_left	   = -1;
+	config.sub_hover_action    = 1;
 
 	config.item_margin_x	   = 3;
 	config.item_margin_y	   = 3;
@@ -153,6 +154,8 @@ static void process_line(char *line)
 		xatoi(&config.sub_padding_bottom, value, XATOI_NONNEG, "config.sub_padding_bottom");
 	} else if (!strcmp(option, "sub_padding_left")) {
 		xatoi(&config.sub_padding_left, value, XATOI_NONNEG, "config.sub_padding_left");
+	} else if (!strcmp(option, "sub_hover_action")) {
+		xatoi(&config.sub_hover_action, value, XATOI_NONNEG, "config.sub_hover_action");
 
 	} else if (!strcmp(option, "item_margin_x")) {
 		xatoi(&config.item_margin_x, value, XATOI_NONNEG, "config.item_margin_x");

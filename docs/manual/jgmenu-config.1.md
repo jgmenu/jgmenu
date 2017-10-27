@@ -1,6 +1,6 @@
 % JGMENU-CONFIG(1)  
 % Johan Malm  
-% 26 September, 2017
+% 27 October, 2017
 
 # NAME
 
@@ -177,6 +177,11 @@ sub_padding_left = __integer__ (default -1)
     The same as `menu_padding_*` but applies to submenu windows  
     only. If set to a negative value, the `menu_padding_*`  
     equivalent will be used.  
+
+sub_hover_action = __integer__ (default 1)
+
+    Open submenu when hovering over item (only works in multi-window  
+    mode).  
 
 item_margin_x = __integer__ (default 3)  
 item_margin_y = __integer__ (default 3)  
