@@ -49,6 +49,7 @@ install: $(PROGS)
 	@install -d $(DESTDIR)$(libexecdir)
 	@install -m755 $(PROGS) $(SCRIPTS_SHELL) $(DESTDIR)$(libexecdir)
 	@install -m755 $(SCRIPTS_PYTHON) $(DESTDIR)$(libexecdir)
+	@install -m644 ./noncore/init/* $(DESTDIR)$(libexecdir)
 	@./scripts/set-exec-path.sh $(DESTDIR)$(bindir)/jgmenu_run $(libexecdir)
 	@./scripts/set-exec-path.sh $(DESTDIR)$(libexecdir)/jgmenu_run $(libexecdir)
 ifdef PYTHON3_POLYGLOT

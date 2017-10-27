@@ -29,6 +29,11 @@ usage () {
 	exit 0
 }
 
+print_exec_path () {
+	printf "%b\n" "${JGMENU_EXEC_DIR}"
+	exit 0
+}
+
 # Pipe to UNIX socket if tint2 button was used.
 send_tint2_env_vars_to_jgmenu () {
 	# Check set/unset with ${parameter+word}
@@ -81,6 +86,7 @@ then
 fi
 
 test "$1" = "--help" && usage
+test "$1" = "--exec-path" && print_exec_path
 
 cmd="$1"
 cmds="jgmenu-${cmd} jgmenu-${cmd}.sh jgmenu-${cmd}.py"

@@ -5,6 +5,7 @@
 tmp_jgmenurc=$(mktemp)
 jgmenurc=~/.config/jgmenu/jgmenurc
 jgmenurc_bak=${jgmenurc}.$(date +%Y%m%d%H%M)
+theme=
 
 regression_items="max_items min_items ignore_icon_cache color_noprog_fg \
 color_title_bg show_title search_all_items ignore_xsettings arrow_show \
@@ -12,12 +13,12 @@ read_tint2rc tint2_rules tint2_button"
 
 usage () {
 	printf "usage: jgmenu_run init [<options>]\n\n"
-	printf "Create or amend jgmenu config file\n\n"
-	printf "If no 'option' is specified, a jgmenurc config file will be\n"
-	printf "  - created if it does not already exist\n"
-	printf "  - amended with any missing variables\n\n"
+	printf "Create or amend config file\n\n"
+	printf "If no theme is specified, jgmenurc will be created/amended with default values\n\n"
 	printf "Options include:\n"
-	printf "    --config-file=<file>  specify config file\n\n"
+	printf "    --config-file=<file>  specify config file\n"
+	printf "    --theme=<theme>  Create config file with a particular theme\n"
+	printf "                     Valid themes include: bunsenlabs\n\n"
 }
 
 populate_tmp_file () {
@@ -76,7 +77,7 @@ EOF
 }
 
 backup_jgmenurc () {
-	cp -p ${jgmenurc} ${jgmenurc_bak}
+	test -e ${jgmenurc} && cp -p ${jgmenurc} ${jgmenurc_bak}
 }
 
 print_start_msg () {
@@ -110,6 +111,8 @@ do
 	case "$1" in
 	--config-file=*)
 		jgmenurc="${1#--config-file=}" ;;
+	--theme=*)
+		theme="${1#--theme=}" ;;
 	--help)
 		usage
 		exit 0
@@ -123,22 +126,30 @@ do
 	shift
 done
 
-
-
 mkdir -p ~/.config/jgmenu
+backup_jgmenurc
 
-populate_tmp_file
-
-if test -e ${jgmenurc}
+if ! test -z ${theme}
 then
-	backup_jgmenurc
-	amend_jgmenurc
+	JGMENU_EXEC_DIR=$(jgmenu_run --exec-path)
+	if test "${theme}" = "bunsenlabs"
+	then
+		. ${JGMENU_EXEC_DIR}/jgmenu-init--bunsenlabs.sh
+		set_theme_bunsenlabs
+	else
+		printf "warn: cannot find theme '${theme}'\n"
+	fi
 else
-	printf "%s\n" "Creating jgmenurc"
-	cp ${tmp_jgmenurc} ${jgmenurc}
+	populate_tmp_file
+	if test -e ${jgmenurc}
+	then
+		amend_jgmenurc
+	else
+		printf "%s\n" "Creating jgmenurc"
+		cp ${tmp_jgmenurc} ${jgmenurc}
+	fi
+	rm -f ${tmp_jgmenurc}
 fi
-
-rm -f ${tmp_jgmenurc}
 
 # Check for jgmenurc items which are no longer valid
 for r in ${regression_items}
