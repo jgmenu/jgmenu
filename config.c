@@ -249,6 +249,9 @@ void config_read_jgmenurc(const char *filename)
 	LIST_HEAD(config_dirs);
 	struct sbuf *tmp;
 
+	/* use default values for --config-file= without file specified */
+	if (filename && filename[0] == '\0')
+		return;
 	if (initiated)
 		goto parse;
 	sbuf_init(&jgmenurc_file);
