@@ -1,10 +1,19 @@
 # This shell script fragment is designed to be sourced by jgmenu-init.sh
 
 set_theme_bunsenlabs () {
-cat <<'EOF' >>"${jgmenurc}"
+cat <<'EOF' >"${jgmenurc}"
 tint2_look          = 0
 at_pointer          = 1
-csv_cmd             = jgmenu_run parse-ob ~/.config/openbox/menu.xml
+EOF
+
+if test -e ~/.config/openbox/menu.xml
+then
+	printf "%s\n" "csv_cmd             = jgmenu_run parse-ob ~/.config/openbox/menu.xml"  >>"${jgmenurc}"
+else
+	printf "%s\n" "csv_cmd             = jgmenu_run parse-pmenu"  >>"${jgmenurc}"
+fi
+
+cat <<'EOF' >>"${jgmenurc}"
 menu_width          = 120
 menu_padding_top    = 0
 menu_padding_right  = 0
