@@ -360,23 +360,32 @@ void init_menuitem_coordinates(void)
  */
 char *parse_caret_action(char *s, char *token)
 {
-	char *p, *q;
+	char *p;
 
 	p = NULL;
-	q = NULL;
 	if (!s)
 		return NULL;
 	if (!strncmp(s, token, strlen(token))) {
 		p = s;
 		p += strlen(token);
-		q = strrchr(p, ')');
-		if (q)
-			*q = '\0';
 	}
 	return p;
 }
 
-void draw_item_sep(struct item *p)
+void remove_caret_markup_closing_bracket(char *s)
+{
+	char *q;
+
+	if (!s)
+		return;
+	if (s[0] == '^') {
+		q = strrchr(s, ')');
+		if (q)
+			*q = '\0';
+	}
+}
+
+void draw_item_sep_without_text(struct item *p)
 {
 	double y;
 
@@ -396,6 +405,14 @@ void draw_item_sep_with_text(struct item *p)
 	ui_insert_text(parse_caret_action(p->name, "^sep("), text_x_coord,
 		       p->area.y, p->area.h, p->area.w, config.color_sep_fg,
 		       config.item_halign);
+}
+
+void draw_item_sep(struct item *p)
+{
+	if (p->name[5] == '\0')
+		draw_item_sep_without_text(p);
+	else
+		draw_item_sep_with_text(p);
 }
 
 void draw_item_bg_norm(struct item *p)
@@ -553,10 +570,8 @@ void draw_menu(void)
 		/* Draw menu items text */
 		if (p->selectable)
 			draw_item_text(p);
-		else if (!strncmp(p->name, "^sep()", 6))
-			draw_item_sep(p);
 		else if (!strncmp(p->name, "^sep(", 5))
-			draw_item_sep_with_text(p);
+			draw_item_sep(p);
 
 		/* Draw Icons */
 		if (config.icon_size && p->icon)
@@ -1024,7 +1039,7 @@ static void get_unique_tag_item(char *utag)
 		if (!node_exists(utag))
 			break;
 	}
-	snprintf(utag, UTAG_BUFSIZ, "%d,^tag(%d)", i, i);
+	snprintf(utag, UTAG_BUFSIZ, "%d,^tag(%d", i, i);
 }
 
 static void insert_tag_item(void)
@@ -1083,6 +1098,8 @@ void read_csv_file(FILE *fp)
 		item->name = argv_buf.argv[0];
 		item->cmd = argv_buf.argv[1];
 		item->iconname = argv_buf.argv[2];
+		remove_caret_markup_closing_bracket(item->name);
+		remove_caret_markup_closing_bracket(item->cmd);
 		if (!item->cmd)
 			item->cmd = item->name;
 		if (first_item) {
@@ -1102,11 +1119,10 @@ void read_csv_file(FILE *fp)
 		item->tag = NULL;
 		item->selectable = 1;
 		item->area.h = config.item_height;
-		if (!strncmp(item->name, "^sep()", 6)) {
+		if (!strncmp(item->name, "^sep(", 5)) {
 			item->selectable = 0;
-			item->area.h = config.sep_height;
-		} else if (!strncmp(item->name, "^sep(", 5)) {
-			item->selectable = 0;
+			if (item->name[5] == '\0')
+				item->area.h = config.sep_height;
 		}
 	}
 
@@ -1666,6 +1682,7 @@ static struct item *subwin_parent_item(Window w)
 		return NULL;
 	n = get_node_from_wid(child);
 	BUG_ON(!n);
+	BUG_ON(!n->parent);
 	return n->parent->last_sel;
 }
 
