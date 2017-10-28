@@ -1,0 +1,17 @@
+jgmenu v0.7.3 release notes
+===========================
+
+Updates since v0.7.2
+--------------------
+
+  - Fix multi-window bugs
+
+        - remember scroll position
+        - take into account window focus when responding to XEvent
+	- stop timer on hide
+
+  - Exclude ^pipe() items from search
+
+  - Add sub_hover_action config option
+
+  - Improve jgmenu-init.sh

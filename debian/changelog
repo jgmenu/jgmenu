@@ -1,3 +1,10 @@
+jgmenu (0.7.3-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+  * Move debian/ directory to project root
+
+ -- Johan Malm <jgm323@gmail.com>  Sat, 28 Oct 2017 21:52:10 +0100
+
 jgmenu (0.7.2-1) UNRELEASED; urgency=medium
 
   * Initial release

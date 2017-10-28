@@ -16,9 +16,10 @@ usage () {
 	printf "Create or amend config file\n\n"
 	printf "If no theme is specified, jgmenurc will be created/amended with default values\n\n"
 	printf "Options include:\n"
-	printf "    --config-file=<file>  specify config file\n"
-	printf "    --theme=<theme>  Create config file with a particular theme\n"
-	printf "                     Valid themes include: bunsenlabs\n\n"
+	printf "    --config-file=<file>  Specify config file\n"
+	printf "    --theme=<theme>       Create config file with a particular theme\n"
+	printf "                          Valid themes include:\n"
+	printf "                            - bunsenlabs\n\n"
 }
 
 populate_tmp_file () {
