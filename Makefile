@@ -59,7 +59,7 @@ else
 	found. Suggest defining PYTHON3_POLYGLOT"
 endif
 	@$(MAKE) --no-print-directory -C docs/manual/ install
-	@./scripts/create_desktop_file.sh $(DESTDIR)$(PREFIX)
+	@./scripts/create_desktop_file.sh $(DESTDIR)$(prefix)
 
 clean:
 	@$(RM) $(PROGS) *.o *.a

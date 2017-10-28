@@ -12,8 +12,8 @@ manpages   = $(man1pages) $(man7pages)
 
 readmefile = ../../README.html
 
-PREFIX ?= /usr/local
-mandir ?= $(PREFIX)/share/man
+prefix ?= /usr/local
+mandir ?= $(prefix)/share/man
 man1dir = $(mandir)/man1
 man7dir = $(mandir)/man7
 

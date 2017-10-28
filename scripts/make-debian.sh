@@ -11,7 +11,7 @@ ver=$(./scripts/version-gen.sh | sed -e 's/^jgmenu v//' | cut -f1 -d"-")
 #git describe --exact-match HEAD 2>/dev/null || echo "warn: not at tag"
 
 rm ../jgmenu_*
-dh_make -p jgmenu_${ver} --createorig --addmissing
+dh_make -p jgmenu_${ver} --createorig --addmissing --single
 
 rm -f debian/watch.ex
 rm -f debian/prerm.ex
