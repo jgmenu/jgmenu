@@ -83,7 +83,7 @@ backup_jgmenurc () {
 print_start_msg () {
 	if test -z ${printed+x}
 	then
-		printf "%b\n" "Amending config file with missing items..."
+		printf "%b\n" "Add missing items to config file..."
 		printf "\n\n%b\n\n" "### the items below were added by 'jgmenu_run init'" >> ${jgmenurc}
 	fi
 	printed=1
@@ -141,13 +141,7 @@ then
 	fi
 else
 	populate_tmp_file
-	if test -e ${jgmenurc}
-	then
-		amend_jgmenurc
-	else
-		printf "%s\n" "Creating jgmenurc"
-		cp ${tmp_jgmenurc} ${jgmenurc}
-	fi
+	amend_jgmenurc
 	rm -f ${tmp_jgmenurc}
 fi
 
@@ -159,4 +153,3 @@ do
 		printf "%b\n" "warning: ${r} is no longer a valid key"
 	fi
 done
-
