@@ -1,10 +1,9 @@
 TODO
 ====
 
-init
-	Add jgmenu-init--bunsenlabs.sh
-
 Simplify geometry.c by enabling access to config.h variables
+
+add gcc -M auto-dependencies to Makefile
 
 in x11-ui.c, create
 	- linked list of windows

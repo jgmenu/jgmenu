@@ -3,13 +3,15 @@ Install
 
 ### Install from repos
 
+BunsenLabs Linux: [backports](http://eu.pkg.bunsenlabs.org/debian/pool/main/j/jgmenu/)  
+
 Arch Linux: [AUR package](https://aur.archlinux.org/packages/jgmenu/)  
 
 Void Linux: [Official package](https://github.com/voidlinux/void-packages/blob/master/srcpkgs/jgmenu/template)  
 
 ### Build and install from scratch
 
-On Debian based systems such as Bunsenlabs and Ubuntu, do:
+On Debian based systems:
 
 ```bash
 mkdir ~/src && cd ~/src
@@ -17,7 +19,7 @@ git clone https://github.com/johanmalm/jgmenu.git
 cd jgmenu
 ./scripts/install-debian-dependencies.sh
 make
-make install
+sudo make install
 ```
 
 For subsequent updates, do:
@@ -26,41 +28,27 @@ For subsequent updates, do:
 git pull
 make clean
 make
-make install
+sudo make install
 ```
-
-A user has written some alternative installation notes
-[here](https://forums.bunsenlabs.org/viewtopic.php?id=3100)  
 
 ### Furter details on build and installation
 
-By default, `make install` will install jgmenu in your $HOME-directory, thus
-avoiding the need for root-privilegies. You will need `$HOME/bin` in your
-`$PATH` to run from there.
+By default, `make install` installs jgmenu to  
+/usr/local/{bin,lib/jgmenu,share/man}  
 
-The build process installs files under:  
-
-  - bin/
-  - lib/jgmenu/
-  - share/man/
-
-Use `prefix` to specify a different target location. For example,
-if you wish to keep your $HOME top-level directory clean, you could do:  
-
-```bash
-make prefix=$HOME/.local install
-```
-
-Or, to do a system-wide installation use '/usr' or '/usr/local'.
-For example: 
+Use `prefix` to specify a different target location. For example: 
 
 ```bash
 sudo make prefix=/usr install
 ```
 
-In addition to `prefix`, there are a number of build variables which can be
-defined. These are described in the Makefile. Create a config.mk to override
-build settings without making your tree dirty or having to re-type them every
+In order to avoid the need for root-privilegies, you can install to your $HOME  
+directory by `make prefix=$HOME install`. You will need `$HOME/bin` in your  
+`$PATH` to run from there.  
+
+In addition to `prefix`, there are a number of build variables which can be  
+defined. These are described in the Makefile. Create a config.mk to override  
+build settings without making your tree dirty or having to re-type them every  
 time. 
 
 There is no "uninstall" target in the Makefile. To tidy up, delete the
