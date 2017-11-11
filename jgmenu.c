@@ -1136,7 +1136,7 @@ void rm_back_items(void)
 	struct item *i, *tmp;
 
 	list_for_each_entry_safe(i, tmp, &menu.master, master)
-		if (!strncmp(i->cmd, "^back()", 7)) {
+		if (!strncmp(i->cmd, "^back(", 6)) {
 			xfree(i->name);
 			list_del(&i->master);
 			xfree(i);
