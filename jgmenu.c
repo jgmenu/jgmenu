@@ -1059,7 +1059,7 @@ static void insert_tag_item(void)
 	item->cmd = argv_buf.argv[1];
 	item->iconname = argv_buf.argv[2];
 	item->icon = NULL;
-	item->tag = NULL;
+	item->tag = item->cmd + 5;
 	item->selectable = 1;
 	item->area.h = config.item_height;
 	list_add_tail(&item->master, &menu.master);
@@ -1107,16 +1107,11 @@ void read_csv_file(FILE *fp)
 				insert_tag_item();
 			first_item = 0;
 		}
-		list_add_tail(&item->master, &menu.master);
-	}
-
-	if (!item || i <= 0)
-		die("input file contains no menu items");
-
-	/* Init items */
-	list_for_each_entry(item, &menu.master, master) {
 		item->icon = NULL;
-		item->tag = NULL;
+		if (!strncmp("^tag(", item->cmd, 5))
+			item->tag = parse_caret_action(item->cmd, "^tag(");
+		else
+			item->tag = NULL;
 		item->selectable = 1;
 		item->area.h = config.item_height;
 		if (!strncmp(item->name, "^sep(", 5)) {
@@ -1124,14 +1119,11 @@ void read_csv_file(FILE *fp)
 			if (item->name[5] == '\0')
 				item->area.h = config.sep_height;
 		}
+		list_add_tail(&item->master, &menu.master);
 	}
 
-	/* Populate tag field */
-	list_for_each_entry(item, &menu.master, master) {
-		if (strncmp("^tag(", item->cmd, 5))
-			continue;
-		item->tag = parse_caret_action(item->cmd, "^tag(");
-	}
+	if (!item || i <= 0)
+		die("input file contains no menu items");
 }
 
 void rm_back_items(void)
