@@ -1077,9 +1077,14 @@ void read_csv_file(FILE *fp)
 		die("no csv-file");
 	argv_set_delim(&argv_buf, ',');
 	for (i = 0; fgets(buf, sizeof(buf), fp); i++) {
+		buf[BUFSIZ - 1] = '\0';
+		if (strlen(buf) == BUFSIZ - 1)
+			die("item %d is too long", i);
 		p = strchr(buf, '\n');
 		if (p)
 			*p = '\0';
+		else
+			die("item %d does not appear to be text", i);
 		if ((buf[0] == '#') ||
 		    (buf[0] == '\n') ||
 		    (buf[0] == '\0')) {
