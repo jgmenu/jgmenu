@@ -1084,7 +1084,7 @@ void read_csv_file(FILE *fp)
 		if (p)
 			*p = '\0';
 		else
-			die("item %d does not appear to be text", i);
+			die("item %d was not correctly terminated with a '\\n'", i);
 		if ((buf[0] == '#') ||
 		    (buf[0] == '\n') ||
 		    (buf[0] == '\0')) {
@@ -1137,7 +1137,7 @@ void rm_back_items(void)
 
 	list_for_each_entry_safe(i, tmp, &menu.master, master)
 		if (!strncmp(i->cmd, "^back(", 6)) {
-			xfree(i->name);
+			xfree(i->buf);
 			list_del(&i->master);
 			xfree(i);
 		}
@@ -1177,7 +1177,7 @@ void pipemenu_del(struct node *node)
 	pm_pop();
 	i = node->item;
 	list_for_each_entry_safe_from(i, i_tmp, &menu.master, master) {
-		xfree(i->name);
+		xfree(i->buf);
 		list_del(&i->master);
 		xfree(i);
 	}
