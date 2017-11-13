@@ -4,6 +4,8 @@ DEVELOPMENT NOTES
 Upversion
 ---------
   - update "default_version" in scripts/version-gen.sh
+  - update debian/changelog
+  - create docs/relnotes/X.Y.txt
   - git tag -a 'vX.Y'
 
 Adding new config variables

@@ -1,0 +1,7 @@
+jgmenu v0.7.4 release notes
+===========================
+
+Updates since v0.7.3
+--------------------
+
+  - Fix bugs

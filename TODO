@@ -1,77 +1,95 @@
 TODO
 ====
 
-Simplify geometry.c by enabling access to config.h variables
+Cleanliness
+-----------
 
-add gcc -M auto-dependencies to Makefile
+	checkout_parent(): consider the case when current window has child(ren)
 
-in x11-ui.c, create
-	- linked list of windows
-	- 'static Window active_window' (instead of ui->w[ui->cur].win)
-	- Write --help message.
+	free string-lists with builtin sbuf_ function
 
-Pipemenu
-	- check duplicate tag names
-	- load icons for pipes
+	Remove parse_caret_action (it was only really good for deleting the
+	closing bracket which we do up-front now anyway)
 
-parse-ob.c: remove return_cmd
-		Read JGMENU_PREPEND_FILE env var (and read ~/.config/jgmenu/prepend.csv by default)
-		Read stdin -->  exec in jgmenu_run
-				stdin -> mkstemp /tmp/jgmenu-XXXXXX
+	Simplify geometry.c by enabling access to config.h variables
 
-Move struct item/node code to data.c.
-	  - Refactor all the checkout_* functions. They're confusing.
+	add gcc -M auto-dependencies to Makefile
 
-The first item in master list is always a tag-item, so remove old code which
-handles exceptions
+	in x11-ui.c, create
+		- linked list of windows
+		- 'static Window active_window' (instead of ui->w[ui->cur].win)
+		- Write --help message.
 
-Refactor around read_csv_file and creating items
+	Pipemenu
+		- check duplicate tag names
+		- load icons for pipes
 
-'\0' terminate read_csv_file if no '\n'  present
+	parse-ob.c: remove return_cmd
+			Read JGMENU_PREPEND_FILE env var (and read ~/.config/jgmenu/prepend.csv by default)
+			Read stdin -->  exec in jgmenu_run
+					stdin -> mkstemp /tmp/jgmenu-XXXXXX
 
-Remove spawn from config (make it args_ instead).
+	Move struct item/node code to data.c.
+		  - Refactor all the checkout_* functions. They're confusing.
 
-Draw diagrams of variables
+	The first item in master list is always a tag-item, so remove old code
+	which handles exceptions
 
-Add csv_cmd to config.c
-  - If csv_cmd unset/empty, read from 'stdin' (csv_cmd=...parse-pmenu by default)
-  - Set csv_cmd=NULL when --simple or --vsimple invoked
+	Refactor around read_csv_file and creating items
 
-Re-factor jgmenu_run lx/pmenu/xdg/csv, etc. by using --csv-*
+	'\0' terminate read_csv_file if no '\n'  present
 
-Add watch.c
-	- Check tint2rc 'modified time' and re-read on change
-	- Consider the same for jgmenurc and tint2-sessionfile (bl)
+	Remove spawn from config (make it args_ instead).
 
-Add support for "fixed-position" items such as icons/images and
-shapes (incl search box)
+	Draw diagrams of variables
 
-On wake-up, check changes to .desktop files, tint2, xsettings, jgmenurc, etc.
+	Add csv_cmd to config.c
+	  - If csv_cmd unset/empty, read from 'stdin' (csv_cmd=...parse-pmenu by
+	    default)
+	  - Set csv_cmd=NULL when --simple or --vsimple invoked
 
-Also replace strdups+free with x-alternatives
+	Re-factor jgmenu_run lx/pmenu/xdg/csv, etc. by using --csv-*
 
-Add menu_height config option
+	Replace strdups+free with x-alternatives
+		replace various warn() with BUG_ON
 
-Set width when filter applied (long items don't currently fit)
+	Set by argv_buf delim by default to make it 'safer'
 
-Add CENTER to menu_halign and menu_valign
+	Add explaination on JGMENU_EXEC_PATH
 
-Set by argv_buf delim by default to make it 'safer'
+	Remove XINERAMA ifdefs
 
-Add explaination on JGMENU_EXEC_PATH
+	Rename filter list (as it clashes with filter_) (maybe 'disp'?)
 
-Remove XINERAMA ifdefs
+	Add shareness with symlinks
 
-Rename filter list (as it clashes with filter_) (maybe 'disp'?)
+	Remove harded coded variables (such as 22, etc)
 
-Add shareness with symlinks
+New features
+------------
+	jgmenu-init.sh:
+	  - put backup files in backup/ directory
+	  - add --clean to remove all config files
 
-Add scroll_bar
+	Add watch.c
+		- Check tint2rc 'modified time' and re-read on change
+		- Consider the same for jgmenurc and tint2-sessionfile (bl)
 
-Add man-page for jgmenu_run ob
+	Add support for "fixed-position" items such as icons/images and
+	shapes (incl search box)
 
-Remove harded coded variables (such as 22, etc)
+	On wake-up, check changes to .desktop files, tint2, xsettings, jgmenurc,
+	etc.
 
+	Add menu_height config option
+
+	Set width when filter applied (long items don't currently fit)
+
+	Add CENTER to menu_halign and menu_valign
+
+	Add scroll_bar
+
+	Add man-page for jgmenu_run ob
 
 AFTER v1.0
 ----------
