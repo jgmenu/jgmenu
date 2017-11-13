@@ -1479,8 +1479,10 @@ void mouse_event(XEvent *e)
 
 	/* right-click */
 	if (ev->button == Button3) {
-		checkout_parent();
-		update(1);
+		if (!config.multi_window) {
+			checkout_parent();
+			update(1);
+		}
 	}
 
 	/* scroll up */
