@@ -6,16 +6,6 @@
  * http://specifications.freedesktop.org/basedir-spec...
  *
  * The list will contain the directories listed below (in given order).
- * If the $XDG* variables are set, the remainder will not be appended to
- * the list.
- *
- * $XDG_DATA_HOME
- * $HOME/.local/share
- * $XDG_DATA_DIRS
- * /usr/local/share
- * /usr/share
- * /opt/share
- *
  */
 
 #include <stdio.h>
@@ -29,14 +19,13 @@
 
 static char *xdg_base_dirs[] = {
 	"$XDG_DATA_HOME", "$HOME/.local/share", "$XDG_DATA_DIRS",
-	"/usr/share", "/usr/local/share", "/opt/share"
+	"/usr/share", "/usr/local/share", "/opt/share", NULL
 };
 
 static char *xdg_config_dirs[] = {
-	"$XDG_CONFIG_HOME", "$HOME/.config", "$XDG_CONFIG_DIRS", "/etc/xdg"
+	"$XDG_CONFIG_HOME", "$HOME/.config", "$XDG_CONFIG_DIRS", "/etc/xdg",
+	NULL
 };
-
-#define COUNT_OF(x) (sizeof(x) / sizeof(x)[0])
 
 static void expand_env_vars(struct sbuf *s)
 {
@@ -59,22 +48,7 @@ cleanup:
 	xfree(env_name.buf);
 }
 
-void xdgdirs_get_basedirs(struct list_head *dir_list)
-{
-	size_t i;
-	struct sbuf tmp;
-
-	sbuf_init(&tmp);
-	for (i = 0; i < COUNT_OF(xdg_base_dirs); i++) {
-		sbuf_cpy(&tmp, xdg_base_dirs[i]);
-		if (!strncmp(tmp.buf, "$", 1))
-			expand_env_vars(&tmp);
-		if (tmp.len)
-			sbuf_list_append(dir_list, tmp.buf);
-	}
-}
-
-void xdgdirs_get_configdirs(struct list_head *dir_list)
+static void get_dirs(struct list_head *dir_list, char **dirs)
 {
 	size_t i;
 	int j;
@@ -83,8 +57,8 @@ void xdgdirs_get_configdirs(struct list_head *dir_list)
 
 	sbuf_init(&tmp);
 	argv_set_delim(&argv_buf, ':');
-	for (i = 0; i < COUNT_OF(xdg_config_dirs); i++) {
-		sbuf_cpy(&tmp, xdg_config_dirs[i]);
+	for (i = 0; dirs[i]; i++) {
+		sbuf_cpy(&tmp, dirs[i]);
 		if (!strncmp(tmp.buf, "$", 1))
 			expand_env_vars(&tmp);
 		if (!tmp.len)
@@ -92,9 +66,20 @@ void xdgdirs_get_configdirs(struct list_head *dir_list)
 		argv_init(&argv_buf);
 		argv_strdup(&argv_buf, tmp.buf);
 		argv_parse(&argv_buf);
-		for (j = 0; j < argv_buf.argc; j++)
+		for (j = 0; j < argv_buf.argc; j++) {
+			info("XDG dir added to list=%s", argv_buf.argv[j]);
 			sbuf_list_append(dir_list, argv_buf.argv[j]);
+		}
 		xfree(argv_buf.buf);
-
 	}
+}
+
+void xdgdirs_get_basedirs(struct list_head *dir_list)
+{
+	get_dirs(dir_list, xdg_base_dirs);
+}
+
+void xdgdirs_get_configdirs(struct list_head *dir_list)
+{
+	get_dirs(dir_list, xdg_config_dirs);
 }
