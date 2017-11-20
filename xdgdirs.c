@@ -25,6 +25,7 @@
 #include "sbuf.h"
 #include "list.h"
 #include "util.h"
+#include "argv-buf.h"
 
 static char *xdg_base_dirs[] = {
 	"$XDG_DATA_HOME", "$HOME/.local/share", "$XDG_DATA_DIRS",
@@ -76,14 +77,24 @@ void xdgdirs_get_basedirs(struct list_head *dir_list)
 void xdgdirs_get_configdirs(struct list_head *dir_list)
 {
 	size_t i;
+	int j;
 	struct sbuf tmp;
+	struct argv_buf argv_buf;
 
 	sbuf_init(&tmp);
+	argv_set_delim(&argv_buf, ':');
 	for (i = 0; i < COUNT_OF(xdg_config_dirs); i++) {
 		sbuf_cpy(&tmp, xdg_config_dirs[i]);
 		if (!strncmp(tmp.buf, "$", 1))
 			expand_env_vars(&tmp);
-		if (tmp.len)
-			sbuf_list_append(dir_list, tmp.buf);
+		if (!tmp.len)
+			continue;
+		argv_init(&argv_buf);
+		argv_strdup(&argv_buf, tmp.buf);
+		argv_parse(&argv_buf);
+		for (j = 0; j < argv_buf.argc; j++)
+			sbuf_list_append(dir_list, argv_buf.argv[j]);
+		xfree(argv_buf.buf);
+
 	}
 }
