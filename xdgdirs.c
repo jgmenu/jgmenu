@@ -66,10 +66,8 @@ static void get_dirs(struct list_head *dir_list, char **dirs)
 		argv_init(&argv_buf);
 		argv_strdup(&argv_buf, tmp.buf);
 		argv_parse(&argv_buf);
-		for (j = 0; j < argv_buf.argc; j++) {
-			info("XDG dir added to list=%s", argv_buf.argv[j]);
+		for (j = 0; j < argv_buf.argc; j++)
 			sbuf_list_append(dir_list, argv_buf.argv[j]);
-		}
 		xfree(argv_buf.buf);
 	}
 }

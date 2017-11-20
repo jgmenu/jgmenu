@@ -88,8 +88,7 @@ static void print_csv_menu(void)
 
 		printf("%s,^tag(%s)\n", n->name, n->tag);
 		if (n->parent)
-			printf("Go back,^checkout(%s),folder\n",
-			       n->parent->name);
+			printf("Go back,^back(),folder\n");
 
 		/* Print directories first */
 		list_for_each_entry(item, &n->menu_items, list)
