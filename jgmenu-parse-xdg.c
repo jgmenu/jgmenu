@@ -15,16 +15,17 @@
 #include <string.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#include <sys/stat.h>
 
 #include "xdgapps.h"
 #include "util.h"
 #include "sbuf.h"
+#include "xdgdirs.h"
 
 #define DEBUG_PRINT_XML_NODES 0
 
 static const char jgmenu_xdg_usage[] =
-"Usage: jgmenu_run parse-xdg <.menu file>\n"
-"       jgmenu_run parse-xdg --no-dirs\n\n"
+"Usage: jgmenu_run parse-xdg [option] [<menu file>]\n\n"
 "    --no-dirs             ignore .menu and .directory files\n";
 
 /*
@@ -57,9 +58,6 @@ struct jgmenu_item {
 
 static LIST_HEAD(jgmenu_nodes);
 static struct jgmenu_node *current_jgmenu_node;
-
-/* command line args */
-static char *data_dir;
 
 static void usage(void)
 {
@@ -303,14 +301,10 @@ static void process_node(xmlNode *node)
 	 */
 	if (!node->content)
 		return;
-
 	sbuf_init(&node_name);
-
 	get_full_node_name(&node_name, node);
-
 	if (node_name.len && strlen(strstrip((char *)node->content)))
 		add_data_to_jgmenu_node(node_name.buf, strstrip((char *)node->content));
-
 	free(node_name.buf);
 }
 
@@ -335,10 +329,8 @@ static void xml_tree_walk(xmlNode *node)
 			revert_to_parent();
 			continue;
 		}
-
 		if (!strcasecmp((char *)n->name, "Comment"))
 			continue;
-
 		process_node(n);
 		xml_tree_walk(n->children);
 	}
@@ -350,7 +342,6 @@ static void parse_xml(const char *filename)
 
 	if (!d)
 		die("error reading file '%s'\n", filename);
-
 	xml_tree_walk(xmlDocGetRootElement(d));
 	xmlFreeDoc(d);
 	xmlCleanupParser();
@@ -365,15 +356,48 @@ static void print_desktop_files(void)
 			printf("%s,%s,%s\n", f->name, f->exec, f->icon);
 }
 
+static void find_menu_file(struct sbuf *filename)
+{
+	LIST_HEAD(config_dirs);
+	struct sbuf *tmp;
+	struct stat sb;
+	static const char * const prefix[] = { "gnome-", "lxde-", "lxqt-", "kde-",
+					       NULL };
+	int i;
+
+	xdgdirs_get_configdirs(&config_dirs);
+	sbuf_init(filename);
+	list_for_each_entry(tmp, &config_dirs, list) {
+		if (getenv("XDG_MENU_PREFIX")) {
+			sbuf_cpy(filename, tmp->buf);
+			sbuf_addstr(filename, "/menus/");
+			sbuf_addstr(filename, getenv("XDG_MENU_PREFIX"));
+			sbuf_addstr(filename, "applications.menu");
+			if (!stat(filename->buf, &sb))
+				goto found;
+		} else {
+			for (i = 0; prefix[i]; i++) {
+				sbuf_cpy(filename, tmp->buf);
+				sbuf_addstr(filename, "/menus/");
+				sbuf_addstr(filename, prefix[i]);
+				sbuf_addstr(filename, "applications.menu");
+				if (!stat(filename->buf, &sb))
+					goto found;
+			}
+		}
+	}
+	sbuf_cpy(filename, "");
+found:
+	sbuf_list_free(&config_dirs);
+}
+
 int main(int argc, char **argv)
 {
-	char *file_name = NULL;
+	struct sbuf filename;
 	int i;
 	int no_dirs = 0;
 
-	if (argc < 2)
-		usage();
-
+	sbuf_init(&filename);
 	LIBXML_TEST_VERSION
 
 	/* Create lists of .desktop- and .directory files */
@@ -381,38 +405,30 @@ int main(int argc, char **argv)
 
 	i = 1;
 	while (i < argc) {
-		if (argv[i][0] != '-') {
-			file_name = argv[i];
-			break;
-		}
-
-		if (!strncmp(argv[i], "--data-dir=", 11))
-			data_dir = argv[i] + 11;
+		if (argv[i][0] != '-')
+			sbuf_cpy(&filename, argv[i]);
 		else if (!strncmp(argv[i], "--no-dirs", 9))
 			no_dirs = 1;
 		else if (!strncmp(argv[i], "--help", 6))
 			usage();
 		else
 			die("unknown option '%s'", argv[i]);
-
 		i++;
 	}
-
 	if (no_dirs) {
 		print_desktop_files();
 		goto out;
 	}
-
-	if (!file_name) {
-		fprintf(stderr, "error: no menu-file specified\n");
-		usage();
-	}
-
-	parse_xml(file_name);
+	if (!filename.len)
+		find_menu_file(&filename);
+	if (!filename.len)
+		die("cannot find menu-file");
+	info("parsing menu file '%s'", filename.buf);
+	parse_xml(filename.buf);
 	process_categories_and_populate_desktop_files();
 	process_directory_files();
 	print_csv_menu();
-
 out:
+	xfree(filename.buf);
 	return 0;
 }

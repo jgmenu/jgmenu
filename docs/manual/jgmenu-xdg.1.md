@@ -1,6 +1,6 @@
 % JGMENU-XDG(1)  
 % Johan Malm  
-% 27 September, 2016
+% 24 September, 2017
 
 # NAME
 
@@ -20,16 +20,12 @@ http://standards.freedesktop.org/basedir-spec/
 http://standards.freedesktop.org/desktop-entry-spec/  
 http://standards.freedesktop.org/desktop-entry-spec/  
 
-*WARNING*: `jgmenu_run xdg` is still at an experimental stage.  
+`jgmenu_run xdg` is a very simple XDG implementation.  
 It understands the XML elements <*Menu*>, <*Name*>, <*Directory*>  
 and <*Include*><*And*><*Category*>, but ignores everything else.
 
-The .menu files are sought in the following order:
-
-  - `~/.config/jgmenu/default.menu`  
-  - `${XDG_CONFIG_DIRS}/menus/*-applications.menu`  
-
-The default value of `$XDG_CONFIG_DIRS` is "/etc/xdg".
+The .menu file is sought in `${XDG_CONFIG_DIRS:-/etc/xdg}` with  
+user configuration override in `${XDG_CONFIG_HOME:-$HOME/.config}`  
 
 `$XDG_MENU_PREFIX` can be used to specity a .menu file. For example  
 `$XDG_MENU_PREFIX=lxde-` will load lxde-applications.menu  
