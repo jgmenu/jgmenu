@@ -65,6 +65,25 @@ static void usage(void)
 	exit(0);
 }
 
+static void cat_file(const char *filename)
+{
+	FILE *fp;
+	char line[4096];
+	struct sbuf f;
+
+	sbuf_init(&f);
+	sbuf_cpy(&f, filename);
+	sbuf_expand_tilde(&f);
+	fp = fopen(f.buf, "r");
+	if (!fp)
+		goto cleanup;
+	while (fgets(line, sizeof(line), fp))
+		printf("%s", line);
+	fclose(fp);
+cleanup:
+	xfree(f.buf);
+}
+
 static void print_menu_item(struct jgmenu_item *item)
 {
 	printf("%s,", item->name);
@@ -83,22 +102,23 @@ static void print_csv_menu(void)
 	list_for_each_entry(n, &jgmenu_nodes, list) {
 		if (list_empty(&n->menu_items))
 			continue;
-
-		printf("%s,^tag(%s)\n", n->name, n->tag);
-		if (n->parent)
+		if (!n->parent) {
+			cat_file("~/.config/jgmenu/prepend.csv");
+		} else {
+			printf("%s,^tag(%s)\n", n->name, n->tag);
 			printf("Go back,^back(),folder\n");
-
+		}
 		/* Print directories first */
 		list_for_each_entry(item, &n->menu_items, list)
 			if (item->cmd && !strncmp(item->cmd, "^checkout", 9))
 				print_menu_item(item);
-
 		/* Then all other items */
 		list_for_each_entry(item, &n->menu_items, list)
 			if (!item->cmd || strncmp(item->cmd, "^checkout", 9))
 				print_menu_item(item);
-
 		printf("\n");
+		if (!n->parent)
+			cat_file("~/.config/jgmenu/append.csv");
 	}
 }
 
@@ -134,10 +154,8 @@ static void add_dir_to_jgmenu_node(struct jgmenu_node *parent,
 
 	if (!name || !tag)
 		die("no name or tag specified in add_dir_to_jgmenu_node()");
-
 	if (!parent)
 		return;
-
 	sbuf_init(&s);
 	sbuf_addstr(&s, "^checkout(");
 	sbuf_addstr(&s, tag);
@@ -240,7 +258,6 @@ static void create_new_jgmenu_node(struct jgmenu_node *parent,
 	INIT_LIST_HEAD(&node->desktop_files);
 	INIT_LIST_HEAD(&node->menu_items);
 	list_add_tail(&node->list, &jgmenu_nodes);
-
 	current_jgmenu_node = node;
 }
 
@@ -252,7 +269,6 @@ static int level(xmlNode *node)
 		node = node->parent;
 		if (!node || !node->name)
 			return level;
-
 		if (!strcasecmp((char *)node->name, "Menu"))
 			++level;
 	}
@@ -275,16 +291,13 @@ static void get_full_node_name(struct sbuf *node_name, xmlNode *node)
 			return;
 		}
 	}
-
 	ismenu = !strcmp((char *)node->name, "Menu");
 	for (;;) {
 		if (!ismenu)
 			sbuf_prepend(node_name, (char *)node->name);
-
 		node = node->parent;
 		if (!node || !node->name)
 			return;
-
 		ismenu = !strcmp((char *)node->name, "Menu");
 		if (!ismenu)
 			sbuf_prepend(node_name, ".");
