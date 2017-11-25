@@ -9,6 +9,8 @@ Arch Linux: [AUR package](https://aur.archlinux.org/packages/jgmenu/)
 
 Void Linux: [Official package](https://github.com/voidlinux/void-packages/blob/master/srcpkgs/jgmenu/template)  
 
+NixOS: [package](https://github.com/NixOS/nixpkgs/tree/master/pkgs/applications/misc/jgmenu)  
+
 ### Build and install from scratch
 
 On Debian based systems:
