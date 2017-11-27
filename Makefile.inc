@@ -11,7 +11,6 @@ CFLAGS  += -Wextra -Wdeclaration-after-statement -Wno-format-zero-length \
 	   -Wstrict-prototypes -Wunused -Wvla -Wunused-result
 CFLAGS  += -Wno-unused-parameter
 CFLAGS  += -DVERSION='"$(VER)"'
-CFLAGS  += -DXINERAMA
 CFLAGS  += `pkg-config cairo pango pangocairo librsvg-2.0 --cflags`
 CFLAGS  += `xml2-config --cflags`
 CFLAGS  += `pkg-config --cflags glib-2.0 libmenu-cache`

@@ -16,21 +16,11 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
-
-#ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
-#endif
-
 #include <unistd.h>		/* for usleep */
 
 #include "x11-ui.h"
 #include "util.h"
-
-/* INTERSECT is required by Xinerama.  MAX and MIN are defined in glib */
-#define INTERSECT(x, y, w, h, r)  (MAX(0, MIN((x) + (w), (r).x_org + (r).width)  - \
-				   MAX((x), (r).x_org)) * \
-				   MAX(0, MIN((y) + (h), (r).y_org + (r).height) - \
-				   MAX((y), (r).y_org)))
 
 struct UI *ui;
 
@@ -107,6 +97,11 @@ void ui_init(void)
 	ui->root = RootWindow(ui->dpy, ui->screen);
 }
 
+#define INTERSECT(x, y, w, h, r)  (MAX(0, MIN((x) + (w), (r).x_org + (r).width)  - \
+				   MAX((x), (r).x_org)) * \
+				   MAX(0, MIN((y) + (h), (r).y_org + (r).height) - \
+				   MAX((y), (r).y_org)))
+
 void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
 {
 	int i, n, x, y, di;
@@ -131,6 +126,7 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
 void set_wm_class(void)
 {
 	XClassHint *classhint = XAllocClassHint();
+
 	classhint->res_name = (char *)"jgmenu";
 	classhint->res_class = (char *)"jgmenu";
 	XSetClassHint(ui->dpy, ui->w[ui->cur].win, classhint);

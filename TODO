@@ -57,8 +57,6 @@ Cleanliness
 
 	Add explaination on JGMENU_EXEC_PATH
 
-	Remove XINERAMA ifdefs
-
 	Rename filter list (as it clashes with filter_) (maybe 'disp'?)
 
 	Add shareness with symlinks
