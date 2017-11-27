@@ -107,68 +107,25 @@ void ui_init(void)
 	ui->root = RootWindow(ui->dpy, ui->screen);
 }
 
-/*
- * The Xinerama code below was copied from dmenu's xft patch
- * (http://tools.suckless.org/dmenu/patches/xft)
- */
 void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
 {
-#ifdef XINERAMA
-	int n;
+	int i, n, x, y, di;
+	unsigned int du;
+	Window dw;
 	XineramaScreenInfo *info;
 
 	info = XineramaQueryScreens(ui->dpy, &n);
-	if (info) {
-		int a, j, di, i = 0, area = 0;
-		unsigned int du;
-		Window w, pw, dw, *dws;
-		XWindowAttributes wa;
-
-		XGetInputFocus(ui->dpy, &w, &di);
-		if (w != ui->root && w != PointerRoot && w != None) {
-			/* find top-level window containing current input focus */
-			do {
-				pw = w;
-				if (XQueryTree(ui->dpy, pw, &dw, &w, &dws, &du) && dws)
-					XFree(dws);
-			} while (w != ui->root && w != pw);
-			/* find xinerama screen with which the window intersects most */
-			if (XGetWindowAttributes(ui->dpy, pw, &wa))
-				for (j = 0; j < n; j++) {
-					a = INTERSECT(wa.x, wa.y, wa.width, wa.height, info[j]);
-					if (a > area) {
-						area = a;
-						i = j;
-					}
-				}
-		}
-
-		/*
-		 * No focused window is on screen, so use pointer location instead
-		 */
-/*
- *		if(!area && XQueryPointer(ui->dpy, root, &dw, &dw, x, y, &di, &di, &du))
- *			for(i = 0; i < n; i++)
- *				if(INTERSECT(*x, *y, 1, 1, info[i]))
- *					break;
- */
-
-/* SET MENU DIMENSIONS */
-
-		*x0 = info[i].x_org;
-		*y0 = info[i].y_org;
-		*width = info[i].width;
-		*height = info[i].height;
-
-		XFree(info);
-	} else
-#endif
-	{
-		*x0 = 0;
-		*y0 = 0;
-		*width = DisplayWidth(ui->dpy, ui->screen);
-		*height = DisplayHeight(ui->dpy, ui->screen);
-	}
+	BUG_ON(!info);
+	XQueryPointer(ui->dpy, ui->root, &dw, &dw, &x, &y, &di, &di, &du);
+	for (i = 0; i < n; i++)
+		if (INTERSECT(x, y, 1, 1, info[i]))
+			break;
+	/* set i = config.screen here if wanted */
+	*x0 = info[i].x_org;
+	*y0 = info[i].y_org;
+	*width = info[i].width;
+	*height = info[i].height;
+	XFree(info);
 }
 
 void set_wm_class(void)

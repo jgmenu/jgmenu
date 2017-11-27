@@ -4,6 +4,7 @@
 
 #include "geometry.h"
 #include "util.h"
+#include "config.h"
 
 struct win {
 	int menu_x0;			/*  g */
@@ -45,6 +46,8 @@ static void update_root(void)
 	else if (win[cur].menu_halign == RIGHT)
 		win[cur].menu_x0 = screen_width - win[cur].menu_width -
 				   menu_margin_x;
+	if (!config.at_pointer && !getenv("TINT2_BUTTON_ALIGNED_X1"))
+		win[cur].menu_x0 += screen_x0;
 
 	if (win[cur].menu_valign == BOTTOM)
 		win[cur].menu_y0 = screen_y0 + screen_height -
