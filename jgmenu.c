@@ -879,6 +879,13 @@ void tint2_align(void)
 		else
 			geo_set_menu_margin_y(py2);
 	} else {
+		if (by1 >= geo_get_screen_y0() + geo_get_screen_height() ||
+		    by1 < geo_get_screen_y0()) {
+			geo_set_use_tint2_vars(0);
+			info("pointer outside tint2 range - no alignment");
+			return;
+		}
+		geo_set_use_tint2_vars(1);
 		info("aligning to tint2 vertical panel env vars\n");
 		if (by1 < py2 - geo_get_menu_height()) {
 			geo_set_menu_margin_y(by1);
