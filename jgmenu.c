@@ -857,6 +857,11 @@ void tint2_align(void)
 		return;
 	}
 	if (t2conf_is_horizontal_panel()) {
+		if (bx1 >= geo_get_screen_x0() + geo_get_screen_width() ||
+		    bx1 < geo_get_screen_x0()) {
+			info("pointer outside tint2 range - no alignment");
+			return;
+		}
 		info("aligning to tint2 horizontal panel env vars");
 		if (bx1 < px2 - geo_get_menu_width()) {
 			geo_set_menu_margin_x(bx1);

@@ -46,7 +46,8 @@ static void update_root(void)
 	else if (win[cur].menu_halign == RIGHT)
 		win[cur].menu_x0 = screen_width - win[cur].menu_width -
 				   menu_margin_x;
-	if (!config.at_pointer && !getenv("TINT2_BUTTON_ALIGNED_X1"))
+	if (!config.at_pointer && (!config.tint2_look ||
+	    !getenv("TINT2_BUTTON_ALIGNED_X1")))
 		win[cur].menu_x0 += screen_x0;
 
 	if (win[cur].menu_valign == BOTTOM)
@@ -387,6 +388,11 @@ int geo_get_menu_width_from_itemarea_width(int width)
 int geo_get_item_height(void)
 {
 	return item_height;
+}
+
+int geo_get_screen_x0(void)
+{
+	return screen_x0;
 }
 
 int geo_get_screen_height(void)
