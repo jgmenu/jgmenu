@@ -51,10 +51,12 @@ static void update_root(void)
 		win[cur].menu_x0 += screen_x0;
 
 	if (win[cur].menu_valign == BOTTOM)
-		win[cur].menu_y0 = screen_y0 + screen_height -
-				   win[cur].menu_height - menu_margin_y;
+		win[cur].menu_y0 = screen_height - win[cur].menu_height -
+				   menu_margin_y;
 	else if (win[cur].menu_valign == TOP)
-		win[cur].menu_y0 = screen_y0 + menu_margin_y;
+		win[cur].menu_y0 = menu_margin_y;
+	if (!config.at_pointer && !use_tint2_vars)
+		win[cur].menu_y0 += screen_y0;
 }
 
 static void left_align(void)
@@ -91,7 +93,7 @@ static void update_sub_window(void)
 {
 	BUG_ON(!cur);
 	if (win[cur].menu_valign == TOP) {
-		int max_y0 = screen_height - win[cur].menu_height;
+		int max_y0 = screen_y0 + screen_height - win[cur].menu_height;
 
 		win[cur].menu_y0 = win[cur - 1].menu_y0 +
 				   win[cur - 1].parent_item.y -
@@ -399,6 +401,11 @@ int geo_get_item_height(void)
 int geo_get_screen_x0(void)
 {
 	return screen_x0;
+}
+
+int geo_get_screen_y0(void)
+{
+	return screen_y0;
 }
 
 int geo_get_screen_height(void)

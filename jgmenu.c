@@ -815,7 +815,8 @@ void launch_menu_at_pointer(void)
 		geo_set_menu_margin_x(geo_get_screen_width() - pos.x);
 	}
 
-	if (pos.y < geo_get_screen_height() - geo_get_menu_height()) {
+	if (pos.y < geo_get_screen_height() + geo_get_screen_y0() -
+	    geo_get_menu_height()) {
 		geo_set_menu_valign(TOP);
 		geo_set_menu_margin_y(pos.y);
 	} else if (geo_get_menu_height() < pos.y) {

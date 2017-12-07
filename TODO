@@ -5,7 +5,6 @@ Current Focus
 -------------
 
 	Dual-monitor:
-		- fix at-pointer alignment
 		- add config monitor option "pointer/1..n"
 		- vertical panel (jgmenu.c)
 		- vertical monitor stacking

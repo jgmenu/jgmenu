@@ -87,6 +87,7 @@ int geo_get_menu_width(void);
 int geo_get_menu_width_from_itemarea_width(int w);
 int geo_get_item_height(void);
 int geo_get_screen_x0(void);
+int geo_get_screen_y0(void);
 int geo_get_screen_height(void);
 int geo_get_screen_width(void);
 
