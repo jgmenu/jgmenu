@@ -187,12 +187,13 @@ struct point geo_get_max_itemarea_that_fits(void)
 {
 	struct point p;
 
-	p.x = !cur ? screen_width - menu_margin_x -
+	p.x = !cur ? screen_x0 + screen_width - menu_margin_x -
 	      menu_padding_left - menu_padding_right :
-	      screen_width - menu_margin_x - sub_padding_left - sub_padding_right;
-	p.y = !cur ? screen_height - menu_margin_y -
+	      screen_x0 + screen_width - menu_margin_x - sub_padding_left -
+	      sub_padding_right;
+	p.y = !cur ? screen_y0 + screen_height - menu_margin_y -
 	      menu_padding_top - menu_padding_bottom :
-	      screen_height - sub_padding_top - sub_padding_bottom;
+	      screen_y0 + screen_height - sub_padding_top - sub_padding_bottom;
 	return p;
 }
 
@@ -200,8 +201,8 @@ struct point geo_get_max_menuarea_that_fits(void)
 {
 	struct point p;
 
-	p.x = screen_width - menu_margin_x;
-	p.y = screen_height - menu_margin_y;
+	p.x = screen_x0 + screen_width - menu_margin_x;
+	p.y = screen_y0 + screen_height - menu_margin_y;
 	return p;
 }
 

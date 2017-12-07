@@ -646,7 +646,8 @@ void set_submenu_width(void)
 		goto set_width;
 	/* grow from right hand edge if too near it */
 	if (config.menu_halign == LEFT && reqw > maxarea.x) {
-		geo_set_menu_margin_x(geo_get_screen_width() - reqw);
+		geo_set_menu_margin_x(geo_get_screen_x0() + geo_get_screen_width() -
+				      reqw);
 		mw = reqw;
 	}
 
@@ -805,8 +806,8 @@ void launch_menu_at_pointer(void)
 
 	XQueryPointer(ui->dpy, DefaultRootWindow(ui->dpy), &dw, &dw, &di, &di,
 		      &pos.x, &pos.y, &du);
-
-	if (pos.x < geo_get_screen_width() - geo_get_menu_width()) {
+	if (pos.x < geo_get_screen_width() + geo_get_screen_x0() -
+	    geo_get_menu_width()) {
 		geo_set_menu_halign(LEFT);
 		geo_set_menu_margin_x(pos.x);
 	} else {
