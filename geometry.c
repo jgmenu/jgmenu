@@ -38,6 +38,7 @@ static int screen_width;
 static int screen_height;		/*  g */
 static int screen_x0;
 static int screen_y0;
+static int use_tint2_vars;		/* s  */
 
 static void update_root(void)
 {
@@ -46,8 +47,7 @@ static void update_root(void)
 	else if (win[cur].menu_halign == RIGHT)
 		win[cur].menu_x0 = screen_width - win[cur].menu_width -
 				   menu_margin_x;
-	if (!config.at_pointer && (!config.tint2_look ||
-	    !getenv("TINT2_BUTTON_ALIGNED_X1")))
+	if (!config.at_pointer && !use_tint2_vars)
 		win[cur].menu_x0 += screen_x0;
 
 	if (win[cur].menu_valign == BOTTOM)
@@ -348,6 +348,11 @@ void geo_set_menu_padding_bottom(int padding)
 void geo_set_menu_padding_left(int padding)
 {
 	menu_padding_left = padding;
+}
+
+void geo_set_use_tint2_vars(int use)
+{
+	use_tint2_vars = use;
 }
 
 /*********************************************************************/

@@ -1,6 +1,24 @@
 TODO
 ====
 
+Current Focus
+-------------
+
+	Dual-monitor:
+		- fix at-pointer alignment
+		- add config monitor option "pointer/1..n"
+		- vertical panel (jgmenu.c)
+		- vertical monitor stacking
+
+	Remove {xdg,pmenu,lx,csv} from jgmenu_run and replace with
+	jgmenu [pmenu|xdg|lx] [options]
+
+	support csv-cmd=xdg,pmenu,lx
+
+	jgmenu init --append,--prepend,--simple
+
+	widgets.c
+
 Cleanliness
 -----------
 
@@ -65,6 +83,8 @@ Cleanliness
 
 New features
 ------------
+	Support dual screen when stacked vertically
+
 	jgmenu-init.sh:
 	  - put backup files in backup/ directory
 	  - add --clean to remove all config files
