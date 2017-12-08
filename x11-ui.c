@@ -102,7 +102,7 @@ void ui_init(void)
 				   MAX(0, MIN((y) + (h), (r).y_org + (r).height) - \
 				   MAX((y), (r).y_org)))
 
-void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
+void ui_get_screen_res(int *x0, int *y0, int *width, int *height, int monitor)
 {
 	int i, n, x, y, di;
 	unsigned int du;
@@ -115,7 +115,11 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height)
 	for (i = 0; i < n; i++)
 		if (INTERSECT(x, y, 1, 1, info[i]))
 			break;
-	/* set i = config.screen here if wanted */
+	if (monitor) {
+		if (monitor > n)
+			die("cannot connect to monitor '%d' (max %d)", monitor, n);
+		i = monitor - 1;
+	}
 	*x0 = info[i].x_org;
 	*y0 = info[i].y_org;
 	*width = info[i].width;

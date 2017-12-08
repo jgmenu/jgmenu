@@ -48,7 +48,7 @@ void ui_clear_canvas(void);
 void grabkeyboard(void);
 void grabpointer(void);
 void ui_init(void);
-void ui_get_screen_res(int *x0, int *y0, int *width, int *height);
+void ui_get_screen_res(int *x0, int *y0, int *width, int *height, int monitor);
 void ui_create_window(int x, int y, int w, int h);
 void ui_init_canvas(int max_width, int max_height);
 void ui_init_cairo(int canvas_width, int canvas_height, const char *font);

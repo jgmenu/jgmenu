@@ -156,7 +156,7 @@ void geo_init(void)
 	item_margin_y = 4;
 
 	ui_get_screen_res(&screen_x0, &screen_y0, &screen_width,
-			  &screen_height);
+			  &screen_height, config.monitor);
 
 	geo_update();
 }

@@ -13,6 +13,7 @@ struct config {
 	int multi_window;
 	char *terminal_exec;
 	char *terminal_args;
+	int monitor;
 
 	int menu_margin_x;
 	int menu_margin_y;

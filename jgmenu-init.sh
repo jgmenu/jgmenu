@@ -32,6 +32,7 @@ at_pointer          = 0
 multi_window        = 1
 terminal_exec       = x-terminal-emulator
 terminal_args       = -e
+monitor             = 0
 menu_margin_x       = 0
 menu_margin_y       = 32
 menu_width          = 200

@@ -25,6 +25,7 @@ void config_set_defaults(void)
 	config.multi_window	   = 1;
 	config.terminal_exec	   = xstrdup("x-terminal-emulator");
 	config.terminal_args	   = xstrdup("-e");
+	config.monitor		   = 0;
 
 	config.menu_margin_x	   = 0;
 	config.menu_margin_y	   = 31;
@@ -110,6 +111,8 @@ static void process_line(char *line)
 	} else if (!strcmp(option, "terminal_args")) {
 		xfree(config.terminal_args);
 		config.terminal_args = xstrdup(value);
+	} else if (!strcmp(option, "monitor")) {
+		xatoi(&config.monitor, value, XATOI_NONNEG, "config.monitor");
 
 	} else if (!strcmp(option, "menu_margin_x")) {
 		xatoi(&config.menu_margin_x, value, XATOI_NONNEG, "config.margin_x");

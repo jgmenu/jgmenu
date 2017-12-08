@@ -1,6 +1,6 @@
 % JGMENU-CONFIG(1)  
 % Johan Malm  
-% 27 October, 2017
+% 8 December, 2017
 
 # NAME
 
@@ -139,6 +139,12 @@ terminal_args = __string__ (default -e)
 
     terminal_args must finish with '-e' or equivalent (where '-e'  
     refers to the meaning of '-e' in 'xterm -e'.  
+
+monitor = __integer__ (default 0)  
+
+    Specify a particular monitor as an index starting from 1.  
+    If 0, the menu will be launched on the monitor where the mouse  
+    is.  
 
 menu_margin_x = __integer__ (default 2)  
 menu_margin_y = __integer__ (default 32)  
