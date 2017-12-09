@@ -7,7 +7,7 @@ struct config {
 	int spawn;		/* 1:execute commands  0:print to stdout */
 	int stay_alive;
 	int hide_on_startup;
-	/* jgmenurc has a csv_cmd variable here */
+	char *csv_cmd;
 	int tint2_look;
 	int at_pointer;
 	int multi_window;

@@ -4,15 +4,15 @@ TODO
 Current Focus
 -------------
 
-	Add jgmenu help
+	Add --stdin
 
-	Update --help and man page with jgmenu modes
+	This about how we handle --csv-cmd=
 
-	Remove {xdg,pmenu,lx,csv} from jgmenu_run
+	Remove -pmenu.py, -ob.sh, -xdg.sh, -lx.sh, -config.sh, -xsettings
 
-	support csv-cmd=xdg,pmenu,lx
+	Update --help and man pages
 
-	jgmenu init --append,--prepend,--simple
+	jgmenu init --append,--prepend, --jgmenurc
 
 	widgets.c
 
@@ -59,11 +59,6 @@ Cleanliness
 	Remove spawn from config (make it args_ instead).
 
 	Draw diagrams of variables
-
-	Add csv_cmd to config.c
-	  - If csv_cmd unset/empty, read from 'stdin' (csv_cmd=...parse-pmenu by
-	    default)
-	  - Set csv_cmd=NULL when --simple or --vsimple invoked
 
 	Re-factor jgmenu_run lx/pmenu/xdg/csv, etc. by using --csv-*
 

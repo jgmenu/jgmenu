@@ -2156,6 +2156,8 @@ int main(int argc, char *argv[])
 		fp = fopen(args_csv_file(), "r");
 	else if (args_csv_cmd())
 		fp = popen(args_csv_cmd(), "r");
+	else if (config.csv_cmd && config.csv_cmd[0] != '\0')
+		fp = popen(config.csv_cmd, "r");
 	if (!fp)
 		fp = stdin;
 	read_csv_file(fp);

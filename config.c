@@ -19,7 +19,7 @@ void config_set_defaults(void)
 	config.spawn		   = 1;	/* not in jgmenurc */
 	config.stay_alive	   = 1;
 	config.hide_on_startup	   = 0;
-	/* jgmenurc has a csv_cmd variable here */
+	config.csv_cmd		   = xstrdup("pmenu");
 	config.tint2_look	   = 1;
 	config.at_pointer	   = 0;
 	config.multi_window	   = 1;
@@ -88,6 +88,21 @@ void config_cleanup(void)
 	xfree(jgmenurc_file.buf);
 }
 
+static void set_command(char **cmd, char *value)
+{
+	xfree(*cmd);
+	if (!strcmp(value, "pmenu"))
+		*cmd = xstrdup("jgmenu_run parse-pmenu");
+	else if (!strcmp(value, "xdg"))
+		*cmd = xstrdup("jgmenu_run parse-xdg");
+	else if (!strcmp(value, "lx"))
+		*cmd = xstrdup("jgmenu_run parse-lx");
+	else if (!strcmp(value, "ob"))
+		*cmd = xstrdup("jgmenu_run parse-ob");
+	else
+		*cmd = xstrdup(value);
+}
+
 static void process_line(char *line)
 {
 	char *option, *value;
@@ -99,6 +114,8 @@ static void process_line(char *line)
 		xatoi(&config.stay_alive, value, XATOI_NONNEG, "config.stay_alive");
 	} else if (!strcmp(option, "hide_on_startup")) {
 		xatoi(&config.hide_on_startup, value, XATOI_NONNEG, "config.hide_on_startup");
+	} else if (!strcmp(option, "csv_cmd")) {
+		set_command(&config.csv_cmd, value);
 	} else if (!strcmp(option, "tint2_look")) {
 		xatoi(&config.tint2_look, value, XATOI_NONNEG, "config.tint2_look");
 	} else if (!strcmp(option, "at_pointer")) {

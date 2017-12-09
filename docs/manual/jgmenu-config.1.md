@@ -1,6 +1,6 @@
 % JGMENU-CONFIG(1)  
 % Johan Malm  
-% 8 December, 2017
+% 9 December, 2017
 
 # NAME
 
@@ -104,12 +104,16 @@ hide_on_startup = __boolean__ (default 0)
     starting jgmenu during the boot process and then sending a   
     `killall -SIGUSR1 jgmenu` to show the menu.  
 
-csv_cmd = __string__ (default `jgmenu_run parse-pmenu`)  
+csv_cmd = __string__ (default `pmenu`)  
 
-    defines the command to produce the jgmenu flavoured CSV for  
-    `jgmenu_run` (when run without argument). Examples include:  
+    Defines the command to produce the jgmenu flavoured CSV for  
+    `jgmenu`. Accpetable keyword include pmenu, xdg, lx and ob.  
+    If a value is given other than these keywords, it will be  
+    executed in a shell (so be careful!). If left blank, jgmenu  
+    will read from __stdin__. Examples:  
 
-    csv_cmd = jgmenu_run parse-ob  
+    csv_cmd = xdg
+    csv_cmd = jgmenu_run parse-xdg --no-dirs  
     csv_cmd = cat ~/mymenu.csv  
 
 tint2_look = __boolean__ (default 1)  

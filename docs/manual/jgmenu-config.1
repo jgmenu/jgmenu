@@ -6,7 +6,7 @@
 .PD 0
 .P
 .PD
-% 8 December, 2017
+% 9 December, 2017
 .SH NAME
 .PP
 jgmenu\-config \- gets and sets jgmenu options
@@ -215,18 +215,33 @@ This is useful for
 .PD
 \ \ \ \ \f[C]killall\ \-SIGUSR1\ jgmenu\f[] to show the menu.
 .PP
-csv_cmd = \f[B]string\f[] (default \f[C]jgmenu_run\ parse\-pmenu\f[])
+csv_cmd = \f[B]string\f[] (default \f[C]pmenu\f[])
 .PP
-\ \ \ \ defines the command to produce the jgmenu flavoured CSV for
+\ \ \ \ Defines the command to produce the jgmenu flavoured CSV for
 .PD 0
 .P
 .PD
-\ \ \ \ \f[C]jgmenu_run\f[] (when run without argument).
-Examples include:
+\ \ \ \ \f[C]jgmenu\f[].
+Accpetable keyword include pmenu, xdg, lx and ob.
+.PD 0
+.P
+.PD
+\ \ \ \ If a value is given other than these keywords, it will be
+.PD 0
+.P
+.PD
+\ \ \ \ executed in a shell (so be careful!).
+If left blank, jgmenu
+.PD 0
+.P
+.PD
+\ \ \ \ will read from \f[B]stdin\f[].
+Examples:
 .IP
 .nf
 \f[C]
-csv_cmd\ =\ jgmenu_run\ parse\-ob\ \ 
+csv_cmd\ =\ xdg
+csv_cmd\ =\ jgmenu_run\ parse\-xdg\ \-\-no\-dirs\ \ 
 csv_cmd\ =\ cat\ ~/mymenu.csv\ \ 
 \f[]
 .fi
