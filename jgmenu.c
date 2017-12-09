@@ -2153,6 +2153,14 @@ int main(int argc, char *argv[])
 
 	if (args_csv_file())
 		fp = fopen(args_csv_file(), "r");
+	else if (args_pmenu())
+		fp = popen("jgmenu_run parse-pmenu", "r");
+	else if (args_xdg())
+		fp = popen("jgmenu_run parse-xdg", "r");
+	else if (args_lx())
+		fp = popen("jgmenu_run parse-lx", "r");
+	else if (args_ob())
+		fp = popen("jgmenu_run parse-ob", "r");
 	else if (args_csv_cmd())
 		fp = popen(args_csv_cmd(), "r");
 	if (!fp)

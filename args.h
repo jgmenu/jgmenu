@@ -7,5 +7,9 @@ extern char *args_csv_file(void);
 extern char *args_csv_cmd(void);
 extern int args_simple(void);
 extern int args_die_when_loaded(void);
+extern int args_pmenu(void);
+extern int args_xdg(void);
+extern int args_lx(void);
+extern int args_ob(void);
 
 #endif /* ARGS_H */
