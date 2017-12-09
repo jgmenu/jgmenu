@@ -369,41 +369,6 @@ static void print_desktop_files(void)
 			printf("%s,%s,%s\n", f->name, f->exec, f->icon);
 }
 
-static void find_menu_file(struct sbuf *filename)
-{
-	LIST_HEAD(config_dirs);
-	struct sbuf *tmp;
-	struct stat sb;
-	static const char * const prefix[] = { "gnome-", "lxde-", "lxqt-", "kde-",
-					       NULL };
-	int i;
-
-	xdgdirs_get_configdirs(&config_dirs);
-	sbuf_init(filename);
-	list_for_each_entry(tmp, &config_dirs, list) {
-		if (getenv("XDG_MENU_PREFIX")) {
-			sbuf_cpy(filename, tmp->buf);
-			sbuf_addstr(filename, "/menus/");
-			sbuf_addstr(filename, getenv("XDG_MENU_PREFIX"));
-			sbuf_addstr(filename, "applications.menu");
-			if (!stat(filename->buf, &sb))
-				goto found;
-		} else {
-			for (i = 0; prefix[i]; i++) {
-				sbuf_cpy(filename, tmp->buf);
-				sbuf_addstr(filename, "/menus/");
-				sbuf_addstr(filename, prefix[i]);
-				sbuf_addstr(filename, "applications.menu");
-				if (!stat(filename->buf, &sb))
-					goto found;
-			}
-		}
-	}
-	sbuf_cpy(filename, "");
-found:
-	sbuf_list_free(&config_dirs);
-}
-
 int main(int argc, char **argv)
 {
 	struct sbuf filename;
@@ -433,7 +398,7 @@ int main(int argc, char **argv)
 		goto out;
 	}
 	if (!filename.len)
-		find_menu_file(&filename);
+		xdgdirs_find_menu_file(&filename);
 	if (!filename.len)
 		die("cannot find menu-file");
 	info("parsing menu file '%s'", filename.buf);
