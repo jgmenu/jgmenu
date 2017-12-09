@@ -279,7 +279,7 @@ static void xml_tree_walk(xmlNode *node)
 	xmlNode *n;
 	int ret;
 
-	for (n = node; n; n = n->next) {
+	for (n = node; n && n->name; n = n->next) {
 		if (!strcasecmp((char *)n->name, "menu")) {
 			ret = menu_start(n);
 			xml_tree_walk(n->children);
@@ -324,7 +324,6 @@ int main(int argc, char **argv)
 	int i;
 	struct sbuf default_file;
 	struct stat sb;
-	int exists;
 
 	LIBXML_TEST_VERSION
 
@@ -342,17 +341,14 @@ int main(int argc, char **argv)
 	}
 	if (!root_menu)
 		root_menu = strdup("root-menu");
-
 	sbuf_init(&default_file);
 	if (!file_name) {
-		sbuf_addstr(&default_file, getenv("HOME"));
+		sbuf_cpy(&default_file, getenv("HOME"));
 		sbuf_addstr(&default_file, "/.config/openbox/menu.xml");
 		file_name = strdup(default_file.buf);
 	}
-	exists = stat(file_name, &sb) == 0;
-	if (!exists)
+	if (stat(file_name, &sb))
 		die("file '%s' does not exist", file_name);
-
 	INIT_LIST_HEAD(&tags);
 	parse_xml(file_name);
 
