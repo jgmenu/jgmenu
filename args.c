@@ -11,26 +11,19 @@ static char *csv_file;
 static char *csv_cmd;
 static int simple;
 static int die_when_loaded;
-static int pmenu;
-static int xdg;
-static int lx;
-static int ob;
+
+void args_exec_commands(int argc, char **argv)
+{
+	if (argc < 2)
+		return;
+	if (!strcmp(argv[1], "init"))
+		if (execvp("jgmenu_run", argv) < 0)
+			die("cannot exec jgmenu_run");
+}
 
 void args_parse(int argc, char **argv)
 {
 	int i;
-
-	if (argc < 2)
-		return;
-	if (!strcmp(argv[1], "pmenu")) {
-		pmenu = 1;
-	} else if (!strcmp(argv[1], "xdg")) {
-		xdg = 1;
-	} else if (!strcmp(argv[1], "lx")) {
-		lx = 1;
-	} else if (!strcmp(argv[1], "ob")) {
-		ob = 1;
-	}
 
 	for (i = 1; i < argc; i++) {
 		if (!strncmp(argv[i], "--no-spawn", 10)) {
@@ -79,24 +72,4 @@ int args_simple(void)
 int args_die_when_loaded(void)
 {
 	return die_when_loaded;
-}
-
-int args_pmenu(void)
-{
-	return pmenu;
-}
-
-int args_xdg(void)
-{
-	return xdg;
-}
-
-int args_lx(void)
-{
-	return lx;
-}
-
-int args_ob(void)
-{
-	return ob;
 }

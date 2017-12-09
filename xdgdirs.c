@@ -116,5 +116,3 @@ void xdgdirs_find_menu_file(struct sbuf *filename)
 found:
 	sbuf_list_free(&config_dirs);
 }
-
-

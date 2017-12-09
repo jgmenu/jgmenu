@@ -98,7 +98,9 @@ struct menu {
 struct menu menu;
 
 static const char jgmenu_usage[] =
-"Usage: jgmenu [OPTIONS]\n"
+"Usage: jgmenu [command] [options]\n\n"
+"Commands include init\n"
+"Options:\n"
 "    --version             show version\n"
 "    --no-spawn            redirect command to stdout instead of executing\n"
 "    --checkout=<tag>      checkout submenu <tag> on startup\n"
@@ -2115,11 +2117,10 @@ int main(int argc, char *argv[])
 			 !strncmp(argv[i], "-h", 2))
 			usage();
 	}
+	args_exec_commands(argc, argv);
 	if (!arg_vsimple)
 		config_read_jgmenurc(arg_config_file);
-
 	args_parse(argc, argv);
-
 	if (args_simple() || arg_vsimple)
 		set_simple_mode();
 	if (arg_vsimple)
@@ -2153,14 +2154,6 @@ int main(int argc, char *argv[])
 
 	if (args_csv_file())
 		fp = fopen(args_csv_file(), "r");
-	else if (args_pmenu())
-		fp = popen("jgmenu_run parse-pmenu", "r");
-	else if (args_xdg())
-		fp = popen("jgmenu_run parse-xdg", "r");
-	else if (args_lx())
-		fp = popen("jgmenu_run parse-lx", "r");
-	else if (args_ob())
-		fp = popen("jgmenu_run parse-ob", "r");
 	else if (args_csv_cmd())
 		fp = popen(args_csv_cmd(), "r");
 	if (!fp)

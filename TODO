@@ -4,19 +4,19 @@ TODO
 Current Focus
 -------------
 
-	Dual-monitor:
-		- add config monitor option "pointer/1..n"
-		- vertical panel (jgmenu.c)
-		- vertical monitor stacking
+	Add jgmenu help
 
-	Remove {xdg,pmenu,lx,csv} from jgmenu_run and replace with
-	jgmenu [pmenu|xdg|lx] [options]
+	Update --help and man page with jgmenu modes
+
+	Remove {xdg,pmenu,lx,csv} from jgmenu_run
 
 	support csv-cmd=xdg,pmenu,lx
 
 	jgmenu init --append,--prepend,--simple
 
 	widgets.c
+
+	Add --o9000 and --local to ppa script
 
 Cleanliness
 -----------
