@@ -78,6 +78,7 @@ void config_set_defaults(void)
 
 void config_cleanup(void)
 {
+	xfree(config.csv_cmd);
 	xfree(config.terminal_exec);
 	xfree(config.terminal_args);
 	xfree(config.font);
@@ -86,21 +87,6 @@ void config_cleanup(void)
 	xfree(config.icon_theme_fallback);
 	xfree(config.arrow_string);
 	xfree(jgmenurc_file.buf);
-}
-
-static void set_command(char **cmd, char *value)
-{
-	xfree(*cmd);
-	if (!strcmp(value, "pmenu"))
-		*cmd = xstrdup("jgmenu_run parse-pmenu");
-	else if (!strcmp(value, "xdg"))
-		*cmd = xstrdup("jgmenu_run parse-xdg");
-	else if (!strcmp(value, "lx"))
-		*cmd = xstrdup("jgmenu_run parse-lx");
-	else if (!strcmp(value, "ob"))
-		*cmd = xstrdup("jgmenu_run parse-ob");
-	else
-		*cmd = xstrdup(value);
 }
 
 static void process_line(char *line)
@@ -115,7 +101,8 @@ static void process_line(char *line)
 	} else if (!strcmp(option, "hide_on_startup")) {
 		xatoi(&config.hide_on_startup, value, XATOI_NONNEG, "config.hide_on_startup");
 	} else if (!strcmp(option, "csv_cmd")) {
-		set_command(&config.csv_cmd, value);
+		xfree(config.csv_cmd);
+		config.csv_cmd = xstrdup(value);
 	} else if (!strcmp(option, "tint2_look")) {
 		xatoi(&config.tint2_look, value, XATOI_NONNEG, "config.tint2_look");
 	} else if (!strcmp(option, "at_pointer")) {
@@ -329,4 +316,19 @@ void config_post_process(void)
 		config.sub_padding_bottom  = config.menu_padding_bottom;
 	if (config.sub_padding_left < 0)
 		config.sub_padding_left = config.menu_padding_left;
+
+	/* Resolve csv_cmd keywords */
+	if (!strcmp(config.csv_cmd, "pmenu")) {
+		xfree(config.csv_cmd);
+		config.csv_cmd = xstrdup("jgmenu_run parse-pmenu");
+	} else if (!strcmp(config.csv_cmd, "xdg")) {
+		xfree(config.csv_cmd);
+		config.csv_cmd = xstrdup("jgmenu_run parse-xdg");
+	} else if (!strcmp(config.csv_cmd, "lx")) {
+		xfree(config.csv_cmd);
+		config.csv_cmd = xstrdup("jgmenu_run parse-lx");
+	} else if (!strcmp(config.csv_cmd, "ob")) {
+		xfree(config.csv_cmd);
+		config.csv_cmd = xstrdup("jgmenu_run parse-ob");
+	}
 }
