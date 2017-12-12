@@ -18,14 +18,7 @@ usage () {
 	printf "  - Shows the menu if an instance of jgmenu is already running\n"
 	printf "  - Starts jgmenu in 'stay-alive' mode (i.e. as a long-running application)\n"
 	printf "    using pmenu unless otherwise specified by 'csv_cmd' in jgmenurc\n\n"
-	printf "Valid 'commands' include:\n"
-	printf "    start           Start menu in 'hidden' mode\n"
-	printf "    init            Create or amend config file\n"
-	printf "    pmenu           Run menu based on .desktop and .directory files\n"
-	printf "    xdg             Run menu based on .desktop, .directory and .menu files\n"
-	printf "    lx              Run XDG compliant menu created using LXDE's libmenu-cache\n"
-	printf "    csv             Run menu based on .csv file\n"
-	printf "    ob              Run menu based openbox menu-file\n\n"
+	printf "Commands are only intended for developers when plugging together modules.\n\n"
 	exit 0
 }
 
@@ -77,11 +70,7 @@ then
 		fi
 	fi
 
-	cmd=$(jgmenu_run config --get csv_cmd)
-	test -z "${cmd}" && cmd="jgmenu_run parse-pmenu"
-
-	# Run it through a shell enable tilde and variable expansion
-	sh -c "${cmd} | jgmenu"
+	exec jgmenu
 	exit 0
 fi
 
