@@ -14,15 +14,12 @@ VER      = $(shell ./scripts/version-gen.sh)
 
 include ./Makefile.inc
 
-SCRIPTS_SHELL  = jgmenu_run jgmenu-pmenu.sh \
-		 jgmenu-csv.sh jgmenu-xdg.sh jgmenu-config.sh \
-		 jgmenu-init.sh jgmenu-ob.sh jgmenu-start.sh \
-		 jgmenu-lx.sh
+SCRIPTS_SHELL  = jgmenu_run jgmenu-init.sh
 
-SCRIPTS_PYTHON = jgmenu-parse-pmenu.py jgmenu-unity-hack.py
+SCRIPTS_PYTHON = jgmenu-pmenu.py jgmenu-unity-hack.py
 
-PROGS	 = jgmenu jgmenu-parse-xdg jgmenu-icon-find jgmenu-xsettings \
-	   jgmenu-parse-ob jgmenu-socket jgmenu-parse-lx
+PROGS	 = jgmenu jgmenu-xdg jgmenu-icon-find jgmenu-xsettings \
+	   jgmenu-ob jgmenu-socket jgmenu-lx
 
 OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
         icon.o xpm-loader.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o \

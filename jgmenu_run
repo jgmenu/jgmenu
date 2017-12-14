@@ -10,6 +10,11 @@ die () {
 	exit 1
 }
 
+legacy_msg () {
+	printf "fatal: command '%s' does not exist anymore\n" "$1"
+	exit 1
+}
+
 usage () {
 	printf "usage: jgmenu_run\n"
 	printf "       jgmenu_run <command> [<args>]\n\n"
@@ -76,6 +81,10 @@ fi
 
 test "$1" = "--help" && usage
 test "$1" = "--exec-path" && print_exec_path
+test "$1" = "parse-pmenu" && legacy_msg "$1"
+test "$1" = "parse-ob" && legacy_msg "$1"
+test "$1" = "parse-xdg" && legacy_msg "$1"
+test "$1" = "parse-lx" && legacy_msg "$1"
 
 cmd="$1"
 cmds="jgmenu-${cmd} jgmenu-${cmd}.sh jgmenu-${cmd}.py"
