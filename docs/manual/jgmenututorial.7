@@ -6,7 +6,7 @@
 .PD 0
 .P
 .PD
-% 15 Jul, 2017" "" "" "" ""
+% 14 December, 2017
 .SH NAME
 .PP
 The jgmenu tutorial
@@ -21,6 +21,14 @@ lessons.
 .SS Lesson 1
 .PP
 After installing jgmenu, you can get going quickly by running:
+.IP
+.nf
+\f[C]
+jgmenu
+\f[]
+.fi
+.PP
+or
 .IP
 .nf
 \f[C]
@@ -67,7 +75,7 @@ It can be awoken (made visible) by executing
 .PD 0
 .P
 .PD
-\f[C]jgmenu_run\f[] again.
+\f[C]jgmenu_run\f[].
 .PP
 If you do not use tint2 or if you wish to override some of its
 .PD 0
@@ -77,7 +85,7 @@ settings, you can create a config file by running:
 .IP
 .nf
 \f[C]
-jgmenu_run\ init
+jgmenu\ init
 \f[]
 .fi
 .PP
@@ -147,17 +155,14 @@ In this tutorial we will refer to
 .P
 .PD
 this type of menu as XDG.
-.PP
-There are at least two ways to run XDG(ish) menus:
-.IP \[bu] 2
-\f[C]jgmenu_run\ pmenu\f[]
+jgmenu can run three types of XDG(ish)
 .PD 0
 .P
 .PD
-.IP \[bu] 2
-\f[C]jgmenu_run\ xdg\f[]
+menus: pmenu, xdg and lx.
+Set \f[C]csv_cmd\f[] in jgmenurc to run these.
 .PP
-To understand the subtleties between these, you need a basic
+To understand the subtleties between them, you need a basic
 .PD 0
 .P
 .PD
@@ -221,12 +226,12 @@ files contain most of the information needed to build a menu
 (e.g.
 "Name", "Exec command", "Icon", "Category")
 .PP
-\f[C]jgmenu_run\ pmenu\f[] is written in python by \@o9000.
-It uses .directory
+\f[C]pmenu\f[] is written in python by \@o9000.
+It uses .directory and
 .PD 0
 .P
 .PD
-and .desktop files to build a menu, but ignores any .menu files.
+\&.desktop files to build a menu, but ignores any .menu files.
 .PD 0
 .P
 .PD
@@ -261,29 +266,24 @@ It ensures that all .desktop files
 .PD
 are included in the menu.
 .PP
-\f[C]jgmenu_run\ xdg\f[] is written in C by myself.
-It uses libxml2 to parse
+\f[C]xdg\f[] is written in C by myself.
+It uses libxml2 to parse the .menu
 .PD 0
 .P
 .PD
-the .menu file, but is otherwise written from scratch.
-It adheres
+file, but is otherwise written from scratch.
+It adheres to the
 .PD 0
 .P
 .PD
-to the basics of XDG\[aq]s menu\-spec but has a long way to go to
-achieve
-.PD 0
-.P
-.PD
-full compliance.
+basics of XDG\[aq]s menu\-spec but is not fully compliant.
 .PP
-\f[C]jgmenu_run\ lx\f[] uses LXDE\[aq]s libmenu\-cache to generate an
-XDG
+\f[C]lx\f[] uses LXDE\[aq]s libmenu\-cache to generate an XDG compliant
+menu
 .PD 0
 .P
 .PD
-compliant menu including separators and internationalization.
+including separators and internationalization.
 .SS Lesson 3
 .PP
 There are many ways to run jgmenu.
@@ -336,11 +336,11 @@ cat\ foo.txt\ |\ jgmenu\ \-\-simple\ \-\-icon\-size=0
 \f[]
 .fi
 .PP
-The option \-\-simple make jgmenu short\-lived and disables all syncing
+The option \-\-simple make jgmenu short\-lived, disables all syncing
 .PD 0
 .P
 .PD
-with tint2
+with tint2 and reads menu items from \f[I]stdin\f[].
 .PP
 The option \-\-icon\-size=0, disables icons (i.e.
 it does not just
@@ -348,18 +348,6 @@ it does not just
 .P
 .PD
 display them at zero size, it actually avoids loading them)
-.PP
-If you have dmenu installed, you will get a very similar result
-.PD 0
-.P
-.PD
-with:
-.IP
-.nf
-\f[C]
-cat\ foo.txt\ |\ dmenu
-\f[]
-.fi
 .SS Lesson 4
 .PP
 As you saw in the previous example, each line fed to \f[I]stdin\f[]
@@ -468,17 +456,6 @@ jgmenu\ \-\-vsimple\ <menu.txt
 cat\ menu.txt\ |\ jgmenu\ \-\-vsimple
 \f[]
 .fi
-.PP
-A couple of points on submenus:
-.PP
-\ \ \- You can press \f[I]backspace\f[] to go back to the parent menu.
-.PP
-\ \ \- You can define the root menu with a ^tag().
-If you do not, it
-.PD 0
-.P
-.PD
-\ \ \ \ can still be checked out with ^back().
 .SS Lesson 7
 .PP
 You can create a very simple XDG menu without any directories or
@@ -489,11 +466,11 @@ categories in the following way:
 .IP
 .nf
 \f[C]
-jgmenu_run\ parse\-xdg\ \-\-no\-dirs\ |\ jgmenu\ \-\-vsimple
+jgmenu_run\ xdg\ \-\-no\-dirs\ |\ jgmenu\ \-\-vsimple
 \f[]
 .fi
 .PP
-"parse\-xdg \-\-no\-dirs" outputs all apps with a .desktop file
+"xdg \-\-no\-dirs" outputs all apps with a .desktop file
 .PD 0
 .P
 .PD
@@ -509,18 +486,6 @@ When a menu is open, just start
 .P
 .PD
 typing to invoke a filter.
-.PP
-Carrying on the comparison with dmenu, the equivalent can be achieved
-.PD 0
-.P
-.PD
-by:
-.IP
-.nf
-\f[C]
-jgmenu_run\ parse\-xdg\ \-\-no\-dirs\ |\ awk\ \-F,\ \[aq]{\ print\ $2}\[aq]\ |\ dmenu
-\f[]
-.fi
 .SS Lesson 8
 .PP
 Let\[aq]s go back to pmenu.
@@ -549,8 +514,6 @@ Suspend,systemctl\ \-i\ suspend,system\-log\-out
 Reboot,systemctl\ \-i\ reboot,system\-reboot
 Poweroff,systemctl\ \-i\ poweroff,system\-shutdown
 EOF
-
-jgmenu_run\ pmenu
 \f[]
 .fi
 .PP

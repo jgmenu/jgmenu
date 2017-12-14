@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 15 Jul, 2017  
+% 14 December, 2017  
 
 # NAME
 
@@ -17,6 +17,10 @@ Lesson 1
 --------
 
 After installing jgmenu, you can get going quickly by running:  
+
+    jgmenu
+
+or
 
     jgmenu_run
 
@@ -35,12 +39,12 @@ There are three points worth noting about what you have just done:
     outside the menu, press escape or select a menu item (using  
     mouse or keyboard), the menu will no longer be visible but is  
     still running. It can be awoken (made visible) by executing  
-    `jgmenu_run` again.
+    `jgmenu_run`.
 
 If you do not use tint2 or if you wish to override some of its  
 settings, you can create a config file by running:  
 
-    jgmenu_run init
+    jgmenu init
 
 Edit this config file (~/.config/jgmenu/jgmenurc) to suit your  
 system. Read JGMENU-CONFIG(1) for further information.  
@@ -73,14 +77,10 @@ text editor instead.
 
 freedesktop.org have developed a menu standard which is adhered to  
 by the big Desktop Environments. In this tutorial we will refer to  
-this type of menu as XDG.
+this type of menu as XDG. jgmenu can run three types of XDG(ish)  
+menus: pmenu, xdg and lx. Set `csv_cmd` in jgmenurc to run these.  
 
-There are at least two ways to run XDG(ish) menus:
-
-  - `jgmenu_run pmenu`  
-  - `jgmenu_run xdg`  
-
-To understand the subtleties between these, you need a basic  
+To understand the subtleties between them, you need a basic  
 appreciataion of the XDG menu-spec and desktop-entry-spec. See:  
 http://standards.freedesktop.org/ for further information.  
 
@@ -104,8 +104,8 @@ system menu:
     files contain most of the information needed to build a menu  
     (e.g. "Name", "Exec command", "Icon", "Category")
 
-`jgmenu_run pmenu` is written in python by @o9000. It uses .directory  
-and .desktop files to build a menu, but ignores any .menu files.  
+`pmenu` is written in python by @o9000. It uses .directory and  
+.desktop files to build a menu, but ignores any .menu files.  
 Instead of the structure specified in the .menu file, it simply maps  
 each ".desktop" application onto one of the ".directory" categories.  
 If a matching ".directory" category does not exist, it tries to  
@@ -115,13 +115,12 @@ This is a generic approach which avoids Desktop Environment specific
 rules defined in the .menu file. It ensures that all .desktop files  
 are included in the menu.
 
-`jgmenu_run xdg` is written in C by myself. It uses libxml2 to parse  
-the .menu file, but is otherwise written from scratch. It adheres  
-to the basics of XDG's menu-spec but has a long way to go to achieve  
-full compliance.
+`xdg` is written in C by myself. It uses libxml2 to parse the .menu  
+file, but is otherwise written from scratch. It adheres to the  
+basics of XDG's menu-spec but is not fully compliant.  
 
-`jgmenu_run lx` uses LXDE's libmenu-cache to generate an XDG  
-compliant menu including separators and internationalization.  
+`lx` uses LXDE's libmenu-cache to generate an XDG compliant menu  
+including separators and internationalization.  
 
 Lesson 3
 ---------
@@ -145,16 +144,11 @@ editor. Then do:
 
     cat foo.txt | jgmenu --simple --icon-size=0
 
-The option --simple make jgmenu short-lived and disables all syncing  
-with tint2
+The option --simple make jgmenu short-lived, disables all syncing  
+with tint2 and reads menu items from _stdin_.  
 
 The option --icon-size=0, disables icons (i.e. it does not just  
 display them at zero size, it actually avoids loading them)
-
-If you have dmenu installed, you will get a very similar result  
-with:
-
-    cat foo.txt | dmenu
 
 Lesson 4
 ---------
@@ -223,32 +217,20 @@ by ^tag() and ^checkout(). Try this:
     # OR
     cat menu.txt | jgmenu --vsimple
 
-A couple of points on submenus:
-
-  - You can press *backspace* to go back to the parent menu.  
-
-  - You can define the root menu with a ^tag(). If you do not, it  
-    can still be checked out with ^back().
-
 Lesson 7
 --------
 
 You can create a very simple XDG menu without any directories or  
 categories in the following way:  
 
-    jgmenu_run parse-xdg --no-dirs | jgmenu --vsimple
+    jgmenu_run xdg --no-dirs | jgmenu --vsimple
 
-"parse-xdg --no-dirs" outputs all apps with a .desktop file  
+"xdg --no-dirs" outputs all apps with a .desktop file  
 (normally in /usr/share/applications) without and categories  
 or directories.
 
 jgmenu has a *search* capability. When a menu is open, just start  
 typing to invoke a filter.
-
-Carrying on the comparison with dmenu, the equivalent can be achieved  
-by:
-
-    jgmenu_run parse-xdg --no-dirs | awk -F, '{ print $2}' | dmenu
 
 Lesson 8
 --------
@@ -275,6 +257,5 @@ For example, you could do:
     Poweroff,systemctl -i poweroff,system-shutdown
     EOF
     
-    jgmenu_run pmenu
 
 ^sep() inserts a horizontal separator line

@@ -1,10 +1,10 @@
 % JGMENU_RUN(1)  
 % Johan Malm  
-% 15 Oct, 2017
+% 14 December, 2017
 
 # NAME
 
-`jgmenu_run` - A simple X11 menu
+`jgmenu_run` - A wrapper for jgmenu
 
 # SYNOPSIS
 
@@ -29,53 +29,9 @@ Some commands have their own man-pages. These can be opened by
 `man jgmenu-<command>`. If such a man-page does not exist, use  
 the `--help` option for usage details.
 
-Valid `commands` include:
-
-### High-level commands
-
-start  
-        Start the menu is hidden mode
-
-init  
-        Create or amend configuration file  
-
-pmenu  
-        Menu based on .directory and .desktop files  
-
-xdg  
-        Menu based on .menu, .directory and .desktop files  
-        See JGMENUTUTORIAL(7) (lesson 2) for further details on the  
-        differences between "pmenu" and "xdg"
-
-lx  
-        XDG compliant menu based using libmenu-cache to parse  
-        .menu, .directory and .desktop files
-
-csv  
-        Menu based on .csv file
-
-ob  
-        Menu based on openbox menu-file
-
-### Low-level commands
-
-These are designed to be used by the high-level commands, although  
-the user can invoke them directly if they wish.
-
-config  
-        Get or set variables in the configuration file  
-
-icon-find  
-        Find an icon based on name, size and theme
-
-parse-xdg  
-        As `xdg`, but outputs jgmenu-csv to stdout
-
-parse-pmenu  
-        As `pmenu`, but outputs jgmenu-csv to stdout
-
-xsettings  
-        Simple xsettings client
+Valid `commands` include any programe in $libexecdir/jgmenu (which  
+is a directory containing executable programs and shell fragments  
+designed to be run by jgmenu rather than directly by users).  
 
 # EXAMPLES
 

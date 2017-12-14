@@ -2,14 +2,14 @@
 .PD 0
 .P
 .PD
-Johan Malm
+% Johan Malm
 .PD 0
 .P
 .PD
-15 Oct, 2017
+% 14 December, 2017
 .SH NAME
 .PP
-\f[C]jgmenu_run\f[] \- A simple X11 menu
+\f[C]jgmenu_run\f[] \- A wrapper for jgmenu
 .SH SYNOPSIS
 .PP
 \f[C]jgmenu_run\f[]
@@ -63,100 +63,16 @@ If such a man\-page does not exist, use
 .PD
 the \f[C]\-\-help\f[] option for usage details.
 .PP
-Valid \f[C]commands\f[] include:
-.SS High\-level commands
-.PP
-start
+Valid \f[C]commands\f[] include any programe in $libexecdir/jgmenu
+(which
 .PD 0
 .P
 .PD
-\ \ \ \ \ \ \ \ Start the menu is hidden mode
-.PP
-init
+is a directory containing executable programs and shell fragments
 .PD 0
 .P
 .PD
-\ \ \ \ \ \ \ \ Create or amend configuration file
-.PP
-pmenu
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \ \ Menu based on .directory and .desktop files
-.PP
-xdg
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \ \ Menu based on .menu, .directory and .desktop files
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \ \ See JGMENUTUTORIAL(7) (lesson 2) for further details on
-the
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \ \ differences between "pmenu" and "xdg"
-.PP
-lx
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \ \ XDG compliant menu based using libmenu\-cache to parse
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \ \ .menu, .directory and .desktop files
-.PP
-csv
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \ \ Menu based on .csv file
-.PP
-ob
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \ \ Menu based on openbox menu\-file
-.SS Low\-level commands
-.PP
-These are designed to be used by the high\-level commands, although
-.PD 0
-.P
-.PD
-the user can invoke them directly if they wish.
-.PP
-config
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \ \ Get or set variables in the configuration file
-.PP
-icon\-find
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \ \ Find an icon based on name, size and theme
-.PP
-parse\-xdg
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \ \ As \f[C]xdg\f[], but outputs jgmenu\-csv to stdout
-.PP
-parse\-pmenu
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \ \ As \f[C]pmenu\f[], but outputs jgmenu\-csv to stdout
-.PP
-xsettings
-.PD 0
-.P
-.PD
-\ \ \ \ \ \ \ \ Simple xsettings client
+designed to be run by jgmenu rather than directly by users).
 .SH EXAMPLES
 .PP
 To run the menu:

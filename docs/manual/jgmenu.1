@@ -6,7 +6,7 @@
 .PD 0
 .P
 .PD
-% 11 September, 2017
+% 14 December, 2017
 .SH NAME
 .PP
 jgmenu \- A simple X11 menu
@@ -34,43 +34,33 @@ It is intended to
 .P
 .PD
 be used with openbox and tint2, but is not dependent on these.
-It has
-.PD 0
-.P
-.PD
-a number of helper\-scripts and wrappers.
-See \f[I]JGMENU_RUN\f[](1) for
-.PD 0
-.P
-.PD
-further details.
 .PP
-jgmenu reads a list of new\-line (\[aq]\\n\[aq]) separated items from
-standard
+jgmenu reads a list of new\-line (\[aq]\\n\[aq]) separated items from a
+file
 .PD 0
 .P
 .PD
-input (stdin) and creates a menu.
-Each line is parsed into
+and creates a menu.
+Each line is parsed into \f[I]description\f[], \f[I]command\f[]
 .PD 0
 .P
 .PD
-\f[I]description\f[], \f[I]command\f[] and \f[I]icon\f[], using comma as
-a field separator.
+and \f[I]icon\f[], using comma as a field separator.
+Empty lines and lines
 .PD 0
 .P
 .PD
-Empty lines and lines beginning with \[aq]#\[aq] are ignored.
-When the user
+beginning with \[aq]#\[aq] are ignored.
+When the user selects an item (by
 .PD 0
 .P
 .PD
-selects an item (by left\-clicking or pressing enter), the
-\f[C]command\f[] of
+left\-clicking or pressing enter), the \f[C]command\f[] of their
+selection
 .PD 0
 .P
 .PD
-their selection is executed as a new process.
+is executed as a new process.
 .PP
 For example:
 .IP
@@ -162,15 +152,23 @@ start menu is hidden state
 .RE
 .TP
 .B \-\-simple
-ignore tint2 settings and run in \[aq]short\-lived\[aq] mode (i.e.
-exit
+\ \- ignore tint2 settings
 .PD 0
 .P
 .PD
 .RS
 .RE
 .PP
-\ \ \ \ \ \ \ after mouse click or enter/escape)
+\ \ \ \ \ \ \ \ \- run in \[aq]short\-lived\[aq] mode (i.e.
+exit after mouse click or
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \ \ \ \ enter/escape)
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \ \ \- read menu items from \f[I]stdin\f[]
 .TP
 .B \-\-vsimple
 same as \-\-simple, but also disables icons and ignores jgmenurc
@@ -197,7 +195,7 @@ specify command to produce menu data
 .RE
 .PP
 \ \ \ \ \ \ \ E.g.
-\f[C]jgmenu_run\ parse\-pmenu\f[]
+\f[C]jgmenu_run\ pmenu\f[]
 .SH USER INTERFACE
 .PP
 The user interface is generally pretty intuitive.
@@ -207,18 +205,18 @@ Here follow mouse
 .PD
 and keyboard events which are not so obvious:
 .IP \[bu] 2
-Right\-click \- return to parent menu
+F10 \- force quit
 .PD 0
 .P
 .PD
 .IP \[bu] 2
-Backspace \- return to parent menu
+Right\-click \- return to parent menu (in single window mode)
 .PD 0
 .P
 .PD
 .IP \[bu] 2
-F10 \- quit even if in \f[C]stay_alive\f[] mode
-.SH CONFIGURATION SETTINGS
+Backspace \- return to parent menu (in single window mode)
+.SH CONFIGURATION FILE
 .PP
 If no file is specified using the \-\-config\-file= option, the XDG Base
 .PD 0
@@ -235,6 +233,569 @@ Global config in \f[C]${XDG_CONFIG_DIRS:\-/etc/xdg}\f[]
 User config override in \f[C]${XDG_CONFIG_HOME:\-$HOME/.config}\f[]
 .PP
 For most users ~/.config/jgmenu/jgmenurc is appropriate.
+.PP
+Global config variables are set in the following order (i.e.
+bottom
+.PD 0
+.P
+.PD
+of list has higher precedence):
+.IP \[bu] 2
+built\-in defaults (config.c)
+.PD 0
+.P
+.PD
+.IP \[bu] 2
+tint2rc config file (can be specified by \f[C]TINT2_CONFIG\f[]
+.PD 0
+.P
+.PD
+\ \ \ \ environment variable
+.PD 0
+.P
+.PD
+.IP \[bu] 2
+jgmenurc config file (can be specified by \-\-config\-file=)
+.PD 0
+.P
+.PD
+.IP \[bu] 2
+command line arguments
+.SS Syntax
+.PP
+Lines beginning with # are ignored.
+.PP
+All other lines are recognised as setting variables in the format
+.PD 0
+.P
+.PD
+\f[I]key\f[] = \f[I]value\f[]
+.PP
+White spaces are mostly ignored.
+.SS Values
+.PP
+Unless otherwise specified, values as treated as simple strings.
+.PP
+Here follow some specific types:
+.PP
+boolean
+.PD 0
+.P
+.PD
+\ \ \ \ When a variable takes a boolean value, only 0 and 1 are
+accepted.
+.PD 0
+.P
+.PD
+\ \ \ \ 0 means false; 1 means true.
+.PP
+integer
+.PD 0
+.P
+.PD
+\ \ \ \ When a variable takes an integer value, only numerical values
+are
+.PD 0
+.P
+.PD
+\ \ \ \ accepted.
+The only valid characters are digits (0\-9) and
+.PD 0
+.P
+.PD
+\ \ \ \ minus\-sign.
+.PP
+\ \ \ \ All integer variables relating to geometry and position are
+.PD 0
+.P
+.PD
+\ \ \ \ interpreted as pixel values unless otherwise specified.
+.PP
+color
+.PD 0
+.P
+.PD
+\ \ \ \ When a variable takes a color value, only the syntax described
+.PD 0
+.P
+.PD
+\ \ \ \ below is recognised:
+.PP
+\ \ \ \ #rrggbb aaa
+.PP
+\ \ \ \ where rr, gg and bb represent hexadecimal values (00\-ff) for
+.PD 0
+.P
+.PD
+\ \ \ \ the colours red, green and blue respectively; and aaa stands for
+.PD 0
+.P
+.PD
+\ \ \ \ the alpha channel value expressed as a percentage (0\-100).
+.PD 0
+.P
+.PD
+\ \ \ \ (i.e.
+100 means no transparency and 0 means fully transparent.)
+.PP
+\ \ \ \ For example #ff0000 100 represents red with no transparency,
+.PD 0
+.P
+.PD
+\ \ \ \ whereas #000088 50 means dark blue with 50% transparency.
+.PP
+pathname
+.PD 0
+.P
+.PD
+\ \ \ \ When a variable takes a pathname value, it is evaluated as a
+.PD 0
+.P
+.PD
+\ \ \ \ string.
+If the first character is tilde (~), it will be
+.PD 0
+.P
+.PD
+\ \ \ \ replaced by the the environment variable $HOME just as a shell
+.PD 0
+.P
+.PD
+\ \ \ \ would expand it.
+.SS Variables
+.PP
+stay_alive = \f[B]boolean\f[] (default 1)
+.PP
+\ \ \ \ If set to 1, the menu will "hide" rather than "exit" when the
+.PD 0
+.P
+.PD
+\ \ \ \ following events occur:
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \- clicking on menu item
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \- clicking outside the menu
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \- pressing escape
+.PD 0
+.P
+.PD
+\ \ \ \ When in the hidden mode, a USR1 signal will "un\-hide" the menu.
+.PP
+hide_on_startup = \f[B]boolean\f[] (default 0)
+.PP
+\ \ \ \ If set to 1, jgmenu start in "hidden" mode.
+This is useful for
+.PD 0
+.P
+.PD
+\ \ \ \ starting\ jgmenu during the boot process and then sending a
+.PD 0
+.P
+.PD
+\ \ \ \ \f[C]killall\ \-SIGUSR1\ jgmenu\f[] to show the menu.
+.PP
+csv_cmd = \f[B]string\f[] (default \f[C]pmenu\f[])
+.PP
+\ \ \ \ Defines the command to produce the jgmenu flavoured CSV for
+.PD 0
+.P
+.PD
+\ \ \ \ \f[C]jgmenu\f[].
+Accpetable keyword include pmenu, xdg, lx and ob.
+.PD 0
+.P
+.PD
+\ \ \ \ If a value is given other than these keywords, it will be
+.PD 0
+.P
+.PD
+\ \ \ \ executed in a shell (so be careful!).
+If left blank, jgmenu
+.PD 0
+.P
+.PD
+\ \ \ \ will read from \f[B]stdin\f[].
+Examples:
+.IP
+.nf
+\f[C]
+csv_cmd\ =\ xdg
+csv_cmd\ =\ jgmenu_run\ parse\-xdg\ \-\-no\-dirs\ \ 
+csv_cmd\ =\ cat\ ~/mymenu.csv\ \ 
+\f[]
+.fi
+.PP
+tint2_look = \f[B]boolean\f[] (default 1)
+.PP
+\ \ \ \ Reads tint2rc and parses config options for colours,\ dimensions
+.PD 0
+.P
+.PD
+\ \ \ \ and alignment.
+Also reads tint2 button environment variables.
+.PD 0
+.P
+.PD
+\ \ \ \ These give more accurate alignment along the length of the panel
+.PD 0
+.P
+.PD
+\ \ \ \ than what parsing the tint2 config file can achieve.
+.PP
+at_pointer = \f[B]boolean\f[] (default 0)
+.PP
+\ \ \ \ If enabled, the menu is launched at the pointer position,
+.PD 0
+.P
+.PD
+\ \ \ \ ignoring \f[C]menu_margin_?\f[] and \f[C]menu_?align\f[] values.
+.PP
+multi_window = \f[B]boolean\f[] (default 1)
+.PP
+\ \ \ \ If enabled, submenus open in new windows.
+.PP
+terminal_exec = \f[B]string\f[] (default x\-terminal\-emulator)
+.PD 0
+.P
+.PD
+terminal_args = \f[B]string\f[] (default \-e)
+.PP
+\ \ \ \ The values of these two variables are used to build a string to
+.PD 0
+.P
+.PD
+\ \ \ \ launch programs requiring a terminal to run.
+.PD 0
+.P
+.PD
+\ \ \ \ With the default values, the string would become:
+.PP
+\ \ \ \ x\-terminal\-emulator \-e \[aq]some_command with arguments\[aq]
+.PP
+\ \ \ \ terminal_args must finish with \[aq]\-e\[aq] or equivalent
+(where \[aq]\-e\[aq]
+.PD 0
+.P
+.PD
+\ \ \ \ refers to the meaning of \[aq]\-e\[aq] in \[aq]xterm \-e\[aq].
+.PP
+monitor = \f[B]integer\f[] (default 0)
+.PP
+\ \ \ \ Specify a particular monitor as an index starting from 1.
+.PD 0
+.P
+.PD
+\ \ \ \ If 0, the menu will be launched on the monitor where the mouse
+.PD 0
+.P
+.PD
+\ \ \ \ is.
+.PP
+menu_margin_x = \f[B]integer\f[] (default 2)
+.PD 0
+.P
+.PD
+menu_margin_y = \f[B]integer\f[] (default 32)
+.PD 0
+.P
+.PD
+menu_width = \f[B]integer\f[] (default 200)
+.PD 0
+.P
+.PD
+menu_padding_top = \f[B]integer\f[] (default 5)
+.PD 0
+.P
+.PD
+menu_padding_right = \f[B]integer\f[] (default 5)
+.PD 0
+.P
+.PD
+menu_padding_bottom = \f[B]integer\f[] (default 5)
+.PD 0
+.P
+.PD
+menu_padding_left = \f[B]integer\f[] (default 5)
+.PD 0
+.P
+.PD
+menu_radius = \f[B]integer\f[] (default 1)
+.PD 0
+.P
+.PD
+menu_border = \f[B]integer\f[] (default 0)
+.PP
+\ \ \ \ "margin" refers to space outside an object
+.PD 0
+.P
+.PD
+\ \ \ \ "padding" refers to space inside an object (between border and
+.PD 0
+.P
+.PD
+\ \ \ \ content)
+.PD 0
+.P
+.PD
+\ \ \ \ "radius" refers to the size of rounded corners
+.PD 0
+.P
+.PD
+\ \ \ \ "border" refers to the border\-thickness
+.PP
+\ \ \ \ The \f[C]menu_margin_*\f[] variables refer to the distance
+between the
+.PD 0
+.P
+.PD
+\ \ \ \ menu (=X11 window) and the edge of the screen.
+.PP
+menu_halign = (left | right) (default left)
+.PD 0
+.P
+.PD
+menu_valign = (top | bottom) (default bottom)
+.PP
+\ \ \ \ Horizontal and vertical alignment respectively.
+.PP
+sub_spacing = \f[B]integer\f[] (default 1)
+.PP
+\ \ \ \ Horizontal space between windows.
+A negative value results in
+.PD 0
+.P
+.PD
+\ \ \ \ each submenu window overlapping its parent window.
+.PP
+sub_padding_top = \f[B]integer\f[] (default \-1)
+.PD 0
+.P
+.PD
+sub_padding_right = \f[B]integer\f[] (default \-1)
+.PD 0
+.P
+.PD
+sub_padding_bottom = \f[B]integer\f[] (default \-1)
+.PD 0
+.P
+.PD
+sub_padding_left = \f[B]integer\f[] (default \-1)
+.PP
+\ \ \ \ The same as \f[C]menu_padding_*\f[] but applies to submenu
+windows
+.PD 0
+.P
+.PD
+\ \ \ \ only.
+If set to a negative value, the \f[C]menu_padding_*\f[]
+.PD 0
+.P
+.PD
+\ \ \ \ equivalent will be used.
+.PP
+sub_hover_action = \f[B]integer\f[] (default 1)
+.PP
+\ \ \ \ Open submenu when hovering over item (only works in
+multi\-window
+.PD 0
+.P
+.PD
+\ \ \ \ mode).
+.PP
+item_margin_x = \f[B]integer\f[] (default 3)
+.PD 0
+.P
+.PD
+item_margin_y = \f[B]integer\f[] (default 3)
+.PD 0
+.P
+.PD
+item_height = \f[B]integer\f[] (default 25)
+.PD 0
+.P
+.PD
+item_padding_x = \f[B]integer\f[] (default 4)
+.PD 0
+.P
+.PD
+item_radius = \f[B]integer\f[] (default 1)
+.PD 0
+.P
+.PD
+item_border = \f[B]integer\f[] (default 0)
+.PP
+\ \ \ \ See equivalent \f[C]menu_\f[] variable definitions.
+.PP
+item_halign = (left | right) (default left)
+.PP
+\ \ \ \ Horizontal alignment of actual menu items.
+Items are left\-aligned
+.PD 0
+.P
+.PD
+\ \ \ \ by default.
+If set to right, the option \f[C]arrow_string\f[] should be
+.PD 0
+.P
+.PD
+\ \ \ \ changed too.
+.PP
+sep_height = \f[B]integer\f[] (default 5)
+.PP
+\ \ \ \ height of separator (defined by ^sep())
+.PP
+font = \f[B]string\f[] (unset by default)
+.PP
+\ \ \ \ "font" accepts a string such as "Cantarell 10"
+.PD 0
+.P
+.PD
+\ \ \ \ The font description without a specified size unit is
+.PD 0
+.P
+.PD
+\ \ \ \ interpreted as "points".
+If "px" is added, it will be read as
+.PD 0
+.P
+.PD
+\ \ \ \ pixels.\ Using "points" enables consistency with other
+.PD 0
+.P
+.PD
+\ \ \ \ applications.
+.PP
+font_fallback = \f[B]string\f[] (default xtg)
+.PP
+\ \ \ \ The same as \[aq]icon_theme_fallback\[aq] (see below)
+.PP
+icon_size = \f[B]integer\f[] (default 22)
+.PP
+\ \ \ \ If icon_size is set to 0, icons will not be searched for and
+.PD 0
+.P
+.PD
+\ \ \ \ loaded.
+.PP
+icon_text_spacing = \f[B]integer\f[] (default 10)
+.PP
+\ \ \ \ Distance between icon and text.
+.PP
+icon_theme = \f[B]string\f[] (unset by default)
+.PP
+\ \ \ \ If an xsettings\-daemon is running, the icon theme will be
+.PD 0
+.P
+.PD
+\ \ \ \ obtained\ from that daemon.
+Otherwise, the variable above will be
+.PD 0
+.P
+.PD
+\ \ \ \ read.
+.PP
+\ \ \ \ The behaviour described above can be over\-ruled by defining the
+.PD 0
+.P
+.PD
+\ \ \ \ following two:
+.PP
+icon_theme_fallback = \f[B]string\f[] (default xtg)
+.PP
+\ \ \ \ Specifies the fallback sources of the icon theme in order of
+.PD 0
+.P
+.PD
+\ \ \ \ precedence, where the left\-most letter designates the source
+.PD 0
+.P
+.PD
+\ \ \ \ with the highest precedence.
+The following are acceptable
+.PD 0
+.P
+.PD
+\ \ \ \ characters:
+.PP
+\ \ \ \ x = xsettings
+.PD 0
+.P
+.PD
+\ \ \ \ t = tint2 config file
+.PD 0
+.P
+.PD
+\ \ \ \ g = gtk3.0 config file
+.PP
+\ \ \ \ \[aq]icon_theme\[aq] takes priority if set.
+.PP
+\ \ \ \ In order to increase consistency with tint2, xsettings
+.PD 0
+.P
+.PD
+\ \ \ \ variables will only be read if the tint2rc variable
+.PD 0
+.P
+.PD
+\ \ \ \ launcher_icon_theme_override is zero.
+.PP
+arrow_string = \f[B]string\f[] (default ▸)
+.PP
+\ \ \ \ The "arrow" indicates that a menu item points a submenu.
+.PD 0
+.P
+.PD
+\ \ \ \ Suggested styles include:
+.PD 0
+.P
+.PD
+\ \ \ \ → ▶ ➔ ➙ ➛ ➜ ➝ ➞ ➟ ➠ ➡ ➢ ➣ ➤ ➥ ➦ ↦ ⇒ ⇝ ⇢ ⇥ ⇨ ⇾ ➭ ➮ ➯ ➱ ➲ ➺ ➼ ➽ ➾
+.PP
+arrow_width = \f[B]integer\f[] (default 15)
+.PP
+\ \ \ \ Width of area allocated for arrow.
+Set to 0 to hide arrow.
+.PP
+color_menu_bg = \f[B]color\f[] (default #000000 70)
+.PD 0
+.P
+.PD
+color_menu_fg = \f[B]color\f[] (default #eeeeee 20)
+.PD 0
+.P
+.PD
+color_menu_border = \f[B]color\f[] (default #eeeeee 8)
+.PD 0
+.P
+.PD
+color_norm_bg = \f[B]color\f[] (default #000000 00)
+.PD 0
+.P
+.PD
+color_norm_fg = \f[B]color\f[] (default #eeeeee 100)
+.PD 0
+.P
+.PD
+color_sel_bg = \f[B]color\f[] (default #ffffff 20)
+.PD 0
+.P
+.PD
+color_sel_fg = \f[B]color\f[] (default #eeeeee 100)
+.PD 0
+.P
+.PD
+color_sel_border = \f[B]color\f[] (default #eeeeee 8)
+.PD 0
+.P
+.PD
+color_sep_fg = \f[B]color\f[] (default #ffffff 20)
 .SH SEE ALSO
 .PP
 \f[C]JGMENU_RUN(1)\f[]
@@ -242,10 +803,6 @@ For most users ~/.config/jgmenu/jgmenurc is appropriate.
 .P
 .PD
 \f[C]JGMENUTUTORIAL(7)\f[]
-.PD 0
-.P
-.PD
-\f[C]JGMENU\-CONFIG(1)\f[]
 .PP
 The jgmenu source code and documentation can be downloaded from
 .PD 0
