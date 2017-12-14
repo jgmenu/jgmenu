@@ -24,10 +24,6 @@
 
 #define DEBUG_PRINT_XML_NODES 0
 
-static const char jgmenu_xdg_usage[] =
-"Usage: jgmenu_run parse-xdg [option] [<menu file>]\n\n"
-"    --no-dirs             ignore .menu and .directory files\n";
-
 /*
  * In jgmenu-speak:
  *	- A "node" is a root-menu or a submenu.
@@ -58,12 +54,6 @@ struct jgmenu_item {
 
 static LIST_HEAD(jgmenu_nodes);
 static struct jgmenu_node *current_jgmenu_node;
-
-static void usage(void)
-{
-	printf("%s", jgmenu_xdg_usage);
-	exit(0);
-}
 
 static void cat_file(const char *filename)
 {
@@ -387,8 +377,6 @@ int main(int argc, char **argv)
 			sbuf_cpy(&filename, argv[i]);
 		else if (!strncmp(argv[i], "--no-dirs", 9))
 			no_dirs = 1;
-		else if (!strncmp(argv[i], "--help", 6))
-			usage();
 		else
 			die("unknown option '%s'", argv[i]);
 		i++;

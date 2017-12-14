@@ -1,5 +1,5 @@
 /*
- * jgmenu-parse-ob.c
+ * jgmenu-ob.c
  *
  * Parses openbox menu and outputs a jgmenu-flavoured CSV file
  */
@@ -13,9 +13,6 @@
 #include "util.h"
 #include "sbuf.h"
 #include "list.h"
-
-static const char jgmenu_parse_ob_usage[] =
-"Usage: jgmenu_run parse-ob\n";
 
 static char *root_menu;
 
@@ -39,12 +36,6 @@ static struct list_head tags;
 static struct tag *curtag;
 static struct item *curitem;
 
-static void usage(void)
-{
-	printf("%s", jgmenu_parse_ob_usage);
-	exit(0);
-}
-
 static void print_it(struct tag *tag)
 {
 	struct item *item;
@@ -57,7 +48,7 @@ static void print_it(struct tag *tag)
 	list_for_each_entry(item, &tag->items, list) {
 		if (item->pipe)
 			printf("%s,^pipe(f=/tmp/jgmenu-pipe; %s >$f; "
-			       "jgmenu_run parse-ob --tag='%s' $f; rm -f $f)\n",
+			       "jgmenu_run ob --tag='%s' $f; rm -f $f)\n",
 			       item->label, item->cmd, item->label);
 		else if (item->checkout)
 			printf("%s,^checkout(%s)\n", item->label, item->cmd);
@@ -332,8 +323,6 @@ int main(int argc, char **argv)
 		if (argv[i][0] != '-') {
 			file_name = argv[i];
 			break;
-		} else if (!strncmp(argv[i], "--help", 6)) {
-			usage();
 		} else if (!strncmp(argv[i], "--tag=", 6)) {
 			root_menu = strdup(argv[i] + 6);
 		}

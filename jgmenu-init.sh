@@ -26,7 +26,7 @@ populate_tmp_file () {
 cat <<'EOF' >>"${tmp_jgmenurc}"
 stay_alive          = 1
 hide_on_startup     = 0
-csv_cmd             = jgmenu_run parse-pmenu
+csv_cmd             = pmenu
 tint2_look          = 1
 at_pointer          = 0
 multi_window        = 1

@@ -420,7 +420,7 @@ def setup_gettext():
 
 def main():
   global strings
-  parser = argparse.ArgumentParser(prog="jgmenu_run parse-pmenu")
+  parser = argparse.ArgumentParser(prog="jgmenu_run pmenu")
   parser.add_argument("--append-file", help="Path to menu file to append to the root menu", metavar="FILE")
   parser.add_argument("--prepend-file", help="Path to menu file to prepend to the root menu", metavar="FILE")
   parser.add_argument("--locale", help="Use a custom locale (e.g. 'en_US.UTF-8'; available locales can be shown " +

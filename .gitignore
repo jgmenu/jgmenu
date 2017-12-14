@@ -1,12 +1,11 @@
 *.o
 *.a
 jgmenu
-jgmenu-parse-xdg
+jgmenu-xdg
 jgmenu-icon-find
 jgmenu-xsettings
-jgmenu-parse-pmenu
-jgmenu-parse-ob
-jgmenu-parse-lx
+jgmenu-ob
+jgmenu-lx
 jgmenu-socket
 README.html
 config.mk

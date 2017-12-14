@@ -4,19 +4,30 @@ TODO
 Current Focus
 -------------
 
-	Add --stdin
+	Remove jgmenu-csv.sh
 
-	This about how we handle --csv-cmd=
+	Update documentation around stdin i.e.
+		- only in --(v)simple mode
+		- or when config option csv_cmd is blank
 
-	Remove -pmenu.py, -ob.sh, -xdg.sh, -lx.sh, -config.sh, -xsettings
+	In jgmenu --help and man page, clarify that --csv-cmd is taken literally
+	(i.e. no keywords are resolved).
 
-	Update --help and man pages
+	Update --help and man pages (incl jgmenu and jgmenu_run)
+
+	CSV-modules should have man pages rather than --help messages
+	These should be called by jgmenu help <csv-command>
+
+	Remove -config.sh, -xsettings
 
 	jgmenu init --append,--prepend, --jgmenurc
-
-	widgets.c
+	Let jgmenu init call all three to create a simple basic setup
+	Add "init --purge" to remove all three.
 
 	Add --o9000 and --local to ppa script
+
+	widgets.c
+	Add an experimental "init --theme=neon"
 
 Cleanliness
 -----------
@@ -60,8 +71,6 @@ Cleanliness
 
 	Draw diagrams of variables
 
-	Re-factor jgmenu_run lx/pmenu/xdg/csv, etc. by using --csv-*
-
 	Replace strdups+free with x-alternatives
 		replace various warn() with BUG_ON
 
@@ -77,8 +86,6 @@ Cleanliness
 
 New features
 ------------
-	Support dual screen when stacked vertically
-
 	jgmenu-init.sh:
 	  - put backup files in backup/ directory
 	  - add --clean to remove all config files
@@ -101,11 +108,9 @@ New features
 
 	Add scroll_bar
 
-	Add man-page for jgmenu_run ob
-
 AFTER v1.0
 ----------
-Support for adding favourites in real-time (e.g. keyboard shortcut for
-locking menu-item onto the root menu - or similar)
+	Support for adding favourites in real-time (e.g. keyboard shortcut for
+	locking menu-item onto the root menu - or similar)
 
-Consider "hover" features and "inline expansion" of menus
+	Consider "hover" features and "inline expansion" of menus
