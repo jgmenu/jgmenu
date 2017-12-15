@@ -7,11 +7,11 @@ then
 fi
 
 start=$(date +%s.%N)
-jgmenu_run parse-pmenu >/dev/null
+jgmenu_run pmenu >/dev/null
 dur1=$(printf "%b\n" "$(date +%s.%N) - $start" | bc)
 
 start=$(date +%s.%N)
-jgmenu_run parse-xdg >/dev/null
+jgmenu_run xdg >/dev/null
 dur2=$(printf "%b\n" "$(date +%s.%N) - $start" | bc)
 
 start=$(date +%s.%N)

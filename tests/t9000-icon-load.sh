@@ -7,7 +7,7 @@
 
 tmp=$(mktemp)
 
-jgmenu_run parse-pmenu >${tmp}
+jgmenu_run pmenu >${tmp}
 
 start=$(date +%s.%N)
 cat ${tmp} | jgmenu --die-when-loaded

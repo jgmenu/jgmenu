@@ -18,4 +18,4 @@ ask_user_for_input
 export XDG_MENU_PREFIX="${menu_file%applications\.menu}"
 printf "XDG_MENU_PREFIX=%b\n" "${XDG_MENU_PREFIX}"
 export XDG_CONFIG_DIRS="a:b:c:::d:$PWD/t0006:e:f"
-../jgmenu --csv-cmd="$PWD/../jgmenu-parse-xdg" --simple
+../jgmenu --csv-cmd="$PWD/../jgmenu-xdg" --simple

@@ -11,6 +11,8 @@ Void Linux: [Official package](https://github.com/voidlinux/void-packages/blob/m
 
 NixOS: [package](https://github.com/NixOS/nixpkgs/tree/master/pkgs/applications/misc/jgmenu)  
 
+Slackware: [SlackBuilds](https://slackbuilds.org/repository/14.2/desktop/jgmenu)  
+
 ### Build and install from scratch
 
 On Debian based systems:

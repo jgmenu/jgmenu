@@ -4,21 +4,9 @@ TODO
 Current Focus
 -------------
 
-	Remove jgmenu-csv.sh
-
-	Update documentation around stdin i.e.
-		- only in --(v)simple mode
-		- or when config option csv_cmd is blank
-
-	In jgmenu --help and man page, clarify that --csv-cmd is taken literally
-	(i.e. no keywords are resolved).
-
-	Update --help and man pages (incl jgmenu and jgmenu_run)
+	jgmenu - warn if strange command line argument is given
 
 	CSV-modules should have man pages rather than --help messages
-	These should be called by jgmenu help <csv-command>
-
-	Remove -config.sh, -xsettings
 
 	jgmenu init --append,--prepend, --jgmenurc
 	Let jgmenu init call all three to create a simple basic setup
@@ -64,8 +52,6 @@ Cleanliness
 	which handles exceptions
 
 	Refactor around read_csv_file and creating items
-
-	'\0' terminate read_csv_file if no '\n'  present
 
 	Remove spawn from config (make it args_ instead).
 
