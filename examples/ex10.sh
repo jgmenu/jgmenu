@@ -30,7 +30,7 @@ do
 	restart_tint2 "${f}"
 	killall jgmenu 2>/dev/null
 	export TINT2_CONFIG=${f}
-	jgmenu --csv-cmd="jgmenu_run parse-pmenu" --config-file= || break
+	jgmenu --csv-cmd="jgmenu_run pmenu" --config-file= || break
 done
 
 restart_tint2

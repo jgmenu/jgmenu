@@ -199,7 +199,7 @@ csv_cmd = __string__ (default `pmenu`)
     will read from __stdin__. Examples:  
 
     csv_cmd = xdg
-    csv_cmd = jgmenu_run parse-xdg --no-dirs  
+    csv_cmd = jgmenu_run xdg --no-dirs  
     csv_cmd = cat ~/mymenu.csv  
 
 tint2_look = __boolean__ (default 1)  
