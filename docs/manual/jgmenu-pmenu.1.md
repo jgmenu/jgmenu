@@ -1,32 +1,59 @@
 % JGMENU-PMENU(1)  
 % Johan Malm  
-% 13 January, 2017
+% 16 December, 2017
 
 # NAME
 
-jgmenu-pmenu.sh - generates a menu based on .desktop and .directory  
+jgmenu-pmenu.py - generates a menu based on .desktop and .directory  
                   files found on the system.  
 
 # SYNOPSIS
 
-jgmenu_run pmenu \[<*options*>]
+jgmenu_run pmenu \[-h | --help] \[--append-file <*FILE*>]  
+                 \[--prepend-file <*FILE*>] \[--locale <*LOCALE*>]  
 
 # DESCRIPTION
 
-Generates a menu based on .desktop and .directory files found on the  
-system. For further info, see:  
-  - JGMENUTUTORIAL(7) lesson 2  
-  - `jgmenu_run parse-pmenu --help`  
+Generates jgmenu flavoured CSV text based on .desktop and .directory  
+files found on the system, but ignores any .menu files. Instead of  
+the structure specified in the .menu file, it simply maps each  
+".desktop" application onto one of the ".directory" categories. If a  
+matching ".directory" category does not exist, it tries to  
+cross-reference "additional categories" to "related categories" in  
+accordance with the XDG menu-spec. This is a generic approach which  
+avoids Desktop Environment specific rules defined in the .menu file.  
+It ensures that all .desktop files are included in the menu.  
 
-The root menu is appended and/or prepended by the contents of the  
-following files if they exist:  
-  - $HOME/.config/jgmenu/append.csv  
-  - $HOME/.config/jgmenu/prepend.csv  
+This program is designed to be run by jgmenu by settings the  
+following in jgmenurc:
+
+    csv_cmd = pmenu
+
+The root menu is appended/prepended by the contents of the following  
+files if they exist:
+
+    ~/.config/jgmenu/append.csv  
+    ~/.config/jgmenu/prepend.csv  
 
 # OPTIONS
 
-All options are passed onto jgmenu
+\-h, --help
+:   show this help message and exit
+
+\--append-file FILE
+:   Path to menu file to append to the root menu  
+
+\--prepend-file FILE
+:   Path to menu file to prepend to the root menu  
+
+\--locale LOCALE
+:   Use a custom locale (e.g. 'en_US.UTF-8'; available  
+       locales can be shown by running 'locale -a')  
 
 # EXAMPLES
 
-`$ jgmenu_run pmenu`
+    jgmenu_run pmenu | jgmenu
+
+    jgmenu --csv-cmd="jgmenu_run pmenu"
+
+    echo "csv_cmd = pmenu" >> ~/.config/jgmenu/jgmenurc ; jgmenu
