@@ -6,7 +6,7 @@
 .PD 0
 .P
 .PD
-% 14 December, 2017
+% 17 December, 2017
 .SH NAME
 .PP
 The jgmenu tutorial
@@ -28,14 +28,6 @@ jgmenu
 \f[]
 .fi
 .PP
-or
-.IP
-.nf
-\f[C]
-jgmenu_run
-\f[]
-.fi
-.PP
 That\[aq]s it!
 .PP
 There are three points worth noting about what you have just done:
@@ -49,13 +41,13 @@ We call this menu "pmenu" (explained
 .PD 0
 .P
 .PD
-below).
+in lesson 7).
 .IP \[bu] 2
-If you use tint2, jgmenu should have copied its appearance,
+If you use tint2, jgmenu should have imitated its appearance
 .PD 0
 .P
 .PD
-position and alignment.
+and aligned with its position.
 .IP \[bu] 2
 You have just started a long\-running application.
 If you click
@@ -94,7 +86,7 @@ Edit this config file (~/.config/jgmenu/jgmenurc) to suit your
 .P
 .PD
 system.
-Read JGMENU\-CONFIG(1) for further information.
+Read the man page JGMENU(1) for further information.
 .PP
 If you have a config file at ~/.config/jgmenu/jgmenurc and want to
 .PD 0
@@ -105,17 +97,38 @@ ignore it for the purposes of running one of the lessons, just use
 .P
 .PD
 the command line argument "\-\-config\-file=" without specifying a file.
+.SS Lesson 2
 .PP
-If you use tint2 and want a traditional "start menu", you can do one
+You can also start jgmenu with
+.IP
+.nf
+\f[C]
+jgmenu_run
+\f[]
+.fi
+.PP
+The advantage of this wrapper is that it will either awake jgmenu or
 .PD 0
 .P
 .PD
-of the following using tint2conf or by editing tint2rc directly:
+start a new instance depending on if it is already running or not.
+.PP
+This makes it suitable for using with panels and keyboard shortcuts.
+.PP
+For example, if you use tint2 and want a traditional "start menu",
+.PD 0
+.P
+.PD
+you can do one of the following using tint2conf or by editing tint2rc
+.PD 0
+.P
+.PD
+directly:
 .IP \[bu] 2
 Add jgmenu.desktop to your launcher
 .IP \[bu] 2
 Create a button setting \f[C]button_lclick_command\ =\ jgmenu_run\f[]
-.SS Lesson 2
+.SS Lesson 3
 .PP
 From this point onwards, it is assumed that you understand basic
 .PD 0
@@ -125,16 +138,16 @@ shell usage including re\-direction (e.g.
 <, >) and piping (e.g.
 |).
 .PP
-The syntax below is used to denote the creation of a text file from
+The syntax below (here\-document) is used to denote the creation of a
 .PD 0
 .P
 .PD
-whatever is between the EOFs.
-You can of course use your favourite
+text file from whatever is between the EOFs.
+You can of course use
 .PD 0
 .P
 .PD
-text editor instead.
+your favourite text editor instead.
 .IP
 .nf
 \f[C]
@@ -145,22 +158,186 @@ EOF
 \f[]
 .fi
 .PP
+There are many ways to run jgmenu.
+In lesson 1, you saw jgmenu as a
+.PD 0
+.P
+.PD
+long\-running application.
+As we go through the next few lessons we
+.PD 0
+.P
+.PD
+will run jgmenu as a short\-lived applications.
+This means that it
+.PD 0
+.P
+.PD
+starts from scratch every time it is called.
+.PP
+So let\[aq]s get back to basics.
+Try the following:
+.IP
+.nf
+\f[C]
+echo\ >foo.txt\ <<EOF
+xterm
+firefox
+EOF
+\f[]
+.fi
+.PP
+If you have not got used to the here\-document syntax yet, it just
+.PD 0
+.P
+.PD
+means that you put the words "xterm" and "firefox" in a text file
+.PD 0
+.P
+.PD
+(which you can of course do using a text editor).
+Then do:
+.IP
+.nf
+\f[C]
+cat\ foo.txt\ |\ jgmenu\ \-\-simple\ \-\-icon\-size=0
+\f[]
+.fi
+.PP
+The option \-\-simple make jgmenu short\-lived, disables all syncing
+.PD 0
+.P
+.PD
+with tint2 and reads menu items from \f[I]stdin\f[].
+.PP
+The option \-\-icon\-size=0, disables icons (i.e.
+it does not just
+.PD 0
+.P
+.PD
+display them at zero size, it actually avoids loading them)
+.SS Lesson 4
+.PP
+As you saw in the previous example, each line fed to \f[I]stdin\f[]
+becomes
+.PD 0
+.P
+.PD
+a menu item.
+Any line containing two fields separated by a comma
+.PD 0
+.P
+.PD
+is parsed as \f[I]description\f[],\f[I]command\f[].
+Consider the following:
+.IP
+.nf
+\f[C]
+cat\ <<EOF\ >menu.sh
+#!/bin/sh
+(
+printf\ "Terminal,xterm\\n"
+printf\ "File\ Manager,pcmanfm\\n"
+)\ |\ jgmenu\ \-\-vsimple
+EOF
+
+chmod\ +x\ menu.sh
+\&./menu.sh
+\f[]
+.fi
+.PP
+This lets you give a more meaningful description to each menu item.
+.PP
+The command line argument \-\-vsimple is the same as \-\-simple, but
+also
+.PD 0
+.P
+.PD
+disables icons and ignores jgmenurc (if it exists).
+.SS Lesson 5
+.PP
+To display icons, you need to populate the third field.
+.PP
+By default, jgmenu will obtain the icon theme from xsettings (if
+.PD 0
+.P
+.PD
+it is running) or tint2rc (if it exists).
+When running with the
+.PD 0
+.P
+.PD
+\-\-simple argument, make sure that \f[I]icon_theme\f[] is set to
+something
+.PD 0
+.P
+.PD
+sensible in your $HOME/.config/jgmenu/jgmenurc.
+.IP
+.nf
+\f[C]
+(
+Browser,firefox,firefox
+File\ manager,pcmanfm,system\-file\-manager
+Terminal,xterm,utilities\-terminal
+Lock,i3lock\ \-c\ 000000,system\-lock\-screen
+Exit\ to\ prompt,openbox\ \-\-exit,system\-log\-out
+Reboot,systemctl\ \-i\ reboot,system\-reboot
+Poweroff,systemctl\ \-i\ poweroff,system\-shutdown
+)\ |\ jgmenu\ \-\-simple
+\f[]
+.fi
+.PP
+In the third field you can also specify the full path if you wish
+.PD 0
+.P
+.PD
+e.g.
+"/usr/share/icons/Faenza/places/22/folder.png"
+.SS Lesson 6
+.PP
+So far we have looked at producing a single "root" menu only.
+.PD 0
+.P
+.PD
+jgmenu understands a small amount of markup and enables submenus
+.PD 0
+.P
+.PD
+by ^tag() and ^checkout().
+Try this:
+.IP
+.nf
+\f[C]
+cat\ <<EOF\ >menu.txt
+Terminal,xterm
+File\ Manager,pcmanfm
+Settings,^checkout(settings)
+
+Settings,^tag(settings)
+Set\ Background\ Image,nitrogen
+EOF
+
+jgmenu\ \-\-vsimple\ \-\-csv\-file="menu.txt"
+\f[]
+.fi
+.SS Lesson 7
+.PP
 freedesktop.org have developed a menu standard which is adhered to
 .PD 0
 .P
 .PD
 by the big Desktop Environments.
-In this tutorial we will refer to
+We will refer to this type of menu
 .PD 0
 .P
 .PD
-this type of menu as XDG.
-jgmenu can run three types of XDG(ish)
+as XDG.
+jgmenu can run three types of XDG(ish) menus: pmenu, xdg and
 .PD 0
 .P
 .PD
-menus: pmenu, xdg and lx.
-Set \f[C]csv_cmd\f[] in jgmenurc to run these.
+lx.
 .PP
 To understand the subtleties between them, you need a basic
 .PD 0
@@ -284,179 +461,14 @@ menu
 .P
 .PD
 including separators and internationalization.
-.SS Lesson 3
 .PP
-There are many ways to run jgmenu.
-In lesson 1, you saw jgmenu as a
+Set \f[C]csv_cmd\f[] in jgmenurc to specify which of these csv\-commands
+you
 .PD 0
 .P
 .PD
-long\-running application.
-As we go through the next few lessons we
-.PD 0
-.P
-.PD
-will run jgmenu as a short\-lived applications.
-This means that it
-.PD 0
-.P
-.PD
-starts from scratch every time it is called.
-.PP
-Let us put XDG system menus and \f[C]jgmenu_run\f[] to one side and get
-.PD 0
-.P
-.PD
-back to basics.
-Try the following:
-.IP
-.nf
-\f[C]
-echo\ >foo.txt\ <<EOF
-xterm
-firefox
-EOF
-\f[]
-.fi
-.PP
-If you have not got used to the syntax yet, it just means that you
-.PD 0
-.P
-.PD
-put the words "xterm" and "firefox" in a text file using a text
-.PD 0
-.P
-.PD
-editor.
-Then do:
-.IP
-.nf
-\f[C]
-cat\ foo.txt\ |\ jgmenu\ \-\-simple\ \-\-icon\-size=0
-\f[]
-.fi
-.PP
-The option \-\-simple make jgmenu short\-lived, disables all syncing
-.PD 0
-.P
-.PD
-with tint2 and reads menu items from \f[I]stdin\f[].
-.PP
-The option \-\-icon\-size=0, disables icons (i.e.
-it does not just
-.PD 0
-.P
-.PD
-display them at zero size, it actually avoids loading them)
-.SS Lesson 4
-.PP
-As you saw in the previous example, each line fed to \f[I]stdin\f[]
-becomes
-.PD 0
-.P
-.PD
-a menu item.
-Any line containing two fields separated by a comma
-.PD 0
-.P
-.PD
-is parsed as \f[I]description\f[],\f[I]command\f[].
-Consider the following:
-.IP
-.nf
-\f[C]
-cat\ <<EOF\ >menu.sh
-#!/bin/sh
-(
-printf\ "Terminal,xterm\\n"
-printf\ "File\ Manager,pcmanfm\\n"
-)\ |\ jgmenu\ \-\-vsimple
-EOF
-
-chmod\ +x\ menu.sh
-\&./menu.sh
-\f[]
-.fi
-.PP
-This lets you give a more meaningful description to each menu item.
-.PP
-The command line argument \-\-vsimple is the same as \-\-simple, but
-also
-.PD 0
-.P
-.PD
-disables icons and ignores jgmenurc (if it exists).
-.SS Lesson 5
-.PP
-To display icons, you need to populate the third field.
-.PP
-By default, jgmenu will obtain the icon theme from xsettings (if
-.PD 0
-.P
-.PD
-it is running) or tint2rc (if it exists).
-When running with the
-.PD 0
-.P
-.PD
-\-\-simple argument, make sure that \f[I]icon_theme\f[] is set to
-something
-.PD 0
-.P
-.PD
-sensible in your $HOME/.config/jgmenu/jgmenurc.
-.IP
-.nf
-\f[C]
-(
-Browser,firefox,firefox
-File\ manager,pcmanfm,system\-file\-manager
-Terminal,xterm,utilities\-terminal
-Lock,i3lock\ \-c\ 000000,system\-lock\-screen
-Exit\ to\ prompt,openbox\ \-\-exit,system\-log\-out
-Reboot,systemctl\ \-i\ reboot,system\-reboot
-Poweroff,systemctl\ \-i\ poweroff,system\-shutdown
-)\ |\ jgmenu\ \-\-simple
-\f[]
-.fi
-.PP
-In the third field you can also specify the full path if you wish
-.PD 0
-.P
-.PD
-e.g.
-"/usr/share/icons/Faenza/places/22/folder.png"
-.SS Lesson 6
-.PP
-So far we have looked at producing a single "root" menu only.
-.PD 0
-.P
-.PD
-jgmenu understands a small amount of markup and enables submenus
-.PD 0
-.P
-.PD
-by ^tag() and ^checkout().
-Try this:
-.IP
-.nf
-\f[C]
-cat\ <<EOF\ >menu.txt
-Terminal,xterm
-File\ Manager,pcmanfm
-Settings,^checkout(settings)
-
-Settings,^tag(settings)
-Set\ Background\ Image,nitrogen
-EOF
-
-jgmenu\ \-\-vsimple\ <menu.txt
-
-#\ OR
-cat\ menu.txt\ |\ jgmenu\ \-\-vsimple
-\f[]
-.fi
-.SS Lesson 7
+wish to run.
+.SS Lesson 8
 .PP
 You can create a very simple XDG menu without any directories or
 .PD 0
@@ -486,15 +498,13 @@ When a menu is open, just start
 .P
 .PD
 typing to invoke a filter.
-.SS Lesson 8
+.SS Lesson 9
 .PP
-Let\[aq]s go back to pmenu.
-.PP
-If you create the files append.csv and/or prepend.csv in
+When running pmenu, xdg or lx, you can add menu items to the root
 .PD 0
 .P
 .PD
-$HOME/.config/jgmenu, these will be added to your root menu.
+menu by editing append.csv and/or prepend.csv in ~/.config/jgmenu.
 .PP
 For example, you could do:
 .IP
