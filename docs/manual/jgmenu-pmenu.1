@@ -6,7 +6,7 @@
 .PD 0
 .P
 .PD
-% 16 December, 2017
+% 17 December, 2017
 .SH NAME
 .PP
 jgmenu\-pmenu.py \- generates a menu based on .desktop and .directory
@@ -61,18 +61,6 @@ avoids Desktop Environment specific rules defined in the .menu file.
 .PD
 It ensures that all .desktop files are included in the menu.
 .PP
-This program is designed to be run by jgmenu by settings the
-.PD 0
-.P
-.PD
-following in jgmenurc:
-.IP
-.nf
-\f[C]
-csv_cmd\ =\ pmenu
-\f[]
-.fi
-.PP
 The root menu is appended/prepended by the contents of the following
 .PD 0
 .P
@@ -113,13 +101,19 @@ Use a custom locale (e.g.
 .PP
 \ \ \ \ \ \ \ locales can be shown by running \[aq]locale \-a\[aq])
 .SH EXAMPLES
+.PP
+This program is designed to be run from jgmenu by settings
+.PD 0
+.P
+.PD
+\f[C]csv_cmd\ =\ pmenu\f[] in the configuration file (jgmenurc).
+.PP
+It can also be run directly from the command line like this:
 .IP
 .nf
 \f[C]
 jgmenu_run\ pmenu\ |\ jgmenu
 
 jgmenu\ \-\-csv\-cmd="jgmenu_run\ pmenu"
-
-echo\ "csv_cmd\ =\ pmenu"\ >>\ ~/.config/jgmenu/jgmenurc\ ;\ jgmenu
 \f[]
 .fi

@@ -6,20 +6,21 @@
 .PD 0
 .P
 .PD
-% 24 September, 2017
+% 17 December, 2017
 .SH NAME
 .PP
-jgmenu\-xdg.sh \- generates a menu based on .menu files
+jgmenu\-xdg.sh \- generates jgmenu flavoured CSV for an XDGish menu
 .SH SYNOPSIS
 .PP
-\f[C]jgmenu_run\ xdg\f[]
+\f[C]jgmenu_run\ xdg\f[] [\-\-no\-dirs] [<\f[I]\&.menu file\f[]>]
 .SH DESCRIPTION
 .PP
-\f[C]jgmenu_run\ xdg\f[] generates a menu based on XML .menu files in
+\f[C]jgmenu_run\ xdg\f[] generates jgmenu flavoured CSV text for a menu
+based
 .PD 0
 .P
 .PD
-accordance with the XDG specifications:
+on XML .menu files loosely in accordance with the XDG specifications:
 .PP
 http://standards.freedesktop.org/menu\-spec/
 .PD 0
@@ -65,8 +66,15 @@ For example
 .PD
 This can be useful if there are several .menu files on the system.
 .SH OPTIONS
-.PP
-NIL
+.TP
+.B \-\-no\-dirs
+ignore .menu and .directory files
+.RS
+.RE
 .SH EXAMPLES
-.PP
-\f[C]$\ jgmenu_run\ xdg\f[]
+.IP
+.nf
+\f[C]
+jgmenu_run\ xdg
+\f[]
+.fi

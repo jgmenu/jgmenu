@@ -1,6 +1,6 @@
 % JGMENU-PMENU(1)  
 % Johan Malm  
-% 16 December, 2017
+% 17 December, 2017
 
 # NAME
 
@@ -23,11 +23,6 @@ cross-reference "additional categories" to "related categories" in
 accordance with the XDG menu-spec. This is a generic approach which  
 avoids Desktop Environment specific rules defined in the .menu file.  
 It ensures that all .desktop files are included in the menu.  
-
-This program is designed to be run by jgmenu by settings the  
-following in jgmenurc:
-
-    csv_cmd = pmenu
 
 The root menu is appended/prepended by the contents of the following  
 files if they exist:
@@ -52,8 +47,11 @@ files if they exist:
 
 # EXAMPLES
 
+This program is designed to be run from jgmenu by settings  
+`csv_cmd = pmenu` in the configuration file (jgmenurc).  
+
+It can also be run directly from the command line like this:  
+
     jgmenu_run pmenu | jgmenu
 
     jgmenu --csv-cmd="jgmenu_run pmenu"
-
-    echo "csv_cmd = pmenu" >> ~/.config/jgmenu/jgmenurc ; jgmenu
