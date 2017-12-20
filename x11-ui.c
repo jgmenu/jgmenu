@@ -98,7 +98,7 @@ void ui_init(void)
 }
 
 #define INTERSECT(x, y, w, h, r)  (MAX(0, MIN((x) + (w), (r).x_org + (r).width)  - \
-				   MAX((x), (r).x_org)) * \
+				   MAX((x), (r).x_org)) &&\
 				   MAX(0, MIN((y) + (h), (r).y_org + (r).height) - \
 				   MAX((y), (r).y_org)))
 
