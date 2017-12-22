@@ -1,0 +1,27 @@
+jgmenu v0.7.6 release notes
+===========================
+
+Updates since v0.7.5
+--------------------
+
+NOTE: The CLI has changed. Please set csv_cmd in the config file rather
+than running 'jgmenu_run lx|pmenu|xdg|ob'. If you prefer to run without
+a config file, use --csv-cmd= (see man-pages for further info).
+
+  * Remove jgmenu-{pmenu,lx,xdg,ob}* and replace with corresponding
+    jgmenu-parse-{pmenu,lx,xdg,ob}* CSV commands.
+
+  * Remove jgmenu-{xsettings,icon-find,csv,config,start}* as they have
+    become redundant.
+
+  * Read from 'csv_cmd' rather than stdin by default. This means that
+    'jgmenu' can be run directly from the command line without arguments,
+    piping or re-direction. stdin will be read if
+      - run in --simple and --vsimple mode;
+      - the config option 'csv_cmd' is empty.
+
+  * Understand csv_cmd keywords: pmenu, xdg, lx and ob.
+
+  * Add monitor config option.
+
+  * Fix multi-screen positioning bugs.
