@@ -1,12 +1,12 @@
 TODO
 ====
 
-Current Focus
--------------
+Current Focus for v0.8
+----------------------
+
+	Highlight correct parent item when submenu open
 
 	jgmenu - warn if strange command line argument is given
-
-	CSV-modules should have man pages rather than --help messages
 
 	jgmenu init --append,--prepend, --jgmenurc
 	Let jgmenu init call all three to create a simple basic setup
@@ -14,7 +14,7 @@ Current Focus
 
 	Add --o9000 and --local to ppa script
 
-	widgets.c
+	widgets.c - change to ',' separator
 	Add an experimental "init --theme=neon"
 
 Cleanliness
