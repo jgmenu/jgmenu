@@ -1,0 +1,66 @@
+.TH "JGMENU\-OB(1)
+.PD 0
+.P
+.PD
+% Johan Malm
+.PD 0
+.P
+.PD
+% 22 December, 2017
+.SH NAME
+.PP
+jgmenu\-ob \- convert openbox menu file to jgmenu flavoured CSV
+.SH SYNOPSIS
+.PP
+\f[C]jgmenu_run\ ob\f[] [\-\-tag=<\f[I]tag\f[]>] [<\f[I]file\f[]>]
+.SH DESCRIPTION
+.PP
+\f[C]jgmenu_run\ ob\f[] coverts openbox menu XML to jgmenu flavoured
+CSV.
+.SH OPTIONS
+.TP
+.B <\f[I]file\f[]>
+specify openbox XML file.
+If not provided,
+.PD 0
+.P
+.PD
+.RS
+.RE
+.PP
+\ \ \ \ \ \ \ ~/.config/openbox/menu.xml will be used.
+.TP
+.B \-\-tag=<\f[I]tag\f[]>
+specify menu element id value in XML file i.e.:
+.PD 0
+.P
+.PD
+.RS
+.RE
+.PP
+\ \ \ \ \ \ \ <\f[I]menu id="root\-menu" label="Openbox 3"\f[]>
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \ If unset, "root\-menu" is used as this is the default in
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \ openbox\[aq]s menu.xml.
+.SH EXAMPLES
+.PP
+This program is designed to be run from jgmenu by settings
+.PD 0
+.P
+.PD
+\f[C]csv_cmd\ =\ ob\f[] in the configuration file (jgmenurc).
+.PP
+It can also be run directly from the command line like this:
+.IP
+.nf
+\f[C]
+jgmenu_run\ ob\ |\ jgmenu
+
+jgmenu\ \-\-csv\-cmd="jgmenu_run\ ob"
+\f[]
+.fi

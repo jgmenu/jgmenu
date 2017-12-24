@@ -32,8 +32,7 @@ JGMENU_LIB = libjgmenu.a
 
 all: $(PROGS)
 	@echo ""
-	@echo "Warning: The CLI is in the process of being changed. Unless you're developing"
-	@echo "or testing, please checkout the latest tag."
+	@echo "Warning: The CLI has changed. Please read release notes."
 
 $(PROGS): % : $(OBJS) %.o
 	$(QUIET_LINK)$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)

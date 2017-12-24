@@ -79,12 +79,11 @@ Dependencies
 | lx      | glib, libmenu-cache                         |
 
 
-  - A *menu* package  is required for "`jgmenu_run pmenu`",
-    "`jgmenu_run xdg`" and "`jgmenu_run lx`"
+  - A *menu* package  is required for "pmenu", "xdg" and "lx".
     Examples of *menu* packages include: lxmenu-data, gnome-menus
     and libgarcon-common (xfce))
 
-  - python3 is required by "`jgmenu_run pmenu`"
+  - python3 is required by "pmenu"
 
   - A Composite Manager such as `compton` is required to enable transparency.
     Most Desktop Environments already have one installed.

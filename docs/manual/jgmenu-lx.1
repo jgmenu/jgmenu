@@ -1,0 +1,53 @@
+.TH "JGMENU\-LX(1)
+.PD 0
+.P
+.PD
+% Johan Malm
+.PD 0
+.P
+.PD
+% 22 December, 2017
+.SH NAME
+.PP
+jgmenu\-lx \- generates jgmenu flavoured CSV for an XDG menu
+.SH SYNOPSIS
+.PP
+\f[C]jgmenu_run\ lx\f[]
+.SH DESCRIPTION
+.PP
+\f[C]jgmenu_run\ lx\f[] generates jgmenu flavoured CSV text for
+.PD 0
+.P
+.PD
+freedesktop.org defined application menus, using LXDE\[aq]s
+.PD 0
+.P
+.PD
+libmenu\-cache.
+.PP
+\f[C]$XDG_MENU_PREFIX\f[] can be used to specity a .menu file.
+For example
+.PD 0
+.P
+.PD
+\f[C]$XDG_MENU_PREFIX=lxde\-\f[] will load lxde\-applications.menu
+.SH KNOWN ISSUES
+.PP
+xfce\-applications.menu is not parsed correctly.
+.SH EXAMPLES
+.PP
+This program is designed to be run from jgmenu by settings
+.PD 0
+.P
+.PD
+\f[C]csv_cmd\ =\ lx\f[] in the configuration file (jgmenurc).
+.PP
+It can also be run directly from the command line like this:
+.IP
+.nf
+\f[C]
+jgmenu_run\ lx\ |\ jgmenu
+
+jgmenu\ \-\-csv\-cmd="jgmenu_run\ lx"
+\f[]
+.fi

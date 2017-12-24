@@ -45,4 +45,3 @@ jgmenu_run
 
 `JGMENU(1)`  
 `JGMENUTUTORIAL(7)`  
-`JGMENU-CONFIG(1)`  
