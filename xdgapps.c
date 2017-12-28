@@ -88,16 +88,15 @@ static void process_file(char *filename, const char *path, int isdir)
 
 	strncpy(fullname, path, strlen(path));
 	strncpy(fullname + strlen(path), filename, strlen(filename) + 1);
-
 	fp = fopen(fullname, "r");
-	if (!fp)
-		die("could not open file %s", filename);
-
+	if (!fp) {
+		warn("could not open file %s", filename);
+		return;
+	}
 	if (isdir)
 		parse_directory_file(fp, filename);
 	else
 		parse_desktop_file(fp);
-
 	fclose(fp);
 }
 
