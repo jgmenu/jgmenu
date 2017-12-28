@@ -217,16 +217,19 @@ def internationalized(entry):
 def read_desktop_entry(path):
   entry = {}
   with open(path, "r", encoding="utf-8") as f:
-    lines = f.read().split("\n")
-    inside = False
-    for line in lines:
-      if line.startswith("["):
-        inside = line == "[Desktop Entry]"
-        continue
-      if inside:
-        if "=" in line:
-          k, v = line.split("=", 1)
-          entry[k] = v
+    try:
+      lines = f.read().split("\n")
+      inside = False
+      for line in lines:
+        if line.startswith("["):
+          inside = line == "[Desktop Entry]"
+          continue
+        if inside:
+          if "=" in line:
+            k, v = line.split("=", 1)
+            entry[k] = v
+    except UnicodeDecodeError:
+      print("warn: '{}' is unicode (utf-8 needed); ignoring it".format(path), file=sys.stderr)
   entry["_path"] = path
   return internationalized(entry)
 
