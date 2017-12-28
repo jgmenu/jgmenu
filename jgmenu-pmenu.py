@@ -216,8 +216,8 @@ def internationalized(entry):
 # A special key "_path" stores the path of the file
 def read_desktop_entry(path):
   entry = {}
-  with open(path, "r", encoding="utf-8") as f:
-    try:
+  try:
+    with open(path, "r", encoding="utf-8") as f:
       lines = f.read().split("\n")
       inside = False
       for line in lines:
@@ -228,8 +228,10 @@ def read_desktop_entry(path):
           if "=" in line:
             k, v = line.split("=", 1)
             entry[k] = v
-    except UnicodeDecodeError:
-      print("warn: '{}' is unicode (utf-8 needed); ignoring it".format(path), file=sys.stderr)
+  except UnicodeDecodeError:
+    print("warn: ignoring '{}' as it is unicode (utf-8 needed)".format(path), file=sys.stderr)
+  except:
+    print("warn: error reading '{}'".format(path), file=sys.stderr)
   entry["_path"] = path
   return internationalized(entry)
 
