@@ -55,25 +55,6 @@ struct jgmenu_item {
 static LIST_HEAD(jgmenu_nodes);
 static struct jgmenu_node *current_jgmenu_node;
 
-static void cat_file(const char *filename)
-{
-	FILE *fp;
-	char line[4096];
-	struct sbuf f;
-
-	sbuf_init(&f);
-	sbuf_cpy(&f, filename);
-	sbuf_expand_tilde(&f);
-	fp = fopen(f.buf, "r");
-	if (!fp)
-		goto cleanup;
-	while (fgets(line, sizeof(line), fp))
-		printf("%s", line);
-	fclose(fp);
-cleanup:
-	xfree(f.buf);
-}
-
 static void print_menu_item(struct jgmenu_item *item)
 {
 	printf("%s,", item->name);
@@ -93,7 +74,7 @@ static void print_csv_menu(void)
 		if (list_empty(&n->menu_items))
 			continue;
 		if (!n->parent) {
-			cat_file("~/.config/jgmenu/prepend.csv");
+			cat("~/.config/jgmenu/prepend.csv");
 		} else {
 			printf("%s,^tag(%s)\n", n->name, n->tag);
 			printf("Go back,^back(),folder\n");
@@ -108,7 +89,7 @@ static void print_csv_menu(void)
 				print_menu_item(item);
 		printf("\n");
 		if (!n->parent)
-			cat_file("~/.config/jgmenu/append.csv");
+			cat("~/.config/jgmenu/append.csv");
 	}
 }
 
@@ -354,9 +335,11 @@ static void print_desktop_files(void)
 {
 	struct desktop_file_data *f;
 
+	cat("~/.config/jgmenu/prepend.csv");
 	list_for_each_entry(f, &desktop_files_all, full_list)
 		if (f->name)
 			printf("%s,%s,%s\n", f->name, f->exec, f->icon);
+	cat("~/.config/jgmenu/append.csv");
 }
 
 int main(int argc, char **argv)

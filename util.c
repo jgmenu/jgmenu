@@ -1,6 +1,7 @@
 #include <signal.h>
 
 #include "util.h"
+#include "sbuf.h"
 
 void info(const char *err, ...)
 {
@@ -277,4 +278,23 @@ void xatoi(int *var, const char *value, int flags, const char *key)
 		xatoi_warn("integer out of range", value, key);
 	else
 		*var = (int)res;
+}
+
+void cat(const char *filename)
+{
+	FILE *fp;
+	char line[4096];
+	struct sbuf f;
+
+	sbuf_init(&f);
+	sbuf_cpy(&f, filename);
+	sbuf_expand_tilde(&f);
+	fp = fopen(f.buf, "r");
+	if (!fp)
+		goto cleanup;
+	while (fgets(line, sizeof(line), fp))
+		printf("%s", line);
+	fclose(fp);
+cleanup:
+	xfree(f.buf);
 }
