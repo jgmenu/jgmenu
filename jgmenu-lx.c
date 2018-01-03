@@ -20,12 +20,25 @@ struct menu {
 static struct list_head menu;
 static struct menu *cur;
 
+static void append(void)
+{
+	static int done;
+
+	if (done)
+		return;
+	cat("~/.config/jgmenu/append.csv");
+	done = 1;
+}
+
 static void print_menu(void)
 {
 	struct menu *m;
 
-	list_for_each_entry(m, &menu, list)
+	cat("~/.config/jgmenu/prepend.csv");
+	list_for_each_entry(m, &menu, list) {
 		printf("%s", m->buf.buf);
+		append();
+	}
 }
 
 static struct menu *menu_add(struct menu *parent)
