@@ -84,13 +84,13 @@ static void make_sfd_nonblocking(void)
 
 static void socketfile_unlink(void)
 {
-	unlink(TINT2_SOCKET_PATH);
+	unlink(tint2_socket_path());
 }
 
 void tint2env_init_socket(void)
 {
 	socketfile_unlink();
-	sfd = unix_listen(TINT2_SOCKET_PATH, 5);
+	sfd = unix_listen(tint2_socket_path(), 5);
 	if (sfd == -1)
 		die("unix_listen");
 	make_sfd_nonblocking();
