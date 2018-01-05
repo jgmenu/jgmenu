@@ -1,24 +1,50 @@
 TODO
 ====
 
-Current Focus for v0.8
-----------------------
+Current Focus for v0.8 release
+------------------------------
 
-	Highlight correct parent item when submenu open
-
-	jgmenu - warn if strange command line argument is given
-
-	jgmenu init --append,--prepend, --jgmenurc
-	Let jgmenu init call all three to create a simple basic setup
-	Add "init --purge" to remove all three.
-
-	Add --o9000 and --local to ppa script
+	Fix jgmenu-pmenu.py bug (seen in Ubuntu 17.10)
 
 	widgets.c - change to ',' separator
-	Add an experimental "init --theme=neon"
+
+Wiki
+----
+	Draw comparison table of lx, xdg, pmenu
+
+	Add animated gif
+
+	Add widgets page
+
+Key changes before v1.0
+-----------------------
+
+	Remove 'single window mode' and replace with ^root() and ^return()
+	(consider how to set new root using a pipe)
+	This will make code simpler and will reduce memory usage as surfaces
+	can be kept smaller.
+
+	Add widgets including icon, rect and text
+
+	Add 4th field - comment (e.g. from generic name)
+
+	Add 5th field - meta (e.g. with categories to enable filter buttons)
+	Consider adding a ^filter()
 
 Cleanliness
 -----------
+
+	jgmenu - warn if strange command line argument is given
+
+	Refactor icon.c
+		- merge struct icon and icon_path
+		- is xdgdirs inited twice?
+		- split icon.c into image.c and icon.c
+		- rename functions (e.g. icon_set_name() --> icon_add())
+
+	Remove hashmap.c
+
+	mv isprog.c jgmenu-path.c (or similar)
 
 	checkout_parent(): consider the case when current window has child(ren)
 
@@ -72,19 +98,32 @@ Cleanliness
 
 New features
 ------------
+
+	Add jgmenu-lx generic name and add LX=1 to Makefile
+
+	Highlight correct parent item when submenu open
+
+	Add jgmenu-xdg.c localisation
+
+	xdg: read xfce menu
+
 	jgmenu-init.sh:
 	  - put backup files in backup/ directory
 	  - add --clean to remove all config files
+	  - jgmenu init --append,--prepend, --jgmenurc
+	    Let jgmenu init call all three to create a simple basic setup
+	    Add "init --purge" to remove all three.
+	  - Add an experimental "init --theme=neon"
 
-	Add watch.c
+	Add watch.c to check changes to .desktop files, tint2, xsettings, jgmenurc,
+	etc. on wake-up
 		- Check tint2rc 'modified time' and re-read on change
 		- Consider the same for jgmenurc and tint2-sessionfile (bl)
 
 	Add support for "fixed-position" items such as icons/images and
 	shapes (incl search box)
 
-	On wake-up, check changes to .desktop files, tint2, xsettings, jgmenurc,
-	etc.
+	Explore pango markup
 
 	Add menu_height config option
 
@@ -94,8 +133,6 @@ New features
 
 	Add scroll_bar
 
-AFTER v1.0
-----------
 	Support for adding favourites in real-time (e.g. keyboard shortcut for
 	locking menu-item onto the root menu - or similar)
 
