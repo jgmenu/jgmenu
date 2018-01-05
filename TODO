@@ -4,8 +4,6 @@ TODO
 Current Focus for v0.8 release
 ------------------------------
 
-	Fix jgmenu-pmenu.py bug (seen in Ubuntu 17.10)
-
 	widgets.c - change to ',' separator
 
 Wiki

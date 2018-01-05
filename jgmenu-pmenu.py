@@ -368,7 +368,10 @@ def load_applications():
               else:
                 options = [c]
             else:
-              options = suggest_categories(entry["_pmenu_raw_Name"])
+              try:
+                options = suggest_categories(entry["_pmenu_raw_Name"])
+              except:
+                print("warn: no 'Name' key in file '{}'".format(entry["_path"]), file=sys.stderr)
             for o in options:
               if o in categories:
                 if o not in menu:
