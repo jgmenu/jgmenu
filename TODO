@@ -1,19 +1,6 @@
 TODO
 ====
 
-Current Focus for v0.8 release
-------------------------------
-
-	widgets.c - change to ',' separator
-
-Wiki
-----
-	Draw comparison table of lx, xdg, pmenu
-
-	Add animated gif
-
-	Add widgets page
-
 Key changes before v1.0
 -----------------------
 
@@ -39,8 +26,6 @@ Cleanliness
 		- is xdgdirs inited twice?
 		- split icon.c into image.c and icon.c
 		- rename functions (e.g. icon_set_name() --> icon_add())
-
-	Remove hashmap.c
 
 	mv isprog.c jgmenu-path.c (or similar)
 

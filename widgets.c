@@ -8,7 +8,7 @@
  * We read lines beginning with '@' from jgmenu flavoured CSV file and parses in
  * accordance with the following syntax:
  *
- * @type-action-x-y-w-h-r-halign-valign-fgcol-bgcol-content
+ * @type,action,x,y,w,h,r,halign,valign,fgcol,bgcol,content
  *
  * where
  *	- action = what to do when clicked
@@ -128,7 +128,7 @@ void widgets_add(const char *s)
 
 	w = xmalloc(sizeof(struct widget));
 	argv_init(&argv_buf);
-	argv_set_delim(&argv_buf, '-');
+	argv_set_delim(&argv_buf, ',');
 	argv_strdup(&argv_buf, s);
 	argv_parse(&argv_buf);
 	if (argv_buf.argc != 12)
