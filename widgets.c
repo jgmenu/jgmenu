@@ -5,8 +5,6 @@
  *
  * A very simple widget implementation
  *
- * This file is very 'alpha' and the API might change at any time.
- *
  * We read lines beginning with '@' from jgmenu flavoured CSV file and parses in
  * accordance with the following syntax:
  *
@@ -35,6 +33,7 @@
 #include "geometry.h"
 #include "sbuf.h"
 #include "filter.h"
+#include "icon.h"
 
 enum widget_type { WIDGET_ERROR, ICON, RECT, TEXT, SEARCH };
 
@@ -54,6 +53,7 @@ struct widget {
 	double fgcol[4];
 	double bgcol[4];
 	char *content;
+	cairo_surface_t *surface;
 	struct list_head list;
 };
 
@@ -61,11 +61,24 @@ static enum widget_type parse_type(const char *field)
 {
 	if (!field || !field[0])
 		return WIDGET_ERROR;
+	if (!strcmp(field, "icon"))
+		return ICON;
 	if (!strcmp(field, "rect"))
 		return RECT;
 	if (!strcmp(field, "search"))
 		return SEARCH;
 	return TEXT;
+}
+
+static void draw_icon(struct widget **w)
+{
+	if (!(*w)->surface) {
+		(*w)->surface = load_cairo_icon((*w)->content);
+		warn("could not find icon '%s'", (*w)->content);
+	}
+	if (!(*w)->surface)
+		return;
+	ui_insert_image((*w)->surface, (*w)->x, (*w)->y, (*w)->w);
 }
 
 static void draw_rect(struct widget **w)
@@ -97,7 +110,9 @@ void widgets_draw(void)
 	if (list_empty(&widgets))
 		return;
 	list_for_each_entry(w, &widgets, list) {
-		if (w->type == RECT)
+		if (w->type == ICON)
+			draw_icon(&w);
+		else if (w->type == RECT)
 			draw_rect(&w);
 		else if (w->type == SEARCH)
 			draw_search(&w);
@@ -131,6 +146,7 @@ void widgets_add(const char *s)
 	parse_hexstr(argv_buf.argv[9], w->fgcol);
 	parse_hexstr(argv_buf.argv[10], w->bgcol);
 	w->content = argv_buf.argv[11];
+	w->surface = NULL;
 	list_add_tail(&w->list, &widgets);
 }
 
