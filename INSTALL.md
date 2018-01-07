@@ -4,16 +4,19 @@ Install
 ### Install from repos
 
 BunsenLabs Linux: [backports](http://eu.pkg.bunsenlabs.org/debian/pool/main/j/jgmenu/)  
-[code]apt-get install jgmenu[/code]  
+
+    apt-get install jgmenu
 
 Arch Linux: [AUR package](https://aur.archlinux.org/packages/jgmenu/)  
 
 ArchLabs Linux [github](https://github.com/ARCHLabs/archlabs_repo/tree/master/x86_64)  
 Installed by default  
-[code]pacman -S jgmenu[/code]  
+
+    pacman -S jgmenu
 
 Void Linux: [Official package](https://github.com/voidlinux/void-packages/blob/master/srcpkgs/jgmenu/template)  
-[code]xbps-install -S jgmenu[/code]  
+
+    xbps-install -S jgmenu 
 
 NixOS: [package](https://github.com/NixOS/nixpkgs/tree/master/pkgs/applications/misc/jgmenu)  
 
