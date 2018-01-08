@@ -1,23 +1,39 @@
 #!/bin/sh
 
-if ! type bc >/dev/null
+execpath=$(jgmenu_run --exec-path)
+cycles=10
+
+if ! type bc >/dev/null 2>&1
 then
 	printf "fatal: need 'bc' for this test\n"
 	exit 1
 fi
 
-start=$(date +%s.%N)
-jgmenu_run pmenu >/dev/null
-dur1=$(printf "%b\n" "$(date +%s.%N) - $start" | bc)
+printf "%b\n" "Running tests..."
 
 start=$(date +%s.%N)
-jgmenu_run xdg >/dev/null
-dur2=$(printf "%b\n" "$(date +%s.%N) - $start" | bc)
+for i in $(seq "${cycles}"); do
+	${execpath}/jgmenu-pmenu.py >/dev/null 2>&1
+done
+dur_pmenu=$(printf "%b\n" "$(date +%s.%N) - $start" | bc)
 
 start=$(date +%s.%N)
-dur3=$(printf "%b\n" "$(date +%s.%N) - $start" | bc)
+for i in $(seq "${cycles}"); do
+	${execpath}/jgmenu-xdg >/dev/null 2>&1
+done
+dur_xdg=$(printf "%b\n" "$(date +%s.%N) - $start" | bc)
 
-printf "pmenu:%.3fs;   " ${dur1}
-printf "xdg:%.3fs;   " ${dur2}
-printf "nothing:%.3fs\n" ${dur3}
+start=$(date +%s.%N)
+for i in $(seq "${cycles}"); do
+	${execpath}/jgmenu-lx >/dev/null 2>&1
+done
+dur_lx=$(printf "%b\n" "$(date +%s.%N) - $start" | bc)
+
+start=$(date +%s.%N) 2>&1
+dur_nothing=$(printf "%b\n" "$(date +%s.%N) - $start" | bc)
+
+printf "pmenu:%.3fs;   " ${dur_pmenu}
+printf "xdg:%.3fs;   " ${dur_xdg}
+printf "lx:%.3fs;   " ${dur_lx}
+printf "nothing:%.3fs\n" ${dur_nothing}
 
