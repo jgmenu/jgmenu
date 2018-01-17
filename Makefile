@@ -14,6 +14,10 @@ VER      = $(shell ./scripts/version-gen.sh)
 
 include ./Makefile.inc
 
+DEPDIR := .d
+$(shell mkdir -p $(DEPDIR) >/dev/null)
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
+
 SCRIPTS_SHELL  = jgmenu_run jgmenu-init.sh
 
 SCRIPTS_PYTHON = jgmenu-pmenu.py jgmenu-unity-hack.py
@@ -26,20 +30,26 @@ OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
 	unix_sockets.o bl.o cache.o back.o terminal.o restart.o theme.o \
 	gtkconf.o font.o args.o widgets.o pm.o socket.o
 
-LIB_H = $(shell find . -name '*.h' -print)
-
+SRCS = $(patsubst %.o,%.c,$(OBJS))
 JGMENU_LIB = libjgmenu.a
 
 all: $(PROGS)
-	@echo ""
-	@echo "Warning: The CLI has changed. Please read release notes."
 
-$(PROGS): % : $(OBJS) %.o
+jgmenu: jgmenu.o $(OBJS)
+jgmenu-xdg: jgmenu-xdg.o util.o sbuf.o xdgdirs.o xdgapps.o argv-buf.o
+jgmenu-ob: jgmenu-ob.o util.o sbuf.o
+jgmenu-socket: jgmenu-socket.o util.o sbuf.o unix_sockets.o socket.o
+jgmenu-lx: jgmenu-lx.o util.o sbuf.o xdgdirs.o argv-buf.o back.o
+$(PROGS):
 	$(QUIET_LINK)$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-%.o: %.c $(LIB_H)
-	$(QUIET_CC)$(CC) $(CFLAGS) -c $*.c
+%.o : %.c
+%.o : %.c $(DEPDIR)/%.d
+	$(QUIET_CC)$(CC) $(DEPFLAGS) $(CFLAGS) -c $<
+	@mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 
+$(DEPDIR)/%.d: ;
+.PRECIOUS: $(DEPDIR)/%.d
 
 install: $(PROGS)
 	@install -d $(DESTDIR)$(bindir)
@@ -60,7 +70,8 @@ endif
 	@./scripts/create_desktop_file.sh $(DESTDIR)$(prefix)
 
 clean:
-	@$(RM) $(PROGS) *.o *.a
+	@$(RM) $(PROGS) *.o *.a $(DEPDIR)/*.d
+	@$(RM) -r .d/ 
 	@$(MAKE) --no-print-directory -C tests/ clean
 	@$(MAKE) --no-print-directory -C tests/helper/ clean
 
@@ -77,3 +88,5 @@ ex:
 check:
 	@./scripts/checkpatch-wrapper.sh *.c
 	@./scripts/checkpatch-wrapper.sh *.h
+
+include $(wildcard $(patsubst %,$(DEPDIR)/%.d,$(basename $(SRCS))))

@@ -10,3 +10,5 @@ jgmenu-socket
 README.html
 config.mk
 valgrind.log
+binsiz.log
+.d/
