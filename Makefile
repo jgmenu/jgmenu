@@ -6,6 +6,9 @@
 # Define PYTHON3_POLYGLOT=1 if '#!/usr/bin/env python3' is not going to work
 # on your system.
 #
+# Define NO_LX=1 if you do not want to build jgmenu-lx (which requires
+# libmenu-cache >=v1.1)
+#
 
 VER      = $(shell ./scripts/version-gen.sh)
 
@@ -22,7 +25,10 @@ SCRIPTS_SHELL  = jgmenu_run jgmenu-init.sh
 
 SCRIPTS_PYTHON = jgmenu-pmenu.py jgmenu-unity-hack.py
 
-PROGS	 = jgmenu jgmenu-xdg jgmenu-ob jgmenu-socket jgmenu-lx
+PROGS	 = jgmenu jgmenu-xdg jgmenu-ob jgmenu-socket
+ifneq ($(NO_LX),1)
+PROGS += jgmenu-lx
+endif
 
 OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
         icon.o xpm-loader.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o \
@@ -39,7 +45,9 @@ jgmenu: jgmenu.o $(OBJS)
 jgmenu-xdg: jgmenu-xdg.o util.o sbuf.o xdgdirs.o xdgapps.o argv-buf.o
 jgmenu-ob: jgmenu-ob.o util.o sbuf.o
 jgmenu-socket: jgmenu-socket.o util.o sbuf.o unix_sockets.o socket.o
+ifneq ($(NO_LX),1)
 jgmenu-lx: jgmenu-lx.o util.o sbuf.o xdgdirs.o argv-buf.o back.o
+endif
 $(PROGS):
 	$(QUIET_LINK)$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
