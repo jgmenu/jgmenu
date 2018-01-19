@@ -10,6 +10,7 @@
 #include "list.h"
 #include "back.h"
 #include "xdgdirs.h"
+#include "fmt.h"
 
 struct menu {
 	struct sbuf buf;
@@ -73,8 +74,16 @@ static void process_app(MenuCacheApp *app)
 {
 	/* TODO: Check visibility flag here too */
 	char *p = NULL;
+	static struct sbuf s;
+	static int inited;
 
-	sbuf_addstr(&cur->buf, menu_cache_item_get_name(MENU_CACHE_ITEM(app)));
+	if (!inited) {
+		sbuf_init(&s);
+		inited = 1;
+	}
+	fmt_name(&s, menu_cache_item_get_name(MENU_CACHE_ITEM(app)),
+		 menu_cache_app_get_generic_name(MENU_CACHE_APP(app)));
+	sbuf_addstr(&cur->buf, s.buf);
 	sbuf_addstr(&cur->buf, ",");
 	if (menu_cache_app_get_use_terminal(app))
 		sbuf_addstr(&cur->buf, "^term(");

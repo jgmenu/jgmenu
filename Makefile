@@ -34,7 +34,7 @@ OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
         icon.o xpm-loader.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o \
 	filter.o compat.o hashmap.o lockfile.o argv-buf.o t2conf.o t2env.o \
 	unix_sockets.o bl.o cache.o back.o terminal.o restart.o theme.o \
-	gtkconf.o font.o args.o widgets.o pm.o socket.o
+	gtkconf.o font.o args.o widgets.o pm.o socket.o fmt.o
 
 SRCS = $(patsubst %.o,%.c,$(OBJS))
 JGMENU_LIB = libjgmenu.a
@@ -46,7 +46,7 @@ jgmenu-xdg: jgmenu-xdg.o util.o sbuf.o xdgdirs.o xdgapps.o argv-buf.o
 jgmenu-ob: jgmenu-ob.o util.o sbuf.o
 jgmenu-socket: jgmenu-socket.o util.o sbuf.o unix_sockets.o socket.o
 ifneq ($(NO_LX),1)
-jgmenu-lx: jgmenu-lx.o util.o sbuf.o xdgdirs.o argv-buf.o back.o
+jgmenu-lx: jgmenu-lx.o util.o sbuf.o xdgdirs.o argv-buf.o back.o fmt.o
 endif
 $(PROGS):
 	$(QUIET_LINK)$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
