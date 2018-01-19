@@ -11,15 +11,17 @@ CFLAGS  += -Wextra -Wdeclaration-after-statement -Wno-format-zero-length \
 	   -Wstrict-prototypes -Wunused -Wvla -Wunused-result
 CFLAGS  += -Wno-unused-parameter
 CFLAGS  += -DVERSION='"$(VER)"'
-CFLAGS  += `pkg-config cairo pango pangocairo librsvg-2.0 --cflags`
-CFLAGS  += `xml2-config --cflags`
-CFLAGS  += `pkg-config --cflags glib-2.0 libmenu-cache`
 
-LIBS  = `pkg-config x11 xinerama cairo pango pangocairo librsvg-2.0 --libs`
-LIBS += `xml2-config --libs`
-LIBS += `pkg-config --libs glib-2.0 libmenu-cache`
-LIBS += -pthread
-LIBS += -lrt
+jgmenu:     CFLAGS  += `pkg-config cairo pango pangocairo librsvg-2.0 --cflags`
+jgmenu-ob:  CFLAGS  += `xml2-config --cflags`
+jgmenu-xdg: CFLAGS  += `xml2-config --cflags`
+jgmenu-lx:  CFLAGS  += `pkg-config --cflags glib-2.0 libmenu-cache`
+
+jgmenu:     LIBS += `pkg-config x11 xinerama cairo pango pangocairo librsvg-2.0 --libs`
+jgmenu:     LIBS += -pthread -lrt
+jgmenu-ob:  LIBS += `xml2-config --libs`
+jgmenu-xdg: LIBS += `xml2-config --libs`
+jgmenu-lx:  LIBS += `pkg-config --libs glib-2.0 libmenu-cache`
 
 LDFLAGS += $(LIBS)
 
