@@ -73,6 +73,7 @@ color_sel_bg        = #ffffff 20
 color_sel_fg        = #eeeeee 100
 color_sel_border    = #eeeeee 8
 color_sep_fg        = #ffffff 20
+csv_name_format     = %n (%g)
 EOF
 }
 

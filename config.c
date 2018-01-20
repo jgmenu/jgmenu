@@ -74,6 +74,8 @@ void config_set_defaults(void)
 	parse_hexstr("#eeeeee 100", config.color_sel_fg);
 	parse_hexstr("#eeeeee 8", config.color_sel_border);
 	parse_hexstr("#ffffff 20", config.color_sep_fg);
+
+	config.csv_name_format	   = NULL; /* Set in fmt.c */
 }
 
 void config_cleanup(void)
@@ -87,6 +89,7 @@ void config_cleanup(void)
 	xfree(config.icon_theme_fallback);
 	xfree(config.arrow_string);
 	xfree(jgmenurc_file.buf);
+	xfree(config.csv_name_format);
 }
 
 static void process_line(char *line)
@@ -227,6 +230,9 @@ static void process_line(char *line)
 		parse_hexstr(value, config.color_sel_border);
 	} else if (!strcmp(option, "color_sep_fg")) {
 		parse_hexstr(value, config.color_sep_fg);
+	} else if (!strcmp(option, "csv_name_format")) {
+		xfree(config.csv_name_format);
+		config.csv_name_format = xstrdup(value);
 	}
 }
 
@@ -331,4 +337,7 @@ void config_post_process(void)
 		xfree(config.csv_cmd);
 		config.csv_cmd = xstrdup("jgmenu_run ob");
 	}
+
+	if (config.csv_name_format)
+		setenv("JGMENU_NAME_FORMAT", config.csv_name_format, 1);
 }

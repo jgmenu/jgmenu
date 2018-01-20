@@ -62,6 +62,8 @@ struct config {
 	double color_sel_fg[4];
 	double color_sel_border[4];
 	double color_sep_fg[4];
+
+	char *csv_name_format;
 };
 
 extern struct config config;

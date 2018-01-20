@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 14 December, 2017
+% 20 January, 2017
 
 # NAME
 
@@ -364,6 +364,16 @@ color_sel_bg = __color__ (default #ffffff 20)
 color_sel_fg = __color__ (default #eeeeee 100)  
 color_sel_border = __color__ (default #eeeeee 8)  
 color_sep_fg = __color__ (default #ffffff 20)  
+
+csv_name_format = __string__ (default `%n (%g)`)  
+
+    Defines the format of the *name* field for CSV generators  
+    (currently only applicable to lx). It understands the following  
+    two fields:  
+        %n - application name  
+        %g - application generic name  
+    If a *generic name* does not exist or is the same as the *name*,  
+    %n will be used without any formatting.  
 
 # SEE ALSO
 
