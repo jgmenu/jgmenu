@@ -6,9 +6,12 @@
 
 /*
  * %n - application name
- * %g - application generic name in brackets
+ * %g - application generic name
+ *
+ * Note: If a 'generic name' does not exist or is the same as the 'name',
+ *       %n will be returned without formatting
  */
-static const char default_name_format[] = "%n %g";
+static const char default_name_format[] = "%n (%g)";
 
 void fmt_name(struct sbuf *buf, const char *name, const char *generic_name)
 {
@@ -23,9 +26,14 @@ void fmt_name(struct sbuf *buf, const char *name, const char *generic_name)
 		inited = 1;
 	}
 	sbuf_cpy(buf, "");
-	for (p = &format[0]; p; p++) {
-		if (!p || *p == '\0')
-			return;
+	if (!name)
+		return;
+	if (!generic_name || generic_name[0] == '\0' ||
+	    !strcasecmp(name, generic_name)) {
+		sbuf_cpy(buf, name);
+		return;
+	}
+	for (p = &format[0]; p && *p; p++) {
 		if (*p != '%') {
 			sbuf_addch(buf, p[0]);
 			continue;
@@ -35,18 +43,11 @@ void fmt_name(struct sbuf *buf, const char *name, const char *generic_name)
 			--p;
 			break;
 		case 'n':
-			if (!name)
-				continue;
 			sbuf_addstr(buf, name);
 			break;
 		case 'g':
-			if (!generic_name || !name)
-				continue;
-			if (!strcmp(name, generic_name))
-				continue;
-			sbuf_addstr(buf, " (");
 			sbuf_addstr(buf, generic_name);
-			sbuf_addstr(buf, ")");
+			break;
 		case '%':
 		default:
 			break;
