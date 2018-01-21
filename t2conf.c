@@ -61,25 +61,25 @@ static void say(const char *err, ...)
 	fprintf(stderr, "\n");
 }
 
-static int parse_height(const char *h)
+static int parse_height(char *h)
 {
 	char *p;
 
 	p = strchr(h, '%');
 	if (!p)
 		return atoi(h);
-	p = '\0';
+	*p = '\0';
 	return atoi(h) / 100.0 * g_screen_height;
 }
 
-static int parse_width(const char *w)
+static int parse_width(char *w)
 {
 	char *p;
 
 	p = strchr(w, '%');
 	if (!p)
 		return atoi(w);
-	p = '\0';
+	*p = '\0';
 	return atoi(w) / 100.0 * g_screen_width;
 }
 
