@@ -22,7 +22,7 @@ all: $(manpages) $(readmefile)
 $(manpages): % : %.md
 	@echo "    PANDOC    " $^
 	@pandoc -s -t man $^ -o $@
-	@pandoc -s $(variant) --css=$(css) -o $@.html $^
+#	@pandoc -s $(variant) --css=$(css) -o $@.html $^
 
 $(readmefile): ../../README.md
 	@echo "    PANDOC    ../../README.md"

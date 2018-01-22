@@ -27,8 +27,6 @@ Cleanliness
 		- split icon.c into image.c and icon.c
 		- rename functions (e.g. icon_set_name() --> icon_add())
 
-	mv isprog.c jgmenu-path.c (or similar)
-
 	checkout_parent(): consider the case when current window has child(ren)
 
 	free string-lists with builtin sbuf_ function
@@ -37,8 +35,6 @@ Cleanliness
 	closing bracket which we do up-front now anyway)
 
 	Simplify geometry.c by enabling access to config.h variables
-
-	add gcc -M auto-dependencies to Makefile
 
 	in x11-ui.c, create
 		- linked list of windows
@@ -81,8 +77,6 @@ Cleanliness
 
 New features
 ------------
-
-	Add jgmenu-lx generic name and add LX=1 to Makefile
 
 	Highlight correct parent item when submenu open
 
