@@ -30,12 +30,9 @@ ifneq ($(NO_LX),1)
 PROGS += jgmenu-lx
 endif
 
-OBJS =  x11-ui.o config.o util.o geometry.o isprog.o sbuf.o icon-find.o \
-        icon.o xpm-loader.o xdgdirs.o xdgapps.o xsettings.o xsettings-helper.o \
-	filter.o compat.o hashmap.o lockfile.o argv-buf.o t2conf.o t2env.o \
-	unix_sockets.o bl.o cache.o back.o terminal.o restart.o theme.o \
-	gtkconf.o font.o args.o widgets.o pm.o socket.o fmt.o
-
+objects = $(patsubst ./%.c,%.o,$(shell find . -maxdepth 1 -name '*.c' -print))
+mains = $(patsubst %,%.o,$(PROGS))
+OBJS = $(filter-out $(mains),$(objects))
 SRCS = $(patsubst %.o,%.c,$(OBJS))
 JGMENU_LIB = libjgmenu.a
 
@@ -100,5 +97,8 @@ ex:
 check:
 	@./scripts/checkpatch-wrapper.sh *.c
 	@./scripts/checkpatch-wrapper.sh *.h
+
+print-%:
+	@echo '$*=$($*)'
 
 include $(wildcard $(patsubst %,$(DEPDIR)/%.d,$(basename $(SRCS))))
