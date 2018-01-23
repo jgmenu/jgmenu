@@ -24,6 +24,50 @@
 
 struct UI *ui;
 
+static void *win_prop(Window win, Atom property, Atom req_type)
+{
+	Atom actual_type_return;
+	int actual_format_return = 0;
+	unsigned long nitems_return = 0;
+	unsigned long bytes_after_return = 0;
+	unsigned char *prop_return;
+
+	if (!win)
+		return NULL;
+	if (XGetWindowProperty(ui->dpy, win, property, 0, 0x7fffffff, False,
+			       req_type, &actual_type_return,
+			       &actual_format_return, &nitems_return,
+			       &bytes_after_return, &prop_return) != Success)
+		return NULL;
+	return prop_return;
+}
+
+static int workarea(struct area *a)
+{
+	long *wa;
+
+	wa = win_prop(ui->root, XInternAtom(ui->dpy, "_NET_WORKAREA", False),
+		      XA_CARDINAL);
+	if (!wa)
+		return -1;
+	a->x = (int)wa[0];
+	a->y = (int)wa[1];
+	a->w = (int)wa[2];
+	a->h = (int)wa[3];
+	XFree(wa);
+	return 0;
+}
+
+static void print_work_area(void)
+{
+	struct area a = { 0, 0, 0, 0 };
+
+	if (workarea(&a) < 0)
+		info("your WM does not support _NET_WORKAREA");
+	else
+		info("_NET_WORKAREA: (%d,%d,%d,%d)", a.x, a.y, a.w, a.h);
+}
+
 void ui_clear_canvas(void)
 {
 	cairo_save(ui->w[ui->cur].c);
@@ -125,6 +169,8 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height, int monitor)
 	*width = info[i].width;
 	*height = info[i].height;
 	XFree(info);
+	fprintf(stderr, "info: screen: (%d,%d,%d,%d)\n", *x0, *y0, *width, *height);
+	print_work_area();
 }
 
 void set_wm_class(void)
