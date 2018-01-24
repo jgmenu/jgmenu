@@ -45,6 +45,7 @@
 #include "args.h"
 #include "widgets.h"
 #include "pm.h"
+#include "workarea.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -2143,9 +2144,15 @@ int main(int argc, char *argv[])
 		config_read_jgmenurc(arg_config_file);
 
 	config_post_process();
+	/* config variables will not be changed after this point */
+
 	set_font();
 	set_theme();
 	init_geo_variables_from_config();
+
+	/* Set workarea based on _NET_WORKAREA if supported by WM */
+//	if (config.confine_to_workarea)
+		workarea_set();
 
 	if (config.tint2_look) {
 		tint2env_init_socket();

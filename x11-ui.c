@@ -42,7 +42,7 @@ static void *win_prop(Window win, Atom property, Atom req_type)
 	return prop_return;
 }
 
-static int workarea(struct area *a)
+int ui_get_workarea(struct area *a)
 {
 	long *wa;
 
@@ -56,16 +56,6 @@ static int workarea(struct area *a)
 	a->h = (int)wa[3];
 	XFree(wa);
 	return 0;
-}
-
-static void print_work_area(void)
-{
-	struct area a = { 0, 0, 0, 0 };
-
-	if (workarea(&a) < 0)
-		info("your WM does not support _NET_WORKAREA");
-	else
-		info("_NET_WORKAREA: (%d,%d,%d,%d)", a.x, a.y, a.w, a.h);
 }
 
 void ui_clear_canvas(void)
@@ -151,26 +141,24 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height, int monitor)
 	int i, n, x, y, di;
 	unsigned int du;
 	Window dw;
-	XineramaScreenInfo *info;
+	XineramaScreenInfo *screen_info;
 
-	info = XineramaQueryScreens(ui->dpy, &n);
-	BUG_ON(!info);
+	screen_info = XineramaQueryScreens(ui->dpy, &n);
+	BUG_ON(!screen_info);
 	XQueryPointer(ui->dpy, ui->root, &dw, &dw, &x, &y, &di, &di, &du);
 	for (i = 0; i < n; i++)
-		if (INTERSECT(x, y, 1, 1, info[i]))
+		if (INTERSECT(x, y, 1, 1, screen_info[i]))
 			break;
 	if (monitor) {
 		if (monitor > n)
 			die("cannot connect to monitor '%d' (max %d)", monitor, n);
 		i = monitor - 1;
 	}
-	*x0 = info[i].x_org;
-	*y0 = info[i].y_org;
-	*width = info[i].width;
-	*height = info[i].height;
-	XFree(info);
-	fprintf(stderr, "info: screen: (%d,%d,%d,%d)\n", *x0, *y0, *width, *height);
-	print_work_area();
+	*x0 = screen_info[i].x_org;
+	*y0 = screen_info[i].y_org;
+	*width = screen_info[i].width;
+	*height = screen_info[i].height;
+	XFree(screen_info);
 }
 
 void set_wm_class(void)

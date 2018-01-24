@@ -44,6 +44,7 @@ struct UI {
 
 extern struct UI *ui;
 
+int ui_get_workarea(struct area *a);
 void ui_clear_canvas(void);
 void grabkeyboard(void);
 void grabpointer(void);
