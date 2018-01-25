@@ -2151,7 +2151,7 @@ int main(int argc, char *argv[])
 	init_geo_variables_from_config();
 
 	/* Set workarea based on _NET_WORKAREA if supported by WM */
-//	if (config.confine_to_workarea)
+	if (config.confine_to_workarea)
 		workarea_set();
 
 	if (config.tint2_look) {

@@ -358,6 +358,15 @@ void geo_set_use_tint2_vars(int use)
 	use_tint2_vars = use;
 }
 
+void geo_set_screen_area(struct area a)
+{
+	screen_x0 = a.x;
+	screen_y0 = a.y;
+	screen_width = a.w;
+	screen_height = a.h;
+	geo_update();
+}
+
 /*********************************************************************/
 
 int geo_get_menu_x0(void)
