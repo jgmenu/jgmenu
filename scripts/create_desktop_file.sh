@@ -50,5 +50,3 @@ printf "%b\n" "Icon=${JGMENU_DESKTOP_ICON}" >>${dest}
 printf "%b\n" "Categories=Menu" >>${dest}
 printf "%b\n" "MimeType=" >>${dest}
 printf "%b\n" "StartupNotify=false" >>${dest}
-printf "%b\n" "X-GNOME-FullName=Menu" >>${dest}
-printf "%b\n" "X-MultipleArgs=false" >>${dest}
