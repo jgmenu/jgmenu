@@ -37,15 +37,18 @@ mkdir -p ${desktop_dir}
 dest=${desktop_dir}/${desktop_file}
 
 printf "%b\n" "[Desktop Entry]" >${dest}
+printf "%b\n" "Type=Application" >>${dest}
 printf "%b\n" "Encoding=UTF-8" >>${dest}
 printf "%b\n" "Name=jgmenu" >>${dest}
-printf "%b\n" "X-GNOME-FullName=Menu" >>${dest}
+printf "%b\n" "GenericName=Application Menu" >>${dest}
+printf "%b\n" "GenericName[ru]=Меню приложений" >>${dest}
+printf "%b\n" "Comment=Displays menu for launching installed applications" >>${dest}
+printf "%b\n" "Comment[ru]=Отображает меню для запуска установленных приложений" >>${dest}
 printf "%b\n" "Exec=${JGMENU_DESKTOP_EXEC}" >>${dest}
 printf "%b\n" "Terminal=false" >>${dest}
-printf "%b\n" "X-MultipleArgs=false" >>${dest}
-printf "%b\n" "Type=Application" >>${dest}
 printf "%b\n" "Icon=${JGMENU_DESKTOP_ICON}" >>${dest}
 printf "%b\n" "Categories=Menu" >>${dest}
 printf "%b\n" "MimeType=" >>${dest}
 printf "%b\n" "StartupNotify=false" >>${dest}
-
+printf "%b\n" "X-GNOME-FullName=Menu" >>${dest}
+printf "%b\n" "X-MultipleArgs=false" >>${dest}
