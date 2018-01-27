@@ -26,10 +26,9 @@ void config_set_defaults(void)
 	config.terminal_exec	   = xstrdup("x-terminal-emulator");
 	config.terminal_args	   = xstrdup("-e");
 	config.monitor		   = 0;
-	config.confine_to_workarea = 0;
 
 	config.menu_margin_x	   = 0;
-	config.menu_margin_y	   = 31;
+	config.menu_margin_y	   = 0;
 	config.menu_width	   = 200;
 	config.menu_padding_top	   = 5;
 	config.menu_padding_right  = 5;
@@ -121,8 +120,6 @@ static void process_line(char *line)
 		config.terminal_args = xstrdup(value);
 	} else if (!strcmp(option, "monitor")) {
 		xatoi(&config.monitor, value, XATOI_NONNEG, "config.monitor");
-	} else if (!strcmp(option, "confine_to_workarea")) {
-		xatoi(&config.confine_to_workarea, value, XATOI_NONNEG, "config.confine_to_workarea");
 
 	} else if (!strcmp(option, "menu_margin_x")) {
 		xatoi(&config.menu_margin_x, value, XATOI_NONNEG, "config.margin_x");

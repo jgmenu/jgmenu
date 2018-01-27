@@ -2139,7 +2139,14 @@ int main(int argc, char *argv[])
 	if (config.tint2_look)
 		read_tint2rc();
 
-	/* Parse jgmenurc again to overrule tint2rc values */
+	/*
+	 * If _NET_WORKAREA is supported by the Window Manager, set
+	 * config.menu_margin_{x|y} and config.{v|h}align if possible
+	 */
+	workarea_set_margin();
+	workarea_set_panel_pos();
+
+	/* Parse jgmenurc again to overrule tint2rc and workarea values */
 	if (config.tint2_look && !arg_vsimple)
 		config_read_jgmenurc(arg_config_file);
 
@@ -2149,10 +2156,6 @@ int main(int argc, char *argv[])
 	set_font();
 	set_theme();
 	init_geo_variables_from_config();
-
-	/* Set workarea based on _NET_WORKAREA if supported by WM */
-	if (config.confine_to_workarea)
-		workarea_set();
 
 	if (config.tint2_look) {
 		tint2env_init_socket();
