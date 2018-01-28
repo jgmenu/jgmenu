@@ -806,28 +806,52 @@ void launch_menu_at_pointer(void)
 	int di;
 	unsigned int du;
 	struct point pos;
+	struct area wa;
 
 	XQueryPointer(ui->dpy, DefaultRootWindow(ui->dpy), &dw, &dw, &di, &di,
 		      &pos.x, &pos.y, &du);
-	if (pos.x < geo_get_screen_width() + geo_get_screen_x0() -
-	    geo_get_menu_width()) {
+
+	/* We use config.menu_{v,h}align to tell us where the panel is */
+	if (config.menu_valign == TOP)
+		wa.y = geo_get_screen_y0() + config.menu_margin_y;
+	else
+		wa.y = geo_get_screen_y0();
+	wa.h = geo_get_screen_height() - config.menu_margin_y;
+
+	if (config.menu_halign == LEFT)
+		wa.x = geo_get_screen_x0() + config.menu_margin_x;
+	else
+		wa.x = geo_get_screen_x0();
+	wa.w = geo_get_screen_width() - config.menu_margin_x;
+
+	if (pos.x < wa.w + wa.x - geo_get_menu_width()) {
 		geo_set_menu_halign(LEFT);
+		if (config.menu_halign == LEFT && pos.x < config.menu_margin_x)
+			pos.x = config.menu_margin_x;
 		geo_set_menu_margin_x(pos.x);
 	} else {
 		geo_set_menu_halign(RIGHT);
+		if (config.menu_halign == RIGHT && pos.x > wa.w)
+			pos.x = wa.w;
 		geo_set_menu_margin_x(geo_get_screen_width() - pos.x);
 	}
 
-	if (pos.y < geo_get_screen_height() + geo_get_screen_y0() -
-	    geo_get_menu_height()) {
+	if (pos.y < wa.h + wa.y - geo_get_menu_height()) {
 		geo_set_menu_valign(TOP);
+		if (config.menu_valign == TOP && pos.y < config.menu_margin_y)
+			pos.y = config.menu_margin_y;
 		geo_set_menu_margin_y(pos.y);
 	} else if (geo_get_menu_height() < pos.y) {
 		geo_set_menu_valign(BOTTOM);
+		if (config.menu_valign == BOTTOM && pos.y > wa.h)
+			pos.y = wa.h;
 		geo_set_menu_margin_y(geo_get_screen_height() - pos.y);
 	} else {
 		geo_set_menu_valign(BOTTOM);
-		geo_set_menu_margin_y(0);
+		if (config.menu_valign == BOTTOM)
+			geo_set_menu_margin_y(config.menu_margin_y);
+		else
+			geo_set_menu_margin_y(0);
 	}
 	set_submenu_width();
 }
