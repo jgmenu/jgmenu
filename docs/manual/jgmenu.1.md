@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 20 January, 2017
+% 29 January, 2017
 
 # NAME
 
@@ -34,7 +34,7 @@ used around the whole field in the format aaa,"""bbb"""
 
 For example:
 
-    foo,"""^pipe(find /usr/share/pixmaps -printf '%f,display %p,%p\n')"""
+    foo,"""^pipe(find . -printf '%f,display %p,%p\n')"""
 
 The following mark-up is supported in the *description* field:
 
@@ -102,6 +102,7 @@ Icons will be displayed if the third field is populated; for example:
 The user interface is generally pretty intuitive. Here follow mouse  
 and keyboard events which are not so obvious:  
 
+  - F5 - restart  
   - F10 - force quit  
   - Right-click - return to parent menu (in single window mode)  
   - Backspace - return to parent menu (in single window mode)  
@@ -236,8 +237,8 @@ monitor = __integer__ (default 0)
     If 0, the menu will be launched on the monitor where the mouse  
     is.  
 
-menu_margin_x = __integer__ (default 2)  
-menu_margin_y = __integer__ (default 32)  
+menu_margin_x = __integer__ (default 0)  
+menu_margin_y = __integer__ (default 0)  
 menu_width = __integer__ (default 200)  
 menu_padding_top = __integer__ (default 5)  
 menu_padding_right = __integer__ (default 5)  
