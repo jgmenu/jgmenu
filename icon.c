@@ -13,6 +13,7 @@
  */
 
 #include <librsvg/rsvg.h>
+#include <png.h>
 
 #include "icon.h"
 #include "icon-find.h"
@@ -57,13 +58,35 @@ void icon_set_size(int size)
 	cache_set_icon_size(size);
 }
 
+#define PNG_BYTES_TO_CHECK (4)
+static int ispng(const char *filename)
+{
+	unsigned char header[PNG_BYTES_TO_CHECK];
+	FILE *fp;
+
+	fp = fopen(filename, "rb");
+	if (!fp)
+		return 0;
+	if (fread(header, 1, PNG_BYTES_TO_CHECK, fp) != PNG_BYTES_TO_CHECK)
+		return 0;
+	if (png_sig_cmp(header, (png_size_t)0, PNG_BYTES_TO_CHECK)) {
+		warn("file '%s' is not a recognised png file", filename);
+		fclose(fp);
+		return 0;
+	}
+	fclose(fp);
+	return 1;
+}
+
 static cairo_surface_t *get_png_icon(const char *filename)
 {
 	cairo_surface_t *image = NULL;
 
+	if (!ispng(filename))
+		return NULL;
 	image = cairo_image_surface_create_from_png(filename);
 	if (cairo_surface_status(image)) {
-		fprintf(stderr, "warning: cannot find icon %s\n", filename);
+		warn("error reading '%s'", filename);
 		cairo_surface_destroy(image);
 		return NULL;
 	}
