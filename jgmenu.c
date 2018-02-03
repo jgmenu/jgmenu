@@ -1497,28 +1497,14 @@ static int is_outside_menu_windows(XMotionEvent **e)
 /* Pointer vertical offset (not sure why this is needed) */
 #define MOUSE_FUDGE 3
 
-void mouse_event(XEvent *e)
+void mouse_release(XEvent *e)
 {
-	XMotionEvent *xme;
 	XButtonReleasedEvent *ev;
 	struct point mouse_coords;
-	int outside_menu_windows = 0;
 
 	mouse_coords = mousexy();
 	mouse_coords.y -= MOUSE_FUDGE;
-
-	xme = (XMotionEvent *)e;
-	if (is_outside_menu_windows(&xme))
-		outside_menu_windows = 1;
-
 	ev = &e->xbutton;
-
-	/* left/right-click outside menu windows */
-	if ((ev->button == Button1 || ev->button == Button3) &&
-	    outside_menu_windows) {
-		hide_or_exit();
-		return;
-	}
 
 	/* right-click */
 	if (ev->button == Button3) {
@@ -1565,6 +1551,29 @@ void mouse_event(XEvent *e)
 			ui_win_del_beyond(ui->cur);
 		action_cmd(menu.sel->cmd);
 	}
+}
+
+static int mouse_outside(XEvent *e)
+{
+	XMotionEvent *xme;
+	XButtonReleasedEvent *ev;
+	struct point mouse_coords;
+	int outside_menu_windows = 0;
+
+	mouse_coords = mousexy();
+	mouse_coords.y -= MOUSE_FUDGE;
+
+	xme = (XMotionEvent *)e;
+	if (is_outside_menu_windows(&xme))
+		outside_menu_windows = 1;
+
+	ev = &e->xbutton;
+
+	/* left/right-click outside menu windows */
+	if ((ev->button == Button1 || ev->button == Button3) &&
+	    outside_menu_windows)
+		return 1;
+	return 0;
 }
 
 static double timespec_to_sec(struct timespec *ts)
@@ -1954,6 +1963,8 @@ void run(void)
 		}
 
 		if (XPending(ui->dpy)) {
+			static int close_pending;
+
 			XNextEvent(ui->dpy, &ev);
 
 			/* UTF-8 support */
@@ -1965,7 +1976,25 @@ void run(void)
 				XRefreshKeyboardMapping(&ev.xmapping);
 				break;
 			case ButtonRelease:
-				mouse_event(&ev);
+				if (close_pending) {
+					close_pending = 0;
+					hide_or_exit();
+					break;
+				}
+				mouse_release(&ev);
+				break;
+			case ButtonPress:
+				/*
+				 * tint2 buttons/execps take action on
+				 * "ButtonRelease". We want to be able to use
+				 * these to both open and close the menu.
+				 * When passing mouse events through tint2 to
+				 * the WM, we want menu to be able to repsond
+				 * to "ButtonPress" without immediately dying
+				 * on "ButtonRelease".
+				 */
+				if (mouse_outside(&ev))
+					close_pending = 1;
 				break;
 			case KeyPress:
 				key_event(&ev.xkey);
