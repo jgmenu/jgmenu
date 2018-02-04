@@ -951,9 +951,8 @@ static void awake_menu(void)
 		launch_menu_at_pointer();
 		resize();
 	}
-	/* for speed improvement, set tint2_look = 0 */
+	tint2env_read_socket();
 	if (config.tint2_look && !config.at_pointer) {
-		tint2env_read_socket();
 		tint2_align();
 		update(1);
 	}
