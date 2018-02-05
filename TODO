@@ -1,6 +1,32 @@
 TODO
 ====
 
+Current Focus
+-------------
+
+Update t0004-speedtest and then add unicode check.
+
+Check .desktop files are not Unicode in order to avoid segfault
+(e.g. extace.desktop)
+
+Refactor config.c (incl "struct config jgmenurc") to:
+  - avoid having to load it twice from jgmenu.c
+  - enable more sane config options wrt menu_margin_{x,y}, _NET_WORKAREA and
+    tint2 environment variables
+
+Rename screen{_x0,_y0...} variables to simply screen (as a struct area)
+
+Do we remove geo_set_screen_area() again?
+
+Replace popen() with something that takes into account NOCHLWAIT and avoid
+a shell invocation
+
+Investigate duplicate .desktop entries on Raspberry Pi and nixOS
+
+Replace desktop script with a .desktop file.
+
+Add icon
+
 Key changes before v1.0
 -----------------------
 
@@ -11,9 +37,14 @@ Key changes before v1.0
 
 	Add widgets including icon, rect and text
 
-	Add 4th field - comment (e.g. from generic name)
+	Review fields
+		1: name
+		2: command (begin with @ to aviod sh -c '' wrapper and therefore adhere to XDG spec)
+		3: icon
+		4: comment (for pop up or item spanning two lines)
+		5: working directory (start in $HOME be default)
+		6: meta data (e.g. categories to enable filter buttons)
 
-	Add 5th field - meta (e.g. with categories to enable filter buttons)
 	Consider adding a ^filter()
 
 Cleanliness
@@ -36,10 +67,9 @@ Cleanliness
 
 	Simplify geometry.c by enabling access to config.h variables
 
-	in x11-ui.c, create
+	In x11-ui.c, create
 		- linked list of windows
 		- 'static Window active_window' (instead of ui->w[ui->cur].win)
-		- Write --help message.
 
 	Pipemenu
 		- check duplicate tag names
@@ -60,8 +90,6 @@ Cleanliness
 
 	Remove spawn from config (make it args_ instead).
 
-	Draw diagrams of variables
-
 	Replace strdups+free with x-alternatives
 		replace various warn() with BUG_ON
 
@@ -75,8 +103,10 @@ Cleanliness
 
 	Remove harded coded variables (such as 22, etc)
 
-New features
-------------
+Improvements / New features
+---------------------------
+
+	Parse polybar config files
 
 	Highlight correct parent item when submenu open
 
@@ -97,14 +127,9 @@ New features
 		- Check tint2rc 'modified time' and re-read on change
 		- Consider the same for jgmenurc and tint2-sessionfile (bl)
 
-	Add support for "fixed-position" items such as icons/images and
-	shapes (incl search box)
-
-	Explore pango markup
+	Pango markup
 
 	Add menu_height config option
-
-	Set width when filter applied (long items don't currently fit)
 
 	Add CENTER to menu_halign and menu_valign
 

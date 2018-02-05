@@ -5,12 +5,12 @@ Install
 
 | OS               | command                   | repo                 |
 | :---             | :---                      | :---                 |
-| BunsenLabs Linux | apt-get install jgmenu    | [backports](http://eu.pkg.bunsenlabs.org/debian/pool/main/j/jgmenu/) |
-| Arch Linux       | git clone https://aur.archlinux.org/jgmenu.git/ && cd jgmenu && makepkg -si | [AUR package](https://aur.archlinux.org/packages/jgmenu/) |
+| Arch Linux       | pacman -S jgmenu          | [community](https://www.archlinux.org/packages/community/x86_64/jgmenu/) |
 | ArchLabs Linux   | pacman -S jgmenu          | [github](https://github.com/ARCHLabs/archlabs_repo/tree/master/x86_64) |
-| Void Linux       | xbps-install -S jgmenu    | [Official package](https://github.com/voidlinux/void-packages/blob/master/srcpkgs/jgmenu/template) |
+| BunsenLabs Linux | apt-get install jgmenu    | [backports](http://eu.pkg.bunsenlabs.org/debian/pool/main/j/jgmenu/) |
 | NixOS            |                           | [package](https://github.com/NixOS/nixpkgs/tree/master/pkgs/applications/misc/jgmenu) |
-| Slackware        |                           | [SlackBuilds](https://slackbuilds.org/repository/14.2/desktop/jgmenu/) |
+| Slackware        |                           | [slackbuilds](https://slackbuilds.org/repository/14.2/desktop/jgmenu/) |
+| Void Linux       | xbps-install -S jgmenu    | [package](https://github.com/voidlinux/void-packages/blob/master/srcpkgs/jgmenu/template) |
 
 ### Build and install from scratch
 
