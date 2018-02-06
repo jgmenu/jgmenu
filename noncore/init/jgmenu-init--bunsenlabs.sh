@@ -8,9 +8,9 @@ EOF
 
 if test -e ~/.config/openbox/menu.xml
 then
-	printf "%s\n" "csv_cmd             = jgmenu_run parse-ob ~/.config/openbox/menu.xml"  >>"${jgmenurc}"
+	printf "%s\n" "csv_cmd             = ob"  >>"${jgmenurc}"
 else
-	printf "%s\n" "csv_cmd             = jgmenu_run parse-pmenu"  >>"${jgmenurc}"
+	printf "%s\n" "csv_cmd             = pmenu"  >>"${jgmenurc}"
 fi
 
 cat <<'EOF' >>"${jgmenurc}"
