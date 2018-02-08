@@ -1,27 +1,23 @@
 #!/bin/sh
 
 tmp_file=$(mktemp)
-N_ITEMS=1000
+n_items=5000
 
-printf "Creating temporary file with ${N_ITEMS} items...\n"
-
-for i in $(seq "${N_ITEMS}")
+for i in $(seq "${n_items}")
 do
-
-# NO ICON
-#	echo "foo ${i},bar${i}" >> ${tmp_file}
-
-# PNG
-#	echo "foo ${i},bar${i},firefox" >> ${tmp_file}
-
-# SVG
 	echo "foo ${i},bar${i},jabber" >> ${tmp_file}
 done
 
-printf "Press key to run jgmenu\n"
-read a
+printf "%b\n" "$0: speed test of ${n_items} items"
 
-#cat ${tmp_file} | ../jgmenu --icon-size=22 --config-file=t0004-jgmenurc
-cat ${tmp_file} | ../jgmenu --icon-size=0 --config-file=t0004-jgmenurc
+start=$(date +%s.%N)
+
+../jgmenu --csv-file="${tmp_file}" \
+	--icon-size=0 \
+	--vsimple \
+	--die-when-loaded 2>/dev/null
+
+dur=$(printf "%b\n" "$(date +%s.%N) - $start" | bc)
+printf "Duration=%.3fs\n" "${dur}"
 
 rm ${tmp_file}
