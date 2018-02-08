@@ -46,6 +46,7 @@
 #include "widgets.h"
 #include "pm.h"
 #include "workarea.h"
+#include "charset.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -1122,11 +1123,16 @@ void read_csv_file(FILE *fp)
 		buf[BUFSIZ - 1] = '\0';
 		if (strlen(buf) == BUFSIZ - 1)
 			die("item %d is too long", i);
-		p = strchr(buf, '\n');
+		p = strrchr(buf, '\n');
 		if (p)
 			*p = '\0';
 		else
 			die("item %d was not correctly terminated with a '\\n'", i);
+		if (!utf8_validate(buf, p - &buf[0])) {
+			warn("line not utf-8 compatible: '%s'", buf);
+			i--;
+			continue;
+		}
 		if ((buf[0] == '#') ||
 		    (buf[0] == '\n') ||
 		    (buf[0] == '\0')) {
