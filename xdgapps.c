@@ -12,6 +12,7 @@
 #include "util.h"
 #include "sbuf.h"
 #include "list.h"
+#include "charset.h"
 
 struct list_head desktop_files_all;
 struct list_head desktop_files_filtered;
@@ -20,9 +21,9 @@ struct list_head directory_files;
 /* "${HOME}/.local/share", "/usr/share", etc. */
 static struct list_head xdg_data_dirs;
 
-static void parse_directory_file(FILE *fp, const char *filename)
+static int parse_directory_file(FILE *fp, const char *filename)
 {
-	char line[8192];
+	char line[BUFSIZ];
 	char *p;
 	struct directory_file_data *tmp;
 
@@ -31,9 +32,14 @@ static void parse_directory_file(FILE *fp, const char *filename)
 	tmp->filename = strdup(filename);
 
 	while (fgets(line, sizeof(line), fp)) {
-		p = strchr(line, '\n');
-		if (p)
-			*p = '\0';
+		if (line[0] == '\0')
+			continue;
+		p = strrchr(line, '\n');
+		if (!p)
+			continue;
+		*p = '\0';
+		if (!utf8_validate(line, p - &line[0]))
+			return -1;
 
 		if (!strncmp("Name=", line, 5))
 			tmp->name = strdup(line + 5);
@@ -42,20 +48,26 @@ static void parse_directory_file(FILE *fp, const char *filename)
 	}
 
 	list_add_tail(&tmp->list, &directory_files);
+	return 0;
 }
 
-static void parse_desktop_file(FILE *fp)
+static int parse_desktop_file(FILE *fp)
 {
-	char line[8192];
+	char line[BUFSIZ];
 	char *p;
 	struct desktop_file_data *tmp;
 
 	tmp = xcalloc(1, sizeof(struct desktop_file_data));
 
 	while (fgets(line, sizeof(line), fp)) {
-		p = strchr(line, '\n');
-		if (p)
-			*p = '\0';
+		if (line[0] == '\0')
+			continue;
+		p = strrchr(line, '\n');
+		if (!p)
+			continue;
+		*p = '\0';
+		if (!utf8_validate(line, p - &line[0]))
+			return -1;
 
 		/* A bit crude, but prevents loading other Exec values */
 		if ((line[0] == '[') && strcmp(line, "[Desktop Entry]"))
@@ -79,12 +91,14 @@ static void parse_desktop_file(FILE *fp)
 	}
 
 	list_add_tail(&tmp->full_list, &desktop_files_all);
+	return 0;
 }
 
 static void process_file(char *filename, const char *path, int isdir)
 {
 	FILE *fp;
-	char fullname[8192];
+	char fullname[BUFSIZ];
+	int ret;
 
 	strncpy(fullname, path, strlen(path));
 	strncpy(fullname + strlen(path), filename, strlen(filename) + 1);
@@ -94,10 +108,12 @@ static void process_file(char *filename, const char *path, int isdir)
 		return;
 	}
 	if (isdir)
-		parse_directory_file(fp, filename);
+		ret = parse_directory_file(fp, filename);
 	else
-		parse_desktop_file(fp);
+		ret = parse_desktop_file(fp);
 	fclose(fp);
+	if (ret < 0)
+		warn("file '%s' is not utf-8 compatible", filename);
 }
 
 /*

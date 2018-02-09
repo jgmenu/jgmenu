@@ -4,13 +4,11 @@ TODO
 Current Focus
 -------------
 
-Update t0004-speedtest and then add unicode check.
-
 Fix socket bug in main() too. + write comment to explain what's happening
 
 check if argv[1] is init before parsing args
 
-Check .desktop files are not Unicode in order to avoid segfault
+lx: check .desktop files are not Unicode in order to avoid segfault
 (e.g. extace.desktop)
 
 Refactor config.c (incl "struct config jgmenurc") to:
