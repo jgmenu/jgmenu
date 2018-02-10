@@ -959,6 +959,7 @@ static void awake_menu(void)
 	}
 	XMapWindow(ui->dpy, ui->w[ui->cur].win);
 	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
+	XRaiseWindow(ui->dpy, ui->w[ui->cur].win);
 	grabkeyboard();
 	grabpointer();
 }
