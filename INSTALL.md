@@ -18,6 +18,7 @@ Install
 git clone https://github.com/johanmalm/jgmenu.git
 cd jgmenu
 ./scripts/install-debian-dependencies.sh  # or equivalent
+echo "NO_LX=1" >> config.mk               # unless you have libmenu-cache v1.1+
 make
 sudo make install
 ```
