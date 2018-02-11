@@ -1,3 +1,11 @@
+  * Move debian/ directory to project roo2
+jgmenu (0.8.1-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+  * Set NO_LX=1 before buliding
+
+ -- Johan Malm <jgm323@gmail.com>  Sun, 11 Feb 2018 21:34:21 +0000
+
 jgmenu (0.8-1) UNRELEASED; urgency=medium
 
   * New upstream release

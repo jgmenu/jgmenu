@@ -1,0 +1,27 @@
+jgmenu v0.8.1 release notes
+===========================
+
+Updates since v0.8
+------------------
+
+  * Fix bug reported on some tiling managers (e.g. dwm, bspwm) whereby
+    menu is obscured by other windows (issue #51)
+
+  * Survive unicode .desktop files (issue #46)
+
+  * Fix unix socket bug which was present when using a tint2 launcher or
+    button in combination with config options at_pointer=1 or tint2_look=0
+
+  * Add support for opening and closing jgmenu using openbox root window
+    mouse clicks passed through tint2 panel (issue #21)
+
+  * Check png headers before attempting load images (issue #50)
+
+  * Confine menu to workarea when launching from panel/dock area
+    (i.e. align menu to edge of panel/dock) (issue #21)
+    
+  * lx: support name format for "name" and "generic name" (issue #10)
+    This requires libmenu-cache >=v1.1; use NO_LX=1 to to build without
+    Add config option 'csv_name_format'
+
+  * Add auto dependency generation (-MMD -MP) to Makefile

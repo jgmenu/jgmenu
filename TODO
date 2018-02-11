@@ -20,9 +20,6 @@ Rename screen{_x0,_y0...} variables to simply screen (as a struct area)
 
 Do we remove geo_set_screen_area() again?
 
-Replace popen() with something that takes into account NOCHLWAIT and avoid
-a shell invocation
-
 Investigate duplicate .desktop entries on Raspberry Pi and nixOS
 
 Replace desktop script with a .desktop file.
