@@ -2230,6 +2230,8 @@ int main(int argc, char *argv[])
 	if (!fp)
 		fp = stdin;
 	read_csv_file(fp);
+	if (fp && fp != stdin)
+		fclose(fp);
 	if (config.multi_window)
 		rm_back_items();
 	build_tree();
