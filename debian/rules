@@ -1,7 +1,5 @@
 #!/usr/bin/make -f
 
-export NO_LX=1
-
 %:
 	dh $@
 
