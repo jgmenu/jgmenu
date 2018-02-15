@@ -1,7 +1,16 @@
 #!/usr/bin/make -f
 
+_LMC_VERSION := $(shell pkg-config --modversion libmenu-cache)
+_JGMENU_NO_LX := $(shell dpkg --compare-versions $(_LMC_VERSION) '<<' 1.1 && echo 1 || echo 0)
+
 %:
 	dh $@
 
+override_dh_auto_configure:
+	true
+
+override_dh_auto_build:
+	dh_auto_build -- NO_LX=$(_JGMENU_NO_LX)
+
 override_dh_auto_install:
-	dh_auto_install -- prefix=/usr
+	dh_auto_install -- prefix=/usr NO_LX=$(_JGMENU_NO_LX)
