@@ -4,9 +4,15 @@ TODO
 Current Focus
 -------------
 
+Makefile: add uninstall
+
+charset.c: do not assert s == e
+
 Fix socket bug in main() too. + write comment to explain what's happening
 
 check if argv[1] is init before parsing args
+
+Reduce size of surfaces (as a result of having removed single window mode)
 
 lx: check .desktop files are not Unicode in order to avoid segfault
 (e.g. extace.desktop)
@@ -28,11 +34,6 @@ Add icon
 
 Key changes before v1.0
 -----------------------
-
-	Remove 'single window mode' and replace with ^root() and ^return()
-	(consider how to set new root using a pipe)
-	This will make code simpler and will reduce memory usage as surfaces
-	can be kept smaller.
 
 	Add widgets including icon, rect and text
 

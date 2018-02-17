@@ -1,0 +1,11 @@
+jgmenu v0.8.2 release notes
+===========================
+
+Updates since v0.8.1
+--------------------
+
+  * Check libmenu-cache version during build. Do not compile lx if
+    libmenu-cache <v1.1 (thanks @2ion for advice on this)
+
+  * Remove single window mode. It will be replaced by a cleaner, more
+    flexible implementation.

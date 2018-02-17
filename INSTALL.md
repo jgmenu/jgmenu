@@ -3,14 +3,16 @@ Install
 
 ### Install from repos
 
-| OS               | command                   | repo                 |
-| :---             | :---                      | :---                 |
-| Arch Linux       | pacman -S jgmenu          | [community](https://www.archlinux.org/packages/community/x86_64/jgmenu/) |
-| ArchLabs Linux   | pacman -S jgmenu          | [github](https://github.com/ARCHLabs/archlabs_repo/tree/master/x86_64) |
-| BunsenLabs Linux | apt-get install jgmenu    | [backports](http://eu.pkg.bunsenlabs.org/debian/pool/main/j/jgmenu/) |
-| NixOS            |                           | [package](https://github.com/NixOS/nixpkgs/tree/master/pkgs/applications/misc/jgmenu) |
-| Slackware        |                           | [slackbuilds](https://slackbuilds.org/repository/14.2/desktop/jgmenu/) |
-| Void Linux       | xbps-install -S jgmenu    | [package](https://github.com/voidlinux/void-packages/blob/master/srcpkgs/jgmenu/template) |
+| Repo                                                                                   | command                |
+| :---                                                                                   | :---                   |
+| [Arch](https://www.archlinux.org/packages/community/x86_64/jgmenu/)                    | pacman -S jgmenu       |
+| [ArchLabs](https://github.com/ARCHLabs/archlabs_repo/tree/master/x86_64)               | pacman -S jgmenu       |
+| [BunsenLabs](http://eu.pkg.bunsenlabs.org/debian/pool/main/j/jgmenu/)                  | apt-get install jgmenu |
+| [NixOS](https://github.com/NixOS/nixpkgs/tree/master/pkgs/applications/misc/jgmenu)    |                        |
+| [Slackware](https://slackbuilds.org/repository/14.2/desktop/jgmenu/)                   |                        |
+| [Void](https://github.com/voidlinux/void-packages/blob/master/srcpkgs/jgmenu/template) | xbps-install -S jgmenu |
+
+[repology](https://repology.org/metapackage/jgmenu/versions)
 
 ### Build and install from scratch
 
@@ -25,8 +27,8 @@ sudo make install
 For subsequent updates, do:
 
 ```bash
-git pull
 make clean
+git pull
 make
 sudo make install
 ```
