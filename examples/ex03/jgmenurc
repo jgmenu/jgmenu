@@ -1,7 +1,6 @@
 # .jgmenurc example
 
 at_pointer          = 1
-multi_window        = 1
 
 menu_margin_x	= 10
 menu_margin_y	= 40

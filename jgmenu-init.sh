@@ -27,7 +27,6 @@ hide_on_startup     = 0
 csv_cmd             = pmenu
 tint2_look          = 1
 at_pointer          = 0
-multi_window        = 1
 terminal_exec       = x-terminal-emulator
 terminal_args       = -e
 monitor             = 0

@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 29 January, 2017
+% 17 February, 2017
 
 # NAME
 
@@ -214,10 +214,6 @@ at_pointer = __boolean__ (default 0)
 
     If enabled, the menu is launched at the pointer position,  
     ignoring `menu_margin_?` and `menu_?align` values.  
-
-multi_window = __boolean__ (default 1)  
-
-    If enabled, submenus open in new windows.  
 
 terminal_exec = __string__ (default x-terminal-emulator)  
 terminal_args = __string__ (default -e)

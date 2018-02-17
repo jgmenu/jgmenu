@@ -110,8 +110,6 @@ static void process_line(char *line)
 		xatoi(&config.tint2_look, value, XATOI_NONNEG, "config.tint2_look");
 	} else if (!strcmp(option, "at_pointer")) {
 		xatoi(&config.at_pointer, value, XATOI_NONNEG, "config.at_pointer");
-	} else if (!strcmp(option, "multi_window")) {
-		xatoi(&config.multi_window, value, XATOI_NONNEG, "config.multi_window");
 	} else if (!strcmp(option, "terminal_exec")) {
 		xfree(config.terminal_exec);
 		config.terminal_exec = xstrdup(value);

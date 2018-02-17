@@ -7,7 +7,6 @@
 #csv_cmd             = pmenu
 tint2_look          = 0
 #at_pointer          = 0
-multi_window         = 1
 #terminal_exec       = x-terminal-emulator
 #terminal_args       = -e
 #

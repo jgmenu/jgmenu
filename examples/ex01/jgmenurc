@@ -8,4 +8,3 @@ color_norm_bg	= #000000 0
 color_norm_fg	= #111111 100
 color_sel_bg	= #2222dd 80
 color_sel_fg	= #eeeeee 100
-multi_window    = 1

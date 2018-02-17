@@ -1,7 +1,5 @@
 # .jgmenurc example
 
-multi_window    = 0
-
 menu_margin_x	= 10
 menu_margin_y	= 40
 menu_width	= 250
