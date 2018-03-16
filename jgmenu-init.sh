@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# `jgmenu_run init` creates/updates jgmenurc
+# 'jgmenu init' creates/updates jgmenurc
 
 tmp_jgmenurc=$(mktemp)
 jgmenurc=~/.config/jgmenu/jgmenurc
@@ -9,7 +9,7 @@ theme=
 
 regression_items="max_items min_items ignore_icon_cache color_noprog_fg \
 color_title_bg show_title search_all_items ignore_xsettings arrow_show \
-read_tint2rc tint2_rules tint2_button"
+read_tint2rc tint2_rules tint2_button multi_window"
 
 usage () {
 	printf "usage: jgmenu init [<options>]\n"
@@ -80,27 +80,44 @@ backup_jgmenurc () {
 	test -e ${jgmenurc} && cp -p ${jgmenurc} ${jgmenurc_bak}
 }
 
-print_start_msg () {
-	if test -z ${printed+x}
+# strstr <needle> <haystack>
+strstr () {
+	! test -z "$2" && test -z "${2##*$1*}"
+}
+
+# insert_after <file> <pattern> <insert_string>
+insert_after () {
+	local tmp=$(mktemp)
+	local done="n"
+	if ! grep "$2" "$1" >/dev/null 2>&1
 	then
-		printf "%b\n" "Add missing items to config file..."
-		printf "\n\n%b\n\n" "### the items below were added by 'jgmenu_run init'" >> ${jgmenurc}
+		printf "%b\n" "BUG: cannot find pattern $2"
+		return
 	fi
-	printed=1
+	while IFS= read -r line
+	do
+		printf "%b\n" "${line}" >>${tmp}
+		if strstr "$2" "$line" && test "$done" == "n"
+		then
+			printf "%b\n" "$3" >>${tmp}
+			done="y"
+		fi
+	done <${1}
+	mv -f ${tmp} $1
 }
 
 amend_jgmenurc () {
-	prefix="      - "
+	local prefix="      - "
 	while IFS= read -r line
 	do
-		v=$(echo ${line%%=*} | tr -d ' ')
-		test -z "${v}" && continue
-		if ! grep "^${v}[\ =]\|[\ #]${v}[\ =]" "${jgmenurc}" >/dev/null 2>&1
+		key=$(echo ${line%%=*} | tr -d ' ')
+		test -z "${key}" && continue
+		if ! grep "^${key}[\ =]\|[\ #]${key}[\ =]" "${jgmenurc}" >/dev/null 2>&1
 		then
-			print_start_msg
 			printf "${prefix}%b\n" "${line}"
-			printf "#%b\n" "${line}" >> ${jgmenurc}
+			insert_after "${jgmenurc}" "$prev" "#$line"
 		fi
+		prev=${key}
 	done <${tmp_jgmenurc}
 }
 
@@ -148,7 +165,7 @@ fi
 # Check for jgmenurc items which are no longer valid
 for r in ${regression_items}
 do
-	if grep ${r} ${jgmenurc} >/dev/null
+	if grep ${r} ${jgmenurc} >/dev/null 2>&1
 	then
 		printf "%b\n" "warning: ${r} is no longer a valid key"
 	fi
