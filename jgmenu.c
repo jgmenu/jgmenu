@@ -2156,6 +2156,7 @@ int main(int argc, char *argv[])
 	int arg_vsimple = 0;
 	FILE *fp = NULL;
 
+	args_exec_commands(argc, argv);
 	init_locale();
 	restart_init(argv);
 	init_sigactions();
@@ -2177,7 +2178,6 @@ int main(int argc, char *argv[])
 			 !strncmp(argv[i], "-h", 2))
 			usage();
 	}
-	args_exec_commands(argc, argv);
 	if (!arg_vsimple)
 		config_read_jgmenurc(arg_config_file);
 	args_parse(argc, argv);
