@@ -2209,6 +2209,7 @@ int main(int argc, char *argv[])
 	if (config.tint2_look && !arg_vsimple)
 		config_read_jgmenurc(arg_config_file);
 
+	args_parse(argc, argv);
 	config_post_process();
 	/* config variables will not be changed after this point */
 
