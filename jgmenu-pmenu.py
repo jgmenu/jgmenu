@@ -395,6 +395,16 @@ def create_menu(arg_append_file, arg_prepend_file):
   print("jgmenu,^tag(pmenu)")
   cat_file(arg_prepend_file)
   tree, categories = load_applications()
+
+  # If no menu-package exists, just dump the apps in the menu-root
+  if len(categories) <= 1:
+    for app in tree['Other']:
+      icon = app["Icon"] if "Icon" in app else ""
+      print(app["Name"] + "," + app["cmd"] + "," + icon)
+    cat_file(arg_append_file)
+    print("warn: no menu package found; displaying apps without directories", file=sys.stderr)
+    return
+
   for c in sorted(tree):
     category = categories[c]
     icon = category["Icon"] if "Icon" in category else "folder"
