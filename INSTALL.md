@@ -77,9 +77,13 @@ Dependencies
 | lx      | glib, libmenu-cache                         |
 
 
-  - A *menu* package  is required for "pmenu", "xdg" and "lx".
-    Examples of *menu* packages include: lxmenu-data, gnome-menus
-    and libgarcon-common (xfce))
+  - A *menu* package  is required for "xdg" and "lx".
+    Examples of *menu* packages include: lxmenu-data, gnome-menus and
+    libgarcon-common (xfce)).
+
+  - "pmenu" uses any installed *menu* packages if they exist, but also
+    works without these by showing applications in the menu's root
+    directory.
 
   - python3 is required by "pmenu"
 
