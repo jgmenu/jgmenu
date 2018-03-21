@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 17 December, 2017  
+% 21 March, 2017  
 
 # NAME
 
@@ -24,12 +24,11 @@ That's it!
 
 There are three points worth noting about what you have just done:  
 
-  - You should see a "Linux/BSD system" menu with categories such as  
-    "Graphics" and "Office". We call this menu "pmenu" (explained  
-    in lesson 7).
+  - You should see a "Linux/BSD system" menu showing installed  
+    applications. We call this menu "pmenu" (explained in lesson 7).  
 
-  - If you use tint2, jgmenu should have imitated its appearance  
-    and aligned with its position.  
+  - If you use tint2, jgmenu should have based its appearance and  
+    alignment on tint2rc.  
 
   - You have just started a long-running application. If you click  
     outside the menu, press escape or select a menu item (using  
@@ -37,8 +36,8 @@ There are three points worth noting about what you have just done:
     still running. It can be awoken (made visible) by executing  
     `jgmenu_run`.
 
-If you do not use tint2 or if you wish to override some of its  
-settings, you can create a config file by running:  
+If you wish to override any default settings, you can create a  
+config file by running:  
 
     jgmenu init
 
@@ -61,13 +60,10 @@ start a new instance depending on if it is already running or not.
 
 This makes it suitable for using with panels and keyboard shortcuts.  
 
-For example, if you use tint2 and want a traditional "start menu",  
-you can do one of the following using tint2conf or by editing tint2rc  
-directly:
+If you use tint2 and want a traditional "start menu", add  
+jgmenu.desktop to the launcher or create a button setting  
 
-  - Add jgmenu.desktop to your launcher  
-
-  - Create a button setting `button_lclick_command = jgmenu_run`  
+    button_lclick_command = jgmenu_run
 
 Lesson 3
 --------
