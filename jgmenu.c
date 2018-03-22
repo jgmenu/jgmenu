@@ -1706,7 +1706,7 @@ void tmr_mouseover_set(int msec)
 		die("timer_settime");
 }
 
-#define TMR_MOUSEOVER_DELAY_MSEC (250)
+#define TMR_MOUSEOVER_DELAY_MSEC (100)
 
 void tmr_mouseover_start(void)
 {
