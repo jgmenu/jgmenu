@@ -239,8 +239,8 @@ void ui_win_init(int x, int y, int w, int h, int max_w, int max_h, const char *f
 {
 	ui->cur = 0;
 	ui_create_window(x, y, w, h);
-	ui_init_canvas(max_w, max_h);
-	ui_init_cairo(max_w, max_h, font);
+	ui_init_canvas(w, h);
+	ui_init_cairo(w, h, font);
 }
 
 void ui_win_add(int x, int y, int w, int h, int max_w, int max_h, const char *font)
