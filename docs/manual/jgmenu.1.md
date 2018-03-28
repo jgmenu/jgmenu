@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 17 February, 2017
+% 28 March, 2017
 
 # NAME
 
@@ -297,10 +297,10 @@ sep_height = __integer__ (default 5)
 
 font = __string__ (unset by default)  
 
-    "font" accepts a string such as "Cantarell 10"  
-    The font description without a specified size unit is  
-    interpreted as "points". If "px" is added, it will be read as  
-    pixels. Using "points" enables consistency with other  
+    *font* accepts a string such as *Cantarell 10* or  
+    *UbuntuCondensed 11*. The font description without a specified  
+    size unit is interpreted as "points". If "px" is added, it will  
+    be read as pixels. Using "points" enables consistency with other  
     applications.
 
 font_fallback = __string__ (default xtg)  
