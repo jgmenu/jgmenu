@@ -60,10 +60,8 @@ start a new instance depending on if it is already running or not.
 
 This makes it suitable for using with panels and keyboard shortcuts.  
 
-If you use tint2 and want a traditional "start menu", add  
-jgmenu.desktop to the launcher or create a button setting  
-
-    button_lclick_command = jgmenu_run
+See https://github.com/johanmalm/jgmenu/wiki for futher info on  
+panel and window manager integration.  
 
 Lesson 3
 --------
