@@ -85,13 +85,13 @@ strstr () {
 	! test -z "$2" && test -z "${2##*$1*}"
 }
 
-# insert_after <file> <pattern> <insert_string>
+# insert_after <file> <after> <insert_string>
 insert_after () {
 	local tmp=$(mktemp)
 	local done="n"
 	if ! grep "$2" "$1" >/dev/null 2>&1
 	then
-		printf "%b\n" "BUG: cannot find pattern $2"
+		printf "%b\n" "BUG: cannot find 'after' pattern $2"
 		return
 	fi
 	while IFS= read -r line
