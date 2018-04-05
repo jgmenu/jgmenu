@@ -80,30 +80,13 @@ backup_jgmenurc () {
 	test -e ${jgmenurc} && cp -p ${jgmenurc} ${jgmenurc_bak}
 }
 
-# strstr <needle> <haystack>
-strstr () {
-	! test -z "$2" && test -z "${2##*$1*}"
-}
-
-# insert_after <file> <after> <insert_string>
-insert_after () {
-	local tmp=$(mktemp)
-	local done="n"
-	if ! grep "$2" "$1" >/dev/null 2>&1
+print_start_msg () {
+	if test -z ${printed+x}
 	then
-		printf "%b\n" "BUG: cannot find 'after' pattern $2"
-		return
+		printf "%b\n" "Add missing items to config file..."
+		printf "\n\n%b\n\n" "### the items below were added by 'jgmenu_run init'" >> ${jgmenurc}
 	fi
-	while IFS= read -r line
-	do
-		printf "%b\n" "${line}" >>${tmp}
-		if strstr "$2" "$line" && test "$done" == "n"
-		then
-			printf "%b\n" "$3" >>${tmp}
-			done="y"
-		fi
-	done <${1}
-	mv -f ${tmp} $1
+	printed=1
 }
 
 amend_jgmenurc () {
@@ -114,10 +97,10 @@ amend_jgmenurc () {
 		test -z "${key}" && continue
 		if ! grep "^${key}[\ =]\|[\ #]${key}[\ =]" "${jgmenurc}" >/dev/null 2>&1
 		then
+			print_start_msg
 			printf "${prefix}%b\n" "${line}"
-			insert_after "${jgmenurc}" "$prev" "#$line"
+			printf "#%b\n" "${line}" >> ${jgmenurc}
 		fi
-		prev=${key}
 	done <${tmp_jgmenurc}
 }
 
