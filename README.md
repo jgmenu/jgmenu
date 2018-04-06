@@ -3,7 +3,7 @@ jgmenu
 
 jgmenu is a simple X11 menu intended to be used with tint2 and openbox.
 
-  - [INSTALL.md](INSTALL.md)  
+  - [Install](INSTALL.md)  
 
   - [Tutorial](docs/manual/jgmenututorial.7.md)  
 

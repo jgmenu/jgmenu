@@ -4,15 +4,15 @@ TODO
 Current Focus
 -------------
 
-Makefile: add uninstall
+Makefile: install .desktop file directly
+
+jgmenu(1): explain what the diffirent colours refer to
+
+Add hover_delay config option
 
 charset.c: do not assert s == e
 
 Fix socket bug in main() too. + write comment to explain what's happening
-
-check if argv[1] is init before parsing args
-
-Reduce size of surfaces (as a result of having removed single window mode)
 
 lx: check .desktop files are not Unicode in order to avoid segfault
 (e.g. extace.desktop)
@@ -26,11 +26,11 @@ Rename screen{_x0,_y0...} variables to simply screen (as a struct area)
 
 Do we remove geo_set_screen_area() again?
 
+Makefile: add uninstall
+
 Investigate duplicate .desktop entries on Raspberry Pi and nixOS
 
-Replace desktop script with a .desktop file.
-
-Add icon
+Add watch.c
 
 Key changes before v1.0
 -----------------------
