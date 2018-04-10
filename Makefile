@@ -23,7 +23,8 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
 SCRIPTS_SHELL  = jgmenu_run jgmenu-init.sh
 
-SCRIPTS_PYTHON = jgmenu-pmenu.py jgmenu-unity-hack.py
+SCRIPTS_PYTHON = jgmenu-pmenu.py jgmenu-unity-hack.py \
+                 noncore/config/jgmenu-config.py
 
 PROGS	 = jgmenu jgmenu-xdg jgmenu-ob jgmenu-socket
 
@@ -71,10 +72,11 @@ install: $(PROGS)
 	@install -m755 $(PROGS) $(SCRIPTS_SHELL) $(DESTDIR)$(libexecdir)
 	@install -m755 $(SCRIPTS_PYTHON) $(DESTDIR)$(libexecdir)
 	@install -m644 ./noncore/init/* $(DESTDIR)$(libexecdir)
+	@install -m644 ./noncore/config/jgmenurc $(DESTDIR)$(libexecdir)
 	@./scripts/set-exec-path.sh $(DESTDIR)$(bindir)/jgmenu_run $(libexecdir)
 	@./scripts/set-exec-path.sh $(DESTDIR)$(libexecdir)/jgmenu_run $(libexecdir)
 ifdef PYTHON3_POLYGLOT
-	@./scripts/python3-polyglot.sh $(DESTDIR)$(libexecdir) $(SCRIPTS_PYTHON)
+	@./scripts/python3-polyglot.sh $(DESTDIR)$(libexecdir) $(notdir $(SCRIPTS_PYTHON))
 else
 	@type python3 >/dev/null 2>&1 || printf "%s\n" "warning: python3 not \
 	found. Suggest defining PYTHON3_POLYGLOT"
