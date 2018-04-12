@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=jgmenu
+GenericName=Application Menu
+GenericName[ru]=Меню приложений
+GenericName[sv]=Program Meny
+Comment=Displays menu for launching installed applications
+Comment[ru]=Отображает меню для запуска установленных приложений
+Comment[sv]=Visar meny för installerade program
+Exec=jgmenu_run
+Terminal=false
+Icon=jgmenu
+Categories=System
+StartupNotify=false
