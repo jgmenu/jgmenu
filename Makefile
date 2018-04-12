@@ -82,11 +82,14 @@ else
 	found. Suggest defining PYTHON3_POLYGLOT"
 endif
 	@$(MAKE) --no-print-directory -C docs/manual/ install
-	@./scripts/create_desktop_file.sh $(DESTDIR)$(prefix)
+	@install -d $(DESTDIR)$(datarootdir)/icons/hicolor/scalable/apps/
+	@install -d $(DESTDIR)$(datarootdir)/applications/
+	@install -m644 ./data/jgmenu.svg $(DESTDIR)$(datarootdir)/icons/hicolor/scalable/apps/
+	@install -m644 ./data/jgmenu.desktop $(DESTDIR)$(datarootdir)/applications/
 
 clean:
 	@$(RM) $(PROGS) *.o *.a $(DEPDIR)/*.d
-	@$(RM) -r .d/ 
+	@$(RM) -r .d/
 	@$(MAKE) --no-print-directory -C tests/ clean
 	@$(MAKE) --no-print-directory -C tests/helper/ clean
 

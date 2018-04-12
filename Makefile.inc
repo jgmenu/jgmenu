@@ -5,6 +5,12 @@ prefix    ?= /usr/local
 bindir     = $(prefix)/bin
 libexecdir = $(prefix)/lib/jgmenu
 
+ifeq ($(prefix),$(HOME))
+datarootdir= $(prefix)/.local/share
+else
+datarootdir= $(prefix)/share
+endif
+
 CFLAGS  += -g -Wall -Os -std=gnu89
 CFLAGS  += -Wextra -Wdeclaration-after-statement -Wno-format-zero-length \
 	   -Wold-style-definition -Woverflow -Wpointer-arith \
