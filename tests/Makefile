@@ -1,6 +1,6 @@
 ASAN_FLAGS = -O0 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic -fuse-ld=gold
 
-all: t1012
+all: t1011 t1012 t1013
 #all: t1011
 #all: t0002 t0003 t0005 t0007 t0008
 
@@ -34,6 +34,10 @@ t1011:
 
 t1012:
 	./t1012-argv-buf.sh
+
+t1013:
+	./t1013-config-amend.sh
+
 t9000:
 	@./t9000-icon-load.sh
 	@./t9000-icon-load.sh
