@@ -94,6 +94,7 @@ def insert_pos(template_lines, conf_lines, key):
     return nr_comment_lines_at_start(conf_lines), line_to_add
 
 def resolve(file_name):
+    """ expand ~ and $foo """
     if file_name is None or file_name == '':
         die("file_name must be specified")
     file_name = os.path.expanduser(file_name)
@@ -103,11 +104,35 @@ def resolve(file_name):
     return file_name
 
 def get_template_file_name():
+    """ get filename for template jgmenurc config file """
     s = read_pipe("jgmenu_run --exec-path").strip().decode("utf-8")
     s += "/jgmenurc"
     if not os.path.exists(s):
         die("$libexecdir/jgmenurc does not exist")
     return s
+
+def adjust_line_spacing(conf_lines, template_lines):
+    """ adjust line spacing in accordance with template """
+    keys_with_space_after = []
+    space = False
+    for line in reversed(template_lines):
+        if line == '':
+            space = True
+        elif "=" in line and space:
+            keys_with_space_after.append(get_key(line))
+            space = False
+    new_list = []
+    first_key_line = True
+    for line in conf_lines:
+        if line == '':
+            continue
+        if '=' in line and first_key_line:
+            new_list.append('')
+            first_key_line = False
+        new_list.append(line)
+        if '=' in line and get_key(line) in keys_with_space_after:
+            new_list.append('')
+    return new_list
 
 def amend(conf_file_name):
     """ amend config-file based on template """
@@ -120,10 +145,13 @@ def amend(conf_file_name):
 
     keys = missing_keys(template_lines, conf_lines)
     if keys:
-        print("info: adding missing keys: {}".format(keys))
+        print("info: add keys {}".format(keys))
+    # using insert_pos(), we may not get the correct line spacing
     for key in keys:
         i_pos, line = insert_pos(template_lines, conf_lines, key)
         conf_lines.insert(i_pos, line)
+
+    conf_lines = adjust_line_spacing(conf_lines, template_lines)
 
     # delete empty lines at end of file
     for line in reversed(conf_lines):

@@ -4,7 +4,20 @@ TODO
 Current Focus
 -------------
 
-Makefile: install .desktop file directly
+config: check key-order - if not right, add new items at end
+	chanage file_name to filename
+
+jgmenu-init.sh: move to noncore/init
+		simplify (and make sure of config)
+
+icon: add 22, 24, 48 png icons
+
+replace all references to man pages (e.g. JGMENU(1)) with lower case
+
+Makefile: replace polyglot ifdef with a check in the script (keeps Makefile cleaner)
+
+desktop file: Update Makefile to install .desktop file directly
+	      Update wiki with env var info
 
 jgmenu(1): explain what the diffirent colours refer to
 
@@ -30,22 +43,10 @@ Makefile: add uninstall
 
 Investigate duplicate .desktop entries on Raspberry Pi and nixOS
 
-Add watch.c
-
 Key changes before v1.0
 -----------------------
 
-	Add widgets including icon, rect and text
-
-	Review fields
-		1: name
-		2: command (begin with @ to aviod sh -c '' wrapper and therefore adhere to XDG spec)
-		3: icon
-		4: comment (for pop up or item spanning two lines)
-		5: working directory (start in $HOME be default)
-		6: meta data (e.g. categories to enable filter buttons)
-
-	Consider adding a ^filter()
+	Add watch.c
 
 Cleanliness
 -----------
@@ -105,6 +106,19 @@ Cleanliness
 
 Improvements / New features
 ---------------------------
+
+	Add widgets including icon, rect and text
+
+	Review fields
+		1: name
+		2: command (begin with @ to aviod sh -c '' wrapper and
+                   therefore adhere to XDG spec)
+		3: icon
+		4: comment (for pop up or item spanning two lines)
+		5: working directory (start in $HOME be default)
+		6: meta data (e.g. categories to enable filter buttons)
+
+	Consider adding a ^filter()
 
 	Parse polybar config files
 

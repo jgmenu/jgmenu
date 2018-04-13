@@ -1,6 +1,6 @@
-# .jgmenurc with default values
+# jgmenu config file (jgmenurc)
 #
-# See the man page JGMENU(1) for further details.
+# See the man page jgmenu(1) for further details.
 
 #stay_alive          = 1
 #hide_on_startup     = 0
