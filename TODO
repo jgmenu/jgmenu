@@ -4,9 +4,6 @@ TODO
 Current Focus
 -------------
 
-config: check key-order - if not right, add new items at end
-	chanage file_name to filename
-
 jgmenu-init.sh: move to noncore/init
 		simplify (and make sure of config)
 

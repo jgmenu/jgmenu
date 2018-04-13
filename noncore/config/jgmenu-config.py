@@ -93,17 +93,17 @@ def insert_pos(template_lines, conf_lines, key):
     # we'll onle get here if it's the first key/value line
     return nr_comment_lines_at_start(conf_lines), line_to_add
 
-def resolve(file_name):
+def resolve(filename):
     """ expand ~ and $foo """
-    if file_name is None or file_name == '':
-        die("file_name must be specified")
-    file_name = os.path.expanduser(file_name)
-    file_name = os.path.expandvars(file_name)
-    if not os.path.exists(file_name):
-        die("file '{}' does not exist".format(file_name))
-    return file_name
+    if filename is None or filename == '':
+        die("filename must be specified")
+    filename = os.path.expanduser(filename)
+    filename = os.path.expandvars(filename)
+    if not os.path.exists(filename):
+        die("file '{}' does not exist".format(filename))
+    return filename
 
-def get_template_file_name():
+def get_template_filename():
     """ get filename for template jgmenurc config file """
     s = read_pipe("jgmenu_run --exec-path").strip().decode("utf-8")
     s += "/jgmenurc"
@@ -134,13 +134,13 @@ def adjust_line_spacing(conf_lines, template_lines):
             new_list.append('')
     return new_list
 
-def amend(conf_file_name):
+def amend(conf_filename):
     """ amend config-file based on template """
-    conf_file_name = resolve(conf_file_name)
-    template_file_name = get_template_file_name()
-    with open(conf_file_name, "r+") as f:
+    conf_filename = resolve(conf_filename)
+    template_filename = get_template_filename()
+    with open(conf_filename, "r+") as f:
         conf_lines = f.read().split("\n")
-    with open(template_file_name, "r+") as f:
+    with open(template_filename, "r+") as f:
         template_lines = f.read().split("\n")
 
     keys = missing_keys(template_lines, conf_lines)
@@ -159,7 +159,7 @@ def amend(conf_file_name):
             conf_lines.pop()
             break
     # write config file
-    with open(conf_file_name, "w") as f:
+    with open(conf_filename, "w") as f:
         for line in conf_lines:
             f.write("{}\n".format(line))
 
