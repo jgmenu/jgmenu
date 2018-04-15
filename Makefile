@@ -21,7 +21,10 @@ DEPDIR := .d
 $(shell mkdir -p $(DEPDIR) >/dev/null)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
-SCRIPTS_SHELL  = jgmenu_run jgmenu-init.sh
+SCRIPTS_SHELL  = jgmenu_run noncore/init/jgmenu-init.sh
+
+FRAGMENTS      = noncore/init/jgmenu-init--bunsenlabs.sh \
+                 noncore/config/jgmenurc
 
 SCRIPTS_PYTHON = jgmenu-pmenu.py jgmenu-unity-hack.py \
                  noncore/config/jgmenu-config.py
@@ -71,8 +74,7 @@ install: $(PROGS)
 	@install -d $(DESTDIR)$(libexecdir)
 	@install -m755 $(PROGS) $(SCRIPTS_SHELL) $(DESTDIR)$(libexecdir)
 	@install -m755 $(SCRIPTS_PYTHON) $(DESTDIR)$(libexecdir)
-	@install -m644 ./noncore/init/* $(DESTDIR)$(libexecdir)
-	@install -m644 ./noncore/config/jgmenurc $(DESTDIR)$(libexecdir)
+	@install -m644 $(FRAGMENTS) $(DESTDIR)$(libexecdir)
 	@./scripts/set-exec-path.sh $(DESTDIR)$(bindir)/jgmenu_run $(libexecdir)
 	@./scripts/set-exec-path.sh $(DESTDIR)$(libexecdir)/jgmenu_run $(libexecdir)
 ifdef PYTHON3_POLYGLOT
