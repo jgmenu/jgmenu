@@ -23,6 +23,17 @@ usage () {
 	say "                          Valid themes include: bunsenlabs\n"
 }
 
+# Check for jgmenurc items which are no longer valid
+check_regression () {
+	for r in ${regression_items}
+	do
+		if grep ${r} ${jgmenurc} >/dev/null 2>&1
+		then
+			printf "%b\n" "warning: ${r} is no longer a valid key"
+		fi
+	done
+}
+
 backup_jgmenurc () {
 	test -e ${jgmenurc} && cp -p ${jgmenurc} ${jgmenurc_bak}
 }
@@ -68,15 +79,8 @@ else
 		say "info: creating jgmenurc"
 		cp ${JGMENU_EXEC_DIR}/jgmenurc ${jgmenurc}
 	else
-		jgmenu_run config amend
+		jgmenu_run config amend --file "${jgmenurc}"
 	fi
 fi
 
-# Check for jgmenurc items which are no longer valid
-for r in ${regression_items}
-do
-	if grep ${r} ${jgmenurc} >/dev/null 2>&1
-	then
-		printf "%b\n" "warning: ${r} is no longer a valid key"
-	fi
-done
+check_regression
