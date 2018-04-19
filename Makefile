@@ -21,7 +21,8 @@ DEPDIR := .d
 $(shell mkdir -p $(DEPDIR) >/dev/null)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
-SCRIPTS_SHELL  = jgmenu_run noncore/init/jgmenu-init.sh
+SCRIPTS_SHELL  = jgmenu_run noncore/init/jgmenu-init.sh \
+                 noncore/bookmarks/jgmenu-ff-bookmarks.sh
 
 FRAGMENTS      = noncore/init/jgmenu-init--bunsenlabs.sh \
                  noncore/config/jgmenurc
