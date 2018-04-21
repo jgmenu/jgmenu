@@ -9,12 +9,14 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 
 #include "util.h"
 #include "sbuf.h"
 #include "list.h"
 
 static char *root_menu;
+char template[] = "temp_jgmenu_ob_XXXXXX";
 
 struct tag {
 	char *label;
@@ -303,10 +305,54 @@ static void parse_xml(const char *filename)
 	xmlDoc *d = xmlReadFile(filename, NULL, 0);
 
 	if (!d)
-		die("error reading file '%s'\n", filename);
+		exit(1);
 	xml_tree_walk(xmlDocGetRootElement(d));
 	xmlFreeDoc(d);
 	xmlCleanupParser();
+}
+
+void read_command(const char *cmd, char *template)
+{
+	char buf[BUFSIZ];
+	int link[2];
+	int fd;
+	ssize_t cnt;
+
+	if (pipe(link) == -1)
+		die("pipe");
+
+	fd = mkstemp(template);
+	if (fd < 0)
+		die("unable to create tempfile");
+	switch (fork()) {
+	case -1:
+		die("fork");
+		break;
+	case 0:
+		if (close(link[0] == -1))
+			warn("close 1");
+		if (dup2(link[1], STDOUT_FILENO) == -1)
+			die("dup2");
+		execl("/bin/sh", "/bin/sh", "-c", cmd, NULL);
+		break;
+	default:
+		break;
+	}
+	if (close(link[1]) == -1)
+		warn("close 3");
+	while ((cnt = read(link[0], buf, sizeof(buf))) > 0) {
+		if (write(fd, buf, cnt) != cnt)
+			warn("bad write to temp file '%s'", template);
+	}
+	if (close(link[0]) == -1)
+		warn("close 4");
+	if (wait(NULL) == -1)
+		warn("wait");
+}
+
+static void unlink_temp_file(void)
+{
+	unlink(template);
 }
 
 int main(int argc, char **argv)
@@ -325,6 +371,10 @@ int main(int argc, char **argv)
 			break;
 		} else if (!strncmp(argv[i], "--tag=", 6)) {
 			root_menu = strdup(argv[i] + 6);
+		} else if (!strncmp(argv[i], "--cmd=", 6)) {
+			read_command(argv[i] + 6, template);
+			atexit(unlink_temp_file);
+			file_name = xstrdup(template);
 		}
 		i++;
 	}
