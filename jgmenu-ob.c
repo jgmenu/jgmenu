@@ -355,43 +355,62 @@ static void unlink_temp_file(void)
 	unlink(template);
 }
 
+static void cleanup(void)
+{
+	xfree(root_menu);
+}
+
+void handle_argument_clash(void)
+{
+	die("both --cmd=<cmd> and <file> provided");
+}
+
 int main(int argc, char **argv)
 {
-	char *file_name = NULL;
+	char *filename = NULL;
 	int i;
 	struct sbuf default_file;
 	struct stat sb;
 
 	LIBXML_TEST_VERSION
 
+	atexit(cleanup);
 	i = 1;
 	while (i < argc) {
 		if (argv[i][0] != '-') {
-			file_name = argv[i];
+			if (filename)
+				handle_argument_clash();
+			filename = xstrdup(argv[i]);
+			if (argc > i + 1)
+				die("<file> must be the last argument");
 			break;
 		} else if (!strncmp(argv[i], "--tag=", 6)) {
 			root_menu = strdup(argv[i] + 6);
 		} else if (!strncmp(argv[i], "--cmd=", 6)) {
+			if (filename)
+				handle_argument_clash();
 			read_command(argv[i] + 6, template);
 			atexit(unlink_temp_file);
-			file_name = xstrdup(template);
+			filename = xstrdup(template);
 		}
 		i++;
 	}
 	if (!root_menu)
 		root_menu = strdup("root-menu");
-	sbuf_init(&default_file);
-	if (!file_name) {
+	if (!filename) {
+		sbuf_init(&default_file);
 		sbuf_cpy(&default_file, getenv("HOME"));
 		sbuf_addstr(&default_file, "/.config/openbox/menu.xml");
-		file_name = strdup(default_file.buf);
+		filename = strdup(default_file.buf);
+		xfree(default_file.buf);
 	}
-	if (stat(file_name, &sb))
-		die("file '%s' does not exist", file_name);
+	if (stat(filename, &sb))
+		die("file '%s' does not exist", filename);
 	INIT_LIST_HEAD(&tags);
-	parse_xml(file_name);
+	parse_xml(filename);
 
 	print_menu();
+	xfree(filename);
 
 	return 0;
 }
