@@ -53,6 +53,7 @@ void config_set_defaults(void)
 	config.item_radius	   = 1;
 	config.item_border	   = 0;
 	config.item_halign	   = LEFT;
+
 	config.sep_height	   = 5;
 
 	config.font		   = NULL; /* Leave as NULL (see font.c) */
@@ -65,7 +66,7 @@ void config_set_defaults(void)
 	config.arrow_string	   = xstrdup("▸");
 	config.arrow_width	   = 15;
 
-	parse_hexstr("#000000 70", config.color_menu_bg);
+	parse_hexstr("#000000 85", config.color_menu_bg);
 	parse_hexstr("#eeeeee 20", config.color_menu_fg);
 	parse_hexstr("#eeeeee 8", config.color_menu_border);
 	parse_hexstr("#000000 00", config.color_norm_bg);
@@ -75,7 +76,7 @@ void config_set_defaults(void)
 	parse_hexstr("#eeeeee 8", config.color_sel_border);
 	parse_hexstr("#ffffff 20", config.color_sep_fg);
 
-	config.csv_name_format	   = NULL; /* Set in fmt.c */
+	config.csv_name_format	   = NULL; /* Leave as NULL (see in fmt.c) */
 }
 
 void config_cleanup(void)

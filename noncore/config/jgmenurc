@@ -12,7 +12,7 @@
 #monitor             = 0
 
 #menu_margin_x       = 0
-#menu_margin_y       = 32
+#menu_margin_y       = 0
 #menu_width          = 200
 #menu_padding_top    = 5
 #menu_padding_right  = 5
@@ -50,7 +50,7 @@
 #arrow_string        = ▸
 #arrow_width         = 15
 
-#color_menu_bg       = #000000 70
+#color_menu_bg       = #000000 85
 #color_menu_fg       = #eeeeee 20
 #color_menu_border   = #eeeeee 8
 
