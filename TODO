@@ -4,19 +4,14 @@ TODO
 Current Focus
 -------------
 
-jgmenu-init.sh: move to noncore/init
-		simplify (and make sure of config)
-
-icon: add 22, 24, 48 png icons
-
-replace all references to man pages (e.g. JGMENU(1)) with lower case
+Consider add % at start of command in order to not hide_or_exit() (issue #55)
 
 Makefile: replace polyglot ifdef with a check in the script (keeps Makefile cleaner)
 
-desktop file: Update Makefile to install .desktop file directly
-	      Update wiki with env var info
-
 jgmenu(1): explain what the diffirent colours refer to
+
+wiki:	- add notes on plank and cairo-dock
+	- desktop file: Update with env var info
 
 Add hover_delay config option
 
@@ -25,7 +20,7 @@ charset.c: do not assert s == e
 Fix socket bug in main() too. + write comment to explain what's happening
 
 lx: check .desktop files are not Unicode in order to avoid segfault
-(e.g. extace.desktop)
+(Add unit test to prove problem - to include extace.desktop)
 
 Refactor config.c (incl "struct config jgmenurc") to:
   - avoid having to load it twice from jgmenu.c
