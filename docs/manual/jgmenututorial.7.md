@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 21 March, 2017  
+% 24 April, 2018  
 
 # NAME
 
@@ -160,11 +160,27 @@ by ^tag() and ^checkout(). Try this:
     File Manager,pcmanfm
     Settings,^checkout(settings)
     
-    Settings,^tag(settings)
+    ^tag(settings)
     Set Background Image,nitrogen
     EOF
     
     jgmenu --vsimple --csv-file="menu.txt"
+
+In pseudo-code, build your CSV file as follows:  
+
+    # the root-menu
+    sub1,^checkout(sub1)
+    sub2,^checkout(sub2)
+    
+    # the first sub-menu
+    ^tag(sub1)
+    item1.1
+    item1.2
+    
+    # the second sub-menu
+    ^tag(sub2)
+    item2.1
+    item2.2
 
 Lesson 7
 --------
