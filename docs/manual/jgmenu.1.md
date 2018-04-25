@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 28 March, 2017
+% 23 April, 2018
 
 # NAME
 
@@ -42,7 +42,8 @@ The following mark-up is supported in the *description* field:
 
 The following mark-up is supported in the *command* field:
 
-  - ^tag() - define a submenu
+  - ^tag() - define a submenu (can be in the *description* field if  
+  no other field is defined on that line)
 
   - ^checkout() - check-out a submenu
 
