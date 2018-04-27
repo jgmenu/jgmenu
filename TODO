@@ -4,6 +4,8 @@ TODO
 Current Focus
 -------------
 
+Issue #56 - at_pointer=1 mode on multiple monitors
+
 Consider add % at start of command in order to not hide_or_exit() (issue #55)
 
 Makefile: replace polyglot ifdef with a check in the script (keeps Makefile cleaner)

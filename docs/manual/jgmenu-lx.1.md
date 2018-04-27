@@ -1,10 +1,10 @@
 % JGMENU-LX(1)  
 % Johan Malm  
-% 22 December, 2017
+% 27 April, 2018
 
 # NAME
 
-jgmenu-lx - generates jgmenu flavoured CSV for an XDG menu
+jgmenu-lx - generate jgmenu flavoured CSV menu data for an XDG menu  
 
 # SYNOPSIS
 
@@ -12,7 +12,7 @@ jgmenu-lx - generates jgmenu flavoured CSV for an XDG menu
 
 # DESCRIPTION
 
-`jgmenu_run lx` generates jgmenu flavoured CSV text for  
+`jgmenu_run lx` generates jgmenu flavoured CSV menu data for  
 freedesktop.org defined application menus, using LXDE's  
 libmenu-cache.
 
@@ -30,6 +30,6 @@ This program is designed to be run from jgmenu by settings
 
 It can also be run directly from the command line like this:  
 
-    jgmenu_run lx | jgmenu
+    jgmenu_run lx | jgmenu --simple
 
     jgmenu --csv-cmd="jgmenu_run lx"

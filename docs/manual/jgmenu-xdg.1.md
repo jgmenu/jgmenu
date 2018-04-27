@@ -1,10 +1,11 @@
 % JGMENU-XDG(1)  
 % Johan Malm  
-% 18 December, 2017
+% 27 April, 2018
 
 # NAME
 
-jgmenu-xdg.sh - generates jgmenu flavoured CSV for an XDGish menu
+jgmenu-xdg.sh - generate jgmenu flavoured CSV menu data for an XDGish  
+                menu  
 
 # SYNOPSIS
 
@@ -12,8 +13,8 @@ jgmenu-xdg.sh - generates jgmenu flavoured CSV for an XDGish menu
 
 # DESCRIPTION
 
-`jgmenu_run xdg` generates jgmenu flavoured CSV text for a menu based  
-on XML .menu files loosely in accordance with the XDG specifications:
+`jgmenu_run xdg` generates jgmenu flavoured CSV menu data for a menu  
+based on XML .menu files loosely in accordance with the XDG spec:  
 
 http://standards.freedesktop.org/menu-spec/  
 http://standards.freedesktop.org/basedir-spec/  
@@ -43,6 +44,6 @@ This program is designed to be run from jgmenu by settings
 
 It can also be run directly from the command line like this:  
 
-    jgmenu_run xdg | jgmenu
+    jgmenu_run xdg | jgmenu --simple
 
     jgmenu --csv-cmd="jgmenu_run xdg"

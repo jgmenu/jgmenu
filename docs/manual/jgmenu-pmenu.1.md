@@ -1,24 +1,24 @@
 % JGMENU-PMENU(1)  
 % Johan Malm  
-% 17 December, 2017
+% 27 April, 2018  
 
 # NAME
 
-jgmenu-pmenu.py - generates a menu based on .desktop and .directory  
-                  files found on the system.  
+jgmenu-pmenu.py - generate jgmenu flavoured CSV menu data based on  
+                  .desktop and .directory files found on the system  
 
 # SYNOPSIS
 
-jgmenu_run pmenu \[-h | --help] \[--append-file <*FILE*>]  
+`jgmenu_run pmenu` \[-h | --help] \[--append-file <*FILE*>]  
                  \[--prepend-file <*FILE*>] \[--locale <*LOCALE*>]  
 
 # DESCRIPTION
 
-Generates jgmenu flavoured CSV text based on .desktop and .directory  
-files found on the system, but ignores any .menu files. Instead of  
-the structure specified in the .menu file, it simply maps each  
-".desktop" application onto one of the ".directory" categories. If a  
-matching ".directory" category does not exist, it tries to  
+Generates jgmenu flavoured CSV menu data based on .desktop and  
+.directory files found on the system, but ignores any .menu files.  
+Instead of the structure specified in the .menu file, it simply maps  
+each ".desktop" application onto one of the ".directory" categories.  
+If a matching ".directory" category does not exist, it tries to  
 cross-reference "additional categories" to "related categories" in  
 accordance with the XDG menu-spec. This is a generic approach which  
 avoids Desktop Environment specific rules defined in the .menu file.  
@@ -42,8 +42,8 @@ files if they exist:
 :   Path to menu file to prepend to the root menu  
 
 \--locale LOCALE
-:   Use a custom locale (e.g. 'en_US.UTF-8'; available  
-       locales can be shown by running 'locale -a')  
+:   Use a custom locale (e.g. `en_US.UTF-8`)  
+       Available locales can be shown by running 'locale -a'.  
 
 # EXAMPLES
 
@@ -52,6 +52,6 @@ This program is designed to be run from jgmenu by settings
 
 It can also be run directly from the command line like this:  
 
-    jgmenu_run pmenu | jgmenu
+    jgmenu_run pmenu | jgmenu --simple
 
     jgmenu --csv-cmd="jgmenu_run pmenu"
