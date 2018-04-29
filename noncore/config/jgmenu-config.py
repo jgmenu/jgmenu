@@ -147,7 +147,6 @@ def amend(conf_filename):
     if keys:
         print("info: add keys {}".format(keys))
     else:
-        print("info: jgmenu config file has no missing key/value lines")
         return
 
     # using insert_pos(), we may not get the correct line spacing
