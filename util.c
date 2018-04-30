@@ -294,6 +294,7 @@ void cat(const char *filename)
 		goto cleanup;
 	while (fgets(line, sizeof(line), fp))
 		printf("%s", line);
+	printf("\n");
 	fclose(fp);
 cleanup:
 	xfree(f.buf);
