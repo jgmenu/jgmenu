@@ -2206,7 +2206,7 @@ int main(int argc, char *argv[])
 	workarea_set_panel_pos();
 
 	/* Parse jgmenurc again to overrule tint2rc and workarea values */
-	if (config.tint2_look && !arg_vsimple)
+	if (!arg_vsimple)
 		config_read_jgmenurc(arg_config_file);
 
 	args_parse(argc, argv);
