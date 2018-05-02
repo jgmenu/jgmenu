@@ -9,7 +9,7 @@ tint2_look          = 0
 #monitor             = 0
 
 #menu_margin_x       = 0
-#menu_margin_y       = 32
+menu_margin_y       = 30
 #menu_width          = 200
 menu_padding_top    = 40
 menu_padding_right  = 10
@@ -31,8 +31,8 @@ sub_padding_top     = 10
 #item_margin_y       = 3
 #item_height         = 25
 #item_padding_x      = 4
-#item_radius         = 1
-#item_border         = 0
+item_radius         = 2
+item_border         = 1
 #item_halign         = left
 
 #sep_height          = 5
@@ -56,7 +56,7 @@ color_norm_fg       = #444444 100
 
 color_sel_bg        = #e6e6e6 100
 color_sel_fg        = #444444 100
-#color_sel_border    = #eeeeee 8
+color_sel_border    = #888888 100
 
 #color_sep_fg        = #ffffff 20
 
