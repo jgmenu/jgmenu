@@ -169,11 +169,18 @@ backup_jgmenurc () {
 		cp -p ${prepend_file} ${prepend_file}.$(date +%Y%m%d%H%M)
 }
 
+analyse () {
+	say "Check for obsolete config options..."
+	check_regression
+	say "Check installed menu packages..."
+	check_menu_package_installed
+	say "Check for lx module..."
+	check_lx_installed
+	return 0
+}
+
 initial_checks () {
 	check_config_file
-	check_regression
-	check_menu_package_installed
-	check_lx_installed
 }
 
 # NOT YET IMPLEMENTED:
@@ -186,6 +193,7 @@ initial_checks () {
 print_commands () {
 	printf "%b" "\
 *** commands ***\n\
+a, analyse = run a number of jgmenu related checks on system\n\
 t, theme   = create config files based on templates\n\
 p, prepend = add items at top of root-menu (e.g. web browser and terminal)\n\
 q, quit    = quit init process\n"
@@ -197,6 +205,9 @@ prompt () {
 	printf "%b" "What now> "
 	read -r cmd
 	case "$cmd" in
+	analyse|a)
+		analyse
+		;;
 	theme|t)
 		set_theme $(get_theme)
 		;;
