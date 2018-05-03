@@ -2,7 +2,6 @@
 
 # 'jgmenu init' creates/updates jgmenurc
 
-JGMENU_EXEC_DIR=$(jgmenu_run --exec-path)
 config_file=~/.config/jgmenu/jgmenurc
 prepend_file=~/.config/jgmenu/prepend.csv
 
@@ -16,6 +15,12 @@ verbose=f
 regression_items="max_items min_items ignore_icon_cache color_noprog_fg \
 color_title_bg show_title search_all_items ignore_xsettings arrow_show \
 read_tint2rc tint2_rules tint2_button multi_window"
+
+terminals="x-terminal-emulator terminator uxterm xterm gnome-terminal \
+lxterminal qterminal urxvt rxvt xfce4-terminal konsole sakura st"
+
+JGMENU_EXEC_DIR=$(jgmenu_run --exec-path)
+. "${JGMENU_EXEC_DIR}"/jgmenu-init--prepend.sh
 
 say () {
 	printf "%b\n" "$@"
@@ -132,10 +137,13 @@ set_theme () {
 	bunsenlabs*)
 		. "${JGMENU_EXEC_DIR}"/jgmenu-init--bunsenlabs.sh
 		setup_theme
+		killall jgmenu >/dev/null 2>&1
 		;;
 	neon)
 		. "${JGMENU_EXEC_DIR}"/jgmenu-init--neon.sh
 		setup_theme
+		prepend_items
+		killall jgmenu >/dev/null 2>&1
 		;;
 	esac
 
@@ -212,7 +220,6 @@ prompt () {
 		set_theme $(get_theme)
 		;;
 	prepend|p)
-		. "${JGMENU_EXEC_DIR}"/jgmenu-init--prepend.sh
 		prepend_items
 		;;
 	quit|q)

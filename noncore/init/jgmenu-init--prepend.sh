@@ -1,8 +1,5 @@
 # This shell script fragment is designed to be sourced by jgmenu-init.sh
 
-terminals="x-terminal-emulator terminator uxterm xterm gnome-terminal \
-lxterminal qterminal urxvt rxvt xfce4-terminal konsole sakura st"
-
 add_terminal () {
 	test -e ${prepend_file} && for t in ${terminals}
 	do
