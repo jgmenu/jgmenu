@@ -142,6 +142,12 @@ get_theme () {
 	done | jgmenu --vsimple --no-spawn 2>/dev/null
 }
 
+restart_jgmenu () {
+	say "Restarting jgmenu..."
+	killall jgmenu >/dev/null 2>&1
+	nohup jgmenu >/dev/null 2>&1 &
+}
+
 set_theme () {
 	test $# -eq 0 && die "set_theme(): no theme specified"
 	filename="$(jgmenu_run --exec-path)"/jgmenurc."$1"
@@ -152,17 +158,17 @@ set_theme () {
 	bunsenlabs*)
 		. "${JGMENU_EXEC_DIR}"/jgmenu-init--bunsenlabs.sh
 		setup_theme
-		killall jgmenu >/dev/null 2>&1
+		say "Theme '$1' has been set"
+		restart_jgmenu
 		;;
 	neon)
 		. "${JGMENU_EXEC_DIR}"/jgmenu-init--neon.sh
 		setup_theme
 		prepend_items
-		killall jgmenu >/dev/null 2>&1
+		say "Theme '$1' has been set"
+		restart_jgmenu
 		;;
 	esac
-
-	say "Theme '$1' has been set. Restart jgmenu to try it"
 }
 
 restart_tint2 () {
