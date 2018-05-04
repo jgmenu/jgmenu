@@ -98,6 +98,21 @@ check_lx_installed () {
 	fi
 }
 
+check_search_for_unicode_files () {
+	for x in $xdg_data_dirs
+	do
+		test -d "${x}"/applications/ || continue
+		if file -i "${x}"/applications/*.desktop \
+			| grep -v 'utf-8\|ascii'
+		then
+			unicode_found=y
+		fi
+	done
+
+	test "${unicode_found}" = "y" && say "\
+warning: unicode files are not XDG compliant and may give unpredicted results"
+}
+
 icon_theme_last_used_by_jgmenu () {
 	icon_theme=$(grep -i 'Inherits' ~/.cache/jgmenu/icons/index.theme)
 	icon_size=$(grep -i 'Size' ~/.cache/jgmenu/icons/index.theme)
@@ -184,6 +199,8 @@ analyse () {
 	check_menu_package_installed
 	say "Check for lx module..."
 	check_lx_installed
+	say "Check for unicode files..."
+	check_search_for_unicode_files
 	return 0
 }
 
