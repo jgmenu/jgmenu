@@ -187,6 +187,12 @@ restart_tint2 () {
 	fi
 }
 
+check_nr_backups () {
+	nr=$(ls -1 ~/.config/jgmenu/backup/ 2>/dev/null | wc -l)
+	test $nr -gt 100 && warn "\
+you have more than 100 backup files - consider removing a few"
+}
+
 backup_jgmenurc () {
 	local files_to_backup=".config/jgmenu/jgmenurc \
 		.config/jgmenu/prepend.csv"
@@ -219,6 +225,7 @@ analyse () {
 }
 
 initial_checks () {
+	check_nr_backups
 	check_config_file
 }
 
