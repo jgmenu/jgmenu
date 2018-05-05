@@ -1,11 +1,16 @@
 # This shell script fragment is designed to be sourced by jgmenu-init.sh
 
-prepend_add () {
+prepend__terminals="x-terminal-emulator terminator uxterm xterm gnome-terminal \
+lxterminal qterminal urxvt rxvt xfce4-terminal konsole sakura st"
+
+prepend__browsers="firefox iceweasel chromium midori"
+
+prepend__add () {
 	printf "%b\n" "$@" >>"${prepend_file}"
 }
 
-add_browser () {
-	test -e ${prepend_file} && for b in ${browsers}
+prepend__add_browser () {
+	test -e ${prepend_file} && for b in ${prepend__browsers}
 	do
 		if grep -i ${b} ${prepend_file} >/dev/null 2>&1
 		then
@@ -13,19 +18,19 @@ add_browser () {
 			return
 		fi
 	done
-	for b in ${browsers}
+	for b in ${prepend__browsers}
 	do
 		if type ${t} >/dev/null 2>&1
 		then
-			prepend_add "Browser,${b},${b}"
+			prepend__add "Browser,${b},${b}"
 			printf "Prepend %b\n" "${b}"
 			break
 		fi
 	done
 }
 
-add_terminal () {
-	test -e ${prepend_file} && for t in ${terminals}
+prepend__add_terminal () {
+	test -e ${prepend_file} && for t in ${prepend__terminals}
 	do
 		if grep -i ${t} ${prepend_file} >/dev/null 2>&1
 		then
@@ -33,11 +38,11 @@ add_terminal () {
 			return
 		fi
 	done
-	for t in ${terminals}
+	for t in ${prepend__terminals}
 	do
 		if type ${t} >/dev/null 2>&1
 		then
-			prepend_add "Terminal,${t},utilities-terminal"
+			prepend__add "Terminal,${t},utilities-terminal"
 			printf "Prepend %b\n" "${t}"
 			break
 		fi
@@ -46,7 +51,7 @@ add_terminal () {
 
 prepend_items () {
 	#File manager,pcmanfm,system-file-manager
-	add_browser
-	add_terminal
-	prepend_add "^sep()"
+	prepend__add_browser
+	prepend__add_terminal
+	prepend__add "^sep()"
 }
