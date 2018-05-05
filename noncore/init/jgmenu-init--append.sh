@@ -12,9 +12,11 @@ append__lock () {
 	if type i3lock-fancy >/dev/null 2>&1
 	then
 		append__add "Lock,i3lock-fancy -p,system-lock-screen"
+		say "Append i3lock-fancy"
 	elif type i3lock >/dev/null 2>&1
 	then
 		append__add "Lock,i3lock -c 000000,system-lock-screen"
+		say "Append i3lock"
 	fi
 }
 
@@ -25,6 +27,7 @@ append__exit () {
 	fi
 	if type systemctl >/dev/null
 	then
+		say "Append exit options (systemctl)"
 		append__add "Exit,^checkout(exit),system-shutdown"
 		append__add "^tag(exit)"
 		if pgrep openbox >/dev/null
