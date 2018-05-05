@@ -188,11 +188,22 @@ restart_tint2 () {
 }
 
 backup_jgmenurc () {
-	mkdir -p ~/.config/jgmenu
-	test -e ${config_file} && \
-		cp -p ${config_file} ${config_file}.$(date +%Y%m%d%H%M)
-	test -e ${prepend_file} && \
-		cp -p ${prepend_file} ${prepend_file}.$(date +%Y%m%d%H%M)
+	local files_to_backup=".config/jgmenu/jgmenurc \
+		.config/jgmenu/prepend.csv"
+
+	mkdir -p ~/.config/jgmenu/backup
+	say "Backing up config files..."
+	cd ${HOME}
+	tar_name=${HOME}/.config/jgmenu/backup/"$(date +%Y%m%d%H%M%S)".tar
+	# create empty tarball to append files to
+	tar -cf ${tar_name} -T /dev/null
+	for i in ${files_to_backup}
+	do
+		test -e ${i} || continue
+		tar -rhf ${tar_name} "${i}"
+	done
+	gzip ${tar_name}
+	say "${tar_name}"
 }
 
 analyse () {
