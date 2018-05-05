@@ -9,8 +9,8 @@ EOF
 
 setup_tint2_neon_theme () {
 	pgrep tint2 >/dev/null  || return
-	printf "%b\n" "Do you wish to create a tint2 config file to match this menu"
-	printf "%b" "WARNING: Your current tint2rc will over-written [yN]"
+	warn "your current tint2rc will over-written if you answer 'y'"
+	say "Do you wish to create a tint2 config file to match this menu [yN]"
 	read answer
 	if test "$answer" = "y" || test "$answer" = "Y"
 	then

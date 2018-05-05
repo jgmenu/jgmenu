@@ -23,6 +23,10 @@ say () {
 	printf "%b\n" "$@"
 }
 
+warn () {
+	printf "warning: %b\n" "$@"
+}
+
 die () {
 	printf "fatal: %b\n" "$@"
 	exit 1
@@ -60,7 +64,7 @@ check_regression () {
 	do
 		if grep ${r} ${config_file} >/dev/null 2>&1
 		then
-			printf "%b\n" "warning: ${r} is no longer a valid key"
+			warn "${r} is no longer a valid key"
 		fi
 	done
 }
@@ -78,7 +82,7 @@ check_menu_package_installed () {
 	then
 		verbose_info "menu package(s) exist"
 	else
-		say "warn: no menu package installed"
+		warn "no menu package installed"
 	fi
 }
 
@@ -91,7 +95,7 @@ check_lx_installed () {
 	then
 		verbose_info "the lx module is installed"
 	else
-		say "warn: the lx module is not installed"
+		warn "the lx module is not installed"
 	fi
 }
 
@@ -106,8 +110,8 @@ check_search_for_unicode_files () {
 		fi
 	done
 
-	test "${unicode_found}" = "y" && say "\
-warning: unicode files are not XDG compliant and may give unpredicted results"
+	test "${unicode_found}" = "y" && warn "\
+unicode files are not XDG compliant and may give unpredicted results"
 }
 
 icon_theme_last_used_by_jgmenu () {
@@ -271,7 +275,7 @@ prompt () {
 	'')
 		;;
 	*)
-		echo "warn: '$cmd' is not a recognised command"
+		warn "'$cmd' is not a recognised command"
 		print_commands
 		;;
 	esac
