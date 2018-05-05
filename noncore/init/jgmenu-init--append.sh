@@ -8,6 +8,7 @@ append__lock () {
 	if grep -i 'lock' ${append_file} >/dev/null 2>&1
 	then
 		say "append.csv already contains a lock entry"
+		return
 	fi
 	if type i3lock-fancy >/dev/null 2>&1
 	then
@@ -24,6 +25,7 @@ append__exit () {
 	if grep -i 'exit' ${append_file} >/dev/null 2>&1
 	then
 		say "append.csv already contains an exit entry"
+		return
 	fi
 	if type systemctl >/dev/null
 	then
