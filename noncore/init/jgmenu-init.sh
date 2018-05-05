@@ -4,6 +4,7 @@
 
 config_file=~/.config/jgmenu/jgmenurc
 prepend_file=~/.config/jgmenu/prepend.csv
+append_file=~/.config/jgmenu/append.csv
 
 xdg_config_dirs="${XDG_CONFIG_HOME:-$HOME/.config} ${XDG_CONFIG_DIRS:-/etc/xdg}"
 xdg_data_dirs="$XDG_DATA_HOME $HOME/.local/share $XDG_DATA_DIRS \
@@ -18,6 +19,7 @@ read_tint2rc tint2_rules tint2_button multi_window"
 
 JGMENU_EXEC_DIR=$(jgmenu_run --exec-path)
 . "${JGMENU_EXEC_DIR}"/jgmenu-init--prepend.sh
+. "${JGMENU_EXEC_DIR}"/jgmenu-init--append.sh
 
 say () {
 	printf "%b\n" "$@"
@@ -166,6 +168,7 @@ set_theme () {
 		. "${JGMENU_EXEC_DIR}"/jgmenu-init--neon.sh
 		setup_theme
 		prepend_items
+		append_items
 		say "Theme '$1' has been set"
 		restart_jgmenu
 		;;
@@ -199,7 +202,8 @@ you have more than 100 backup files - consider removing a few"
 
 backup_jgmenurc () {
 	local files_to_backup=".config/jgmenu/jgmenurc \
-		.config/jgmenu/prepend.csv"
+		.config/jgmenu/prepend.csv \
+		.config/jgmenu/append.csv"
 
 	mkdir -p ~/.config/jgmenu/backup
 	say "Backing up config files..."
@@ -236,16 +240,15 @@ initial_checks () {
 # NOT YET IMPLEMENTED:
 #s, setup   = run through all options\n\
 #i, icon    = set icon theme\n\
-#x, xdg     = check xdg menu package is installed\n\
 #u, undo    = revert back to previous set of config files\n\
-#a, append  = add items at bottom of root-menu (e.g. lock and exit)\n\
 #c, csv     = choose csv generator (i.e. the thing that produces the menu content)\n\
 print_commands () {
 	printf "%b" "\
 *** commands ***\n\
-a, analyse = run a number of jgmenu related checks on system\n\
+c, check   = run a number of jgmenu related checks on system\n\
 t, theme   = create config files based on templates\n\
 p, prepend = add items at top of root-menu (e.g. web browser and terminal)\n\
+a, append  = add items at bottom of root-menu (e.g. lock and exit)\n\
 q, quit    = quit init process\n"
 }
 
@@ -255,7 +258,7 @@ prompt () {
 	printf "%b" "What now> "
 	read -r cmd
 	case "$cmd" in
-	analyse|a)
+	check|c)
 		analyse
 		;;
 	theme|t)
@@ -263,6 +266,9 @@ prompt () {
 		;;
 	prepend|p)
 		prepend_items
+		;;
+	append|a)
+		append_items
 		;;
 	quit|q)
 		return 1

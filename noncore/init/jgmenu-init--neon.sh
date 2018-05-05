@@ -1,7 +1,7 @@
 # This shell script fragment is designed to be sourced by jgmenu-init.sh
 
 add_search_box () {
-cat >~/.config/jgmenu/prepend.csv <<'EOF'
+cat >${prepend_file} <<'EOF'
 @rect,action,10,10,180,25,3,left,top,#666666 15,#000000 0,content
 @search,action,10,10,180,25,3,left,top,#666666 90,#222222 3,Type to search...
 EOF
@@ -20,6 +20,8 @@ setup_tint2_neon_theme () {
 }
 
 setup_theme () {
+	rm -f ${prepend_file}
+	rm -f ${append_file}
 	add_search_box
 	setup_tint2_neon_theme
 }

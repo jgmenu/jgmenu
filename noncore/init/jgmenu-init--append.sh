@@ -1,22 +1,28 @@
 # This shell script fragment is designed to be sourced by jgmenu-init.sh
 
-append__file=~/.config/jgmenu/append.csv
-
 append__add () {
-	printf "%b\n" "$@" >>"${append__file}"
+	printf "%b\n" "$@" >>"${append_file}"
 }
 
-append_items () {
-	append__add "^sep()"
-
-	if type i3lock-fancy >dev/null 2>&1
+append__lock () {
+	if grep -i 'lock' ${append_file} >/dev/null 2>&1
+	then
+		say "append.csv already contains a lock entry"
+	fi
+	if type i3lock-fancy >/dev/null 2>&1
 	then
 		append__add "Lock,i3lock-fancy -p,system-lock-screen"
 	elif type i3lock >/dev/null 2>&1
 	then
 		append__add "Lock,i3lock -c 000000,system-lock-screen"
 	fi
+}
 
+append__exit () {
+	if grep -i 'exit' ${append_file} >/dev/null 2>&1
+	then
+		say "append.csv already contains an exit entry"
+	fi
 	if type systemctl >/dev/null
 	then
 		append__add "Exit,^checkout(exit),system-shutdown"
@@ -29,4 +35,10 @@ append_items () {
 		append__add "Reboot,systemctl -i reboot,system-reboot"
 		append__add "Poweroff,systemctl -i poweroff,system-shutdown"
 	fi
+}
+
+append_items () {
+	append__add "^sep()"
+	append__lock
+	append__exit
 }
