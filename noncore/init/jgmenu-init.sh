@@ -203,7 +203,8 @@ you have more than 100 backup files - consider removing a few"
 backup_jgmenurc () {
 	local files_to_backup=".config/jgmenu/jgmenurc \
 		.config/jgmenu/prepend.csv \
-		.config/jgmenu/append.csv"
+		.config/jgmenu/append.csv \
+		.config/tint2/tint2rc"
 
 	mkdir -p ~/.config/jgmenu/backup
 	say "Backing up config files..."
@@ -211,10 +212,10 @@ backup_jgmenurc () {
 	tar_name=${HOME}/.config/jgmenu/backup/"$(date +%Y%m%d%H%M%S)".tar
 	# create empty tarball to append files to
 	tar -cf ${tar_name} -T /dev/null
-	for i in ${files_to_backup}
+	for f in ${files_to_backup}
 	do
-		test -e ${i} || continue
-		tar -rhf ${tar_name} "${i}"
+		test -e ${f} || continue
+		tar -rhf ${tar_name} "${f}"
 	done
 	gzip ${tar_name}
 	say "${tar_name}"
