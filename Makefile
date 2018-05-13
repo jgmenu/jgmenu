@@ -103,7 +103,7 @@ else
 	@type python3 >/dev/null 2>&1 || printf "%s\n" "warning: python3 not \
 	found. Suggest defining PYTHON3_POLYGLOT"
 endif
-	@$(MAKE) --no-print-directory -C docs/manual/ install
+	@$(MAKE) --no-print-directory -C docs/manual/ prefix=$(prefix) install
 	@install -d $(DESTDIR)$(datarootdir)/icons/hicolor/scalable/apps/
 	@install -d $(DESTDIR)$(datarootdir)/applications/
 	@install -m644 ./data/jgmenu.svg $(DESTDIR)$(datarootdir)/icons/hicolor/scalable/apps/
