@@ -48,7 +48,10 @@ SCRIPTS_PYTHON = jgmenu-pmenu.py jgmenu-unity-hack.py \
 
 PROGS	 = jgmenu jgmenu-xdg jgmenu-ob jgmenu-socket
 
-NO_LX := $(shell pkg-config "libmenu-cache < 1.1.0" && echo "1")
+# wrap in ifneq to ensure we respect user defined NO_LX=1
+ifneq ($(NO_LX),1)
+NO_LX := $(shell pkg-config "libmenu-cache >= 1.1.0" "glib-2.0" || echo "1")
+endif
 ifneq ($(NO_LX),1)
 PROGS += jgmenu-lx
 endif
