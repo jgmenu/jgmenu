@@ -108,6 +108,30 @@ endif
 	@install -d $(DESTDIR)$(datarootdir)/applications/
 	@install -m644 ./data/jgmenu.svg $(DESTDIR)$(datarootdir)/icons/hicolor/scalable/apps/
 	@install -m644 ./data/jgmenu.desktop $(DESTDIR)$(datarootdir)/applications/
+ifeq ($(NO_LX),1)
+	@echo "info: lx module not included as libmenu-cache >=1.1.0 not found"
+endif
+
+# We are not brave enough to uninstall in /usr/, /usr/local/ etc
+uninstall:
+ifneq ($(prefix),$(HOME))
+	@$(error uninstall only works if prefix=$(HOME))
+endif
+	@rm -f ~/bin/jgmenu
+	@rm -f ~/bin/jgmenu_run
+	@rm -rf ~/lib/jgmenu/
+	@-rmdir ~/lib 2>/dev/null || true
+	@rm -f ~/share/man/man1/jgmenu*
+	@rm -f ~/share/man/man7/jgmenu*
+	@-rmdir ~/share/man/man1 2>/dev/null || true
+	@-rmdir ~/share/man/man7 ~/share/man ~/share 2>/dev/null || true
+	@rm -f ~/.local/share/icons/hicolor/scalable/apps/jgmenu.svg
+	@rm -f ~/.local/share/applications/jgmenu.desktop
+	@-rmdir ~/.local/share/applications 2>/dev/null || true
+	@-rmdir ~/.local/share/icons/hicolor/scalable/apps 2>/dev/null || true
+	@-rmdir ~/.local/share/icons/hicolor/scalable 2>/dev/null || true
+	@-rmdir ~/.local/share/icons/hicolor 2>/dev/null || true
+	@-rmdir ~/.local/share/icons 2>/dev/null || true
 
 clean:
 	@$(RM) $(PROGS) *.o *.a $(DEPDIR)/*.d
