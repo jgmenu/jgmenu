@@ -239,10 +239,12 @@ initial_checks () {
 }
 
 # NOT YET IMPLEMENTED:
-#s, setup   = run through all options\n\
+#d, dpi     = scan system for dpi settings and set config file
+#g, gen     = choose CSV generator (i.e. the thing that produces the menu content)\n\
 #i, icon    = set icon theme\n\
+#s, search  = add search box\n\
 #u, undo    = revert back to previous set of config files\n\
-#c, csv     = choose csv generator (i.e. the thing that produces the menu content)\n\
+#y, polybar = sync with polybar settings
 print_commands () {
 	printf "%b" "\
 *** commands ***\n\
