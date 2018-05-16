@@ -27,6 +27,3 @@ ex04	Tests icon positioning and icon theme inheritance
 --
 ex10	Demo of all tint2rc config files in /usr/share/tint2
 ex11	Vanilla tint2rc with button - no jgmenurc
-ex12	Dark
-ex13	Gray with search box
-

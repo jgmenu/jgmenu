@@ -1,33 +1,35 @@
 TODO
 ====
 
-Current Focus
--------------
+Bugs
+----
 
 Issue #56 - at_pointer=1 mode on multiple monitors
 
-Consider add % at start of command in order to not hide_or_exit() (issue #55)
-
-Makefile: replace polyglot ifdef with a check in the script (keeps Makefile cleaner)
-
-jgmenu(1): explain what the diffirent colours refer to
-
-wiki:	- add notes on plank and cairo-dock
-	- desktop file: Update with env var info
+Before v0.9
+-----------
 
 Add hover_delay config option
 
-charset.c: do not assert s == e
-
 Fix socket bug in main() too. + write comment to explain what's happening
+
+WIP
+---
+
+Remove some jgmenu info message (e.g. _NET_WORKAREA)
+Add notes on _NET_WORKAREA to man page
+
+ob: - consider where tempfile lives...
+    - use new --cmd= syntax when CSV produced
+
+Consider add % at start of command in order to not hide_or_exit() (issue #55)
+
+jgmenu(1): explain what the diffirent colours refer to
+
+charset.c: do not assert s == e
 
 lx: check .desktop files are not Unicode in order to avoid segfault
 (Add unit test to prove problem - to include extace.desktop)
-
-Refactor config.c (incl "struct config jgmenurc") to:
-  - avoid having to load it twice from jgmenu.c
-  - enable more sane config options wrt menu_margin_{x,y}, _NET_WORKAREA and
-    tint2 environment variables
 
 Rename screen{_x0,_y0...} variables to simply screen (as a struct area)
 
@@ -36,11 +38,6 @@ Do we remove geo_set_screen_area() again?
 Makefile: add uninstall
 
 Investigate duplicate .desktop entries on Raspberry Pi and nixOS
-
-Key changes before v1.0
------------------------
-
-	Add watch.c
 
 Cleanliness
 -----------
@@ -72,8 +69,6 @@ Cleanliness
 
 	parse-ob.c: remove return_cmd
 			Read JGMENU_PREPEND_FILE env var (and read ~/.config/jgmenu/prepend.csv by default)
-			Read stdin -->  exec in jgmenu_run
-					stdin -> mkstemp /tmp/jgmenu-XXXXXX
 
 	Move struct item/node code to data.c.
 		  - Refactor all the checkout_* functions. They're confusing.
@@ -94,8 +89,6 @@ Cleanliness
 
 	Rename filter list (as it clashes with filter_) (maybe 'disp'?)
 
-	Add shareness with symlinks
-
 	Remove harded coded variables (such as 22, etc)
 
 Improvements / New features
@@ -114,21 +107,11 @@ Improvements / New features
 
 	Consider adding a ^filter()
 
-	Parse polybar config files
-
-	Highlight correct parent item when submenu open
+	init: Parse polybar config files
 
 	Add jgmenu-xdg.c localisation
 
 	xdg: read xfce menu
-
-	jgmenu-init.sh:
-	  - put backup files in backup/ directory
-	  - add --clean to remove all config files
-	  - jgmenu init --append,--prepend, --jgmenurc
-	    Let jgmenu init call all three to create a simple basic setup
-	    Add "init --purge" to remove all three.
-	  - Add an experimental "init --theme=neon"
 
 	Add watch.c to check changes to .desktop files, tint2, xsettings, jgmenurc,
 	etc. on wake-up
