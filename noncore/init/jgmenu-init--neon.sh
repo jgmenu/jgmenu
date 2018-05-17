@@ -14,6 +14,7 @@ setup_tint2_neon_theme () {
 	read answer
 	if test "$answer" = "y" || test "$answer" = "Y"
 	then
+		mkdir -p ~/.config/tint2
 		cp -f "${JGMENU_EXEC_DIR}"/tint2rc.neon ~/.config/tint2/tint2rc
 		restart_tint2
 	fi
