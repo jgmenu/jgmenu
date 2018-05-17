@@ -18,7 +18,7 @@ menu_padding_left   = 10
 #menu_radius         = 1
 #menu_border         = 0
 #menu_halign         = left
-#menu_valign         = bottom
+menu_valign         = bottom
 
 #sub_spacing         = 1
 sub_padding_top     = 10
