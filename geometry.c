@@ -133,6 +133,13 @@ static void geo_update(void)
 		update_sub_window();
 }
 
+void geo_update_monitor_coords(void)
+{
+	ui_get_screen_res(&screen_x0, &screen_y0, &screen_width,
+			  &screen_height, config.monitor);
+	geo_update();
+}
+
 void geo_init(void)
 {
 	/*
@@ -155,10 +162,7 @@ void geo_init(void)
 	item_margin_x = 4;
 	item_margin_y = 4;
 
-	ui_get_screen_res(&screen_x0, &screen_y0, &screen_width,
-			  &screen_height, config.monitor);
-
-	geo_update();
+	geo_update_monitor_coords();
 }
 
 int geo_get_item_coordinates(struct area *a)

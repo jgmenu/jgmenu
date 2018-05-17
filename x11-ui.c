@@ -131,6 +131,17 @@ void ui_init(void)
 	ui->root = RootWindow(ui->dpy, ui->screen);
 }
 
+static void print_screen_info(int n, XineramaScreenInfo *screen_info)
+{
+	int i;
+
+	info("%d monitor(s) detected", n);
+	for (i = 0; i < n; i++)
+		printf("        - monitor-%d: x0=%d; y0=%d; w=%d; h=%d\n",
+		       i + 1, screen_info[i].x_org, screen_info[i].y_org,
+		       screen_info[i].width, screen_info[i].height);
+}
+
 #define INTERSECT(x, y, w, h, r)  (MAX(0, MIN((x) + (w), (r).x_org + (r).width)  - \
 				   MAX((x), (r).x_org)) &&\
 				   MAX(0, MIN((y) + (h), (r).y_org + (r).height) - \
@@ -146,9 +157,13 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height, int monitor)
 	screen_info = XineramaQueryScreens(ui->dpy, &n);
 	BUG_ON(!screen_info);
 	XQueryPointer(ui->dpy, ui->root, &dw, &dw, &x, &y, &di, &di, &du);
+	if (getenv("JGMENU_SCREEN_INFO"))
+		print_screen_info(n, screen_info);
 	for (i = 0; i < n; i++)
 		if (INTERSECT(x, y, 1, 1, screen_info[i]))
 			break;
+
+	/* handle user specified monitor (from config file) */
 	if (monitor) {
 		if (monitor > n)
 			die("cannot connect to monitor '%d' (max %d)", monitor, n);

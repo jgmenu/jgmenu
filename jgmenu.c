@@ -809,6 +809,7 @@ void launch_menu_at_pointer(void)
 	struct point pos;
 	struct area wa;
 
+	geo_update_monitor_coords();
 	XQueryPointer(ui->dpy, DefaultRootWindow(ui->dpy), &dw, &dw, &di, &di,
 		      &pos.x, &pos.y, &du);
 

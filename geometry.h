@@ -47,6 +47,7 @@
 #include "x11-ui.h"
 #include "align.h"
 
+void geo_update_monitor_coords(void);
 void geo_init(void);
 int geo_get_item_coordinates(struct area *a);
 struct point geo_get_max_itemarea_that_fits(void);
