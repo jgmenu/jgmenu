@@ -13,9 +13,8 @@ Adding new config variables
 Any new config variables need to be added to the following:
   - config.c
   - config.h
-  - docs/jgmenurc
-  - jgmenu-init.sh
-  - docs/manual/jgmenu-config.1.md
+  - noncore/config/jgmenurc
+  - docs/manual/jgmenu.1.md
 
 Testing
 -------

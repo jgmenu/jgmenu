@@ -1,18 +1,6 @@
 TODO
 ====
 
-Bugs
-----
-
-Issue #56 - at_pointer=1 mode on multiple monitors
-
-Before v0.9
------------
-
-Add hover_delay config option
-
-Fix socket bug in main() too. + write comment to explain what's happening
-
 WIP
 ---
 

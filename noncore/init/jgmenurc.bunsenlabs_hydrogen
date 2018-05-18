@@ -6,6 +6,7 @@ at_pointer          = 1
 #terminal_exec       = x-terminal-emulator
 #terminal_args       = -e
 #monitor             = 0
+#hover_delay	     = 100
 
 #menu_margin_x       = 0
 #menu_margin_y       = 0

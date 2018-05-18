@@ -14,6 +14,7 @@ struct config {
 	char *terminal_exec;
 	char *terminal_args;
 	int monitor;
+	int hover_delay;
 
 	int menu_margin_x;
 	int menu_margin_y;

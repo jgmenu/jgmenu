@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 23 April, 2018
+% 18 May, 2018
 
 # NAME
 
@@ -233,6 +233,11 @@ monitor = __integer__ (default 0)
     Specify a particular monitor as an index starting from 1.  
     If 0, the menu will be launched on the monitor where the mouse  
     is.  
+
+hover_delay = __integer__ (default 100)  
+
+    The amount of time (in milliseconds) from hovering over an item  
+    until a submenu is opened.  
 
 menu_margin_x = __integer__ (default 0)  
 menu_margin_y = __integer__ (default 0)  

@@ -26,6 +26,7 @@ void config_set_defaults(void)
 	config.terminal_exec	   = xstrdup("x-terminal-emulator");
 	config.terminal_args	   = xstrdup("-e");
 	config.monitor		   = 0;
+	config.hover_delay	   = 100;
 
 	config.menu_margin_x	   = 0;
 	config.menu_margin_y	   = 0;
@@ -119,6 +120,8 @@ static void process_line(char *line)
 		config.terminal_args = xstrdup(value);
 	} else if (!strcmp(option, "monitor")) {
 		xatoi(&config.monitor, value, XATOI_NONNEG, "config.monitor");
+	} else if (!strcmp(option, "hover_delay")) {
+		xatoi(&config.hover_delay, value, XATOI_NONNEG, "config.hover_delay");
 
 	} else if (!strcmp(option, "menu_margin_x")) {
 		xatoi(&config.menu_margin_x, value, XATOI_NONNEG, "config.margin_x");
