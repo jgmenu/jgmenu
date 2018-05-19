@@ -11,6 +11,15 @@ prepend__add () {
 	printf "%b\n" "$@" >>"${prepend_file}"
 }
 
+prepend__add_sep () {
+	if grep -i "\^sep(" ${prepend_file} >/dev/null 2>&1
+	then
+		say "prepend.csv already contains a separator"
+		return
+	fi
+	prepend__add "^sep()"
+}
+
 prepend__add_terminal () {
 	test -e ${prepend_file} && for x in ${prepend__terminals}
 	do
@@ -75,5 +84,5 @@ prepend_items () {
 	prepend__add_terminal
 	prepend__add_browser
 	prepend__add_file_manager
-	prepend__add "^sep()"
+	prepend__add_sep
 }

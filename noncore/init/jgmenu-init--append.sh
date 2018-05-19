@@ -4,6 +4,11 @@ append__add () {
 	printf "%b\n" "$@" >>"${append_file}"
 }
 
+append__sep () {
+	test -e ${append_file} && return
+	append__add "^sep()"
+}
+
 append__lock () {
 	if grep -i 'lock' ${append_file} >/dev/null 2>&1
 	then
@@ -43,7 +48,7 @@ append__exit () {
 }
 
 append_items () {
-	append__add "^sep()"
+	append__sep
 	append__lock
 	append__exit
 }
