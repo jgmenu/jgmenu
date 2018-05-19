@@ -158,6 +158,10 @@ set_theme () {
 	cp -f $filename ~/.config/jgmenu/jgmenurc
 
 	case "$1" in
+	archlabs*)
+		say "Theme '$1' has been set"
+		restart_jgmenu
+		;;
 	bunsenlabs*)
 		. "${JGMENU_EXEC_DIR}"/jgmenu-init--bunsenlabs.sh
 		setup_theme

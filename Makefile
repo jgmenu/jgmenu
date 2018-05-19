@@ -37,6 +37,7 @@ SCRIPTS_SHELL  = jgmenu_run noncore/init/jgmenu-init.sh \
 FRAGMENTS      = noncore/init/jgmenu-init--prepend.sh \
                  noncore/init/jgmenu-init--append.sh \
                  noncore/init/jgmenu-init--bunsenlabs.sh \
+                 noncore/init/jgmenurc.archlabs_1803 \
                  noncore/init/jgmenurc.bunsenlabs_hydrogen \
                  noncore/init/jgmenu-init--neon.sh \
                  noncore/init/jgmenurc.neon \
