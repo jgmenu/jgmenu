@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 18 May, 2018
+% 19 May, 2018
 
 # NAME
 
@@ -380,8 +380,8 @@ csv_name_format = __string__ (default `%n (%g)`)
 
 # SEE ALSO
 
-`JGMENU_RUN(1)`  
-`JGMENUTUTORIAL(7)`  
+`jgmenu_run(1)`  
+`jgmenututorial(7)`  
 
 
 The jgmenu source code and documentation can be downloaded from  

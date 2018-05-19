@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 24 April, 2018  
+% 19 May, 2018  
 
 # NAME
 
@@ -42,7 +42,7 @@ config file by running:
     jgmenu init
 
 Edit this config file (~/.config/jgmenu/jgmenurc) to suit your  
-system. Read the man page JGMENU(1) for further information.  
+system. Read the man page jgmenu(1) for further information.  
 
 If you have a config file at ~/.config/jgmenu/jgmenurc and want to  
 ignore it for the purposes of running one of the lessons, just use  

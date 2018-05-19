@@ -1,6 +1,6 @@
 % JGMENU_RUN(1)  
 % Johan Malm  
-% 14 December, 2017
+% 19 May, 2018
 
 # NAME
 
@@ -43,5 +43,5 @@ jgmenu_run
 
 # SEE ALSO
 
-`JGMENU(1)`  
-`JGMENUTUTORIAL(7)`  
+`jgmenu(1)`  
+`jgmenututorial(7)`  
