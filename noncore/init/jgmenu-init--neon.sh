@@ -8,7 +8,7 @@ EOF
 }
 
 setup_tint2_neon_theme () {
-	pgrep tint2 >/dev/null  || return
+	type tint2 >/dev/null  || return
 	warn "your current tint2rc will over-written if you answer 'y'"
 	say "Do you wish to create a tint2 config file to match this menu [yN]"
 	read answer
