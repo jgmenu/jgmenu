@@ -106,7 +106,7 @@ check_search_for_unicode_files () {
 	do
 		test -d "${x}"/applications/ || continue
 		if file -i "${x}"/applications/*.desktop \
-			| grep -v 'utf-8\|ascii'
+			| grep -v 'utf-8\|ascii\|symlink'
 		then
 			unicode_found=y
 		fi
