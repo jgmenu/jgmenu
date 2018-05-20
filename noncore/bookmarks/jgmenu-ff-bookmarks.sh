@@ -9,6 +9,12 @@
 database=$(find ~/.mozilla/${JGMENU_BROWSER}/ -name "places.sqlite")
 submenus=$(mktemp)
 
+usage () {
+	printf "%b\n" "\
+usage: jgmenu_run ff-bookmarks\n\
+Generate jgmenu flavoured CSV menu data for firefox/iceweasel bookmarks"
+}
+
 check_dependency () {
 	if ! type "$1" >/dev/null 2>&1
 	then
@@ -41,6 +47,12 @@ process_folders () {
 		process_bookmarks $id 
 	done
 }
+
+if test $1 = "--help"
+then
+	usage
+	exit 0
+fi
 
 check_dependency ${JGMENU_BROWSER}
 check_dependency sqlite3
