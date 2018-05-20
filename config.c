@@ -294,7 +294,8 @@ void config_read_jgmenurc(const char *filename)
 	initiated = 1;
 	if (stat(jgmenurc_file.buf, &sb) < 0)
 		return;
-	info("using config file %s", jgmenurc_file.buf);
+	if (getenv("JGMENU_CONFIG_FILE_INFO"))
+		info("using config file %s", jgmenurc_file.buf);
 parse:
 	parse_file(jgmenurc_file.buf);
 }
