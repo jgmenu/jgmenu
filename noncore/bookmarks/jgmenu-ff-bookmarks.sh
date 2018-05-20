@@ -9,6 +9,14 @@
 database=$(find ~/.mozilla/${JGMENU_BROWSER}/ -name "places.sqlite")
 submenus=$(mktemp)
 
+check_dependency () {
+	if ! type "$1" >/dev/null 2>&1
+	then
+		printf "%b\n" "'$1' is required to run module [ff-bookmarks]"
+		exit 1
+	fi
+}
+
 process_bookmarks () {
 	query="select b.title, p.url from moz_bookmarks as b left outer join \
                moz_places as p on b.fk=p.id where b.type = 1 and p.hidden=0 \
@@ -34,6 +42,8 @@ process_folders () {
 	done
 }
 
+check_dependency ${JGMENU_BROWSER}
+check_dependency sqlite3
 
 # unfiled bookmarks
 root="(select id from moz_bookmarks where rtrim(guid,'_')='unfiled')"
