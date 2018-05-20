@@ -112,9 +112,4 @@ Build Options
 In addition to `prefix`, there are a number of build variables which can be  
 defined. These are described in the Makefile. Create a config.mk to override  
 build settings without making your tree dirty or having to re-type them every  
-time. My config.mk typically contains:
-
-```bash
-prefix=$(HOME)
-ASAN=1
-```
+time.
