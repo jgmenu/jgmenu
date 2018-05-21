@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 19 May, 2018  
+% 21 May, 2018  
 
 # NAME
 
@@ -275,4 +275,51 @@ For example, you could do:
     
 
 ^sep() inserts a horizontal separator line
+
+Lesson 10
+---------
+
+In lesson 7, we introduced pmenu, xdg and lx. These commands are  
+referred to as "CSV generators" and are invoked as follows:  
+
+    jgmenu_run <*command*>
+
+This is the full list of built-in "CSV generators":  
+
+  - pmenu  
+  - xdg  
+  - lx  
+  - ob  
+  - ff-bookmarks  
+
+They are documented by a man page or a simple --help message.  
+
+    man jgmenu-<command>
+    jgmenu_run <command> --help
+
+Here follow some examples of how they can be used.  
+
+Specify CSV generator in the config file by setting `csv_cmd` in  
+`~/.config/jgmenu/jgmenurc`  
+
+    csv_cmd = jgmenu_run pmenu
+
+Specify CSV generator on the command line
+
+    jgmenu --csv-cmd="jgmenu_run pmenu"
+
+Pipe the CSV output to jgmenu (using `--simple` to read from `stdin`)  
+
+    jgmenu_run pmenu | jgmenu --simple
+
+Create a pipemenu using ^pipe() markup  
+
+```
+cat <<EOF >pipe_example
+Terminal,xterm
+File Manager,pcmanfm
+^pipe(jgmenu_run pmenu)
+
+jgmenu --csv-file="pipe_example"
+```
 
