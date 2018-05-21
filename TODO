@@ -4,7 +4,6 @@ TODO
 WIP
 ---
 
-Remove some jgmenu info message (e.g. _NET_WORKAREA)
 Add notes on _NET_WORKAREA to man page
 
 ob: - consider where tempfile lives...
@@ -22,8 +21,6 @@ lx: check .desktop files are not Unicode in order to avoid segfault
 Rename screen{_x0,_y0...} variables to simply screen (as a struct area)
 
 Do we remove geo_set_screen_area() again?
-
-Makefile: add uninstall
 
 Investigate duplicate .desktop entries on Raspberry Pi and nixOS
 

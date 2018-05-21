@@ -1,0 +1,48 @@
+jgmenu v0.9 release notes
+=========================
+
+Updates since v0.8.2
+--------------------
+
+  * Re-write 'init' module to make it do the following:
+
+	- Create and amend the jgmenurc config file
+	- Provide config file templates
+	- Carry out some system checks which are useful when setting
+	  up jgmenu
+
+  * Add 'config' module (to support 'init')
+
+  * Add --cmd= option to 'ob'
+
+    This is particularly useful for pipe-menus designed for openbox,
+    for example:
+
+    cat <<'EOF' >>~/.config/jgmenu/prepend.csv 
+    Places,^pipe(jgmenu_run ob --cmd=al-places-pipemenu)
+    EOF
+
+  * Add 'ff-bookmarks' CSV generator (for firefox bookmarks)
+
+  * Add jgmenututorial(7) lesson 10 on CSV generators
+
+  * Add icon (jgmenu.svg) - thanks ArchLabs team for the inspiration
+
+  * Simplify jgmenu.desktop
+
+  * Reduce default mouseover hover timer from 250ms to 100ms
+    Also, add config option 'hover_delay' for anyone wishing to tweak further.
+
+  * Make pmenu handle missing menu package. If no menu-package exists, all
+    apps are put in the menu's root
+
+  * Add 'tasks' module (written-by: @Misko-2083)
+
+    This is not yet included in the Makefile, but has been added to the repo
+    as an interesting tool for the time being.
+
+  * Makefile: handle missing dependencies better (incl libmenu-cache)
+
+  * Give jgmenurc higher precedence than _NET_WORKAREA
+
+  * Various minor bug fixes and updates to man pages.
