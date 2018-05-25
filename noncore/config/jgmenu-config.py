@@ -140,7 +140,7 @@ def amend(conf_filename):
     template_filename = get_template_filename()
     with open(conf_filename, "r+") as f:
         conf_lines = f.read().split("\n")
-    with open(template_filename, "r+") as f:
+    with open(template_filename, "r") as f:
         template_lines = f.read().split("\n")
 
     keys = missing_keys(template_lines, conf_lines)
