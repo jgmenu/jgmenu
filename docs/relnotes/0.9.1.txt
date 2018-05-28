@@ -1,0 +1,7 @@
+jgmenu v0.9.1 release notes
+===========================
+
+Updates since v0.9
+------------------
+
+  * Bug fix in 'config' module
