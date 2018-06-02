@@ -1,8 +1,20 @@
 TODO
 ====
 
+BUG
+---
+
+bg colour is transparent if tint2rc is missing and tint2_look==1
+
+
 WIP
 ---
+
+Add --no-dirs to pmenu
+
+Add TOC to jgmenututorial(7)
+
+sub_padding: change -1 to 'auto'. If auto, take smallest menu_padding
 
 Add notes on _NET_WORKAREA to man page
 
@@ -11,7 +23,7 @@ ob: - consider where tempfile lives...
 
 Consider add % at start of command in order to not hide_or_exit() (issue #55)
 
-jgmenu(1): explain what the diffirent colours refer to
+jgmenu(1): explain what the different colours refer to
 
 charset.c: do not assert s == e
 
