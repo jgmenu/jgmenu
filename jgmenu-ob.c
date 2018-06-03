@@ -50,8 +50,8 @@ static void print_it(struct tag *tag)
 		printf("Back,^back()\n");
 	list_for_each_entry(item, &tag->items, list) {
 		if (item->pipe)
-			printf("%s,^pipe(f=/tmp/jgmenu-pipe; %s >$f; "
-			       "jgmenu_run ob --tag='%s' $f; rm -f $f)\n",
+			printf("%s,^pipe("
+			       "jgmenu_run ob --cmd='%s' --tag='%s')\n",
 			       item->label, item->cmd, item->label);
 		else if (item->checkout)
 			printf("%s,^checkout(%s)\n", item->label, item->cmd);
