@@ -27,27 +27,6 @@ static char *xdg_config_dirs[] = {
 	NULL
 };
 
-static void expand_env_vars(struct sbuf *s)
-{
-	char *p;
-	struct sbuf env_name;
-
-	sbuf_init(&env_name);
-	sbuf_cpy(&env_name, s->buf);
-	p = strchr(env_name.buf, '/');
-	if (p)
-		*p = '\0';
-	p = getenv(env_name.buf + 1);
-	if (!p) {
-		sbuf_cpy(s, "");
-		goto cleanup;
-	}
-	sbuf_shift_left(s, strlen(env_name.buf));
-	sbuf_prepend(s, p);
-cleanup:
-	xfree(env_name.buf);
-}
-
 static void get_dirs(struct list_head *dir_list, char **dirs)
 {
 	size_t i;
@@ -60,7 +39,7 @@ static void get_dirs(struct list_head *dir_list, char **dirs)
 	for (i = 0; dirs[i]; i++) {
 		sbuf_cpy(&tmp, dirs[i]);
 		if (!strncmp(tmp.buf, "$", 1))
-			expand_env_vars(&tmp);
+			sbuf_expand_env_var(&tmp);
 		if (!tmp.len)
 			continue;
 		argv_init(&argv_buf);
