@@ -1,6 +1,7 @@
 /* Simple tint2rc parser for jgmenu */
 
 #include <string.h>
+#include <sys/stat.h>
 
 #include "util.h"
 #include "config.h"
@@ -434,6 +435,7 @@ void t2conf_atexit(void)
 void t2conf_parse(const char *filename, int screen_width, int screen_height)
 {
 	struct sbuf tint2rc;
+	struct stat sb;
 
 	g_screen_width = screen_width;
 	g_screen_height = screen_height;
@@ -445,9 +447,12 @@ void t2conf_parse(const char *filename, int screen_width, int screen_height)
 	else
 		sbuf_addstr(&tint2rc, DEFAULT_TINT2RC);
 	sbuf_expand_tilde(&tint2rc);
+	if (stat(tint2rc.buf, &sb) == -1)
+		goto cleanup;
 	parse_file(tint2rc.buf);
-	free(tint2rc.buf);
 	set_alignment_and_position();
+cleanup:
+	free(tint2rc.buf);
 	t2conf_cleanup();
 }
 
