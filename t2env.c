@@ -56,10 +56,9 @@ void tint2env_read_socket(void)
 
 	/* sfd is non-blocking */
 	client_fd = accept(sfd, NULL, NULL);
-	if (client_fd == -1) {
-		fprintf(stderr, "info: tint2 button was not used\n");
+	/* only proceed if tint2 button/launcher was used */
+	if (client_fd == -1)
 		return;
-	}
 	while ((num_read = read(client_fd, buf, SOCKET_BUF_SIZE)) > 0) {
 		buf[num_read] = '\0';
 		process_buf(buf);

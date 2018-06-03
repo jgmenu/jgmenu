@@ -2139,7 +2139,6 @@ static void init_sigactions(void)
 
 static void cleanup(void)
 {
-	info("cleaning up...");
 	ui_cleanup();
 	config_cleanup();
 	filter_cleanup();
