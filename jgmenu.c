@@ -47,6 +47,7 @@
 #include "pm.h"
 #include "workarea.h"
 #include "charset.h"
+#include "watch.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 
@@ -949,6 +950,8 @@ static void if_unity_run_hack(void)
 static void awake_menu(void)
 {
 	if_unity_run_hack();
+	if (watch_files_have_changed())
+		restart();
 	if (config.at_pointer) {
 		launch_menu_at_pointer();
 		resize();
@@ -2144,6 +2147,7 @@ static void cleanup(void)
 	if (config.icon_size)
 		icon_cleanup();
 	widgets_cleanup();
+	watch_cleanup();
 
 	delete_empty_item();
 	destroy_node_tree();
@@ -2193,6 +2197,7 @@ int main(int argc, char *argv[])
 
 	if_unity_run_hack();
 
+	watch_init();
 	ui_init();
 	geo_init();
 
