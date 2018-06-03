@@ -75,6 +75,29 @@ void sbuf_expand_tilde(struct sbuf *s)
 	sbuf_prepend(s, getenv("HOME"));
 }
 
+void sbuf_expand_env_var(struct sbuf *s)
+{
+	char *p;
+	struct sbuf env_var_name;
+
+	if (s->buf[0] != '$')
+		return;
+	sbuf_init(&env_var_name);
+	sbuf_cpy(&env_var_name, s->buf);
+	p = strchr(env_var_name.buf, '/');
+	if (p)
+		*p = '\0';
+	p = getenv(env_var_name.buf + 1);
+	if (!p) {
+		sbuf_cpy(s, "");
+		goto cleanup;
+	}
+	sbuf_shift_left(s, strlen(env_var_name.buf));
+	sbuf_prepend(s, p);
+cleanup:
+	xfree(env_var_name.buf);
+}
+
 void sbuf_ltrim(struct sbuf *s)
 {
 	char *p;

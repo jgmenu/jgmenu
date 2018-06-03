@@ -45,6 +45,14 @@ extern void sbuf_cpy(struct sbuf *s, const char *data);
 extern void sbuf_prepend(struct sbuf *s, const char *data);
 extern void sbuf_shift_left(struct sbuf *s, int n_bytes);
 extern void sbuf_expand_tilde(struct sbuf *s);
+
+/**
+ * sbuf_expand_env_var - expand environment variable
+ * @s: the string to be expanded
+ *
+ * Expands an environment variable (e.g. $FOO) at the beginning of the string.
+ */
+extern void sbuf_expand_env_var(struct sbuf *s);
 extern void sbuf_ltrim(struct sbuf *s);
 extern void sbuf_rtrim(struct sbuf *s);
 extern void sbuf_trim(struct sbuf *s);
