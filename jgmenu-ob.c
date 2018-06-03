@@ -10,6 +10,7 @@
 #include <libxml/tree.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 #include "util.h"
 #include "sbuf.h"
@@ -321,6 +322,7 @@ void read_command(const char *cmd, char *template)
 	if (pipe(link) == -1)
 		die("pipe");
 
+	chdir("/tmp");
 	fd = mkstemp(template);
 	if (fd < 0)
 		die("unable to create tempfile");
