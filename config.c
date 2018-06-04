@@ -306,8 +306,18 @@ static void set_floor(int *var, int floor)
 		*var = floor;
 }
 
+int smallest_of_four(int a, int b, int c, int d)
+{
+	a = a > b ? b : a;
+	a = a > c ? c : a;
+	a = a > d ? d : a;
+	return a;
+}
+
 void config_post_process(void)
 {
+	int smallest_padding;
+
 	/*
 	 * The menu-border is drawn 'inside' the menu. Therefore, padding_* has
 	 * to allow for the border thickness.
@@ -317,14 +327,18 @@ void config_post_process(void)
 	set_floor(&config.menu_padding_right, config.menu_border);
 	set_floor(&config.menu_padding_top, config.menu_border);
 
+	smallest_padding = smallest_of_four(config.menu_padding_top,
+					    config.menu_padding_left,
+					    config.menu_padding_bottom,
+					    config.menu_padding_right);
 	if (config.sub_padding_top < 0)
-		config.sub_padding_top = config.menu_padding_top;
+		config.sub_padding_top = smallest_padding;
 	if (config.sub_padding_right < 0)
-		config.sub_padding_right = config.menu_padding_right;
+		config.sub_padding_right = smallest_padding;
 	if (config.sub_padding_bottom < 0)
-		config.sub_padding_bottom  = config.menu_padding_bottom;
+		config.sub_padding_bottom  = smallest_padding;
 	if (config.sub_padding_left < 0)
-		config.sub_padding_left = config.menu_padding_left;
+		config.sub_padding_left = smallest_padding;
 
 	/* Resolve csv_cmd keywords */
 	if (!strcmp(config.csv_cmd, "pmenu")) {
