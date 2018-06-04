@@ -41,10 +41,10 @@ void config_set_defaults(void)
 	config.menu_valign	   = BOTTOM;
 
 	config.sub_spacing	   = 1;
-	config.sub_padding_top	   = -1;
-	config.sub_padding_right   = -1;
-	config.sub_padding_bottom  = -1;
-	config.sub_padding_left	   = -1;
+	config.sub_padding_top	   = CONFIG_AUTO;
+	config.sub_padding_right   = CONFIG_AUTO;
+	config.sub_padding_bottom  = CONFIG_AUTO;
+	config.sub_padding_left	   = CONFIG_AUTO;
 	config.sub_hover_action    = 1;
 
 	config.item_margin_x	   = 3;
@@ -159,13 +159,33 @@ static void process_line(char *line)
 	} else if (!strcmp(option, "sub_spacing")) {
 		xatoi(&config.sub_spacing, value, 0, "config.sub_spacing");
 	} else if (!strcmp(option, "sub_padding_top")) {
-		xatoi(&config.sub_padding_top, value, XATOI_NONNEG, "config.sub_padding_top");
+		if (!value)
+			return;
+		if (!strcasecmp(value, "auto"))
+			config.sub_padding_top = CONFIG_AUTO;
+		else
+			xatoi(&config.sub_padding_top, value, XATOI_NONNEG, "config.sub_padding_top");
 	} else if (!strcmp(option, "sub_padding_right")) {
-		xatoi(&config.sub_padding_right, value, XATOI_NONNEG, "config.sub_padding_right");
+		if (!value)
+			return;
+		if (!strcasecmp(value, "auto"))
+			config.sub_padding_right = CONFIG_AUTO;
+		else
+			xatoi(&config.sub_padding_right, value, XATOI_NONNEG, "config.sub_padding_right");
 	} else if (!strcmp(option, "sub_padding_bottom")) {
-		xatoi(&config.sub_padding_bottom, value, XATOI_NONNEG, "config.sub_padding_bottom");
+		if (!value)
+			return;
+		if (!strcasecmp(value, "auto"))
+			config.sub_padding_bottom = CONFIG_AUTO;
+		else
+			xatoi(&config.sub_padding_bottom, value, XATOI_NONNEG, "config.sub_padding_bottom");
 	} else if (!strcmp(option, "sub_padding_left")) {
-		xatoi(&config.sub_padding_left, value, XATOI_NONNEG, "config.sub_padding_left");
+		if (!value)
+			return;
+		if (!strcasecmp(value, "auto"))
+			config.sub_padding_left = CONFIG_AUTO;
+		else
+			xatoi(&config.sub_padding_left, value, XATOI_NONNEG, "config.sub_padding_left");
 	} else if (!strcmp(option, "sub_hover_action")) {
 		xatoi(&config.sub_hover_action, value, XATOI_NONNEG, "config.sub_hover_action");
 
@@ -331,6 +351,10 @@ void config_post_process(void)
 					    config.menu_padding_left,
 					    config.menu_padding_bottom,
 					    config.menu_padding_right);
+	/*
+	 * Use '< 0' to include both CONFIG_AUTO and -1 (for backward
+	 * compatibility)
+	 */
 	if (config.sub_padding_top < 0)
 		config.sub_padding_top = smallest_padding;
 	if (config.sub_padding_right < 0)

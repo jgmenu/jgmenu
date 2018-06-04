@@ -4,31 +4,24 @@ TODO
 WIP
 ---
 
+man pages:
+  - Add TOC to jgmenututorial(7)
+  - jgmenu(1): explain what the different colours refer to
+  - Add notes on _NET_WORKAREA to man page
+
 Add --no-dirs to pmenu
-
-Add TOC to jgmenututorial(7)
-
-sub_padding: change -1 to 'auto'. If auto, take smallest menu_padding
-
-Add notes on _NET_WORKAREA to man page
-
-Consider add % at start of command in order to not hide_or_exit() (issue #55)
-
-jgmenu(1): explain what the different colours refer to
-
-charset.c: do not assert s == e
 
 lx: check .desktop files are not Unicode in order to avoid segfault
 (Add unit test to prove problem - to include extace.desktop)
 
-Rename screen{_x0,_y0...} variables to simply screen (as a struct area)
-
-Do we remove geo_set_screen_area() again?
-
-Investigate duplicate .desktop entries on Raspberry Pi and nixOS
-
 Cleanliness
 -----------
+
+	Investigate duplicate .desktop entries on Raspberry Pi and nixOS
+
+	Simplify geometry.c by enabling access to config.h variables
+
+	Remove redundant code following removal of multi_window = 0
 
 	jgmenu - warn if strange command line argument is given
 
@@ -44,8 +37,6 @@ Cleanliness
 
 	Remove parse_caret_action (it was only really good for deleting the
 	closing bracket which we do up-front now anyway)
-
-	Simplify geometry.c by enabling access to config.h variables
 
 	In x11-ui.c, create
 		- linked list of windows

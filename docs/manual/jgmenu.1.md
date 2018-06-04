@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 19 May, 2018
+% 4 June, 2018  
 
 # NAME
 
@@ -268,14 +268,14 @@ sub_spacing = __integer__ (default 1)
     Horizontal space between windows. A negative value results in  
     each submenu window overlapping its parent window.
 
-sub_padding_top = __integer__ (default -1)  
-sub_padding_right = __integer__ (default -1)  
-sub_padding_bottom = __integer__ (default -1)  
-sub_padding_left = __integer__ (default -1)  
+sub_padding_top = __integer__ (default auto)  
+sub_padding_right = __integer__ (default auto)  
+sub_padding_bottom = __integer__ (default auto)  
+sub_padding_left = __integer__ (default auto)  
 
     The same as `menu_padding_*` but applies to submenu windows  
-    only. If set to a negative value, the `menu_padding_*`  
-    equivalent will be used.  
+    only. It understands the keyword 'auto'. If set to 'auto', the  
+    smallest of the four `menu_padding_*` will be used.  
 
 sub_hover_action = __integer__ (default 1)
 

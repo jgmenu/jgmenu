@@ -3,6 +3,8 @@
 
 #include "align.h"
 
+#define CONFIG_AUTO (-9999)
+
 struct config {
 	int spawn;		/* 1:execute commands  0:print to stdout */
 	int stay_alive;
