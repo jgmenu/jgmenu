@@ -50,7 +50,6 @@ icon_size            = 24
 #arrow_width         = 15
 
 color_menu_bg        = #2b303b 100
-color_menu_fg        = #8fa1b3 100
 #color_menu_border   = #eeeeee 8
 
 color_norm_bg        = #2b303b 0

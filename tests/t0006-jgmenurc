@@ -17,7 +17,6 @@ font		= Ubuntu condensed 14px
 icon_size	= 0
 
 color_menu_bg	= #eeeeee 100
-color_menu_fg	= #000000 100
 color_norm_bg	= #eeeeee 100
 color_norm_fg	= #000000 100
 color_sel_bg	= #000000 60

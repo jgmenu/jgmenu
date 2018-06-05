@@ -57,7 +57,6 @@ struct config {
 	int arrow_width;
 
 	double color_menu_bg[4];
-	double color_menu_fg[4];
 	double color_menu_border[4];
 	double color_norm_bg[4];
 	double color_norm_fg[4];

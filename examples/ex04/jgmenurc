@@ -16,7 +16,6 @@ icon_size	  = 22
 icon_theme	  = theme1
 
 color_menu_bg	  = #76c7d7 80
-color_menu_fg	  = #faf7f3 100
 color_norm_bg	  = #76c7d7 0
 color_norm_fg	  = #faf7f3 100
 color_sel_bg	  = #a5ecfa 50

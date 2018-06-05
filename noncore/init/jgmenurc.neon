@@ -49,7 +49,6 @@ font		    = Roboto Condensed 9
 #arrow_width         = 15
 
 color_menu_bg       = #cecece 90
-#color_menu_fg       = #eeeeee 20
 color_menu_border   = #888888 100
 
 #color_norm_bg       = #000000 00
