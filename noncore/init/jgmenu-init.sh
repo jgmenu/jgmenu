@@ -15,7 +15,7 @@ verbose=f
 
 regression_items="max_items min_items ignore_icon_cache color_noprog_fg \
 color_title_bg show_title search_all_items ignore_xsettings arrow_show \
-read_tint2rc tint2_rules tint2_button multi_window"
+read_tint2rc tint2_rules tint2_button multi_window color_menu_fg"
 
 JGMENU_EXEC_DIR=$(jgmenu_run --exec-path)
 . "${JGMENU_EXEC_DIR}"/jgmenu-init--prepend.sh
