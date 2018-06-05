@@ -22,10 +22,10 @@ menu_radius         = 1
 #menu_valign         = bottom
 
 sub_spacing         = 3
-#sub_padding_top     = -1
-#sub_padding_right   = -1
-#sub_padding_bottom  = -1
-#sub_padding_left    = -1
+#sub_padding_top     = auto
+#sub_padding_right   = auto
+#sub_padding_bottom  = auto
+#sub_padding_left    = auto
 #sub_hover_action    = 1
 
 item_margin_x       = 1
