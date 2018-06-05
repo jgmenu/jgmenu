@@ -42,11 +42,13 @@ verbose_info () {
 usage () {
 	say "\
 usage: jgmenu init [<options>]\n\
-Create/amend config files\n\
+       jgmenu init [--config-file=<file>] --regression-check\n\
+Create/amend/check config files\n\
 Options include:\n\
     --config-file=<file>  Specify config file\n\
     --theme=<theme>       Create config file with a particular theme\n\
     --list-themes         Display all available themes\n\
+    --regression-check    Only check for config options no longer valid\n\
     --verbose             Be more verbose\n"
 }
 
@@ -311,6 +313,10 @@ do
 		theme="${1#--theme=}" ;;
 	--list-themes)
 		print_available_themes
+		exit 0
+		;;
+	--regression-check)
+		check_regression
 		exit 0
 		;;
 	--verbose)
