@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 4 June, 2018  
+% 7 June, 2018  
 
 # NAME
 
@@ -358,15 +358,30 @@ arrow_width = __integer__ (default 15)
 
     Width of area allocated for arrow. Set to 0 to hide arrow.  
 
-color_menu_bg = __color__ (default #000000 70)  
-color_menu_fg = __color__ (default #eeeeee 20)  
+color_menu_bg = __color__ (default #000000 85)  
+
+    Background colour of menu window  
+
 color_menu_border = __color__ (default #eeeeee 8)  
-color_norm_bg = __color__ (default #000000 00)  
+
+    Border colour of menu window  
+
+color_norm_bg = __color__ (default #000000 0)  
 color_norm_fg = __color__ (default #eeeeee 100)  
+
+    Background and foreground (=font) colors of all menu items,  
+    except the one currently selected.  
+
 color_sel_bg = __color__ (default #ffffff 20)  
 color_sel_fg = __color__ (default #eeeeee 100)  
 color_sel_border = __color__ (default #eeeeee 8)  
+
+    Background, foreground (=font) and border colors of the currently  
+    selected menu item.  
+
 color_sep_fg = __color__ (default #ffffff 20)  
+
+    Colour of seperator  
 
 csv_name_format = __string__ (default `%n (%g)`)  
 
