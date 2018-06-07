@@ -3,7 +3,7 @@ Contributing
 
 First of all, thanks for contributing or considering to contribute.  
 
-We have development rules:  
+We have two high level development rules:  
 
   - Friendship, ideas and code are valued in said order  
   - There are no deadlines  
@@ -20,6 +20,7 @@ Add new config variables
 ---------------------------
 
 Any new config variables need to be added to the following:  
+
   - config.c  
   - config.h  
   - noncore/config/jgmenurc  
@@ -36,7 +37,6 @@ To just check a specific .c or .h file, do
 
 `make test` runs unit tests  
 
-
 APIs
 ----
 
@@ -49,7 +49,8 @@ https://www.kernel.org/pub/software/scm/git/docs/technical/api-hashmap.html
 Architecture
 ------------
 
-`jgmenu_run` is a wrapper which call jgmenu-<command>  
+`jgmenu_run` is a wrapper which call jgmenu-\<*command*> where `command`  
+is the first argument provided to `jgmenu_run`.  
 
 `jgmenu_run` makes jgmenu easier to use by  
 
@@ -61,17 +62,22 @@ Architecture
 It also helps keep $prefix/bin tidier by putting all the other scripts in  
 $libexecdir.
 
-Grammar
--------
+Although it is recommended to do a `make install`, it is possible to run  
+`./jgmenu_run` from the source directory by setting `JGMENU_EXEC_PATH`.  
 
-jgmenu is always written with a lowercase "j". It should be obvious from the  
-context if we refer to the entire application or just the binary file.
+Grammar and Language
+--------------------
+
+jgmenu is always written with a lowercase "j". It should be obvious from  
+the context if we refer to the entire application or just the binary  
+file.  
+
+The language used in documentation shall follow British English rules.  
+Although, for variable names and configuration options, US spelling is  
+used (e.g. color and center)  
 
 Git
 ---
 
 Keep commit messages lines to 74 characters.  
-
-Although it is recommended to do a `make install`, it is possible to run  
-`./jgmenu_run` from the source directory by setting `JGMENU_EXEC_PATH`.  
 
