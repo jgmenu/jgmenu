@@ -507,9 +507,23 @@ menu_margin_x = \f[B]integer\f[] (default 0)
 .P
 .PD
 menu_margin_y = \f[B]integer\f[] (default 0)
+.PP
+\ \ \ \ "margin" refers to space outside an object
 .PD 0
 .P
 .PD
+\ \ \ \ The \f[C]menu_margin_*\f[] variables refer to the distance
+between the
+.PD 0
+.P
+.PD
+\ \ \ \ menu (=X11 window) and the edge of the screen.
+.PD 0
+.P
+.PD
+\ \ \ \ See note on \f[C]_NET_WORKAREA\f[] under
+\f[C]menu_{v,h}align\f[] variables
+.PP
 menu_width = \f[B]integer\f[] (default 200)
 .PD 0
 .P
@@ -536,10 +550,6 @@ menu_radius = \f[B]integer\f[] (default 1)
 .PD
 menu_border = \f[B]integer\f[] (default 0)
 .PP
-\ \ \ \ "margin" refers to space outside an object
-.PD 0
-.P
-.PD
 \ \ \ \ "padding" refers to space inside an object (between border and
 .PD 0
 .P
@@ -554,13 +564,6 @@ menu_border = \f[B]integer\f[] (default 0)
 .PD
 \ \ \ \ "border" refers to the border\-thickness
 .PP
-\ \ \ \ The \f[C]menu_margin_*\f[] variables refer to the distance
-between the
-.PD 0
-.P
-.PD
-\ \ \ \ menu (=X11 window) and the edge of the screen.
-.PP
 menu_halign = (left | right) (default left)
 .PD 0
 .P
@@ -568,6 +571,41 @@ menu_halign = (left | right) (default left)
 menu_valign = (top | bottom) (default bottom)
 .PP
 \ \ \ \ Horizontal and vertical alignment respectively.
+.PP
+\ \ \ \ Note: If these variables are not set, jgmenu will try to guess
+.PD 0
+.P
+.PD
+\ \ \ \ the alignment and margin by reading \f[C]_NET_WORKAREA\f[] and
+tint2\[aq]s
+.PD 0
+.P
+.PD
+\ \ \ \ config file and environment variables.
+.PP
+\ \ \ \ \f[C]_NET_WORKAREA\f[] is a freedesktop EWMH root window
+property.
+Not
+.PD 0
+.P
+.PD
+\ \ \ \ all Window Managers and Panels respect these.
+.PD 0
+.P
+.PD
+\ \ \ \ Here follow some example of those that do:
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \ \ openbox, xfwm4, tint2, polybar
+.PD 0
+.P
+.PD
+\ \ \ \ And some that do not:
+.PD 0
+.P
+.PD
+\ \ \ \ \ \ \ \ awesome, i3, bspwm, plank
 .PP
 sub_spacing = \f[B]integer\f[] (default 1)
 .PP

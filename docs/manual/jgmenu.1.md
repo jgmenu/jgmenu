@@ -241,6 +241,12 @@ hover_delay = __integer__ (default 100)
 
 menu_margin_x = __integer__ (default 0)  
 menu_margin_y = __integer__ (default 0)  
+
+    "margin" refers to space outside an object  
+    The `menu_margin_*` variables refer to the distance between the  
+    menu (=X11 window) and the edge of the screen.  
+    See note on `_NET_WORKAREA` under `menu_{v,h}align` variables  
+
 menu_width = __integer__ (default 200)  
 menu_padding_top = __integer__ (default 5)  
 menu_padding_right = __integer__ (default 5)  
@@ -249,19 +255,26 @@ menu_padding_left = __integer__ (default 5)
 menu_radius = __integer__ (default 1)  
 menu_border = __integer__ (default 0)  
 
-    "margin" refers to space outside an object  
     "padding" refers to space inside an object (between border and  
     content)  
     "radius" refers to the size of rounded corners  
     "border" refers to the border-thickness  
 
-    The `menu_margin_*` variables refer to the distance between the  
-    menu (=X11 window) and the edge of the screen.  
-
 menu_halign = (left | right) (default left)  
 menu_valign = (top | bottom) (default bottom)  
 
     Horizontal and vertical alignment respectively.  
+
+    Note: If these variables are not set, jgmenu will try to guess  
+    the alignment and margin by reading `_NET_WORKAREA` and tint2's  
+    config file and environment variables.  
+
+    `_NET_WORKAREA` is a freedesktop EWMH root window property. Not  
+    all Window Managers and Panels respect these.  
+    Here follow some example of those that do:  
+        openbox, xfwm4, tint2, polybar  
+    And some that do not:  
+        awesome, i3, bspwm, plank  
 
 sub_spacing = __integer__ (default 1)
 
