@@ -1,21 +1,7 @@
-TODO
-====
-
-WIP
----
-
-man pages:
-  - Add TOC to jgmenututorial(7)
-  - jgmenu(1): explain what the different colours refer to
-  - Add notes on _NET_WORKAREA to man page
-
-Add --no-dirs to pmenu
-
-lx: check .desktop files are not Unicode in order to avoid segfault
-(Add unit test to prove problem - to include extace.desktop)
-
 Cleanliness
 -----------
+
+	Remove reference to ^back()
 
 	Investigate duplicate .desktop entries on Raspberry Pi and nixOS
 
@@ -70,8 +56,15 @@ Cleanliness
 
 	Remove harded coded variables (such as 22, etc)
 
+	lx: check .desktop files are not Unicode in order to avoid segfault
+	(Add unit test to prove problem - to include extace.desktop)
+
 Improvements / New features
 ---------------------------
+
+	Add ^root()
+
+	Add ^filter()
 
 	Add widgets including icon, rect and text
 
@@ -83,8 +76,6 @@ Improvements / New features
 		4: comment (for pop up or item spanning two lines)
 		5: working directory (start in $HOME be default)
 		6: meta data (e.g. categories to enable filter buttons)
-
-	Consider adding a ^filter()
 
 	init: Parse polybar config files
 

@@ -1,0 +1,12 @@
+jgmenu v1.0 release notes
+=========================
+
+Updates since v0.9.1
+--------------------
+
+  * Auto-refresh on configuration change or application (un)installation
+
+  * Set sub menu padding automatically, based on the smallest padding
+    value of the the root menu
+
+  * Remove config option color_menu_fg (as it was not is use anyway)
