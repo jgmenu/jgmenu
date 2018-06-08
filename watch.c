@@ -18,6 +18,8 @@
 
 static const char * const files_to_watch[] = {
 	"~/.config/jgmenu/jgmenurc",
+	"~/.config/jgmenu/prepend.csv",
+	"~/.config/jgmenu/append.csv",
 	"~/.config/tint2/tint2rc",
 	"~/.local/share/applications",
 	"/usr/share/applications",
@@ -45,11 +47,16 @@ static void add_file(const char *filename)
 	sbuf_addstr(&f, filename);
 	sbuf_expand_tilde(&f);
 	sbuf_expand_env_var(&f);
-	if (stat(f.buf, &sb) == -1)
-		return;
 	watched_file = malloc(sizeof(struct watched_file));
 	watched_file->filename = f.buf;
-	watched_file->tv.tv_sec = sb.st_mtime;
+	/*
+	 * We add files even if they don't yet exist in order to be able
+	 * to detect if they are added in the future.
+	 */
+	if (stat(f.buf, &sb) == -1)
+		watched_file->tv.tv_sec = 0;
+	else
+		watched_file->tv.tv_sec = sb.st_mtime;
 	list_add_tail(&watched_file->list, &watched_files);
 }
 
@@ -72,10 +79,19 @@ int watch_files_have_changed(void)
 
 	watch_init();
 	list_for_each_entry(f, &watched_files, list) {
-		if (stat(f->filename, &sb) == -1)
-			continue;
+		if (stat(f->filename, &sb) == -1) {
+			if (!f->tv.tv_sec) {
+				continue;
+			} else {
+				info("file/dir removed '%s'", f->filename);
+				return 1;
+			}
+		}
 		if (f->tv.tv_sec != sb.st_mtime) {
-			info("file/dir has changed '%s'", f->filename);
+			if (!f->tv.tv_sec)
+				info("file/dir added '%s'", f->filename);
+			else
+				info("file/dir changed '%s'", f->filename);
 			return 1;
 		}
 	}
