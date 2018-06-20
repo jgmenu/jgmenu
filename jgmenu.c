@@ -761,6 +761,9 @@ void checkout_submenu(char *tag)
 void checkout_parentmenu(char *tag)
 {
 	checkout_tag(tag);
+	/* If we've used ^root(tag), we're alreday at top window */
+	if (!ui->cur)
+		return;
 	if (config.multi_window) {
 		geo_win_del();
 		ui_win_del();
