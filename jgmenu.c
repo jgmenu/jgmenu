@@ -687,14 +687,16 @@ void set_submenu_height(void)
 
 int tag_exists(const char *tag)
 {
-	struct node *n;
+	struct item *item;
 
 	if (!tag)
 		return 0;
-	list_for_each_entry(n, &menu.nodes, node) {
-		if (!strcmp(tag, n->item->tag))
+//	list_for_each_entry(item, &menu.master, master)
+//		if (item->tag)
+//			fprintf(stderr, "[%s] ", item->tag);
+	list_for_each_entry(item, &menu.master, master)
+		if (item->tag && !strcmp(tag, item->tag))
 			return 1;
-	}
 	return 0;
 }
 
