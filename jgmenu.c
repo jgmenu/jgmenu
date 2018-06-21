@@ -692,9 +692,6 @@ int tag_exists(const char *tag)
 	if (!tag)
 		return 0;
 	list_for_each_entry(item, &menu.master, master)
-		if (item->tag)
-			fprintf(stderr, "[%s] ", item->tag);
-	list_for_each_entry(item, &menu.master, master)
 		if (item->tag && !strcmp(tag, item->tag))
 			return 1;
 	return 0;
@@ -1016,7 +1013,7 @@ void create_node(const char *name, struct node *parent)
 }
 
 /* Create nodal tree from tagged items */
-void walk_tagged_items(struct item *this, struct node *parent)
+struct node *walk_tagged_items(struct item *this, struct node *parent)
 {
 	struct item *child, *p;
 	struct node *current_node;
@@ -1032,7 +1029,7 @@ void walk_tagged_items(struct item *this, struct node *parent)
 	/* p now points to first menu-item under tag "this->tag" */
 
 	if (p == list_last_entry(&menu.master, struct item, master))
-		return;
+		return NULL;
 
 	/* FIXME: Check if node(s.buf) already exists */
 	current_node = list_last_entry(&menu.nodes, struct node, node);
@@ -1050,6 +1047,7 @@ void walk_tagged_items(struct item *this, struct node *parent)
 			break;
 		}
 	}
+	return current_node;
 }
 
 void destroy_node_tree(void)
@@ -1065,6 +1063,7 @@ void destroy_node_tree(void)
 void build_tree(void)
 {
 	struct item *item;
+	struct node *n, *root_node;
 
 	BUG_ON(list_empty(&menu.master));
 	item = list_first_entry_or_null(&menu.master, struct item, master);
@@ -1074,7 +1073,23 @@ void build_tree(void)
 	if (!item->tag)
 		walk_tagged_items(NULL, NULL);
 	else
-		walk_tagged_items(get_item_from_tag(item->tag), NULL);
+		root_node = walk_tagged_items(get_item_from_tag(item->tag), NULL);
+
+	/*
+	 * Add any remaining ^tag()s - i.e. those without a corresponding
+	 * ^checkout(). These are added to the top-level node.
+	 */
+	list_for_each_entry(item, &menu.master, master) {
+		BUG_ON(!item);
+		if (!item->tag)
+			continue;
+		list_for_each_entry(n, &menu.nodes, node)
+			if (n->item == item)
+				goto already_exists;
+		create_node(item->tag, root_node);
+already_exists:
+		;
+	}
 }
 
 /*
