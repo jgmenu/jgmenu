@@ -1341,6 +1341,9 @@ void action_cmd(char *cmd)
 		menu.current_node->last_first = menu.first;
 		pipemenu_add(p);
 		update(1);
+	} else if (!strncmp(cmd, "^root(", 6)) {
+		checkout_tag(cmd + 6);
+		update(0);
 	} else {
 		spawn(cmd);
 		hide_or_exit();
