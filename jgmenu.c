@@ -691,13 +691,26 @@ int tag_exists(const char *tag)
 
 	if (!tag)
 		return 0;
-//	list_for_each_entry(item, &menu.master, master)
-//		if (item->tag)
-//			fprintf(stderr, "[%s] ", item->tag);
+	list_for_each_entry(item, &menu.master, master)
+		if (item->tag)
+			fprintf(stderr, "[%s] ", item->tag);
 	list_for_each_entry(item, &menu.master, master)
 		if (item->tag && !strcmp(tag, item->tag))
 			return 1;
 	return 0;
+}
+
+struct item *get_item_from_tag(const char *tag)
+{
+	struct item *item;
+
+	BUG_ON(!tag);
+	list_for_each_entry(item, &menu.master, master)
+		if (item->tag && !strcmp(tag, item->tag))
+			return item;
+	if (tag && strncmp(tag, "root", 4))
+		fprintf(stderr, "warning: could not find tag '%s'\n", tag);
+	return NULL;
 }
 
 void find_subhead(const char *tag)
@@ -971,19 +984,6 @@ static void awake_menu(void)
 	XRaiseWindow(ui->dpy, ui->w[ui->cur].win);
 	grabkeyboard();
 	grabpointer();
-}
-
-struct item *get_item_from_tag(const char *tag)
-{
-	struct item *item;
-
-	BUG_ON(!tag);
-	list_for_each_entry(item, &menu.master, master)
-		if (item->tag && !strcmp(tag, item->tag))
-			return item;
-	if (tag && strncmp(tag, "root", 4))
-		fprintf(stderr, "warning: could not find tag '%s'\n", tag);
-	return NULL;
 }
 
 int node_exists(const char *name)
