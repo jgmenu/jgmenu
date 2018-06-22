@@ -392,6 +392,8 @@ def cat_file(path):
 
 # Creates and shows the menu
 def create_menu(arg_append_file, arg_prepend_file):
+  single_window = os.getenv("JGMENU_SINGLE_WINDOW")
+
   print("jgmenu,^tag(pmenu)")
   cat_file(arg_prepend_file)
   tree, categories = load_applications()
@@ -408,7 +410,10 @@ def create_menu(arg_append_file, arg_prepend_file):
   for c in sorted(tree):
     category = categories[c]
     icon = category["Icon"] if "Icon" in category else "folder"
-    print(category["Name"] + ",^checkout(" + category["Name"] + ")," + icon)
+    if single_window:
+      print(category["Name"] + ",^root(" + category["Name"] + ")," + icon)
+    else:
+      print(category["Name"] + ",^checkout(" + category["Name"] + ")," + icon)
   cat_file(arg_append_file)
   for c in sorted(tree):
     category = categories[c]
