@@ -55,6 +55,7 @@ static pthread_t thread;	   /* worker thread for loading icons	  */
 static int pipe_fds[2];		   /* talk between threads + catch sig    */
 static timer_t tmr_mouseover;
 static int sw_close_pending;
+static int super_key_pressed;
 
 struct item {
 	char *buf;
@@ -1401,6 +1402,10 @@ void key_event(XKeyEvent *ev)
 		init_menuitem_coordinates();
 		draw_menu();
 		break;
+	case XK_Super_L:
+	case XK_Super_R:
+		super_key_pressed = 1;
+		break;
 	case XK_Escape:
 		if (filter_needle_length()) {
 			filter_reset();
@@ -2028,6 +2033,14 @@ void run(void)
 				 */
 				if (mouse_outside(&ev))
 					close_pending = 1;
+				break;
+			case KeyRelease:
+				if (super_key_pressed) {
+					super_key_pressed = 0;
+					/* avoid passing super key to WM */
+					usleep(30000);
+					hide_or_exit();
+				}
 				break;
 			case KeyPress:
 				key_event(&ev.xkey);
