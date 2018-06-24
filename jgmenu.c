@@ -1068,13 +1068,10 @@ void build_tree(void)
 
 	BUG_ON(list_empty(&menu.master));
 	item = list_first_entry_or_null(&menu.master, struct item, master);
-	BUG_ON(item->tag && list_is_singular(&menu.master));
+	BUG_ON(!item->tag);
+	BUG_ON(list_is_singular(&menu.master));
 
-	/* consider case when first item is not a ^tag() item */
-	if (!item->tag)
-		walk_tagged_items(NULL, NULL);
-	else
-		root_node = walk_tagged_items(get_item_from_tag(item->tag), NULL);
+	root_node = walk_tagged_items(get_item_from_tag(item->tag), NULL);
 
 	/*
 	 * Add any remaining ^tag()s - i.e. those without a corresponding
