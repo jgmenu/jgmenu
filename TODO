@@ -38,9 +38,6 @@ Cleanliness
 	Move struct item/node code to data.c.
 		  - Refactor all the checkout_* functions. They're confusing.
 
-	The first item in master list is always a tag-item, so remove old code
-	which handles exceptions
-
 	Refactor around read_csv_file and creating items
 
 	Remove spawn from config (make it args_ instead).
@@ -61,8 +58,6 @@ Cleanliness
 
 Improvements / New features
 ---------------------------
-
-	Add ^root()
 
 	Add ^filter()
 

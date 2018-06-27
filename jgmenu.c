@@ -586,12 +586,10 @@ void draw_menu(void)
 		if (p == menu.last)
 			break;
 	}
-
 	if (filter_tail() != menu.last)
 		draw_items_below_indicator();
 	if (filter_head() != menu.first)
 		draw_items_above_indicator();
-
 	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
 }
 
@@ -601,12 +599,10 @@ struct node *get_node_from_tag(const char *tag)
 
 	if (!tag)
 		return NULL;
-
 	list_for_each_entry(n, &menu.nodes, node) {
 		if (!strcmp(tag, n->item->tag))
 			return n;
 	}
-
 	return NULL;
 }
 
@@ -713,22 +709,18 @@ struct item *get_item_from_tag(const char *tag)
 
 void find_subhead(const char *tag)
 {
-	if (!tag || !strncmp(tag, "__root__", 8)) {
-		menu.current_node = list_first_entry_or_null(&menu.nodes, struct node, node);
-		menu.subhead = list_first_entry_or_null(&menu.master, struct item, master);
-	} else {
-		if (!tag_exists(tag)) {
-			warn("tag '%s' does not exist", tag);
-			return;
-		}
-		menu.current_node = get_node_from_tag(tag);
-		if (!menu.current_node)
-			die("node '%s' does not exist", tag);
-		menu.subhead = container_of((menu.current_node->item)->master.next,
-					    struct item, master);
-		if (!menu.subhead)
-			die("no menu.subhead");
+	BUG_ON(!tag);
+	if (!tag_exists(tag)) {
+		warn("tag '%s' does not exist", tag);
+		return;
 	}
+	menu.current_node = get_node_from_tag(tag);
+	if (!menu.current_node)
+		die("node '%s' does not exist", tag);
+	menu.subhead = container_of((menu.current_node->item)->master.next,
+				    struct item, master);
+	if (!menu.subhead)
+		die("no menu.subhead");
 }
 
 void find_subtail(const char *tag)
@@ -1001,11 +993,7 @@ void create_node(const char *name, struct node *parent)
 
 	n = xmalloc(sizeof(struct node));
 	BUG_ON(!name);
-	if (!strcmp(name, "__root__"))
-		n->item = list_first_entry_or_null(&menu.master,
-						   struct item, master);
-	else
-		n->item = get_item_from_tag(name);
+	n->item = get_item_from_tag(name);
 	n->last_sel = NULL;
 	n->last_first = NULL;
 	n->parent = parent;
@@ -1019,16 +1007,11 @@ struct node *walk_tagged_items(struct item *this, struct node *parent)
 	struct item *child, *p;
 	struct node *current_node;
 
-	if (this) {
-		create_node(this->tag, parent);
-		/* move to next item, as this points to a ^tag() item */
-		p = container_of((this)->master.next, struct item, master);
-	} else {
-		create_node("__root__", NULL);
-		p = list_first_entry_or_null(&menu.master, struct item, master);
-	}
+	BUG_ON(!this);
+	create_node(this->tag, parent);
+	/* move to next item, as this points to a ^tag() item */
+	p = container_of((this)->master.next, struct item, master);
 	/* p now points to first menu-item under tag "this->tag" */
-
 	if (p == list_last_entry(&menu.master, struct item, master))
 		return NULL;
 
