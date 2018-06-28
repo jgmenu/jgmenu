@@ -1251,6 +1251,11 @@ void checkout_parent(void)
 	parent = menu.current_node->parent;
 	if (pm_is_outside(parent))
 		pipemenu_del(menu.current_node);
+	/* reverting to parent following ^root() */
+	if (!parent->wid) {
+		parent->wid = menu.current_node->wid;
+		menu.current_node->wid = 0;
+	}
 	checkout_parentmenu(parent->item->tag);
 }
 
