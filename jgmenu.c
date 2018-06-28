@@ -288,12 +288,10 @@ void update_filtered_list(void)
 	INIT_LIST_HEAD(&menu.filter);
 
 	if (filter_needle_length()) {
-		if (config.multi_window) {
-			ui_win_del_beyond(0);
-			geo_set_cur(0);
-			checkout_rootnode();
-			pipemenu_del_all();
-		}
+		ui_win_del_beyond(0);
+		geo_set_cur(0);
+		checkout_rootnode();
+		pipemenu_del_all();
 		list_for_each_entry(item, &menu.master, master) {
 			if (!strncmp("^checkout(", item->cmd, 10) ||
 			    !strncmp("^tag(", item->cmd, 5) ||
@@ -745,20 +743,18 @@ void checkout_tag(const char *tag)
 
 void checkout_submenu(char *tag)
 {
-	if (config.multi_window && geo_cur() >= MAX_NR_WINDOWS - 1) {
+	if (geo_cur() >= MAX_NR_WINDOWS - 1) {
 		warn("Maximum number of windows reached ('%d')", MAX_NR_WINDOWS);
 		return;
 	}
 	checkout_tag(tag);
-	if (config.multi_window)
-		geo_win_add(menu.sel->area);
+	geo_win_add(menu.sel->area);
 	set_submenu_height();
 	set_submenu_width();
-	if (config.multi_window)
-		ui_win_add(geo_get_menu_x0(), geo_get_menu_y0(),
-			   geo_get_menu_width(), geo_get_menu_height(),
-			   geo_get_screen_width(), geo_get_screen_height(),
-			   font_get());
+	ui_win_add(geo_get_menu_x0(), geo_get_menu_y0(),
+		   geo_get_menu_width(), geo_get_menu_height(),
+		   geo_get_screen_width(), geo_get_screen_height(),
+		   font_get());
 	menu.current_node->wid = ui->w[ui->cur].win;
 }
 
@@ -768,20 +764,14 @@ void checkout_parentmenu(char *tag)
 	/* If we've used ^root(tag), we're alreday at top window */
 	if (!ui->cur)
 		return;
-	if (config.multi_window) {
-		geo_win_del();
-		ui_win_del();
-	} else {
-		set_submenu_height();
-		set_submenu_width();
-	}
+	geo_win_del();
+	ui_win_del();
 }
 
 void checkout_rootmenu(char *tag)
 {
 	checkout_tag(tag);
-	if (config.multi_window)
-		geo_set_cur(0);
+	geo_set_cur(0);
 	set_submenu_height();
 	set_submenu_width();
 }
@@ -1215,8 +1205,7 @@ void pipemenu_add(const char *s)
 	pipe_head = list_last_entry(&menu.master, struct item, master);
 	read_csv_file(fp);
 	pipe_head = container_of(pipe_head->master.next, struct item, master);
-	if (config.multi_window)
-		rm_back_items();
+	rm_back_items();
 	/* FIXME: walk_tag_items means 'add new nodes' - consider renaming */
 	parent_node = menu.current_node;
 	walk_tagged_items(pipe_head, parent_node);
@@ -1270,10 +1259,8 @@ static void hide_menu(void)
 	tmr_mouseover_stop();
 	XUngrabKeyboard(ui->dpy, CurrentTime);
 	XUngrabPointer(ui->dpy, CurrentTime);
-	if (config.multi_window) {
-		ui_win_del_beyond(0);
-		geo_set_cur(0);
-	}
+	ui_win_del_beyond(0);
+	geo_set_cur(0);
 	XUnmapWindow(ui->dpy, ui->w[ui->cur].win);
 	filter_reset();
 	checkout_rootnode();
@@ -1528,14 +1515,6 @@ void mouse_release(XEvent *e)
 	mouse_coords.y -= MOUSE_FUDGE;
 	ev = &e->xbutton;
 
-	/* right-click */
-	if (ev->button == Button3) {
-		if (!config.multi_window) {
-			checkout_parent();
-			update(1);
-		}
-	}
-
 	/* scroll up */
 	if (ev->button == Button4 && menu.first != filter_head()) {
 		if (ui_has_child_window_open(menu.current_node->wid))
@@ -1564,8 +1543,7 @@ void mouse_release(XEvent *e)
 	if (ev->button == Button1) {
 		if (!menu.sel->selectable)
 			return;
-		if (config.multi_window &&
-		    config.sub_hover_action &&
+		if (config.sub_hover_action &&
 		    (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
 		     !strncmp(menu.sel->cmd, "^pipe(", 6)))
 			return;
@@ -1818,7 +1796,7 @@ void process_pointer_position(XEvent *ev, int force)
 		return;
 	if (e->subwindow == ui->w[ui->cur].win) {
 		move_selection_with_mouse(&pw);
-		if (config.multi_window && config.sub_hover_action)
+		if (config.sub_hover_action)
 			hover();
 	} else if (is_outside_menu_windows(&e)) {
 		tmr_mouseover_stop();
@@ -2259,8 +2237,7 @@ int main(int argc, char *argv[])
 	read_csv_file(fp);
 	if (fp && fp != stdin)
 		fclose(fp);
-	if (config.multi_window)
-		rm_back_items();
+	rm_back_items();
 	build_tree();
 
 	if (args_checkout())

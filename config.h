@@ -12,7 +12,6 @@ struct config {
 	char *csv_cmd;
 	int tint2_look;
 	int at_pointer;
-	int multi_window;
 	char *terminal_exec;
 	char *terminal_args;
 	int monitor;
