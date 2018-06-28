@@ -32,6 +32,7 @@ $(shell mkdir -p $(DEPDIR) >/dev/null)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
 SCRIPTS_SHELL  = jgmenu_run noncore/init/jgmenu-init.sh \
+                 noncore/places/jgmenu-places.sh \
                  noncore/bookmarks/jgmenu-ff-bookmarks.sh
 
 FRAGMENTS      = noncore/init/jgmenu-init--prepend.sh \
