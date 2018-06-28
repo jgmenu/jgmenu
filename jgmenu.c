@@ -570,6 +570,7 @@ void draw_menu(void)
 		/* Draw submenu arrow */
 		if (config.arrow_width && (!strncmp(p->cmd, "^checkout(", 10) ||
 					   !strncmp(p->cmd, "^pipe(", 6) ||
+					   !strncmp(p->cmd, "^root(", 6) ||
 					   !strncmp(p->cmd, "^sub(", 5)))
 			draw_submenu_arrow(p);
 
