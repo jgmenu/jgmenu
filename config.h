@@ -16,6 +16,7 @@ struct config {
 	char *terminal_args;
 	int monitor;
 	int hover_delay;
+	int hide_back_items;
 
 	int menu_margin_x;
 	int menu_margin_y;

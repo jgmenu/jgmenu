@@ -1205,7 +1205,8 @@ void pipemenu_add(const char *s)
 	pipe_head = list_last_entry(&menu.master, struct item, master);
 	read_csv_file(fp);
 	pipe_head = container_of(pipe_head->master.next, struct item, master);
-	rm_back_items();
+	if (config.hide_back_items)
+		rm_back_items();
 	/* FIXME: walk_tag_items means 'add new nodes' - consider renaming */
 	parent_node = menu.current_node;
 	walk_tagged_items(pipe_head, parent_node);
@@ -2242,7 +2243,8 @@ int main(int argc, char *argv[])
 	read_csv_file(fp);
 	if (fp && fp != stdin)
 		fclose(fp);
-	rm_back_items();
+	if (config.hide_back_items)
+		rm_back_items();
 	build_tree();
 
 	if (args_checkout())

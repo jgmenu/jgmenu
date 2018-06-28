@@ -26,6 +26,7 @@ void config_set_defaults(void)
 	config.terminal_args	   = xstrdup("-e");
 	config.monitor		   = 0;
 	config.hover_delay	   = 100;
+	config.hide_back_items	   = 1;
 
 	config.menu_margin_x	   = 0;
 	config.menu_margin_y	   = 0;
@@ -120,6 +121,8 @@ static void process_line(char *line)
 		xatoi(&config.monitor, value, XATOI_NONNEG, "config.monitor");
 	} else if (!strcmp(option, "hover_delay")) {
 		xatoi(&config.hover_delay, value, XATOI_NONNEG, "config.hover_delay");
+	} else if (!strcmp(option, "hide_back_items")) {
+		xatoi(&config.hide_back_items, value, XATOI_NONNEG, "config.hide_back_items");
 
 	} else if (!strcmp(option, "menu_margin_x")) {
 		xatoi(&config.menu_margin_x, value, XATOI_NONNEG, "config.margin_x");

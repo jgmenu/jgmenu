@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 7 June, 2018  
+% 28 June, 2018  
 
 # NAME
 
@@ -238,6 +238,12 @@ hover_delay = __integer__ (default 100)
 
     The amount of time (in milliseconds) from hovering over an item  
     until a submenu is opened.  
+
+hide_back_items = __boolean__ (default 1)  
+
+    If enabled, all ^back() items will be suppressed. As a general  
+    rule, it should be set to 1 for a multi-window menu, and 0 when  
+    in single-window mode.  
 
 menu_margin_x = __integer__ (default 0)  
 menu_margin_y = __integer__ (default 0)  
