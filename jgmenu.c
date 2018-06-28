@@ -1338,7 +1338,10 @@ void action_cmd(char *cmd)
 		pipemenu_add(p);
 		update(1);
 	} else if (!strncmp(cmd, "^root(", 6)) {
+		/* Two nodes with the same wid breaks get_node_from_wid() */
+		menu.current_node->wid = 0;
 		checkout_tag(cmd + 6);
+		menu.current_node->wid = ui->w[ui->cur].win;
 		update(0);
 	} else {
 		spawn(cmd);
@@ -1820,9 +1823,9 @@ void process_pointer_position(XEvent *ev, int force)
 		tmr_mouseover_stop();
 	} else {
 		/*
-		 * NOTE: When sub window has just opened, we end up here on
-		 * the next event (once). I.e. we re-set the focus on the item
-		 * that triggered the subwindow to open.
+		 * When sub window has just opened, we end up here on
+		 * the next event (once) and re-set the focus on the 'parent'
+		 * window.
 		 */
 		set_focus(e->subwindow);
 		update(1);
