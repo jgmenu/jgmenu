@@ -9,7 +9,7 @@
 path=${1:-$HOME}
 path=${path%/}
 
-test -d $path || { echo "$0: '$path' is not a directory" >&2 ; exit 1 ; }
+test -d "$path" || { echo "$0: '$path' is not a directory" >&2 ; exit 1 ; }
 
 for i in $path/*
 do
@@ -27,3 +27,8 @@ done
 
 printf "%b\n" "${directories_menu}"
 printf "%b\n" "${files_menu}"
+
+if test -z "${directories_menu}" && test -z "${files_menu}"
+then
+	printf "%b\n" '<empty>'
+fi
