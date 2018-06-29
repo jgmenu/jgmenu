@@ -25,6 +25,8 @@ ${shortname},${JGMENU_RESOURCE_OPENER} ${path}/${shortname}"
 	fi
 done
 
+printf "%b\n" "Browse here...,${JGMENU_RESOURCE_OPENER} ${path}"
+printf "%b\n" "^sep()"
 printf "%b\n" "${directories_menu}"
 printf "%b\n" "${files_menu}"
 
