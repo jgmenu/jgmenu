@@ -4,6 +4,8 @@
 # ArchLabs and BunsenLabs
 #
 
+: ${JGMENU_RESOURCE_OPENER=xdg-open}
+
 path=${1:-$HOME}
 path=${path%/}
 
@@ -19,7 +21,7 @@ do
 ${shortname},^pipe(jgmenu_run places ${path}/${shortname})"
 	else
 		files_menu="$files_menu
-${shortname},exo-open ${path}/${shortname}"
+${shortname},${JGMENU_RESOURCE_OPENER} ${path}/${shortname}"
 	fi
 done
 
