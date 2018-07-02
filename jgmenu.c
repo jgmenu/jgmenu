@@ -1259,6 +1259,19 @@ void pipemenu_del_from(struct node *node)
 	}
 }
 
+void pipemenu_del_beyond(struct node *node)
+{
+	struct node *n, *n_tmp;
+
+	list_for_each_entry_safe_reverse(n, n_tmp, &menu.nodes, node) {
+		if (!pm_first_pipemenu_node())
+			break;
+		if (n == node)
+			break;
+		pipemenu_del_from(n);
+	}
+}
+
 void pipemenu_del_all(void)
 {
 	struct node *n;
@@ -1953,7 +1966,14 @@ void run(void)
 
 				/* mouse over signal */
 				if (ch == 't') {
+					/*
+					 * We are about to open a new submenu
+					 * window, so let's make sure we delete
+					 * any old sub windows and remains of
+					 * pipemenus.
+					 */
 					ui_win_del_beyond(ui->cur);
+					pipemenu_del_beyond(menu.current_node);
 					if (!sw_close_pending)
 						action_cmd(menu.sel->cmd);
 					sw_close_pending = 0;
