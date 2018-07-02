@@ -1236,7 +1236,12 @@ void pipemenu_add(const char *s)
 	pm_push(menu.current_node, parent_node);
 }
 
-void pipemenu_del(struct node *node)
+/**
+ * pipemenu_del_from - remove nodes and menu items associated with pipemenu
+ * @node: delete pipemenu from this point onwards
+ * Note: 'node' needs to be within a pipemenu
+ */
+void pipemenu_del_from(struct node *node)
 {
 	struct item *i, *i_tmp;
 	struct node *n_tmp;
@@ -1261,7 +1266,7 @@ void pipemenu_del_all(void)
 	n = (struct node *)pm_first_pipemenu_node();
 	if (!n)
 		return;
-	pipemenu_del(n);
+	pipemenu_del_from(n);
 	pm_cleanup();
 }
 
@@ -1273,7 +1278,7 @@ void checkout_parent(void)
 		return;
 	parent = menu.current_node->parent;
 	if (pm_is_outside(parent))
-		pipemenu_del(menu.current_node);
+		pipemenu_del_from(menu.current_node);
 	/* reverting to parent following ^root() */
 	if (!parent->wid) {
 		parent->wid = menu.current_node->wid;
