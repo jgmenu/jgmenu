@@ -153,6 +153,28 @@ void version(void)
 	exit(0);
 }
 
+int level(struct node *n)
+{
+	int i = 0;
+
+	while (n->parent) {
+		n = n->parent;
+		++i;
+	}
+	return i;
+}
+
+void print_nodes(void)
+{
+	struct node *n;
+
+	list_for_each_entry(n, &menu.nodes, node) {
+		fprintf(stderr, "%d", level(n));
+		fprintf(stderr, "%.5s ", n->item->tag);
+	}
+	fprintf(stderr, "\n");
+}
+
 struct item *filter_head(void)
 {
 	return list_first_entry_or_null(&menu.filter, struct item, filter);
@@ -1472,6 +1494,9 @@ void key_event(XKeyEvent *ev)
 		break;
 	case XK_F5:
 		restart();
+		break;
+	case XK_F8:
+		print_nodes();
 		break;
 	case XK_F9:
 		/* Useful for stopping Makefile during tests/ or examples/ */
