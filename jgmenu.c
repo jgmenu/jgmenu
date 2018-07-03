@@ -1373,6 +1373,8 @@ void action_cmd(char *cmd)
 		update(1);
 	} else if (!strncmp(cmd, "^root(", 6)) {
 		/* Two nodes with the same wid breaks get_node_from_wid() */
+		menu.current_node->last_sel = menu.sel;
+		menu.current_node->last_first = menu.first;
 		menu.current_node->wid = 0;
 		checkout_tag(cmd + 6);
 		menu.current_node->wid = ui->w[ui->cur].win;
