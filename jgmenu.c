@@ -1507,6 +1507,7 @@ void key_event(XKeyEvent *ev)
 		break;
 	case XK_Right:
 		if (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
+		    !strncmp(menu.sel->cmd, "^root(", 6) ||
 		    !strncmp(menu.sel->cmd, "^pipe(", 6))
 			action_cmd(menu.sel->cmd);
 		break;
