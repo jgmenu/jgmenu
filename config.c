@@ -77,6 +77,7 @@ void config_set_defaults(void)
 	parse_hexstr("#ffffff 20", config.color_sep_fg);
 
 	config.csv_name_format	   = NULL; /* Leave as NULL (see in fmt.c) */
+	config.csv_single_window   = 0;
 }
 
 void config_cleanup(void)
@@ -254,6 +255,8 @@ static void process_line(char *line)
 	} else if (!strcmp(option, "csv_name_format")) {
 		xfree(config.csv_name_format);
 		config.csv_name_format = xstrdup(value);
+	} else if (!strcmp(option, "csv_single_window")) {
+		xatoi(&config.csv_single_window, value, XATOI_NONNEG, "config.csv_single_window");
 	}
 }
 
@@ -380,4 +383,8 @@ void config_post_process(void)
 
 	if (config.csv_name_format)
 		setenv("JGMENU_NAME_FORMAT", config.csv_name_format, 1);
+	if (config.csv_single_window)
+		setenv("JGMENU_SINGLE_WINDOW", "1", 1);
+	else
+		unsetenv("JGMENU_SINGLE_WINDOW");
 }
