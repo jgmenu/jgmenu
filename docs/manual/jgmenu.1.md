@@ -59,7 +59,10 @@ The following mark-up is supported in the *command* field:
   - ^tag() - define a submenu (can be in the *description* field if  
   no other field is defined on that line)
 
-  - ^checkout() - check-out a submenu
+  - ^checkout() - open a submenu in a new window
+
+  - ^root() - open a submenu in the root window, replacing the  
+  current menu
 
   - ^sub() - draw a "submenu" arrow
 
