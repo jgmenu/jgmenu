@@ -13,10 +13,24 @@ jgmenu \[\--no-spawn] \[\--checkout=<*tag*>] \[\--config-file=<*file*>]
        \[\--simple] \[\--vsimple] \[\--csv-file<*file*>]  
        \[\--csv-cmd=<*command*>]  
 
+jgmenu init \[<*options*>]
+
+Launch a menu using this command:  
+
+    jgmenu
+
+Create a configuration file using this command:  
+
+    jgmenu init
+
+For a step-by-step usage guide, do:
+
+    man jgmenututorial
+
 # DESCRIPTION
 
 jgmenu is a small menu application for Linux/BSD. It is intended to  
-be used with openbox and tint2, but is not dependent on these.
+be used with openbox and tint2, but is not dependent on these.  
 
 jgmenu reads a list of new-line ('\\n') separated items from a file  
 and creates a menu. Each line is parsed into *description*, *command*  
