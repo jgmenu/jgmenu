@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 28 June, 2018  
+% 5 July, 2018  
 
 # NAME
 
@@ -411,6 +411,13 @@ csv_name_format = __string__ (default `%n (%g)`)
         %g - application generic name  
     If a *generic name* does not exist or is the same as the *name*,  
     %n will be used without any formatting.  
+
+csv_single_window = __boolean__ (default 0)  
+
+    If enabled, ^root() will be used instead of ^checkout().  
+    This results in a single window menu, where submenus appear in  
+    the same window.  
+    This is currently only supported by pmenu.  
 
 # SEE ALSO
 
