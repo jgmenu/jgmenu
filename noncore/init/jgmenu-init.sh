@@ -12,6 +12,7 @@ xdg_data_dirs="$XDG_DATA_HOME $HOME/.local/share $XDG_DATA_DIRS \
 
 theme=
 verbose=f
+interactive=f
 
 regression_items="max_items min_items ignore_icon_cache color_noprog_fg \
 color_title_bg show_title search_all_items ignore_xsettings arrow_show \
@@ -45,6 +46,8 @@ usage: jgmenu init [<options>]\n\
        jgmenu init [--config-file=<file>] --regression-check\n\
 Create/amend/check config files\n\
 Options include:\n\
+    -h|--help             Display this message\n\
+    -i|--interactive      Enter interactive mode\n\
     --config-file=<file>  Specify config file\n\
     --theme=<theme>       Create config file with a particular theme\n\
     --list-themes         Display all available themes\n\
@@ -307,6 +310,8 @@ await_user_command () {
 while test $# != 0
 do
 	case "$1" in
+	-i|--interactive)
+		interactive=t ;;
 	--config-file=*)
 		config_file="${1#--config-file=}" ;;
 	--theme=*)
@@ -321,7 +326,7 @@ do
 		;;
 	--verbose)
 		verbose=t ;;
-	--help)
+	-h|--help)
 		usage
 		exit 0
 		;;
@@ -337,4 +342,10 @@ done
 backup_jgmenurc
 test -z ${theme} || { set_theme $theme ; exit 0 ; }
 initial_checks
-await_user_command
+if test "${interactive}" = "t"
+then
+	await_user_command
+else
+	say "Run 'jgmenu init -h' for usage message"
+	say "Run 'jgmenu init -i' to enter interactive mode"
+fi
