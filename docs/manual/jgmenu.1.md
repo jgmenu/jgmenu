@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 5 July, 2018  
+% 6 July, 2018  
 
 # NAME
 
@@ -15,17 +15,17 @@ jgmenu \[\--no-spawn] \[\--checkout=<*tag*>] \[\--config-file=<*file*>]
 
 jgmenu init \[<*options*>]
 
-Launch a menu using this command:  
 
-    jgmenu
+```
+┌────────────────────┬─────────────────────────┐
+│ jgmenu             │ launch menu             │
+├────────────────────┼─────────────────────────┤
+│ jgmenu init        │ create config file      │
+├────────────────────┼─────────────────────────┤
+│ man jgmenututorial │ read step-by-step guide │
+└────────────────────┴─────────────────────────┘
+```
 
-Create a configuration file using this command:  
-
-    jgmenu init
-
-For a step-by-step usage guide, do:
-
-    man jgmenututorial
 
 # DESCRIPTION
 
