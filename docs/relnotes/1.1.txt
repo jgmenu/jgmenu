@@ -1,0 +1,18 @@
+jgmenu v1.1 release notes
+=========================
+
+Updates since v1.0
+------------------
+
+  * Add ^root() markup
+
+  * Add config options:
+      - csv_single_window
+      - hide_back_items
+
+  * Add 'places' module
+
+  * Make super-key hide/exit menu
+
+  * Make init-script non-interactive by default
+    (use -i to enter interactive mode)
