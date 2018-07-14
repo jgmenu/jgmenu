@@ -2219,7 +2219,7 @@ int main(int argc, char *argv[])
 
 	args_exec_commands(argc, argv);
 	init_locale();
-	restart_init(argv);
+	restart_init(argc, argv);
 	init_sigactions();
 	config_set_defaults();
 

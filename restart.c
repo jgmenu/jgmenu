@@ -1,17 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
-static char **argv;
+#define JGMENU_MAX_ARGS (32)
 
-void restart_init(char **cmd_line_argv)
+static char *args[JGMENU_MAX_ARGS];
+
+void restart_init(int argc, char **argv)
 {
-	argv = cmd_line_argv;
+	int i, j;
+
+	for (i = 0, j = 0; i < argc && i < JGMENU_MAX_ARGS && argv[i]; i++) {
+		if (!strcmp(argv[i], "--hide-on-startup"))
+			continue;
+		args[j++] = argv[i];
+	}
+	args[j] = NULL;
 }
 
 void restart(void)
 {
 	fprintf(stderr, "info: restarting jgmenu...\n");
-	if (execvp(argv[0], argv) < 0)
+	if (execvp(args[0], args) < 0)
 		fprintf(stderr, "warn: restart failed\n");
 }
