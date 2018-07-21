@@ -397,7 +397,6 @@ char *parse_caret_action(char *s, char *token)
 	}
 	return p;
 }
-
 void remove_caret_markup_closing_bracket(char *s)
 {
 	char *q;
@@ -439,6 +438,15 @@ void draw_item_sep(struct item *p)
 		draw_item_sep_without_text(p);
 	else
 		draw_item_sep_with_text(p);
+}
+
+void draw_last_sel(struct item *p)
+{
+	if (menu.sel == p)
+		return;
+	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
+			  p->area.h, config.item_radius, config.item_border,
+			  0, config.color_sel_fg);
 }
 
 void draw_item_bg_norm(struct item *p)
@@ -586,6 +594,8 @@ void draw_menu(void)
 			draw_item_bg_sel(p);
 		else if (p->selectable)
 			draw_item_bg_norm(p);
+		if (p == menu.current_node->last_sel)
+			draw_last_sel(p);
 
 		/* Draw submenu arrow */
 		if (config.arrow_width && (!strncmp(p->cmd, "^checkout(", 10) ||
