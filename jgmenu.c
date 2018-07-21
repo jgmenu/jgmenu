@@ -77,6 +77,7 @@ struct node {
 	struct item *item;	   /* item that node points to		  */
 	struct item *last_sel;	   /* used when returning to node	  */
 	struct item *last_first;   /* used when returning to node	  */
+	struct item *expanded;	   /* tracks item with sub window open    */
 	struct node *parent;
 	Window wid;
 	struct list_head node;
@@ -1019,6 +1020,7 @@ void create_node(const char *name, struct node *parent)
 	n->item = get_item_from_tag(name);
 	n->last_sel = NULL;
 	n->last_first = NULL;
+	n->expanded = NULL;
 	n->parent = parent;
 	n->wid = 0;
 	list_add_tail(&n->node, &menu.nodes);
@@ -1786,26 +1788,10 @@ static struct node *get_node_from_wid(Window w)
 	return NULL;
 }
 
-static struct item *subwin_parent_item(Window w)
-{
-	struct node *n;
-	Window child = ui_win_child_wid(w);
-
-	if (!child)
-		return NULL;
-	n = get_node_from_wid(child);
-	BUG_ON(!n);
-	BUG_ON(!n->parent);
-	return n->parent->last_sel;
-}
-
 void hover(void)
 {
-	struct item *open_item;
-
 	/* submenu item */
-	open_item = subwin_parent_item(menu.current_node->wid);
-	if (menu.sel == open_item) {
+	if (menu.sel == menu.current_node->expanded) {
 		tmr_mouseover_stop();
 		return;
 	}
@@ -1987,8 +1973,11 @@ void run(void)
 					 */
 					ui_win_del_beyond(ui->cur);
 					pipemenu_del_beyond(menu.current_node);
-					if (!sw_close_pending)
+					menu.current_node->expanded = NULL;
+					if (!sw_close_pending) {
+						menu.current_node->expanded = menu.sel;
 						action_cmd(menu.sel->cmd);
+					}
 					sw_close_pending = 0;
 					process_pointer_position(&ev, 1);
 					continue;

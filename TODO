@@ -76,7 +76,8 @@ Improvements / New features
 
 	Pango markup
 
-	Add menu_height config option
+	Add menu_height config option (incl keywords such as 'auto' and
+	something to recalc on ^root()
 
 	Add CENTER to menu_halign and menu_valign
 
