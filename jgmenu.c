@@ -123,7 +123,10 @@ static const char jgmenu_usage[] =
 
 static void checkout_rootnode(void);
 static void pipemenu_del_all(void);
+static void pipemenu_del_beyond(struct node *node);
 static void tmr_mouseover_stop(void);
+static void del_beyond_current(void);
+static void del_beyond_root(void);
 
 void init_empty_item(void)
 {
@@ -809,6 +812,7 @@ void checkout_rootmenu(char *tag)
 	set_submenu_width();
 }
 
+/* This checks out the original root menu, regardless of any ^root() action */
 void checkout_rootnode(void)
 {
 	while (menu.current_node->parent)
@@ -1220,6 +1224,56 @@ void rm_back_items(void)
 			list_del(&i->master);
 			xfree(i);
 		}
+}
+
+int is_ancestor_to_current_node(struct node *node)
+{
+	struct node *n;
+
+	if (!node)
+		return 0;
+	n = menu.current_node;
+	while (n->parent) {
+		n = n->parent;
+		if (n == node)
+			return 1;
+	}
+	return 0;
+}
+
+/* For debugging */
+void print_expanded_nodes(void)
+{
+	struct node *n;
+
+	fprintf(stderr, "[DEBUG] expanded: ");
+	list_for_each_entry(n, &menu.nodes, node)
+		if (n->expanded)
+			fprintf(stderr, "%s, ", n->item->tag);
+	fprintf(stderr, "\n");
+}
+
+void recalc_expanded_nodes(void)
+{
+	struct node *n;
+
+	menu.current_node->expanded = NULL;
+	list_for_each_entry(n, &menu.nodes, node)
+		if (!is_ancestor_to_current_node(n))
+			n->expanded = NULL;
+}
+
+/* Delete windows and pipemenus beyond current node */
+void del_beyond_current(void)
+{
+	ui_win_del_beyond(ui->cur);
+	pipemenu_del_beyond(menu.current_node);
+	recalc_expanded_nodes();
+}
+
+void del_beyond_root(void)
+{
+	;
 }
 
 void pipemenu_add(const char *s)
@@ -1790,7 +1844,10 @@ static struct node *get_node_from_wid(Window w)
 
 void hover(void)
 {
-	/* submenu item */
+	/*
+	 * Mouse is over an already "expanded" item (i.e. one that caused a
+	 * sub window to open
+	 */
 	if (menu.sel == menu.current_node->expanded) {
 		tmr_mouseover_stop();
 		return;
@@ -1965,15 +2022,8 @@ void run(void)
 
 				/* mouse over signal */
 				if (ch == 't') {
-					/*
-					 * We are about to open a new submenu
-					 * window, so let's make sure we delete
-					 * any old sub windows and remains of
-					 * pipemenus.
-					 */
-					ui_win_del_beyond(ui->cur);
-					pipemenu_del_beyond(menu.current_node);
-					menu.current_node->expanded = NULL;
+					del_beyond_current();
+					/* open new sub window */
 					if (!sw_close_pending) {
 						menu.current_node->expanded = menu.sel;
 						action_cmd(menu.sel->cmd);
