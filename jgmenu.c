@@ -1476,7 +1476,7 @@ void key_event(XKeyEvent *ev)
 	if (status == XBufferOverflow)
 		return;
 	if (ui_has_child_window_open(menu.current_node->wid))
-		ui_win_del_beyond(ui->cur);
+		del_beyond_current();
 	switch (ksym) {
 	case XK_End:
 		if (filter_head() == &empty_item)
@@ -1636,7 +1636,7 @@ void mouse_release(XEvent *e)
 	/* scroll up */
 	if (ev->button == Button4 && menu.first != filter_head()) {
 		if (ui_has_child_window_open(menu.current_node->wid))
-			ui_win_del_beyond(ui->cur);
+			del_beyond_current();
 		step_back(&menu.first, 1);
 		menu.last = fill_from_top(menu.first);
 		step_back(&menu.sel, 1);
@@ -1648,7 +1648,7 @@ void mouse_release(XEvent *e)
 	/* scroll down */
 	if (ev->button == Button5 && menu.last != filter_tail()) {
 		if (ui_has_child_window_open(menu.current_node->wid))
-			ui_win_del_beyond(ui->cur);
+			del_beyond_current();
 		step_fwd(&menu.last, 1);
 		menu.first = fill_from_bottom(menu.last);
 		step_fwd(&menu.sel, 1);
@@ -1666,7 +1666,7 @@ void mouse_release(XEvent *e)
 		     !strncmp(menu.sel->cmd, "^pipe(", 6)))
 			return;
 		if (ui_has_child_window_open(menu.current_node->wid))
-			ui_win_del_beyond(ui->cur);
+			del_beyond_current();
 		action_cmd(menu.sel->cmd);
 	}
 }
