@@ -1369,14 +1369,14 @@ void checkout_parent(void)
 static void hide_menu(void)
 {
 	tmr_mouseover_stop();
-	XUngrabKeyboard(ui->dpy, CurrentTime);
-	XUngrabPointer(ui->dpy, CurrentTime);
 	ui_win_del_beyond(0);
 	geo_set_cur(0);
-	XUnmapWindow(ui->dpy, ui->w[ui->cur].win);
-	filter_reset();
 	checkout_rootnode();
 	pipemenu_del_all();
+	XUnmapWindow(ui->dpy, ui->w[ui->cur].win);
+	filter_reset();
+	XUngrabKeyboard(ui->dpy, CurrentTime);
+	XUngrabPointer(ui->dpy, CurrentTime);
 	update(1);
 }
 
