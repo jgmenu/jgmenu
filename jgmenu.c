@@ -314,10 +314,7 @@ void update_filtered_list(void)
 	INIT_LIST_HEAD(&menu.filter);
 
 	if (filter_needle_length()) {
-		ui_win_del_beyond(0);
-		geo_set_cur(0);
-		checkout_rootnode();
-		pipemenu_del_all();
+		del_beyond_root();
 		list_for_each_entry(item, &menu.master, master) {
 			if (!strncmp("^checkout(", item->cmd, 10) ||
 			    !strncmp("^tag(", item->cmd, 5) ||
@@ -1273,7 +1270,10 @@ void del_beyond_current(void)
 
 void del_beyond_root(void)
 {
-	;
+	ui_win_del_beyond(0);
+	geo_set_cur(0);
+	checkout_rootnode();	/* original root node */
+	pipemenu_del_all();
 }
 
 void pipemenu_add(const char *s)
@@ -1369,10 +1369,7 @@ void checkout_parent(void)
 static void hide_menu(void)
 {
 	tmr_mouseover_stop();
-	ui_win_del_beyond(0);
-	geo_set_cur(0);
-	checkout_rootnode();
-	pipemenu_del_all();
+	del_beyond_root();
 	XUnmapWindow(ui->dpy, ui->w[ui->cur].win);
 	filter_reset();
 	XUngrabKeyboard(ui->dpy, CurrentTime);
