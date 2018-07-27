@@ -50,7 +50,6 @@
 #include "watch.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
-#define DEBUG_DRAW_LAST_SEL 0
 
 static pthread_t thread;	   /* worker thread for loading icons	  */
 static int pipe_fds[2];		   /* talk between threads + catch sig    */
@@ -460,9 +459,11 @@ void draw_item_sep(struct item *p)
 
 void draw_last_sel(struct item *p)
 {
+	if (p == menu.sel)
+		return;
 	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
-			  p->area.h, config.item_radius, config.item_border + 1,
-			  0, config.color_sel_fg);
+			  p->area.h, config.item_radius, 1,
+			  0, config.color_sel_bg);
 }
 
 void draw_item_bg_norm(struct item *p)
@@ -610,7 +611,7 @@ void draw_menu(void)
 			draw_item_bg_sel(p);
 		else if (p->selectable)
 			draw_item_bg_norm(p);
-		if (DEBUG_DRAW_LAST_SEL && p == menu.current_node->last_sel)
+		if (p == menu.current_node->last_sel)
 			draw_last_sel(p);
 
 		/* Draw submenu arrow */
@@ -1948,6 +1949,11 @@ void process_pointer_position(XEvent *ev, int force)
 		 * window.
 		 */
 		if (menu.current_node->expanded) {
+			/*
+			 * When moving the pointer diagonally from a parent to
+			 * a child window, the correct menu.sel needs to be set
+			 * and redrawn in the parent window.
+			 */
 			menu.sel = menu.current_node->expanded;
 			menu.current_node->last_sel = menu.sel;
 			draw_menu();
