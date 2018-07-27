@@ -1656,12 +1656,10 @@ void mouse_release(XEvent *e)
 	mouse_coords.y -= MOUSE_FUDGE;
 	ev = &e->xbutton;
 
-	/* menu.sel == NULL could be caused by pointer movement */
-	if (!menu.sel)
-		menu.sel = menu.current_node->last_sel;
-
 	/* scroll up */
 	if (ev->button == Button4 && menu.first != filter_head()) {
+		if (!menu.sel)
+			menu.sel = menu.current_node->last_sel;
 		if (ui_has_child_window_open(menu.current_node->wid))
 			del_beyond_current();
 		step_back(&menu.first, 1);
@@ -1675,6 +1673,8 @@ void mouse_release(XEvent *e)
 
 	/* scroll down */
 	if (ev->button == Button5 && menu.last != filter_tail()) {
+		if (!menu.sel)
+			menu.sel = menu.current_node->last_sel;
 		if (ui_has_child_window_open(menu.current_node->wid))
 			del_beyond_current();
 		step_fwd(&menu.last, 1);
@@ -1688,6 +1688,8 @@ void mouse_release(XEvent *e)
 
 	/* left-click */
 	if (ev->button == Button1) {
+		if (!menu.sel)
+			return;
 		if (!menu.sel->selectable)
 			return;
 		if (config.sub_hover_action &&
