@@ -296,6 +296,8 @@ int isvisible(struct item *item)
 {
 	struct item *p;
 
+	if (!item)
+		return 0;
 	p = menu.first;
 	list_for_each_entry_from(p, &menu.filter, filter) {
 		if (p == item)
@@ -398,6 +400,7 @@ char *parse_caret_action(char *s, char *token)
 	}
 	return p;
 }
+
 void remove_caret_markup_closing_bracket(char *s)
 {
 	char *q;
@@ -776,6 +779,10 @@ void checkout_tag(const char *tag)
 
 void checkout_submenu(char *tag)
 {
+	if (!menu.sel) {
+		info("checkout_submenu(): no menu.sel");
+		return;
+	}
 	if (geo_cur() >= MAX_NR_WINDOWS - 1) {
 		warn("Maximum number of windows reached ('%d')", MAX_NR_WINDOWS);
 		return;
@@ -1391,6 +1398,10 @@ void action_cmd(char *cmd)
 
 	if (!cmd)
 		return;
+	if (!menu.sel) {
+		info("action_cmd(): no menu.sel");
+		return;
+	}
 	if (!config.spawn && strncmp("^checkout(", cmd, 10) &&
 	    strncmp("^sub(", cmd, 5) && strncmp("^back(", cmd, 6) &&
 	    strncmp("^pipe(", cmd, 6)) {
@@ -1474,6 +1485,11 @@ void key_event(XKeyEvent *ev)
 		return;
 	if (ui_has_child_window_open(menu.current_node->wid))
 		del_beyond_current();
+
+	/* menu.sel == NULL could be caused by pointer movement */
+	if (!menu.sel)
+		menu.sel = menu.current_node->last_sel;
+
 	switch (ksym) {
 	case XK_End:
 		if (filter_head() == &empty_item)
@@ -1630,6 +1646,10 @@ void mouse_release(XEvent *e)
 	mouse_coords.y -= MOUSE_FUDGE;
 	ev = &e->xbutton;
 
+	/* menu.sel == NULL could be caused by pointer movement */
+	if (!menu.sel)
+		menu.sel = menu.current_node->last_sel;
+
 	/* scroll up */
 	if (ev->button == Button4 && menu.first != filter_head()) {
 		if (ui_has_child_window_open(menu.current_node->wid))
@@ -1762,11 +1782,15 @@ static void move_selection_with_mouse(struct point *mouse_coord)
 			if (menu.sel != item) {
 				menu.sel = item;
 				draw_menu();
-				break;
 			}
+			return;
 		}
 		if (item == menu.last)
 			break;
+	}
+	if (!menu.current_node->expanded) {
+		menu.sel = NULL;
+		draw_menu();
 	}
 }
 
@@ -1849,8 +1873,8 @@ void hover(void)
 		tmr_mouseover_stop();
 		return;
 	}
-	if (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
-	    !strncmp(menu.sel->cmd, "^pipe(", 6)) {
+	if (menu.sel && (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
+			 !strncmp(menu.sel->cmd, "^pipe(", 6))) {
 		tmr_mouseover_start();
 		sw_close_pending = 0;
 		return;
@@ -1870,6 +1894,8 @@ void set_focus(Window w)
 {
 	struct node *n;
 
+	if (!menu.sel)
+		info("set_focus(): no menu.sel");
 	n = get_node_from_wid(w);
 	menu.current_node->last_sel = menu.sel;
 	ui_win_activate(w);
@@ -2019,6 +2045,7 @@ void run(void)
 
 				/* mouse over signal */
 				if (ch == 't') {
+					BUG_ON(!menu.sel);
 					del_beyond_current();
 					/* open new sub window */
 					if (!sw_close_pending) {
