@@ -172,10 +172,22 @@ void print_nodes(void)
 {
 	struct node *n;
 
+	fprintf(stderr, "nodes: ");
 	list_for_each_entry(n, &menu.nodes, node) {
-		fprintf(stderr, "%d", level(n));
-		fprintf(stderr, "%.5s ", n->item->tag);
+		fprintf(stderr, "%d-", level(n));
+		fprintf(stderr, "%.5s; ", n->item->tag);
 	}
+	fprintf(stderr, "\n");
+}
+
+void print_expanded_nodes(void)
+{
+	struct node *n;
+
+	fprintf(stderr, "expanded nodes: ");
+	list_for_each_entry(n, &menu.nodes, node)
+		if (n->expanded)
+			fprintf(stderr, "%s, ", n->item->tag);
 	fprintf(stderr, "\n");
 }
 
@@ -361,6 +373,7 @@ void update_filtered_list(void)
 		menu.sel = menu.first;
 		if (!menu.sel->selectable)
 			menu.sel = next_selectable(menu.first, &isoutside);
+		menu.current_node->last_sel = menu.sel;
 	}
 }
 
@@ -446,10 +459,8 @@ void draw_item_sep(struct item *p)
 
 void draw_last_sel(struct item *p)
 {
-	if (menu.sel == p)
-		return;
 	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
-			  p->area.h, config.item_radius, config.item_border,
+			  p->area.h, config.item_radius, config.item_border + 1,
 			  0, config.color_sel_fg);
 }
 
@@ -1245,18 +1256,6 @@ int is_ancestor_to_current_node(struct node *node)
 	return 0;
 }
 
-/* For debugging */
-void print_expanded_nodes(void)
-{
-	struct node *n;
-
-	fprintf(stderr, "[DEBUG] expanded: ");
-	list_for_each_entry(n, &menu.nodes, node)
-		if (n->expanded)
-			fprintf(stderr, "%s, ", n->item->tag);
-	fprintf(stderr, "\n");
-}
-
 void recalc_expanded_nodes(void)
 {
 	struct node *n;
@@ -1498,6 +1497,7 @@ void key_event(XKeyEvent *ev)
 		menu.first = fill_from_bottom(menu.last);
 		menu.sel = menu.last;
 		init_menuitem_coordinates();
+		menu.current_node->last_sel = menu.sel;
 		draw_menu();
 		break;
 	case XK_Super_L:
@@ -1519,6 +1519,7 @@ void key_event(XKeyEvent *ev)
 		menu.last = fill_from_top(menu.first);
 		menu.sel = menu.first;
 		init_menuitem_coordinates();
+		menu.current_node->last_sel = menu.sel;
 		draw_menu();
 		break;
 	case XK_Up:
@@ -1531,6 +1532,7 @@ void key_event(XKeyEvent *ev)
 			menu.last = fill_from_top(menu.first);
 		}
 		init_menuitem_coordinates();
+		menu.current_node->last_sel = menu.sel;
 		draw_menu();
 		break;
 	case XK_Next:	/* PageDown */
@@ -1546,6 +1548,7 @@ void key_event(XKeyEvent *ev)
 		menu.sel = menu.last;
 		if (!menu.last->selectable)
 			menu.sel = prev_selectable(menu.last, &isoutside);
+		menu.current_node->last_sel = menu.sel;
 		draw_menu();
 		break;
 	case XK_Prior:	/* PageUp */
@@ -1561,6 +1564,7 @@ void key_event(XKeyEvent *ev)
 		menu.sel = menu.first;
 		if (!menu.sel->selectable)
 			menu.sel = next_selectable(menu.first, &isoutside);
+		menu.current_node->last_sel = menu.sel;
 		draw_menu();
 		break;
 	case XK_Return:
@@ -1578,6 +1582,7 @@ void key_event(XKeyEvent *ev)
 			menu.first = fill_from_bottom(menu.last);
 		}
 		init_menuitem_coordinates();
+		menu.current_node->last_sel = menu.sel;
 		draw_menu();
 		break;
 	case XK_Left:
@@ -1594,6 +1599,9 @@ void key_event(XKeyEvent *ev)
 		break;
 	case XK_F5:
 		restart();
+		break;
+	case XK_F7:
+		print_expanded_nodes();
 		break;
 	case XK_F8:
 		print_nodes();
@@ -1658,6 +1666,7 @@ void mouse_release(XEvent *e)
 		menu.last = fill_from_top(menu.first);
 		step_back(&menu.sel, 1);
 		init_menuitem_coordinates();
+		menu.current_node->last_sel = menu.sel;
 		draw_menu();
 		return;
 	}
@@ -1670,6 +1679,7 @@ void mouse_release(XEvent *e)
 		menu.first = fill_from_bottom(menu.last);
 		step_fwd(&menu.sel, 1);
 		init_menuitem_coordinates();
+		menu.current_node->last_sel = menu.sel;
 		draw_menu();
 		return;
 	}
@@ -1781,6 +1791,7 @@ static void move_selection_with_mouse(struct point *mouse_coord)
 		if (ui_is_point_in_area(*mouse_coord, item->area)) {
 			if (menu.sel != item) {
 				menu.sel = item;
+				menu.current_node->last_sel = item;
 				draw_menu();
 			}
 			return;
@@ -1894,8 +1905,6 @@ void set_focus(Window w)
 {
 	struct node *n;
 
-	if (!menu.sel)
-		info("set_focus(): no menu.sel");
 	n = get_node_from_wid(w);
 	menu.current_node->last_sel = menu.sel;
 	ui_win_activate(w);
