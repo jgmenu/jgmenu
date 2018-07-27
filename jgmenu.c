@@ -1932,6 +1932,8 @@ void process_pointer_position(XEvent *ev, int force)
 	pw.y -= MOUSE_FUDGE;
 	if (!force && (pw.x == oldx) && (pw.y == oldy))
 		return;
+
+	/* e->subwindow refers to the window under the pointer */
 	if (e->subwindow == ui->w[ui->cur].win) {
 		move_selection_with_mouse(&pw);
 		if (config.sub_hover_action)
@@ -1940,10 +1942,16 @@ void process_pointer_position(XEvent *ev, int force)
 		tmr_mouseover_stop();
 	} else {
 		/*
-		 * When sub window has just opened, we end up here on
+		 * We end up here whenever we move from one window to another.
+		 * When a sub window has just opened, we end up here on
 		 * the next event (once) and re-set the focus on the 'parent'
 		 * window.
 		 */
+		if (menu.current_node->expanded) {
+			menu.sel = menu.current_node->expanded;
+			menu.current_node->last_sel = menu.sel;
+			draw_menu();
+		}
 		set_focus(e->subwindow);
 		update(1);
 	}
