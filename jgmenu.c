@@ -50,6 +50,7 @@
 #include "watch.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
+#define DEBUG_DRAW_LAST_SEL 0
 
 static pthread_t thread;	   /* worker thread for loading icons	  */
 static int pipe_fds[2];		   /* talk between threads + catch sig    */
@@ -609,7 +610,7 @@ void draw_menu(void)
 			draw_item_bg_sel(p);
 		else if (p->selectable)
 			draw_item_bg_norm(p);
-		if (p == menu.current_node->last_sel)
+		if (DEBUG_DRAW_LAST_SEL && p == menu.current_node->last_sel)
 			draw_last_sel(p);
 
 		/* Draw submenu arrow */
