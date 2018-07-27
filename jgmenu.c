@@ -1942,6 +1942,8 @@ void process_pointer_position(XEvent *ev, int force)
 		if (config.sub_hover_action)
 			hover();
 	} else if (is_outside_menu_windows(&e)) {
+		menu.sel = NULL;
+		draw_menu();
 		tmr_mouseover_stop();
 	} else {
 		/*
