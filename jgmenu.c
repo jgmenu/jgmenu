@@ -1943,6 +1943,8 @@ void process_pointer_position(XEvent *ev, int force)
 			hover();
 	} else if (is_outside_menu_windows(&e)) {
 		menu.sel = NULL;
+		if (menu.current_node->expanded)
+			menu.current_node->last_sel = menu.current_node->expanded;
 		draw_menu();
 		tmr_mouseover_stop();
 	} else {
