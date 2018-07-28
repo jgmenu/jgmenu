@@ -13,15 +13,20 @@ Run,dmenu_run -fn "-*-dejavu sans-medium-r-*-*-*-*-*-*-*-*-*-*",system-run
 Settings and Admin,^checkout(settings),folder
 Exit,^checkout(exit),system-shutdown
 
-Settings and Admin,^tag(settings)
+^tag(settings)
 Wifi,xterm -e 'sudo wifi-menu',network-wireless
 Sound,pavucontrol,multimedia-volume-control
 Printers,firefox http://localhost:631/admin,printer
 Background image,nitrogen ~/bg/,preferences-desktop-wallpaper
 Colour Picker,yad --color --button=OK --undecorated --center,color-picker
+Keyboard Layout,^checkout(keyboard)
 Update system,xterm -e 'sudo pacman -Syyu; bash',system-software-update
 
-Exit,^tag(exit)
+^tag(keyboard)
+British,setxkbmap -layout gb
+Swedish,setxkbmap -layout se
+
+^tag(exit)
 Exit to prompt,openbox --exit,system-log-out
 Suspend,systemctl -i suspend,system-log-out
 Reboot,systemctl -i reboot,system-reboot
