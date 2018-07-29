@@ -34,10 +34,15 @@
 #include "sbuf.h"
 #include "filter.h"
 #include "icon.h"
+#include "x11-ui.h"
 
 enum widget_type { WIDGET_ERROR, ICON, RECT, TEXT, SEARCH };
 
-LIST_HEAD(widgets);
+static LIST_HEAD(widgets);
+static struct point mouse;
+
+/* indicates if mouse is over any of the widgets */
+static int mouseover;
 
 struct widget {
 	char *buf;
@@ -103,6 +108,57 @@ static void draw_search(struct widget **w)
 	xfree(t);
 }
 
+#define WIDGET_PADDING (5)
+static int ismouseover(struct widget **w)
+{
+	struct area a;
+
+	a.x = (*w)->x - WIDGET_PADDING;
+	a.y = (*w)->y - WIDGET_PADDING;
+	a.w = (*w)->w + WIDGET_PADDING * 2;
+	a.h = (*w)->h + WIDGET_PADDING * 2;
+	return ui_is_point_in_area(mouse, a);
+}
+
+static void draw_selection(struct widget **w)
+{
+	struct area a;
+
+	if (!ismouseover(w))
+		return;
+	if (!(*w)->action || (*w)->action[0] == '\0')
+		return;
+	a.x = (*w)->x - WIDGET_PADDING;
+	a.y = (*w)->y - WIDGET_PADDING;
+	a.w = (*w)->w + WIDGET_PADDING * 2;
+	a.h = (*w)->h + WIDGET_PADDING * 2;
+	ui_draw_rectangle(a.x, a.y, a.w, a.h, (*w)->r,
+			  0.0, 1, (*w)->fgcol);
+	ui_draw_rectangle(a.x, a.y, a.w, a.h, (*w)->r,
+			  1.0, 0, (*w)->fgcol);
+}
+
+int widgets_mouseover(void)
+{
+	return mouseover;
+}
+
+void widgets_set_pointer_position(int x, int y)
+{
+	struct widget *w;
+
+	mouseover = 0;
+	mouse.x = x;
+	mouse.y = y;
+
+	list_for_each_entry(w, &widgets, list) {
+		if (ismouseover(&w)) {
+			mouseover = 1;
+			break;
+		}
+	}
+}
+
 void widgets_draw(void)
 {
 	struct widget *w;
@@ -110,6 +166,7 @@ void widgets_draw(void)
 	if (list_empty(&widgets))
 		return;
 	list_for_each_entry(w, &widgets, list) {
+		draw_selection(&w);
 		if (w->type == ICON)
 			draw_icon(&w);
 		else if (w->type == RECT)

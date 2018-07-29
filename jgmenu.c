@@ -600,7 +600,7 @@ void draw_menu(void)
 				  config.menu_radius, config.menu_border,
 				  0, config.color_menu_border);
 
-	if (!menu.current_node->parent)
+	if (!ui->cur)
 		widgets_draw();
 
 	/* Draw menu items */
@@ -1803,10 +1803,14 @@ static void move_selection_with_mouse(struct point *mouse_coord)
 		if (item == menu.last)
 			break;
 	}
-	if (!menu.current_node->expanded) {
+	/* if we got this far, the mouse is not over a menu item */
+
+	if (!menu.current_node->expanded && menu.sel) {
 		menu.sel = NULL;
 		draw_menu();
 	}
+	if (widgets_mouseover())
+		draw_menu();
 }
 
 #define TMR_MOUSEOVER_SIG SIGRTMAX
@@ -1935,6 +1939,8 @@ void process_pointer_position(XEvent *ev, int force)
 	pw.y -= MOUSE_FUDGE;
 	if (!force && (pw.x == oldx) && (pw.y == oldy))
 		return;
+
+	widgets_set_pointer_position(pw.x, pw.y);
 
 	/* e->subwindow refers to the window under the pointer */
 	if (e->subwindow == ui->w[ui->cur].win) {
