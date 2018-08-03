@@ -77,10 +77,8 @@ static enum widget_type parse_type(const char *field)
 
 static void draw_icon(struct widget **w)
 {
-	if (!(*w)->surface) {
+	if (!(*w)->surface)
 		(*w)->surface = load_cairo_icon((*w)->content);
-		warn("could not find icon '%s'", (*w)->content);
-	}
 	if (!(*w)->surface)
 		return;
 	ui_insert_image((*w)->surface, (*w)->x, (*w)->y, (*w)->w);
