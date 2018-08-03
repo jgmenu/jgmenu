@@ -513,13 +513,16 @@ void ui_insert_image(cairo_surface_t *image, double x, double y, double size)
 {
 	double w, h, max;
 
+	cairo_save(ui->w[ui->cur].c);
+	cairo_translate(ui->w[ui->cur].c, x, y);
+
+	/* scale */
 	w = cairo_image_surface_get_width(image);
 	h = cairo_image_surface_get_height(image);
 	max = h > w ? h : w;
+	if (max != size)
+		cairo_scale(ui->w[ui->cur].c, size / max, size / max);
 
-	cairo_save(ui->w[ui->cur].c);
-	cairo_translate(ui->w[ui->cur].c, x, y);
-	cairo_scale(ui->w[ui->cur].c, size / max, size / max);
 	cairo_set_source_surface(ui->w[ui->cur].c, image, 0, 0);
 	cairo_paint(ui->w[ui->cur].c);
 	cairo_restore(ui->w[ui->cur].c);
