@@ -22,6 +22,7 @@
 #include "sbuf.h"
 #include "xpm-loader.h"
 #include "cache.h"
+#include "config.h"
 
 #define DEBUG_THEMES 0
 
@@ -35,13 +36,11 @@ struct icon {
 struct list_head icon_cache;
 
 struct sbuf icon_theme;
-int icon_size;
 
 void icon_init(void)
 {
 	INIT_LIST_HEAD(&icon_cache);
 	sbuf_init(&icon_theme);
-	icon_size = 22;
 }
 
 void icon_set_theme(const char *theme)
@@ -54,7 +53,6 @@ void icon_set_theme(const char *theme)
 
 void icon_set_size(int size)
 {
-	icon_size = size;
 	cache_set_icon_size(size);
 }
 
@@ -154,7 +152,7 @@ void icon_set_name(const char *name)
 	list_add(&icon->list, &icon_cache);
 }
 
-cairo_surface_t *load_cairo_icon(const char *path)
+cairo_surface_t *load_cairo_icon(const char *path, int icon_size)
 {
 	if (strstr(path, ".png"))
 		return get_png_icon(path);
@@ -210,7 +208,7 @@ void icon_load(void)
 		sbuf_cpy(&path->name, icon->name);
 		list_add(&path->list, &icon_paths);
 	}
-	icon_find_all(&icon_paths, icon_size);
+	icon_find_all(&icon_paths, config.icon_size);
 	list_for_each_entry(path, &icon_paths, list) {
 		icon = (struct icon *)path->icon;
 		sbuf_cpy(&icon->path, path->path.buf);
@@ -234,7 +232,8 @@ void icon_load(void)
 		/* icon_load is run twice, so let's not duplicate effort */
 		if (icon->surface)
 			continue;
-		icon->surface = load_cairo_icon(icon->path.buf);
+		icon->surface = load_cairo_icon(icon->path.buf,
+						config.icon_size);
 	}
 
 	free(s.buf);
