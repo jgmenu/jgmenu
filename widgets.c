@@ -150,6 +150,24 @@ void widgets_set_pointer_position(int x, int y)
 	}
 }
 
+/*
+ * widgets_set_point_position() should be run just before calling
+ * this function
+ */
+char *widgets_get_mouseover_action(void)
+{
+	struct widget *w;
+
+	list_for_each_entry(w, &widgets, list) {
+		if (ismouseover(&w)) {
+			if (!w->action || w->action[0] == '\0')
+				continue;
+			return (w->action);
+		}
+	}
+	return NULL;
+}
+
 void widgets_draw(void)
 {
 	struct widget *w;
@@ -184,6 +202,7 @@ void widgets_add(const char *s)
 	w->buf = argv_buf.buf;
 	w->type = parse_type(argv_buf.argv[0] + 1);
 	w->action = argv_buf.argv[1];
+	remove_caret_markup_closing_bracket(w->action);
 	xatoi(&w->x, argv_buf.argv[2], XATOI_NONNEG, "w->x");
 	xatoi(&w->y, argv_buf.argv[3], XATOI_NONNEG, "w->y");
 	xatoi(&w->w, argv_buf.argv[4], XATOI_NONNEG, "w->w");

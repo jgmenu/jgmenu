@@ -1386,10 +1386,6 @@ void action_cmd(char *cmd)
 
 	if (!cmd)
 		return;
-	if (!menu.sel) {
-		info("action_cmd(): no menu.sel");
-		return;
-	}
 	if (!config.spawn && strncmp("^checkout(", cmd, 10) &&
 	    strncmp("^sub(", cmd, 5) && strncmp("^back(", cmd, 6) &&
 	    strncmp("^pipe(", cmd, 6)) {
@@ -1675,6 +1671,17 @@ void mouse_release(XEvent *e)
 
 	/* left-click */
 	if (ev->button == Button1) {
+		char *ret;
+
+		/* widgets */
+		widgets_set_pointer_position(mouse_coords.x, mouse_coords.y);
+		ret = widgets_get_mouseover_action();
+		if (ret && ret[0] != '\0') {
+			action_cmd(ret);
+			return;
+		}
+
+		/* normal menu items */
 		if (!menu.sel)
 			return;
 		if (!menu.sel->selectable)
