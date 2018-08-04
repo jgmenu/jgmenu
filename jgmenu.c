@@ -1389,7 +1389,7 @@ void action_cmd(char *cmd)
 	if (!config.spawn && strncmp("^checkout(", cmd, 10) &&
 	    strncmp("^sub(", cmd, 5) && strncmp("^back(", cmd, 6) &&
 	    strncmp("^pipe(", cmd, 6)) {
-		printf("%s\n", menu.sel->cmd);
+		printf("%s\n", cmd);
 		exit(0);
 	}
 	if (!strncmp(cmd, "^checkout(", 10)) {
