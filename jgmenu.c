@@ -414,19 +414,6 @@ char *parse_caret_action(char *s, char *token)
 	return p;
 }
 
-void remove_caret_markup_closing_bracket(char *s)
-{
-	char *q;
-
-	if (!s)
-		return;
-	if (s[0] == '^') {
-		q = strrchr(s, ')');
-		if (q)
-			*q = '\0';
-	}
-}
-
 void draw_item_sep_without_text(struct item *p)
 {
 	double y;
