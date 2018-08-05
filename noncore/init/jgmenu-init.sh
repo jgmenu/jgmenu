@@ -176,9 +176,6 @@ set_theme () {
 	neon)
 		. "${JGMENU_EXEC_DIR}"/jgmenu-init--neon.sh
 		setup_theme
-		prepend_items
-		append_items
-		say "Theme '$1' has been set"
 		restart_jgmenu
 		;;
 	esac

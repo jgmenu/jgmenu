@@ -11,8 +11,8 @@ tint2_look          = 0
 
 #menu_margin_x       = 0
 menu_margin_y       = 30
-#menu_width          = 200
-menu_padding_top    = 40
+menu_width          = 272
+menu_padding_top    = 100
 menu_padding_right  = 10
 menu_padding_bottom = 10
 menu_padding_left   = 10
