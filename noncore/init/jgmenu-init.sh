@@ -80,10 +80,11 @@ check_menu_package_installed () {
 	local menu_package_exists=
 	for d in $xdg_config_dirs
 	do
-		if test -e $d/menus/*.menu
-		then
-			menu_package_exists=t
-		fi
+		for file in "${d}"/menus/*.menu
+		do
+			test -e "${file}" && menu_package_exists=t
+			break
+		done
 	done
 	if test "$menu_package_exists" = "t"
 	then
