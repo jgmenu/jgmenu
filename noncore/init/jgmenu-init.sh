@@ -90,7 +90,7 @@ check_menu_package_installed () {
 	then
 		verbose_info "menu package(s) exist"
 	else
-		warn "no menu package installed"
+		warn "no menu package installed (suggest package 'lxmenu-data' or similar)"
 	fi
 }
 
