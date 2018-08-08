@@ -1876,8 +1876,21 @@ static struct node *get_node_from_wid(Window w)
 	return NULL;
 }
 
+void close_sub_window(void)
+{
+	if (!ui_has_child_window_open(menu.current_node->wid))
+		return;
+	sw_close_pending = 1;
+	tmr_mouseover_start();
+}
+
 void hover(void)
 {
+	if (widgets_mouseover()) {
+		tmr_mouseover_stop();
+		close_sub_window();
+		return;
+	}
 	/*
 	 * Mouse is over an already "expanded" item (i.e. one that caused a
 	 * sub window to open
@@ -1896,10 +1909,7 @@ void hover(void)
 	/* non-submenu item */
 	if (!sw_close_pending) {
 		tmr_mouseover_stop();
-		if (ui_has_child_window_open(menu.current_node->wid)) {
-			sw_close_pending = 1;
-			tmr_mouseover_start();
-		}
+		close_sub_window();
 	}
 }
 
@@ -1950,6 +1960,7 @@ void process_pointer_position(XEvent *ev, int force)
 	} else {
 		/*
 		 * We end up here whenever we move from one window to another.
+		 *
 		 * When a sub window has just opened, we end up here on
 		 * the next event (once) and re-set the focus on the 'parent'
 		 * window.
