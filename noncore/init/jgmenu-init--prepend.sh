@@ -21,8 +21,11 @@ prepend__add_sep () {
 }
 
 prepend__add_terminal () {
+	# Don't add if terminal already exists in prepend.csv
 	test -e ${prepend_file} && for x in ${prepend__terminals}
 	do
+		# Don't grep for "st" - it's contained in too many strings :)
+		test "${x}" = "st" && break
 		if grep -i ${x} ${prepend_file} >/dev/null 2>&1
 		then
 			say "prepend.csv already contains a terminal entry"

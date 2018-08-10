@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 6 July, 2018  
+% 7 Aug, 2018  
 
 # NAME
 
@@ -271,16 +271,25 @@ menu_margin_y = __integer__ (default 0)
     See note on `_NET_WORKAREA` under `menu_{v,h}align` variables  
 
 menu_width = __integer__ (default 200)  
+
+    Set the *minimum* menu width. The menu width will adjust to the  
+    longest item in the current (sub)menu. If a filter is applied  
+    (e.g. by the user typing) the menu width will NOT adjust.  
+
 menu_padding_top = __integer__ (default 5)  
 menu_padding_right = __integer__ (default 5)  
 menu_padding_bottom = __integer__ (default 5)  
 menu_padding_left = __integer__ (default 5)  
-menu_radius = __integer__ (default 1)  
-menu_border = __integer__ (default 0)  
 
     "padding" refers to space inside an object (between border and  
     content)  
+
+menu_radius = __integer__ (default 1)  
+
     "radius" refers to the size of rounded corners  
+
+menu_border = __integer__ (default 0)  
+
     "border" refers to the border-thickness  
 
 menu_halign = (left | right) (default left)  

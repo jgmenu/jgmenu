@@ -106,34 +106,27 @@ static void draw_search(struct widget **w)
 	xfree(t);
 }
 
-#define WIDGET_PADDING (5)
 static int ismouseover(struct widget **w)
 {
 	struct area a;
 
-	a.x = (*w)->x - WIDGET_PADDING;
-	a.y = (*w)->y - WIDGET_PADDING;
-	a.w = (*w)->w + WIDGET_PADDING * 2;
-	a.h = (*w)->h + WIDGET_PADDING * 2;
+	a.x = (*w)->x;
+	a.y = (*w)->y;
+	a.w = (*w)->w;
+	a.h = (*w)->h;
 	return ui_is_point_in_area(mouse, a);
 }
 
 static void draw_selection(struct widget **w)
 {
-	struct area a;
-
 	if (!ismouseover(w))
 		return;
 	if (!(*w)->action || (*w)->action[0] == '\0')
 		return;
-	a.x = (*w)->x - WIDGET_PADDING;
-	a.y = (*w)->y - WIDGET_PADDING;
-	a.w = (*w)->w + WIDGET_PADDING * 2;
-	a.h = (*w)->h + WIDGET_PADDING * 2;
-	ui_draw_rectangle(a.x, a.y, a.w, a.h, (*w)->r,
-			  0.0, 1, (*w)->fgcol);
-	ui_draw_rectangle(a.x, a.y, a.w, a.h, (*w)->r,
-			  1.0, 0, (*w)->fgcol);
+	ui_draw_rectangle((*w)->x, (*w)->y, (*w)->w, (*w)->h, (*w)->r,
+			  0.0, 1, config.color_sel_bg);
+	ui_draw_rectangle((*w)->x, (*w)->y, (*w)->w, (*w)->h, (*w)->r,
+			  1.0, 0, config.color_sel_fg);
 }
 
 int widgets_mouseover(void)
@@ -155,6 +148,24 @@ void widgets_set_pointer_position(int x, int y)
 			break;
 		}
 	}
+}
+
+/*
+ * widgets_set_point_position() should be run just before calling
+ * this function
+ */
+char *widgets_get_mouseover_action(void)
+{
+	struct widget *w;
+
+	list_for_each_entry(w, &widgets, list) {
+		if (ismouseover(&w)) {
+			if (!w->action || w->action[0] == '\0')
+				continue;
+			return (w->action);
+		}
+	}
+	return NULL;
 }
 
 void widgets_draw(void)
@@ -191,6 +202,7 @@ void widgets_add(const char *s)
 	w->buf = argv_buf.buf;
 	w->type = parse_type(argv_buf.argv[0] + 1);
 	w->action = argv_buf.argv[1];
+	remove_caret_markup_closing_bracket(w->action);
 	xatoi(&w->x, argv_buf.argv[2], XATOI_NONNEG, "w->x");
 	xatoi(&w->y, argv_buf.argv[3], XATOI_NONNEG, "w->y");
 	xatoi(&w->w, argv_buf.argv[4], XATOI_NONNEG, "w->w");

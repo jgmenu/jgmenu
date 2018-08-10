@@ -414,19 +414,6 @@ char *parse_caret_action(char *s, char *token)
 	return p;
 }
 
-void remove_caret_markup_closing_bracket(char *s)
-{
-	char *q;
-
-	if (!s)
-		return;
-	if (s[0] == '^') {
-		q = strrchr(s, ')');
-		if (q)
-			*q = '\0';
-	}
-}
-
 void draw_item_sep_without_text(struct item *p)
 {
 	double y;
@@ -1399,14 +1386,10 @@ void action_cmd(char *cmd)
 
 	if (!cmd)
 		return;
-	if (!menu.sel) {
-		info("action_cmd(): no menu.sel");
-		return;
-	}
 	if (!config.spawn && strncmp("^checkout(", cmd, 10) &&
 	    strncmp("^sub(", cmd, 5) && strncmp("^back(", cmd, 6) &&
 	    strncmp("^pipe(", cmd, 6)) {
-		printf("%s\n", menu.sel->cmd);
+		printf("%s\n", cmd);
 		exit(0);
 	}
 	if (!strncmp(cmd, "^checkout(", 10)) {
@@ -1688,6 +1671,17 @@ void mouse_release(XEvent *e)
 
 	/* left-click */
 	if (ev->button == Button1) {
+		char *ret;
+
+		/* widgets */
+		widgets_set_pointer_position(mouse_coords.x, mouse_coords.y);
+		ret = widgets_get_mouseover_action();
+		if (ret && ret[0] != '\0') {
+			action_cmd(ret);
+			return;
+		}
+
+		/* normal menu items */
 		if (!menu.sel)
 			return;
 		if (!menu.sel->selectable)
@@ -1882,8 +1876,21 @@ static struct node *get_node_from_wid(Window w)
 	return NULL;
 }
 
+void close_sub_window(void)
+{
+	if (!ui_has_child_window_open(menu.current_node->wid))
+		return;
+	sw_close_pending = 1;
+	tmr_mouseover_start();
+}
+
 void hover(void)
 {
+	if (widgets_mouseover()) {
+		tmr_mouseover_stop();
+		close_sub_window();
+		return;
+	}
 	/*
 	 * Mouse is over an already "expanded" item (i.e. one that caused a
 	 * sub window to open
@@ -1902,10 +1909,7 @@ void hover(void)
 	/* non-submenu item */
 	if (!sw_close_pending) {
 		tmr_mouseover_stop();
-		if (ui_has_child_window_open(menu.current_node->wid)) {
-			sw_close_pending = 1;
-			tmr_mouseover_start();
-		}
+		close_sub_window();
 	}
 }
 
@@ -1956,6 +1960,7 @@ void process_pointer_position(XEvent *ev, int force)
 	} else {
 		/*
 		 * We end up here whenever we move from one window to another.
+		 *
 		 * When a sub window has just opened, we end up here on
 		 * the next event (once) and re-set the focus on the 'parent'
 		 * window.

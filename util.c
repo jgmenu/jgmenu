@@ -299,3 +299,16 @@ void cat(const char *filename)
 cleanup:
 	xfree(f.buf);
 }
+
+void remove_caret_markup_closing_bracket(char *s)
+{
+	char *q;
+
+	if (!s)
+		return;
+	if (s[0] == '^') {
+		q = strrchr(s, ')');
+		if (q)
+			*q = '\0';
+	}
+}

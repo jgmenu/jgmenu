@@ -40,5 +40,6 @@ int parse_hexstr(char *hex, double *rgba);
 int get_first_num_from_str(const char *s);
 void xatoi(int *var, const char *value, int flags, const char *key);
 void cat(const char *filename);
+void remove_caret_markup_closing_bracket(char *s);
 
 #endif /* UTIL_H */

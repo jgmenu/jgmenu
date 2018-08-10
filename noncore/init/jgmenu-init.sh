@@ -80,16 +80,17 @@ check_menu_package_installed () {
 	local menu_package_exists=
 	for d in $xdg_config_dirs
 	do
-		if test -e $d/menus/*.menu
-		then
-			menu_package_exists=t
-		fi
+		for file in "${d}"/menus/*.menu
+		do
+			test -e "${file}" && menu_package_exists=t
+			break
+		done
 	done
 	if test "$menu_package_exists" = "t"
 	then
 		verbose_info "menu package(s) exist"
 	else
-		warn "no menu package installed"
+		warn "no menu package installed (suggest package 'lxmenu-data' or similar)"
 	fi
 }
 
@@ -176,9 +177,6 @@ set_theme () {
 	neon)
 		. "${JGMENU_EXEC_DIR}"/jgmenu-init--neon.sh
 		setup_theme
-		prepend_items
-		append_items
-		say "Theme '$1' has been set"
 		restart_jgmenu
 		;;
 	esac
