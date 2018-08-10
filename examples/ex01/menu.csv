@@ -1,10 +1,14 @@
 #
 # ex01
 #
-# Simple menu
+# Menu with widgets
 #
-# Icons with paths
-#
+
+@rect,,10,10,180,25,3,left,top,#666666 15,#000000 0,content
+@search,,10,10,180,25,3,left,top,#666666 90,#222222 3,Type to search...
+@icon,^root(submenu),10,50,24,24,3,left,top,#2222dd 50,#eeeeee 20,/usr/share/icons/Adwaita/24x24/emblems/emblem-favorite-symbolic.symbolic.png
+@icon,^root(submenu),44,50,24,24,3,left,top,#2222dd 50,#eeeeee 20,/usr/share/icons/Adwaita/24x24/emblems/emblem-system-symbolic.symbolic.png
+@icon,^root(submenu),78,50,24,24,3,left,top,#2222dd 50,#eeeeee 20,/usr/share/icons/Adwaita/24x24/emblems/emblem-photos-symbolic.symbolic.png
 
 jgmenu demo,^tag(root)
 directory,^checkout(submenu),folder-documents

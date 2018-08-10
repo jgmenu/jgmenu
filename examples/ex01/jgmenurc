@@ -1,9 +1,65 @@
-menu_halign     = right
-menu_valign     = top
-item_halign     = right
-arrow_string    = <
-color_menu_bg	= #eeeeee 100
-color_norm_bg	= #000000 0
-color_norm_fg	= #111111 100
-color_sel_bg	= #2222dd 80
-color_sel_fg	= #eeeeee 100
+
+#stay_alive          = 1
+#hide_on_startup     = 0
+#csv_cmd             = pmenu
+#tint2_look          = 1
+#at_pointer          = 0
+#terminal_exec       = x-terminal-emulator
+#terminal_args       = -e
+#monitor             = 0
+#hover_delay	     = 100
+#hide_back_items     = 1
+
+#menu_margin_x       = 0
+#menu_margin_y       = 0
+#menu_width          = 200
+menu_padding_top    = 90
+#menu_padding_right  = 5
+#menu_padding_bottom = 5
+#menu_padding_left   = 5
+#menu_radius         = 1
+#menu_border         = 0
+#menu_halign         = left
+menu_valign         = top
+
+#sub_spacing         = 1
+#sub_padding_top     = auto
+#sub_padding_right   = auto
+#sub_padding_bottom  = auto
+#sub_padding_left    = auto
+#sub_hover_action    = 1
+
+#item_margin_x       = 3
+#item_margin_y       = 3
+#item_height         = 25
+#item_padding_x      = 4
+#item_radius         = 1
+#item_border         = 0
+#item_halign         = left
+
+#sep_height          = 5
+
+#font                =
+#font_fallback       = xtg
+#icon_size           = 22
+#icon_text_spacing   = 10
+#icon_theme          =
+#icon_theme_fallback = xtg
+
+#arrow_string        = >
+#arrow_width         = 15
+
+color_menu_bg	    = #eeeeee 100
+#color_menu_border   = #eeeeee 8
+
+color_norm_bg	    = #000000 0
+color_norm_fg	    = #111111 100
+
+color_sel_bg	    = #2222dd 60
+color_sel_fg	    = #eeeeee 100
+#color_sel_border    = #eeeeee 8
+
+#color_sep_fg        = #ffffff 20
+
+#csv_name_format     = %n (%g)
+#csv_single_window   = 0
