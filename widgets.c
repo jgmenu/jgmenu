@@ -162,7 +162,7 @@ char *widgets_get_mouseover_action(void)
 		if (ismouseover(&w)) {
 			if (!w->action || w->action[0] == '\0')
 				continue;
-			return (w->action);
+			return w->action;
 		}
 	}
 	return NULL;
