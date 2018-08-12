@@ -110,8 +110,6 @@ do
 			-e 'CamelCase.*XIMPreeditNothing' \
 			-e 'CamelCase.*XIMStatusNothing' \
 			-e 'CamelCase.*XInternAtom' \
-			-e 'CamelCase.*XineramaScreenInfo' \
-			-e 'CamelCase.*XineramaQueryScreens' \
 			-e 'CamelCase.*XKeyEvent' \
 			-e 'CamelCase.*XMapRaised' \
 			-e 'CamelCase.*XMatchVisualInfo' \
@@ -134,6 +132,12 @@ do
 			-e 'CamelCase.*XQueryPointer' \
 			-e 'CamelCase.*XQueryTree' \
 			-e 'CamelCase.*XRefreshKeyboardMapping' \
+			-e 'CamelCase.*XRRScreenResources' \
+			-e 'CamelCase.*XRRCrtcIn' \
+			-e 'CamelCase.*XRRGetScreenResources' \
+			-e 'CamelCase.*XRRGetCrtcInfo' \
+			-e 'CamelCase.*XRRFreeCrtcInfo' \
+			-e 'CamelCase.*XRRFreeScreenResources' \
 			-e 'CamelCase.*XSetClassHint' \
 			-e 'CamelCase.*XSetErrorHandler' \
 			-e 'CamelCase.*XSetIconName' \
