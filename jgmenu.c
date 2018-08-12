@@ -1976,8 +1976,14 @@ void process_pointer_position(XEvent *ev, int force)
 			 */
 			menu.sel = menu.current_node->expanded;
 			menu.current_node->last_sel = menu.sel;
-			draw_menu();
+		} else {
+			/*
+			 * Don't show selection in submenu if we are not
+			 * actually over the window
+			 */
+			menu.sel = NULL;
 		}
+		draw_menu();
 		set_focus(e->subwindow);
 		update(1);
 	}
