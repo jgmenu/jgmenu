@@ -5,7 +5,7 @@ Priority: optional
 Standards-Version: 3.9.7
 Build-Depends: debhelper (>= 9),
                libx11-dev,
-               libxinerama-dev,
+               libxrandr-dev,
                libcairo2-dev,
                libpango1.0-dev,
                librsvg2-dev,

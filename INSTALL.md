@@ -82,7 +82,7 @@ Dependencies
 
 | program | dependencies                                |
 | :---    | :---                                        |
-| jgmenu  | libx11, libxinerama, cairo, pango, librsvg  |
+| jgmenu  | libx11, libxrandr, cairo, pango, librsvg    |
 | ob      | libxml2                                     |
 | xdg     | libxml2                                     |
 | lx      | glib-2.0, libmenu-cache (>=1.1.0)           |

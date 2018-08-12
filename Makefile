@@ -15,7 +15,7 @@ $(foreach bin,$(REQUIRED_BINS), \
         $(if $(shell type $(bin) 2>/dev/null),, \
                 $(error fatal: could not find '$(bin)')))
 
-REQUIRED_LIBS := x11 xinerama cairo pango pangocairo librsvg-2.0
+REQUIRED_LIBS := x11 xrandr cairo pango pangocairo librsvg-2.0
 $(foreach lib,$(REQUIRED_LIBS), \
         $(if $(shell pkg-config $(lib) && echo 1),, \
                 $(error fatal: could not find library '$(lib)')))
