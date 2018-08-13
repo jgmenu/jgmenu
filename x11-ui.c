@@ -16,7 +16,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
-#include <X11/extensions/Xinerama.h>
+#include <X11/extensions/Xrandr.h>
 #include <unistd.h>		/* for usleep */
 
 #include "x11-ui.h"
@@ -131,49 +131,82 @@ void ui_init(void)
 	ui->root = RootWindow(ui->dpy, ui->screen);
 }
 
-static void print_screen_info(int n, XineramaScreenInfo *screen_info)
+static void print_screen_info(void)
 {
-	int i;
+	int i, n;
+	XRRScreenResources *sr;
+	XRRCrtcInfo *ci = NULL;
 
-	info("%d monitor(s) detected", n);
-	for (i = 0; i < n; i++)
-		printf("        - monitor-%d: x0=%d; y0=%d; w=%d; h=%d\n",
-		       i + 1, screen_info[i].x_org, screen_info[i].y_org,
-		       screen_info[i].width, screen_info[i].height);
+	sr = XRRGetScreenResources(ui->dpy, DefaultRootWindow(ui->dpy));
+	n = sr->noutput;
+	info("%d xrandr outputs(s) detected", n);
+	for (i = 0; i < n; i++) {
+		ci = XRRGetCrtcInfo(ui->dpy, sr, sr->crtcs[i]);
+		if (!ci->width || !ci->height)
+			printf("    - monitor-%d: not connected\n", i + 1);
+		else
+			printf("    - monitor-%d: x0=%d; y0=%d; w=%d; h=%d\n",
+			       i + 1, ci->x, ci->y, ci->width, ci->height);
+	}
+	XRRFreeCrtcInfo(ci);
+	XRRFreeScreenResources(sr);
 }
 
-#define INTERSECT(x, y, w, h, r)  (MAX(0, MIN((x) + (w), (r).x_org + (r).width)  - \
-				   MAX((x), (r).x_org)) &&\
-				   MAX(0, MIN((y) + (h), (r).y_org + (r).height) - \
-				   MAX((y), (r).y_org)))
+static int intersect(int x, int y, int w, int h, XRRCrtcInfo *ci)
+{
+	return MAX(0, MIN(x + w, (int)ci->x + (int)ci->width) - MAX(x, (int)ci->x)) &&
+	       MAX(0, MIN(y + h, (int)ci->y + (int)ci->height) - MAX(y, (int)ci->y));
+}
 
 void ui_get_screen_res(int *x0, int *y0, int *width, int *height, int monitor)
 {
 	int i, n, x, y, di;
 	unsigned int du;
 	Window dw;
-	XineramaScreenInfo *screen_info;
+	XRRScreenResources *sr;
+	XRRCrtcInfo *ci = NULL;
 
-	screen_info = XineramaQueryScreens(ui->dpy, &n);
-	BUG_ON(!screen_info);
-	XQueryPointer(ui->dpy, ui->root, &dw, &dw, &x, &y, &di, &di, &du);
 	if (getenv("JGMENU_SCREEN_INFO"))
-		print_screen_info(n, screen_info);
-	for (i = 0; i < n; i++)
-		if (INTERSECT(x, y, 1, 1, screen_info[i]))
-			break;
+		print_screen_info();
+	sr = XRRGetScreenResources(ui->dpy, DefaultRootWindow(ui->dpy));
+	BUG_ON(!sr);
+	n = sr->noutput;
 
-	/* handle user specified monitor (from config file) */
+	/*
+	 * Global variable config.monitor let's the user specify a monitor.
+	 * If not set, we use the current pointer position
+	 */
 	if (monitor) {
 		if (monitor > n)
-			die("cannot connect to monitor '%d' (max %d)", monitor, n);
-		i = monitor - 1;
+			die("cannot connect to monitor '%d'", monitor);
+		ci = XRRGetCrtcInfo(ui->dpy, sr, sr->crtcs[monitor - 1]);
+		if (!ci->width || !ci->height)
+			die("cannot connect to monitor '%d'", monitor);
+		info("using user specified monitor '%d'", monitor);
+		goto monitor_selected;
 	}
-	*x0 = screen_info[i].x_org;
-	*y0 = screen_info[i].y_org;
-	*width = screen_info[i].width;
-	*height = screen_info[i].height;
-	XFree(screen_info);
+
+	XQueryPointer(ui->dpy, ui->root, &dw, &dw, &x, &y, &di, &di, &du);
+	for (i = 0; i < n; i++) {
+		ci = XRRGetCrtcInfo(ui->dpy, sr, sr->crtcs[i]);
+		BUG_ON(!ci);
+		if (!ci->width || !ci->height)
+			continue;
+		if (intersect(x, y, 1, 1, ci)) {
+			info("using monitor '%d'", i + 1);
+			break;
+		}
+	}
+
+monitor_selected:
+	if (!ci)
+		die("connection could be established to monitor");
+	*x0 = ci->x;
+	*y0 = ci->y;
+	*width = ci->width;
+	*height = ci->height;
+	XRRFreeCrtcInfo(ci);
+	XRRFreeScreenResources(sr);
 }
 
 void set_wm_class(void)
