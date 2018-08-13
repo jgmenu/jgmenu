@@ -1926,6 +1926,26 @@ void set_focus(Window w)
 	menu.current_node = n;
 }
 
+static void adjust_selection_and_redraw(void)
+{
+	if (menu.current_node->expanded) {
+		/*
+		 * When moving the pointer diagonally from a parent to
+		 * a child window, the correct menu.sel needs to be set
+		 * and redrawn in the parent window.
+		 */
+		menu.sel = menu.current_node->expanded;
+		menu.current_node->last_sel = menu.sel;
+	} else {
+		/*
+		 * Don't show selection in submenu if we are not
+		 * actually over the window
+		 */
+		menu.sel = NULL;
+	}
+	draw_menu();
+}
+
 void process_pointer_position(XEvent *ev, int force)
 {
 	struct point pw;
@@ -1952,13 +1972,7 @@ void process_pointer_position(XEvent *ev, int force)
 		if (config.sub_hover_action)
 			hover();
 	} else if (is_outside_menu_windows(&e)) {
-		if (menu.current_node->expanded) {
-			menu.sel = menu.current_node->expanded;
-			menu.current_node->last_sel = menu.sel;
-		} else {
-			menu.sel = NULL;
-		}
-		draw_menu();
+		adjust_selection_and_redraw();
 		tmr_mouseover_stop();
 	} else {
 		/*
@@ -1968,22 +1982,7 @@ void process_pointer_position(XEvent *ev, int force)
 		 * the next event (once) and re-set the focus on the 'parent'
 		 * window.
 		 */
-		if (menu.current_node->expanded) {
-			/*
-			 * When moving the pointer diagonally from a parent to
-			 * a child window, the correct menu.sel needs to be set
-			 * and redrawn in the parent window.
-			 */
-			menu.sel = menu.current_node->expanded;
-			menu.current_node->last_sel = menu.sel;
-		} else {
-			/*
-			 * Don't show selection in submenu if we are not
-			 * actually over the window
-			 */
-			menu.sel = NULL;
-		}
-		draw_menu();
+		adjust_selection_and_redraw();
 		set_focus(e->subwindow);
 		update(1);
 	}
