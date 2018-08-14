@@ -26,6 +26,8 @@ Any new config variables need to be added to the following:
   - noncore/config/jgmenurc  
   - docs/manual/jgmenu.1.md  
 
+Run ./scripts/jgmenurc-checker.sh
+
 Testing
 -------
 

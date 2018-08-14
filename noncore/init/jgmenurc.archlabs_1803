@@ -9,6 +9,7 @@ terminal_exec        = termite
 terminal_args        = -e
 #monitor             = 0
 #hover_delay	     = 100
+#hide_back_items     = 1
 
 menu_margin_x        = 4
 menu_margin_y        = 32
@@ -62,3 +63,4 @@ color_sel_fg         = #2b303b 100
 color_sep_fg         = #8fa1b3 40
 
 #csv_name_format     = %n (%g)
+#csv_single_window   = 0

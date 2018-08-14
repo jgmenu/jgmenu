@@ -7,6 +7,7 @@ at_pointer          = 1
 #terminal_args       = -e
 #monitor             = 0
 #hover_delay	     = 100
+#hide_back_items     = 1
 
 #menu_margin_x       = 0
 #menu_margin_y       = 0
@@ -61,3 +62,4 @@ color_menu_bg       = #3a3a3a 100
 #color_sep_fg        = #ffffff 20
 
 #csv_name_format     = %n (%g)
+#csv_single_window   = 0
