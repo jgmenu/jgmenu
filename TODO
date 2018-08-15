@@ -1,3 +1,16 @@
+WIP
+---
+
+Hide separators when searching
+
+BL: Improve ^sep() formatting
+
+AL: Remove duplicate krita entries in pmenu.
+
+widgets.c: use struct area instead of x,y,w,h
+
+widgets.c: parse align
+
 Cleanliness
 -----------
 
@@ -30,11 +43,6 @@ Cleanliness
 
 	parse-ob.c: remove return_cmd
 			Read JGMENU_PREPEND_FILE env var (and read ~/.config/jgmenu/prepend.csv by default)
-
-	Move struct item/node code to data.c.
-		  - Refactor all the checkout_* functions. They're confusing.
-
-	Refactor around read_csv_file and creating items
 
 	Remove spawn from config (make it args_ instead).
 
@@ -75,11 +83,6 @@ Improvements / New features
 	xdg: read xfce menu
 
 	Pango markup
-
-	Add menu_height config option (incl keywords such as 'auto' and
-	something to recalc on ^root()
-
-	Add CENTER to menu_halign and menu_valign
 
 	Add scroll_bar
 
