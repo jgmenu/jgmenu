@@ -164,6 +164,8 @@ static void process_line(char *line)
 			config.menu_halign = LEFT;
 		else if (!strcasecmp(value, "right"))
 			config.menu_halign = RIGHT;
+		else if (!strcasecmp(value, "center"))
+			config.menu_halign = CENTER;
 	} else if (!strcmp(option, "menu_valign")) {
 		if (!value)
 			return;
@@ -171,6 +173,8 @@ static void process_line(char *line)
 			config.menu_valign = TOP;
 		else if (!strcasecmp(value, "bottom"))
 			config.menu_valign = BOTTOM;
+		else if (!strcasecmp(value, "center"))
+			config.menu_valign = CENTER;
 
 	} else if (!strcmp(option, "sub_spacing")) {
 		xatoi(&config.sub_spacing, value, 0, "config.sub_spacing");

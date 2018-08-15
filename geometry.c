@@ -47,6 +47,8 @@ static void update_root(void)
 	else if (win[cur].menu_halign == RIGHT)
 		win[cur].menu_x0 = screen_width - win[cur].menu_width -
 				   menu_margin_x;
+	else if (win[cur].menu_halign == CENTER)
+		win[cur].menu_x0 = (screen_width - win[cur].menu_width) / 2;
 	if (!config.at_pointer && !use_tint2_vars)
 		win[cur].menu_x0 += screen_x0;
 
@@ -55,6 +57,8 @@ static void update_root(void)
 				   menu_margin_y;
 	else if (win[cur].menu_valign == TOP)
 		win[cur].menu_y0 = menu_margin_y;
+	else if (win[cur].menu_valign == CENTER)
+		win[cur].menu_y0 = (screen_height - win[cur].menu_height) / 2;
 	if (!config.at_pointer && !use_tint2_vars)
 		win[cur].menu_y0 += screen_y0;
 }
@@ -92,7 +96,8 @@ static void right_align_and_adjust(void)
 static void update_sub_window(void)
 {
 	BUG_ON(!cur);
-	if (win[cur].menu_valign == TOP) {
+	if (win[cur].menu_valign == TOP ||
+	    win[cur].menu_valign == CENTER) {
 		int max_y0 = screen_y0 + screen_height - win[cur].menu_height;
 
 		win[cur].menu_y0 = win[cur - 1].menu_y0 +
@@ -112,7 +117,8 @@ static void update_sub_window(void)
 			win[cur].menu_y0 = screen_y0;
 	}
 
-	if (win[cur].menu_halign == LEFT) {
+	if (win[cur].menu_halign == LEFT ||
+	    win[cur].menu_halign == CENTER) {
 		left_align();
 		if (screen_x0 + screen_width - win[cur].menu_width <
 		    win[cur].menu_x0)

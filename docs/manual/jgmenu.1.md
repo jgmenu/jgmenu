@@ -307,8 +307,8 @@ menu_border = __integer__ (default 0)
 
     "border" refers to the border-thickness  
 
-menu_halign = (left | right) (default left)  
-menu_valign = (top | bottom) (default bottom)  
+menu_halign = (left | right | center) (default left)  
+menu_valign = (top | bottom | center) (default bottom)  
 
     Horizontal and vertical alignment respectively.  
 
