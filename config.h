@@ -4,6 +4,8 @@
 #include "align.h"
 
 #define CONFIG_AUTO (-9999)
+#define CONFIG_STATIC (-9998)
+#define CONFIG_DYNAMIC (-9997)
 
 struct config {
 	int spawn;		/* 1:execute commands  0:print to stdout */
@@ -21,6 +23,9 @@ struct config {
 	int menu_margin_x;
 	int menu_margin_y;
 	int menu_width;
+	int menu_height_min;
+	int menu_height_max;
+	int menu_height_mode;
 	int menu_padding_top;
 	int menu_padding_right;
 	int menu_padding_bottom;

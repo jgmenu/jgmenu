@@ -16,6 +16,9 @@
 #menu_margin_x       = 0
 #menu_margin_y       = 0
 #menu_width          = 200
+#menu_height_min     = 0
+#menu_height_max     = 0
+#menu_height_mode    = static
 #menu_padding_top    = 5
 #menu_padding_right  = 5
 #menu_padding_bottom = 5

@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 7 Aug, 2018  
+% 15 Aug, 2018  
 
 # NAME
 
@@ -275,6 +275,21 @@ menu_width = __integer__ (default 200)
     Set the *minimum* menu width. The menu width will adjust to the  
     longest item in the current (sub)menu. If a filter is applied  
     (e.g. by the user typing) the menu width will NOT adjust.  
+
+menu_height_min = __integer__ (default 0)  
+menu_height_max = __integer__ (default 0)  
+
+    Set the min and max height of the root menu. If these are set to  
+    the same value, the menu height will be fixed at that value. If  
+    set to zero, they will be ignored.  
+
+menu_height_mode = (static | dynamic) (default static)  
+
+    "static" means that the height of the initial root menu will be  
+    used for any subsequent ^root() action.  
+
+    "dynamic" means that the root menu height will be re-calculated  
+    every time the root menu is redefined using ^root().  
 
 menu_padding_top = __integer__ (default 5)  
 menu_padding_right = __integer__ (default 5)  

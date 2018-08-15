@@ -1359,6 +1359,8 @@ void checkout_parent(void)
 		menu.current_node->wid = 0;
 	}
 	checkout_parentmenu(parent->item->tag);
+	if (config.menu_height_mode == CONFIG_DYNAMIC)
+		set_submenu_height();
 }
 
 static void hide_menu(void)
@@ -1436,7 +1438,12 @@ void action_cmd(char *cmd)
 		menu.current_node->wid = 0;
 		checkout_tag(cmd + 6);
 		menu.current_node->wid = ui->w[ui->cur].win;
-		update(0);
+		if (config.menu_height_mode == CONFIG_DYNAMIC) {
+			set_submenu_height();
+			update(1);
+		} else {
+			update(0);
+		}
 	} else {
 		spawn(cmd);
 		hide_or_exit();
@@ -2332,6 +2339,16 @@ static void cleanup(void)
 	destroy_master_list();
 }
 
+static void keep_menu_height_between_min_and_max(void)
+{
+	if (config.menu_height_min &&
+	    geo_get_menu_height() < config.menu_height_min)
+		geo_set_menu_height(config.menu_height_min);
+	if (config.menu_height_max &&
+	    geo_get_menu_height() > config.menu_height_max)
+		geo_set_menu_height(config.menu_height_max);
+}
+
 int main(int argc, char *argv[])
 {
 	int i;
@@ -2427,15 +2444,29 @@ int main(int argc, char *argv[])
 	else
 		checkout_rootmenu(tag_of_first_item());
 
+	keep_menu_height_between_min_and_max();
+
 	grabkeyboard();
 	grabpointer();
 
 	if (config.at_pointer)
 		launch_menu_at_pointer();
 
-	ui_win_init(geo_get_menu_x0(), geo_get_menu_y0(),
-		    geo_get_menu_width(), geo_get_menu_height(),
-		    geo_get_screen_width(), geo_get_screen_height(), font_get());
+	if (config.menu_height_mode == CONFIG_DYNAMIC)
+		/*
+		 * Make canvases the full size of the monitor to allow for
+		 * future changes in menu size on ^root().
+		 */
+		ui_win_init(geo_get_menu_x0(), geo_get_menu_y0(),
+			    geo_get_menu_width(), geo_get_menu_height(),
+			    geo_get_screen_width(), geo_get_screen_height(),
+			    font_get());
+	else
+		/* Make canvas just big enough */
+		ui_win_init(geo_get_menu_x0(), geo_get_menu_y0(),
+			    geo_get_menu_width(), geo_get_menu_height(),
+			    geo_get_menu_width(), geo_get_menu_height(),
+			    font_get());
 
 	init_empty_item();
 	filter_init();

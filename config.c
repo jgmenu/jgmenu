@@ -31,6 +31,9 @@ void config_set_defaults(void)
 	config.menu_margin_x	   = 0;
 	config.menu_margin_y	   = 0;
 	config.menu_width	   = 200;
+	config.menu_height_min	   = 0;
+	config.menu_height_max	   = 0;
+	config.menu_height_mode	   = CONFIG_STATIC;
 	config.menu_padding_top	   = 5;
 	config.menu_padding_right  = 5;
 	config.menu_padding_bottom = 5;
@@ -131,6 +134,17 @@ static void process_line(char *line)
 		xatoi(&config.menu_margin_y, value, XATOI_NONNEG, "config.margin_y");
 	} else if (!strcmp(option, "menu_width")) {
 		xatoi(&config.menu_width, value, XATOI_GT_0, "config.menu_width");
+	} else if (!strcmp(option, "menu_height_min")) {
+		xatoi(&config.menu_height_min, value, XATOI_NONNEG, "config.menu_height_min");
+	} else if (!strcmp(option, "menu_height_max")) {
+		xatoi(&config.menu_height_max, value, XATOI_NONNEG, "config.menu_height_max");
+	} else if (!strcmp(option, "menu_height_mode")) {
+		if (!value)
+			return;
+		if (!strcasecmp(value, "static"))
+			config.menu_height_mode = CONFIG_STATIC;
+		else if (!strcasecmp(value, "dynamic"))
+			config.menu_height_mode = CONFIG_DYNAMIC;
 	} else if (!strcmp(option, "menu_padding_top")) {
 		xatoi(&config.menu_padding_top, value, XATOI_NONNEG, "config.menu_padding_top");
 	} else if (!strcmp(option, "menu_padding_right")) {
@@ -380,6 +394,10 @@ void config_post_process(void)
 		xfree(config.csv_cmd);
 		config.csv_cmd = xstrdup("jgmenu_run ob");
 	}
+
+	if (config.menu_height_max &&
+	    config.menu_height_min > config.menu_height_max)
+		warn("menu_height_min cannot be greater than menu_height_max");
 
 	if (config.csv_name_format)
 		setenv("JGMENU_NAME_FORMAT", config.csv_name_format, 1);
