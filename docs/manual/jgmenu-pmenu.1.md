@@ -1,6 +1,6 @@
 % JGMENU-PMENU(1)  
 % Johan Malm  
-% 27 April, 2018  
+% 19 Aug, 2018  
 
 # NAME
 
@@ -44,6 +44,15 @@ files if they exist:
 \--locale LOCALE
 :   Use a custom locale (e.g. `en_US.UTF-8`)  
        Available locales can be shown by running 'locale -a'.  
+
+# ENVIRONMENT VARIABLES  
+
+JGMENU_SINGLE_WINDOW
+:   If set, ^checkout() items will be replaced by ^root()  
+
+JGMENU_NO_DIRS
+:   If set, applications will be listed without a directory structure  
+
 
 # EXAMPLES
 

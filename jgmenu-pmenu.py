@@ -385,12 +385,28 @@ def load_applications():
     menu[c] = sorted(menu[c], key=lambda item: item["Name"])
   return menu, categories
 
+def load_applications_no_dirs():
+  menu = []
+  for d in get_setting_locations():
+    d = d + "/applications/"
+    for (dirpath, dirnames, filenames) in os.walk(d):
+      for filename in filenames:
+        entry = read_desktop_entry(os.path.join(dirpath, filename))
+        cmd = get_cmd(entry)
+        if "Type" in entry and entry["Type"] == "Application" and cmd:
+          entry["cmd"] = cmd
+          if "Name" not in entry:
+            entry["Name"] = filename.replace(".desktop", "")
+            entry["Name"] = entry["Name"][:1].upper() + entry["Name"][1:]
+          menu.append(entry)
+  return menu
+
 def cat_file(path):
   if path and os.path.isfile(path):
     with open(path, encoding='utf-8') as data_file:
       print(data_file.read())
 
-# Creates and shows the menu
+# Creates the menu with directories
 def create_menu(arg_append_file, arg_prepend_file):
   single_window = os.getenv("JGMENU_SINGLE_WINDOW")
 
@@ -425,6 +441,16 @@ def create_menu(arg_append_file, arg_prepend_file):
       icon = app["Icon"] if "Icon" in app else "application-x-executable"
       print("#", app["_path"])
       print(app["Name"] + "," + app["cmd"] + "," + icon)
+
+# Creates menu without directories
+def create_menu_no_dirs(arg_append_file, arg_prepend_file):
+  cat_file(arg_prepend_file)
+  menu = load_applications_no_dirs()
+  for app in sorted(menu, key=lambda k: k['Name']):
+    icon = app["Icon"] if "Icon" in app else "application-x-executable"
+    print("#", app["_path"])
+    print(app["Name"] + "," + app["cmd"] + "," + icon)
+  cat_file(arg_append_file)
 
 def setup_gettext():
   global _
@@ -463,7 +489,10 @@ def main():
     print("Warning: setting locale failed! Use an available locale as listed by 'locale -a'.", file=sys.stderr)
   setup_gettext()
   strings = internationalized(strings)
-  create_menu(append_file, prepend_file)
+  if os.getenv("JGMENU_NO_DIRS"):
+    create_menu_no_dirs(append_file, prepend_file)
+  else:
+    create_menu(append_file, prepend_file)
 
 if __name__ == '__main__':
   main()
