@@ -1,6 +1,6 @@
 % JGMENU-PMENU(1)  
 % Johan Malm  
-% 19 Aug, 2018  
+% 20 Aug, 2018  
 
 # NAME
 
@@ -51,7 +51,8 @@ JGMENU_SINGLE_WINDOW
 :   If set, ^checkout() items will be replaced by ^root()  
 
 JGMENU_NO_DIRS
-:   If set, applications will be listed without a directory structure  
+:   If set, applications will be listed without a directory  
+       structure  
 
 
 # EXAMPLES

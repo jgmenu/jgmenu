@@ -1,6 +1,6 @@
 % JGMENU-LX(1)  
 % Johan Malm  
-% 27 April, 2018
+% 20 Aug, 2018
 
 # NAME
 
@@ -16,8 +16,15 @@ jgmenu-lx - generate jgmenu flavoured CSV menu data for an XDG menu
 freedesktop.org defined application menus, using LXDE's  
 libmenu-cache.
 
-`$XDG_MENU_PREFIX` can be used to specity a .menu file. For example  
-`$XDG_MENU_PREFIX=lxde-` will load lxde-applications.menu  
+# ENVIRONMENT VARIABLES  
+
+`XDG_MENU_PREFIX`
+:   This can be used to specity a .menu file. For example,  
+       `XDG_MENU_PREFIX=lxde-` will load lxde-applications.menu  
+
+JGMENU_NO_DIRS
+:   If set, applications will be listed without a directory  
+       structure  
 
 # KNOWN ISSUES
 
