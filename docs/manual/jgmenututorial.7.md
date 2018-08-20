@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 21 May, 2018  
+% 20 Aug, 2018  
 
 # NAME
 
@@ -11,10 +11,24 @@ The jgmenu tutorial
 This tutorial aims to explain the usage of jgmenu through a set of  
 lessons.
 
+# TABLE OF CONTENTS
+
+Lesson 1  - Get started  
+Lesson 2  - `jgmenu_run`  
+Lesson 3  - Scripting with jgmenu  
+Lesson 4  - Descriptions  
+Lesson 5  - Icons  
+Lesson 6  - Submenus  
+Lesson 7  - XDG Application Menus  
+Lesson 8  - Disable directory structure  
+Lesson 9  - Apprend/Prepend and Separators  
+Lesson 10 - CSV generators  
+Lesson 11 - Search  
+
 # LESSONS
 
-Lesson 1
---------
+Lesson 1 - Get started
+----------------------
 
 After installing jgmenu, you can get going quickly by running:  
 
@@ -48,8 +62,8 @@ If you have a config file at ~/.config/jgmenu/jgmenurc and want to
 ignore it for the purposes of running one of the lessons, just use  
 the command line argument "--config-file=" without specifying a file.  
 
-Lesson 2
---------
+Lesson 2 - `jgmenu_run`
+---------------------
 
 You can also start jgmenu with  
 
@@ -63,8 +77,8 @@ This makes it suitable for using with panels and keyboard shortcuts.
 See https://github.com/johanmalm/jgmenu/wiki for futher info on  
 panel and window manager integration.  
 
-Lesson 3
---------
+Lesson 3 - Scripting with jgmenu
+--------------------------------
 
 From this point onwards, it is assumed that you understand basic  
 shell usage including re-direction (e.g. \<, >) and piping (e.g. |).
@@ -92,50 +106,60 @@ So let's get back to basics. Try the following:
 
 If you have not got used to the here-document syntax yet, it just  
 means that you put the words "xterm" and "firefox" in a text file  
-(which you can of course do using a text editor). Then do:
+(which you can of course do using a text editor). Then do:  
 
     cat foo.txt | jgmenu --simple --icon-size=0
 
-The option --simple make jgmenu short-lived, disables all syncing  
+or  
+
+    jgmenu --vsimple --csv-file="foo.txt"
+
+The option `--simple` make jgmenu short-lived, disables all syncing  
 with tint2 and reads menu items from _stdin_.  
 
-The option --icon-size=0, disables icons (i.e. it does not just  
-display them at zero size, it actually avoids loading them)
+The option `--icon-size=0`, disables icons (i.e. it does not just  
+display them at zero size, it actually avoids loading them)  
 
-Lesson 4
----------
+The command line argument `--vsimple` is the same as `--simple`, but also  
+disables icons and ignores jgmenurc (if it exists).  
 
-As you saw in the previous example, each line fed to *stdin* becomes  
-a menu item. Any line containing two fields separated by a comma  
-is parsed as *description*,*command*. Consider the following:  
+If you want a menu to be launched by a single script, you could  
+construct it like this:  
 
     cat <<EOF >menu.sh
     #!/bin/sh
     (
-    printf "Terminal,xterm\n"
-    printf "File Manager,pcmanfm\n"
+    printf "foo\n"
+    printf "bar\n"
     ) | jgmenu --vsimple
     EOF
-    
     chmod +x menu.sh
     ./menu.sh
 
+Lesson 4 - Descriptions
+-----------------------
+
+As you saw in the previous example, each line fed to *stdin* becomes  
+a menu item. Any line containing two fields separated by a comma  
+is parsed as *description*,*command*. Consider the following  
+CSV menu data:
+
+    Terminal,xterm
+    File Manager,pcmanfm
+
 This lets you give a more meaningful description to each menu item.
 
-The command line argument --vsimple is the same as --simple, but also  
-disables icons and ignores jgmenurc (if it exists).
-
-Lesson 5
---------
+Lesson 5 - Icons
+----------------
 
 To display icons, you need to populate the third field.  
 
 By default, jgmenu will obtain the icon theme from xsettings (if  
 it is running) or tint2rc (if it exists). When running with the  
 --simple argument, make sure that *icon_theme* is set to something  
-sensible in your $HOME/.config/jgmenu/jgmenurc.
+sensible in your $HOME/.config/jgmenu/jgmenurc.  Consider the  
+following CSV menu data:  
 
-    (
     Browser,firefox,firefox
     File manager,pcmanfm,system-file-manager
     Terminal,xterm,utilities-terminal
@@ -143,28 +167,23 @@ sensible in your $HOME/.config/jgmenu/jgmenurc.
     Exit to prompt,openbox --exit,system-log-out
     Reboot,systemctl -i reboot,system-reboot
     Poweroff,systemctl -i poweroff,system-shutdown
-    ) | jgmenu --simple
 
 In the third field you can also specify the full path if you wish  
 e.g. "/usr/share/icons/Faenza/places/22/folder.png"
 
-Lesson 6
---------
+Lesson 6 - Submenus
+-------------------
 
 So far we have looked at producing a single "root" menu only.  
 jgmenu understands a small amount of markup and enables submenus  
 by ^tag() and ^checkout(). Try this:  
 
-    cat <<EOF >menu.txt
     Terminal,xterm
     File Manager,pcmanfm
     Settings,^checkout(settings)
     
     ^tag(settings)
     Set Background Image,nitrogen
-    EOF
-    
-    jgmenu --vsimple --csv-file="menu.txt"
 
 In pseudo-code, build your CSV file as follows:  
 
@@ -182,8 +201,11 @@ In pseudo-code, build your CSV file as follows:
     item2.1
     item2.2
 
-Lesson 7
---------
+^root() can be used instead of ^checkout() in order to open the  
+submenu in the parent window.  
+
+Lesson 7 - XDG Application Menus
+--------------------------------
 
 freedesktop.org have developed a menu standard which is adhered to  
 by the big Desktop Environments. We will refer to this type of menu  
@@ -235,49 +257,47 @@ including separators and internationalization.
 Set `csv_cmd` in jgmenurc to specify which of these csv-commands you  
 wish to run.  
 
-Lesson 8
---------
+Lesson 8 - Disable directory structure
+--------------------------------------
 
-You can create a very simple XDG menu without any directories or  
-categories in the following way:  
+Many modern menus and launchers, ignore the XDG directory strcture.  
 
-    jgmenu_run xdg --no-dirs | jgmenu --vsimple
+With jgmenu, an XDG menu without any directories can be created in a  
+number of ways:  
 
-"xdg --no-dirs" outputs all apps with a .desktop file  
-(normally in /usr/share/applications) without and categories  
-or directories.
+The config options `csv_no_dirs = 1`  
 
-jgmenu has a *search* capability. When a menu is open, just start  
-typing to invoke a filter.
+The CSV generators pmenu and lx understand the environment variable  
+`JGMENU_NO_DIRS`. Set this variable (e.g. `JGMENU_NO_DIRS=1` to open  
+a menu without a directory structure. 
 
-Lesson 9
---------
+Lesson 9 - Apprend/Prepend and Separators
+-----------------------------------------
 
-When running pmenu, xdg or lx, you can add menu items to the root  
-menu by editing append.csv and/or prepend.csv in ~/.config/jgmenu.  
+When running pmenu, xdg or lx, you can add menu items to the top and  
+bottom of the root menu by editing append.csv and/or prepend.csv in  
+~/.config/jgmenu. For example, try the following:
 
-For example, you could do:  
+prepend.csv  
 
-    cat >$HOME/.config/jgmenu/prepend.csv <<EOF
     Browser,firefox,firefox
     File manager,pcmanfm,system-file-manager
     Terminal,xterm,utilities-terminal
     ^sep()
-    EOF
-    
-    cat >$HOME/.config/jgmenu/append.csv <<EOF
+
+append.csv  
+
     ^sep()
-    Exit to prompt,openbox --exit,system-log-out
     Suspend,systemctl -i suspend,system-log-out
     Reboot,systemctl -i reboot,system-reboot
     Poweroff,systemctl -i poweroff,system-shutdown
-    EOF
-    
 
-^sep() inserts a horizontal separator line
+In these example we have used the markup ^sep(), which inserts a  
+horizontal separator line. Similarly, ^sep(foo) inserts a text  
+separator displaying "foo"  
 
-Lesson 10
----------
+Lesson 10 - CSV generators
+--------------------------
 
 In lesson 7, we introduced pmenu, xdg and lx. These commands are  
 referred to as "CSV generators" and are invoked as follows:  
@@ -290,7 +310,7 @@ This is the full list of built-in "CSV generators":
   - xdg  
   - lx  
   - ob  
-  - ff-bookmarks  
+  - ff-bookmarks (requires a recent version of firefox) 
 
 They are documented by a man page or a simple --help message.  
 
@@ -312,14 +332,17 @@ Pipe the CSV output to jgmenu (using `--simple` to read from `stdin`)
 
     jgmenu_run pmenu | jgmenu --simple
 
-Create a pipemenu using ^pipe() markup  
+Create a pipemenu using ^pipe() markup. Consider this example  
 
-```
-cat <<EOF >pipe_example
-Terminal,xterm
-File Manager,pcmanfm
-^pipe(jgmenu_run pmenu)
+    Terminal,xterm
+    File Manager,pcmanfm
+    ^pipe(jgmenu_run pmenu)
 
-jgmenu --csv-file="pipe_example"
-```
+Lesson 11 - Search
+------------------
+
+jgmenu has a *search* capability. When a menu is open, just start  
+typing to invoke a filter.  
+
+A search box can be inserted using widgets (see github wiki).  
 
