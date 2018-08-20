@@ -20,6 +20,7 @@ struct menu {
 
 static struct list_head menu;
 static struct menu *cur;
+static int no_dirs;
 
 static void append(void)
 {
@@ -55,6 +56,10 @@ static struct menu *menu_add(struct menu *parent)
 
 static void process_dir(MenuCacheApp *app)
 {
+	if (no_dirs) {
+		cur = menu_add(cur);
+		return;
+	}
 	sbuf_addstr(&cur->buf, menu_cache_item_get_name(MENU_CACHE_ITEM(app)));
 	sbuf_addstr(&cur->buf, ",^checkout(");
 	sbuf_addstr(&cur->buf, menu_cache_item_get_id(MENU_CACHE_ITEM(app)));
@@ -150,6 +155,9 @@ int main(int argc, char **argv)
 	INIT_LIST_HEAD(&menu);
 	cur = menu_add(NULL);
 	setlocale(LC_ALL, "");
+
+	if (getenv("JGMENU_NO_DIRS"))
+		no_dirs = 1;
 
 	set_if_unset_xdg_menu_prefix();
 	cache = menu_cache_lookup_sync("applications.menu");
