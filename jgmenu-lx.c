@@ -118,7 +118,8 @@ static void traverse(MenuCacheDir *dir)
 			cur = cur->parent;
 			break;
 		case MENU_CACHE_TYPE_SEP:
-			sbuf_addstr(&cur->buf, "^sep()\n");
+			if (!no_dirs)
+				sbuf_addstr(&cur->buf, "^sep()\n");
 			break;
 		case MENU_CACHE_TYPE_APP:
 			process_app(l->data);
