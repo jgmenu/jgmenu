@@ -60,6 +60,8 @@ Cleanliness
 	lx: check .desktop files are not Unicode in order to avoid segfault
 	(Add unit test to prove problem - to include extace.desktop)
 
+	lx: sort items when in 'no_dirs' mode
+
 Improvements / New features
 ---------------------------
 

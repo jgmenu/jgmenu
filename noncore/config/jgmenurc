@@ -69,3 +69,4 @@
 
 #csv_name_format     = %n (%g)
 #csv_single_window   = 0
+#csv_no_dirs         = 0

@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 15 Aug, 2018  
+% 20 Aug, 2018  
 
 # NAME
 
@@ -443,6 +443,11 @@ color_sep_fg = __color__ (default #ffffff 20)
 
     Colour of seperator  
 
+## CSV generator variables
+
+The following variables begin with "csv_" which denotes that they set  
+environment variables which are used by the CSV generators.  
+
 csv_name_format = __string__ (default `%n (%g)`)  
 
     Defines the format of the *name* field for CSV generators  
@@ -455,10 +460,15 @@ csv_name_format = __string__ (default `%n (%g)`)
 
 csv_single_window = __boolean__ (default 0)  
 
-    If enabled, ^root() will be used instead of ^checkout().  
+    If set, ^root() will be used instead of ^checkout().  
     This results in a single window menu, where submenus appear in  
     the same window.  
     This is currently only supported by pmenu.  
+
+csv_no_dirs = __boolean__ (default 0)  
+
+    If set, applications will be listed without any directory  
+    structure. This is currently only supported by pmenu and lx.  
 
 # SEE ALSO
 

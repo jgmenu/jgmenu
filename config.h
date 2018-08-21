@@ -72,6 +72,7 @@ struct config {
 
 	char *csv_name_format;
 	int csv_single_window;
+	int csv_no_dirs;
 };
 
 extern struct config config;
