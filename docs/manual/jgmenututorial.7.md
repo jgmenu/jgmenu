@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 20 Aug, 2018  
+% 23 Aug, 2018  
 
 # NAME
 
@@ -209,8 +209,8 @@ Lesson 7 - XDG Application Menus
 
 freedesktop.org have developed a menu standard which is adhered to  
 by the big Desktop Environments. We will refer to this type of menu  
-as XDG. jgmenu can run three types of XDG(ish) menus: pmenu, xdg and  
-lx.
+as XDG. jgmenu can run three types of XDG(ish) menus: pmenu, lx and  
+xdg.
 
 To understand the subtleties between them, you need a basic  
 appreciataion of the XDG menu-spec and desktop-entry-spec. See:  
@@ -247,12 +247,14 @@ This is a generic approach which avoids Desktop Environment specific
 rules defined in the .menu file. It ensures that all .desktop files  
 are included in the menu.
 
-`xdg` is written in C by myself. It uses libxml2 to parse the .menu  
-file, but is otherwise written from scratch. It adheres to the  
-basics of XDG's menu-spec but is not fully compliant.  
-
 `lx` uses LXDE's libmenu-cache to generate an XDG compliant menu  
-including separators and internationalization.  
+including separators and internationalization. It requires a recent  
+version of libmenu-cache, so may not be included in your build.  
+
+`xdg` uses libxml2 to parse the .menu file, but is otherwise written  
+from scratch. It is not as sophisticated as pmenu and lx.  
+
+See the github jgmenu wiki for a comparison of the three.  
 
 Set `csv_cmd` in jgmenurc to specify which of these csv-commands you  
 wish to run.  
@@ -307,8 +309,8 @@ referred to as "CSV generators" and are invoked as follows:
 This is the full list of built-in "CSV generators":  
 
   - pmenu  
-  - xdg  
   - lx  
+  - xdg  
   - ob  
   - ff-bookmarks (requires a recent version of firefox) 
 
