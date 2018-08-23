@@ -1,0 +1,53 @@
+jgmenu v1.2 release notes
+=========================
+
+Updates since v1.1
+------------------
+
+  * Add config options
+
+     - 'csv_no_dirs' - create a menu without a directory structure
+       (i.e. not nested). This option applies to the lx and pmenu
+       modules.
+
+     - 'menu_height_min', 'menu_height_max' - set the min and max
+       height of the root menu.
+
+     - 'menu_height_mode' which can be either 'static' or 'dynamic'.
+       'dynamic' is a new mode in which the menu height is re-calculated
+       every time the root menu is redefined using ^root() (issue #57)
+
+       A single window menu, with the height adjusting to the space
+       required by the items, can be achieved with the following
+       configuration:
+
+       csv_cmd             = pmenu
+       menu_height_mode    = dynamic
+       hide_back_items     = 0
+       csv_single_window   = 1
+
+  * Support the keyword 'center' for menu alignment
+    (using menu_valign and menu_halign)
+
+    Try this for a launcher:
+
+       tint2_look          = 0
+       csv_cmd             = pmenu
+       menu_halign         = center
+       menu_valign         = center
+       menu_height_min     = 500
+       menu_height_max     = 500
+       csv_no_dirs         = 1
+
+  * x11-ui.c: replace xinerama with xrandr as xinerama has been reported
+    to segfault with some new graphics cards (issue #60)
+    (Suggested-by: @vaygr)
+
+  * widgets: select on mouseover and enable left-click (if action has
+    been specified)
+
+  * init: add bunsenlabs_helium template (Provided-by: @johnraff)
+
+  * Unselect items when mouse moves away from them
+
+  * Exclude "hide-on-startup" option when restarting
