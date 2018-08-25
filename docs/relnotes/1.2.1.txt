@@ -1,0 +1,7 @@
+jgmenu v1.2.1 release notes
+===========================
+
+Updates since v1.2
+------------------
+
+  * Fix bug related to finding monitors with xrandr

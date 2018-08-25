@@ -1,6 +1,5 @@
-jgmenu (1.2-1) UNRELEASED; urgency=medium
+jgmenu (1.2.1-1) UNRELEASED; urgency=medium
 
   * New upstream release
-  * control: change libxinerama-dev to libxrandr-dev
 
- -- Johan Malm <jgm323@gmail.com>  Thu, 23 Aug 2018 20:28:31 +0100
+ -- Johan Malm <jgm323@gmail.com>  Sat, 25 Aug 2018 21:14:01 +0100
