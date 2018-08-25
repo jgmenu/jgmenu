@@ -133,22 +133,25 @@ void ui_init(void)
 
 static void print_screen_info(void)
 {
-	int i, n;
+	int i;
 	XRRScreenResources *sr;
 	XRRCrtcInfo *ci = NULL;
+	static int info_has_been_shown;
+
+	if (info_has_been_shown)
+		return;
+	info_has_been_shown = 1;
 
 	sr = XRRGetScreenResources(ui->dpy, DefaultRootWindow(ui->dpy));
-	n = sr->noutput;
-	info("%d xrandr outputs(s) detected", n);
-	for (i = 0; i < n; i++) {
+	info("%d xrandr crt controller(s) found", sr->ncrtc);
+	for (i = 0; i < sr->ncrtc; i++) {
 		ci = XRRGetCrtcInfo(ui->dpy, sr, sr->crtcs[i]);
-		if (!ci->width || !ci->height)
-			printf("    - monitor-%d: not connected\n", i + 1);
-		else
-			printf("    - monitor-%d: x0=%d; y0=%d; w=%d; h=%d\n",
-			       i + 1, ci->x, ci->y, ci->width, ci->height);
+		if (!ci->noutput)
+			continue;
+		printf("    - monitor-%d: x0=%d; y0=%d; w=%d; h=%d\n",
+		       i + 1, ci->x, ci->y, ci->width, ci->height);
+		XRRFreeCrtcInfo(ci);
 	}
-	XRRFreeCrtcInfo(ci);
 	XRRFreeScreenResources(sr);
 }
 
@@ -170,7 +173,7 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height, int monitor)
 		print_screen_info();
 	sr = XRRGetScreenResources(ui->dpy, DefaultRootWindow(ui->dpy));
 	BUG_ON(!sr);
-	n = sr->noutput;
+	n = sr->ncrtc;
 
 	/*
 	 * Global variable config.monitor let's the user specify a monitor.
@@ -180,7 +183,7 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height, int monitor)
 		if (monitor > n)
 			die("cannot connect to monitor '%d'", monitor);
 		ci = XRRGetCrtcInfo(ui->dpy, sr, sr->crtcs[monitor - 1]);
-		if (!ci->width || !ci->height)
+		if (!ci->noutput)
 			die("cannot connect to monitor '%d'", monitor);
 		info("using user specified monitor '%d'", monitor);
 		goto monitor_selected;
@@ -188,9 +191,11 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height, int monitor)
 
 	XQueryPointer(ui->dpy, ui->root, &dw, &dw, &x, &y, &di, &di, &du);
 	for (i = 0; i < n; i++) {
+		if (ci)
+			XRRFreeCrtcInfo(ci);
 		ci = XRRGetCrtcInfo(ui->dpy, sr, sr->crtcs[i]);
 		BUG_ON(!ci);
-		if (!ci->width || !ci->height)
+		if (!ci->noutput)
 			continue;
 		if (intersect(x, y, 1, 1, ci)) {
 			info("using monitor '%d'", i + 1);
