@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 20 Aug, 2018  
+% 6 Sep, 2018  
 
 # NAME
 
@@ -11,7 +11,7 @@ jgmenu - A simple X11 menu
 jgmenu \[\--no-spawn] \[\--checkout=<*tag*>] \[\--config-file=<*file*>]  
        \[\--icon-size=<*size*>] \[\--at-pointer] \[\--hide-on-startup]  
        \[\--simple] \[\--vsimple] \[\--csv-file<*file*>]  
-       \[\--csv-cmd=<*command*>]  
+       \[\--csv-cmd=<*command*>] \[\--die-when-loaded]  
 
 jgmenu init \[<*options*>]
 
@@ -115,6 +115,9 @@ Icons will be displayed if the third field is populated; for example:
 \--csv-cmd=<*command*>
 :   specify command to produce menu data  
        E.g. `jgmenu_run pmenu`  
+
+\--die-when-loaded
+:   open menu and then exit(0). This is for debugging and testing.  
 
 # USER INTERFACE
 The user interface is generally pretty intuitive. Here follow mouse  
