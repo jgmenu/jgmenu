@@ -123,8 +123,8 @@ There are two ways of producing a stack trace with gdb. Either run the
 programme in gdb and trigger the crash;
 
     gdb jgmenu
-    (gdb) run
     (gdb) handle SIG64 noprint nostop  # or similar
+    (gdb) run
     # wait for crash
     (gdb) backtrace
 
