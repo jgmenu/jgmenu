@@ -50,8 +50,7 @@ static void print_it(struct tag *tag)
 		printf("Back,^back()\n");
 	list_for_each_entry(item, &tag->items, list) {
 		if (item->pipe)
-			printf("%s,^pipe("
-			       "jgmenu_run ob --cmd='%s' --tag='%s')\n",
+			printf("%s,^pipe(jgmenu_run ob --cmd='%s' --tag='%s')\n",
 			       item->label, item->cmd, item->label);
 		else if (item->checkout)
 			printf("%s,^checkout(%s)\n", item->label, item->cmd);
@@ -374,9 +373,9 @@ int main(int argc, char **argv)
 	struct sbuf default_file;
 	struct stat sb;
 
+	atexit(cleanup);
 	LIBXML_TEST_VERSION
 
-	atexit(cleanup);
 	i = 1;
 	while (i < argc) {
 		if (argv[i][0] != '-') {
