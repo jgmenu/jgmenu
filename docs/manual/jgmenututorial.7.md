@@ -304,7 +304,7 @@ Lesson 10 - CSV generators
 In lesson 7, we introduced pmenu, xdg and lx. These commands are  
 referred to as "CSV generators" and are invoked as follows:  
 
-    jgmenu_run <*command*>
+    jgmenu_run <command>
 
 This is the full list of built-in "CSV generators":  
 
