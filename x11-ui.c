@@ -7,6 +7,12 @@
  *  - dmenu 4.5 (http://tools.suckless.org/dmenu/)
  *  - tint2 (https://gitlab.com/o9000/tint2)
  *  - dzen2 (https://github.com/robm/dzen)
+ *
+ * We try to use X11 terminology, for example:
+ *   - screen  - an area into which graphics can be rendered
+ *   - display - a collection of screens
+ *   - monitor - physical device such as CRT
+ *   - crtc    - CRT controller
  */
 
 #include <stdarg.h>
