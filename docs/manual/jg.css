@@ -2,31 +2,41 @@ body {
 	margin: auto;
 	padding-right: 1em;
 	padding-left: 1em;
-	max-width: 44em; 
+	max-width: 44em;
 	color: black;
 	font-family: Ubuntu, Verdana, sans-serif;
 	font-size: 100%;
 	line-height: 140%;
-	color: #333; 
+	color: #333;
+}
+
+b {
+	color:#502000;
+}
+
+i {
+	color:#006000;
 }
 
 pre {
 	border: 1px dotted gray;
 	background-color: #ececec;
-	color: #1111111;
-	padding: 0.5em;
+	color: #111111;
+	padding: 0.7em;
 }
 
 code {
 	font-family: monospace;
+	background-color: #ececec;
+	color: #111111;
 }
 
-h1 a, h2 a, h3 a, h4 a, h5 a { 
+h1 a, h2 a, h3 a, h4 a, h5 a {
 	text-decoration: none;
-	color: #7a5ada; 
+	color: #7a5ada;
 }
 
-h1, h2, h3, h4, h5 { 
+h1, h2, h3, h4, h5 {
 	font-family: verdana;
 	font-weight: bold;
 	border-bottom: 1px solid black;
@@ -34,14 +44,17 @@ h1, h2, h3, h4, h5 {
 }
 
 h1 {
+	color:#A00000;
 	font-size: 130%;
 }
 
 h2 {
+	color:#A00000;
 	font-size: 110%;
 }
 
 h3 {
+	color:#600000;
 	font-size: 95%;
 }
 
