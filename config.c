@@ -27,6 +27,7 @@ void config_set_defaults(void)
 	config.monitor		   = 0;
 	config.hover_delay	   = 100;
 	config.hide_back_items	   = 1;
+	config.columns		   = 1;
 
 	config.menu_margin_x	   = 0;
 	config.menu_margin_y	   = 0;
@@ -128,6 +129,8 @@ static void process_line(char *line)
 		xatoi(&config.hover_delay, value, XATOI_NONNEG, "config.hover_delay");
 	} else if (!strcmp(option, "hide_back_items")) {
 		xatoi(&config.hide_back_items, value, XATOI_NONNEG, "config.hide_back_items");
+	} else if (!strcmp(option, "columns")) {
+		xatoi(&config.columns, value, XATOI_GT_0, "config.columns");
 
 	} else if (!strcmp(option, "menu_margin_x")) {
 		xatoi(&config.menu_margin_x, value, XATOI_NONNEG, "config.margin_x");

@@ -171,25 +171,56 @@ void geo_init(void)
 	geo_update_monitor_coords();
 }
 
+static int get_available_width_of_one_column(void)
+{
+	int w;
+
+	/* calculate available width for all columns */
+	w = !cur ? win[cur].menu_width - (item_margin_x * 2) -
+	       menu_padding_left - menu_padding_right :
+	       win[cur].menu_width - (item_margin_x * 2) -
+	       sub_padding_left - sub_padding_right;
+
+	/* We do not support columns in sub-windows */
+	if (cur)
+		return w;
+
+	/* calculate available width for each column */
+	if (config.columns > 1)
+		w = w / config.columns - (config.columns - 1) * item_margin_x;
+	return w;
+}
+
 int geo_get_item_coordinates(struct area *a)
 {
 	static int h;
+	static int item_width, col;
+	int pad_top, pad_bottom, pad_left;
 
 	/* This is how we reset it */
 	if (!a) {
 		h = 0;
+		col = 1;
 		goto out;
 	}
+	if (!item_width)
+		item_width = get_available_width_of_one_column();
+	pad_top = !cur ? menu_padding_top : sub_padding_top;
+	pad_left = !cur ? menu_padding_left : sub_padding_left;
+	pad_bottom = !cur ? menu_padding_bottom : sub_padding_bottom;
+	/* move to next column */
+	if (h > win[cur].menu_height - a->h - item_margin_y - pad_bottom &&
+	    !cur) {
+		h = 0;
+		col++;
+	}
 	if (!h)
-		h = !cur ? item_margin_y + menu_padding_top :
-		    item_margin_y + sub_padding_top;
+		h = item_margin_y + pad_top;
 	a->y = h;
-	a->x = !cur ? menu_padding_left + item_margin_x :
-	       sub_padding_left + item_margin_x;
-	a->w = !cur ? win[cur].menu_width - (item_margin_x * 2) -
-	       menu_padding_left - menu_padding_right :
-	       win[cur].menu_width - (item_margin_x * 2) -
-	       sub_padding_left - sub_padding_right;
+	a->w = item_width;
+	a->x = item_margin_x + pad_left;
+	if (!cur && col > 1)
+		a->x += (col - 1) * (item_width + item_margin_x);
 	h += a->h + item_margin_y;
 out:
 	return 0;

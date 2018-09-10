@@ -19,6 +19,7 @@ struct config {
 	int monitor;
 	int hover_delay;
 	int hide_back_items;
+	int columns;
 
 	int menu_margin_x;
 	int menu_margin_y;

@@ -220,14 +220,20 @@ void step_fwd(struct item **ptr, int nr)
 struct item *fill_from_top(struct item *first)
 {
 	struct item *p, *last;
-	int h = geo_get_itemarea_height();
+	int col, h;
 
-	h -= config.item_margin_y;
+	h = geo_get_itemarea_height() - config.item_margin_y;
+	col = 1;
 	p = first;
 	last = p;
 	list_for_each_entry_from(p, &menu.filter, filter) {
 		h -= p->area.h + config.item_margin_y;
-		if (h < 0)
+		if (h < 0) {
+			col++;
+			h = geo_get_itemarea_height() - config.item_margin_y;
+			h -= p->area.h + config.item_margin_y;
+		}
+		if (col > config.columns)
 			break;
 		last = p;
 	}
@@ -237,10 +243,11 @@ struct item *fill_from_top(struct item *first)
 struct item *fill_from_bottom(struct item *last)
 {
 	struct item *p, *first;
-	int h = geo_get_itemarea_height();
+	int col, h;
 	int ignoring = 1;
 
-	h -= config.item_margin_y;
+	h = geo_get_itemarea_height() - config.item_margin_y;
+	col = 1;
 	first = last;
 	list_for_each_entry_reverse(p, &menu.filter, filter) {
 		if (p == last)
@@ -248,7 +255,12 @@ struct item *fill_from_bottom(struct item *last)
 		if (ignoring)
 			continue;
 		h -= p->area.h + config.item_margin_y;
-		if (h < 0)
+		if (h < 0) {
+			col++;
+			h = geo_get_itemarea_height() - config.item_margin_y;
+			h -= p->area.h + config.item_margin_y;
+		}
+		if (col > config.columns)
 			break;
 		first = p;
 	}
