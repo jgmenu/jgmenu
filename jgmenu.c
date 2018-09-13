@@ -437,14 +437,17 @@ void draw_item_sep_without_text(struct item *p)
 
 void draw_item_sep_with_text(struct item *p)
 {
-	int text_x_coord;
+	int text_x_coord, width;
 
 	text_x_coord = p->area.x + config.item_padding_x;
 	if (config.icon_size)
 		text_x_coord += config.icon_size + config.icon_text_spacing;
+	width = p->area.w;
+	if (config.icon_size)
+		width -= config.icon_size + config.icon_text_spacing;
 
 	ui_insert_text(parse_caret_action(p->name, "^sep("), text_x_coord,
-		       p->area.y, p->area.h, p->area.w, config.color_sep_fg,
+		       p->area.y, p->area.h, width, config.color_sep_fg,
 		       config.item_halign);
 }
 
@@ -486,7 +489,7 @@ void draw_item_bg_sel(struct item *p)
 
 void draw_item_text(struct item *p)
 {
-	int text_x_coord;
+	int text_x_coord, width;
 
 	if (config.item_halign != RIGHT) {
 		text_x_coord = p->area.x + config.item_padding_x;
@@ -495,18 +498,18 @@ void draw_item_text(struct item *p)
 					config.icon_text_spacing;
 	} else {
 		text_x_coord = p->area.x - config.item_padding_x;
-		if (config.icon_size)
-			text_x_coord -= config.icon_size +
-					config.icon_text_spacing;
 	}
+	width = p->area.w - config.item_padding_x;
+	if (config.icon_size)
+		width -= config.icon_size + config.icon_text_spacing;
 
 	if (p == menu.sel)
 		ui_insert_text(p->name, text_x_coord, p->area.y,
-			       p->area.h, p->area.w, config.color_sel_fg,
+			       p->area.h, width, config.color_sel_fg,
 			       config.item_halign);
 	else
 		ui_insert_text(p->name, text_x_coord, p->area.y,
-			       p->area.h, p->area.w, config.color_norm_fg,
+			       p->area.h, width, config.color_norm_fg,
 			       config.item_halign);
 }
 
