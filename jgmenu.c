@@ -827,8 +827,6 @@ void checkout_rootmenu(char *tag)
 {
 	checkout_tag(tag);
 	geo_set_cur(0);
-	set_submenu_height();
-	set_submenu_width();
 }
 
 /* This checks out the original root menu, regardless of any ^root() action */
@@ -2458,7 +2456,8 @@ int main(int argc, char *argv[])
 		checkout_rootmenu(args_checkout());
 	else
 		checkout_rootmenu(tag_of_first_item());
-
+	set_submenu_height();
+	set_submenu_width();
 	keep_menu_height_between_min_and_max();
 
 	grabkeyboard();
