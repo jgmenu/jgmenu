@@ -1,15 +1,25 @@
 WIP
 ---
 
+columns:
+	- add config option to ./noncore/config/jgmenurc
+
+geometry.c:
+	- reivew the below function to see where menu_width is set
+          "geo_get_menu_width_from_itemarea_width()"
+
+Add JGMENU_SINGLE_WINDOW to 'lx' module
+
 Hide separators when searching
 
 BL: Improve ^sep() formatting
 
 AL: Remove duplicate krita entries in pmenu.
 
-widgets.c: use struct area instead of x,y,w,h
-
-widgets.c: parse align
+widgets.c:
+	- use struct area instead of x,y,w,h
+	- parse align
+	- add 'text'
 
 Cleanliness
 -----------
@@ -81,8 +91,6 @@ Improvements / New features
 	init: Parse polybar config files
 
 	Add jgmenu-xdg.c localisation
-
-	xdg: read xfce menu
 
 	Pango markup
 
