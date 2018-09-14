@@ -832,6 +832,9 @@ void checkout_rootmenu(char *tag)
 /* This checks out the original root menu, regardless of any ^root() action */
 void checkout_rootnode(void)
 {
+	BUG_ON(!menu.current_node);
+	if (!menu.current_node->parent)
+		return;
 	while (menu.current_node->parent)
 		menu.current_node = menu.current_node->parent;
 	checkout_rootmenu(menu.current_node->item->tag);
