@@ -74,3 +74,10 @@ Various members of the BunsenLabs and ArchLabs communities have also
 helped with testing, documentation, ideas and inspiration to keep this
 project going.
 
+Versioning
+----------
+
+We use [semver 2.0.0](http://www.semver.org) (semver 2.0.0), except that at patch-level zero,  
+the ".0" is omitted.
+
+For example, 1.0.0 becomes 1.0, whereas 1.0.1 does not change.
