@@ -1,7 +1,7 @@
 jgmenu
 ======
 
-jgmenu is a simple X11 menu intended to be used with tint2 and openbox.
+A simple X11 menu
 
   - [Install](INSTALL.md)  
 
@@ -21,22 +21,24 @@ Description and Key Features
 
   * It is hackable with a clean, small code base.
 
+  * It is designed for customisation, scripting, ricing and tweaking
+
   * It can display the following types of menu (or any combination of):
 
       - bespoke menu using a jgmenu flavoured CSV format
 
       - application menu (XDG compatible) with localisation support
 
-      - openbox XML menu including pipe-menus
+      - pipe menus
+
+      - openbox XML menu including openbox pipe-menus
 
   * It can display SVG, PNG and XPM icons.
 
   * It has UTF-8 search support.
 
-  * It is highly customizable (e.g. colours, alignment, margins, padding,
-    transparency).
-
-  * It can synchronise with xsettings, GTK and tint2 settings.
+  * It can optionally use some appearance settings from XSettings, tint2  
+    and GTK.
 
   * It does not depend on any toolkits such as GTK and Qt, but uses cairo and
     pango to render the menu directly onto an X11 window.
