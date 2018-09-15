@@ -8,6 +8,7 @@ at_pointer          = 1
 #monitor             = 0
 #hover_delay	     = 100
 #hide_back_items     = 1
+#columns             = 1
 
 #menu_margin_x       = 0
 #menu_margin_y       = 0
