@@ -201,6 +201,7 @@ int geo_get_item_coordinates(struct area *a)
 	if (!a) {
 		h = 0;
 		col = 1;
+		item_width = 0;
 		goto out;
 	}
 	if (!item_width)
