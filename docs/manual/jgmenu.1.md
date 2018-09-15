@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 6 Sep, 2018  
+% 15 Sep, 2018  
 
 # NAME
 
@@ -264,6 +264,10 @@ hide_back_items = __boolean__ (default 1)
     If enabled, all ^back() items will be suppressed. As a general  
     rule, it should be set to 1 for a multi-window menu, and 0 when  
     in single-window mode.  
+
+columns = __integer__ (default 1)  
+
+    Specify the number of columns in which to show menu items  
 
 menu_margin_x = __integer__ (default 0)  
 menu_margin_y = __integer__ (default 0)  
