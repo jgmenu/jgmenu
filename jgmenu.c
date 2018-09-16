@@ -1339,12 +1339,12 @@ void pipemenu_del_from(struct node *node)
 	}
 }
 
-void pipemenu_del_beyond(struct node *node)
+void pipemenu_del_beyond(struct node *keep_me)
 {
 	struct node *n, *n_tmp;
 
 	list_for_each_entry_safe_reverse(n, n_tmp, &menu.nodes, node) {
-		if (n == node)
+		if (n == keep_me)
 			break;
 		/* we can't remove nodes within a pipemenu */
 		if (pm_is_pipe_root(n))
