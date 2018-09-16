@@ -43,6 +43,16 @@ int pm_is_outside(void *parent_node)
 	return (parent_node == pm->parent_node);
 }
 
+int pm_is_pipe_root(void *node)
+{
+	struct pm *pm;
+
+	list_for_each_entry(pm, &pipe_stack, list)
+		if (node == pm->pipe_node)
+			return 1;
+	return 0;
+}
+
 void pm_pop(void)
 {
 	struct pm *pm;

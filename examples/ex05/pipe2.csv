@@ -1,3 +1,14 @@
 this is pipe2
 list files in current directory,^pipe(ls -1)
 """list pixmaps using triple quote""","""^pipe(find /usr/share/pixmaps -type f -printf '%f,display %p,%p\n')"""
+checkout foo,^checkout(foo)
+checkout bar,^checkout(bar)
+
+^tag(foo)
+one
+two
+three
+
+^tag(bar)
+alpha
+beta

@@ -157,6 +157,16 @@ void version(void)
 	exit(0);
 }
 
+void indent(int number_of_spaces)
+{
+	int i;
+
+	if (number_of_spaces <= 0)
+		return;
+	for (i = 0; i < number_of_spaces; i++)
+		fprintf(stderr, " ");
+}
+
 int level(struct node *n)
 {
 	int i = 0;
@@ -172,23 +182,16 @@ void print_nodes(void)
 {
 	struct node *n;
 
-	fprintf(stderr, "nodes: ");
+	fprintf(stderr, "nodes:\n");
 	list_for_each_entry(n, &menu.nodes, node) {
-		fprintf(stderr, "%d-", level(n));
-		fprintf(stderr, "%.5s; ", n->item->tag);
-	}
-	fprintf(stderr, "\n");
-}
-
-void print_expanded_nodes(void)
-{
-	struct node *n;
-
-	fprintf(stderr, "expanded nodes: ");
-	list_for_each_entry(n, &menu.nodes, node)
+		indent(level(n) * 2);
+		fprintf(stderr, "%.8s ", n->item->tag);
+		if (pm_is_pipe_root(n))
+			fprintf(stderr, "[pipe] ");
 		if (n->expanded)
-			fprintf(stderr, "%s, ", n->item->tag);
-	fprintf(stderr, "\n");
+			fprintf(stderr, "[expanded] ");
+		fprintf(stderr, "\n");
+	}
 }
 
 struct item *filter_head(void)
@@ -1609,7 +1612,6 @@ void key_event(XKeyEvent *ev)
 		restart();
 		break;
 	case XK_F7:
-		print_expanded_nodes();
 		break;
 	case XK_F8:
 		print_nodes();
