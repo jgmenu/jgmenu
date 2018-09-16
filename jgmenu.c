@@ -186,7 +186,7 @@ void print_nodes(void)
 	list_for_each_entry(n, &menu.nodes, node) {
 		indent(level(n) * 2);
 		fprintf(stderr, "%.8s ", n->item->tag);
-		if (pm_is_pipe_root(n))
+		if (pm_is_pipe_node(n))
 			fprintf(stderr, "[pipe] ");
 		if (n->expanded)
 			fprintf(stderr, "[expanded] ");
@@ -1370,7 +1370,7 @@ void checkout_parent(void)
 	if (!menu.current_node->parent)
 		return;
 	parent = menu.current_node->parent;
-	if (pm_is_outside(parent))
+	if (pm_is_pipe_node(menu.current_node))
 		pipemenu_del_from(menu.current_node);
 	/* reverting to parent following ^root() */
 	if (!parent->wid) {
