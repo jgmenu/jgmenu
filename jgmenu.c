@@ -1344,11 +1344,11 @@ void pipemenu_del_beyond(struct node *node)
 	struct node *n, *n_tmp;
 
 	list_for_each_entry_safe_reverse(n, n_tmp, &menu.nodes, node) {
-		if (!pm_first_pipemenu_node())
-			break;
 		if (n == node)
 			break;
-		pipemenu_del_from(n);
+		/* we can't remove nodes within a pipemenu */
+		if (pm_is_pipe_root(n))
+			pipemenu_del_from(n);
 	}
 }
 
