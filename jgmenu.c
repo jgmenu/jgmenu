@@ -1347,7 +1347,7 @@ void pipemenu_del_beyond(struct node *keep_me)
 		if (n == keep_me)
 			break;
 		/* we can't remove nodes within a pipemenu */
-		if (pm_is_pipe_root(n))
+		if (pm_is_pipe_node(n))
 			pipemenu_del_from(n);
 	}
 }

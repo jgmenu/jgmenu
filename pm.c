@@ -43,7 +43,7 @@ int pm_is_outside(void *parent_node)
 	return (parent_node == pm->parent_node);
 }
 
-int pm_is_pipe_root(void *node)
+int pm_is_pipe_node(void *node)
 {
 	struct pm *pm;
 
