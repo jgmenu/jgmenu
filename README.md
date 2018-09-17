@@ -1,9 +1,13 @@
 <h3 align="center"><img src="https://i.imgur.com/l8uaBVi.png" alt="jgmenu" height="64px"><br />jgmenu </h3>
 <p align="center">A simple X11 menu</p>
 
-### \[[Install](INSTALL.md)\] \[[Tutorial](docs/manual/jgmenututorial.7.md)\] \[[Wiki and Screenshots](https://github.com/johanmalm/jgmenu/wiki)\] </h3>
+<h3 align="center">[<a
+href="INSTALL.md">Install</a>] [<a
+href="docs/manual/jgmenututorial.7.md">Tutorial</a>] [<a
+href="https://github.com/johanmalm/jgmenu/wiki">Wiki</a>] [<a
+href="https://github.com/johanmalm/jgmenu/wiki/Screenshots">Screenshots</a>] [</h3>
 
-<img src="https://i.imgur.com/O3E84L3.png" alt="jgmenu" align="right" height="305px" width="256px">
+<img src="https://i.imgur.com/O3E84L3.png" alt="jgmenu" align="right" height="610px" width="512px">
 
 jgmenu is a stand-alone, simple and contemporary-looking menu application for Linux and BSD.
 
