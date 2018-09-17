@@ -3,7 +3,7 @@
 
 ### \[[Install](INSTALL.md)\] \[[Tutorial](docs/manual/jgmenututorial.7.md)\] \[[Wiki and Screenshots](https://github.com/johanmalm/jgmenu/wiki)\] </h3>
 
-<img src="https://i.imgur.com/oS761ww.png" alt="jgmenu" align="right" height="240px">
+<img src="https://i.imgur.com/O3E84L3.png" alt="jgmenu" align="right" height="305px" width="256px">
 
 jgmenu is a stand-alone, simple and contemporary-looking menu application for Linux and BSD.
 
@@ -16,8 +16,6 @@ It is designed for customisation, scripting, ricing and tweaking
 It can optionally use some appearance settings from XSettings, tint2 and GTK.
 
 It does not depend on any toolkits such as GTK and Qt, but uses cairo and pango to render the menu directly onto an X11 window.
-
-<img src="https://i.imgur.com/SpM3UpM.png" alt="jgmenu" align="right" height="240px">
 
 It can display the following types of menu (or any combination of):
 
