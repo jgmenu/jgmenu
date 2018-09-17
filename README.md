@@ -1,9 +1,7 @@
 <h3 align="center"><img src="https://i.imgur.com/l8uaBVi.png" alt="jgmenu" height="64px"><br />jgmenu </h3>
 <p align="center">A simple X11 menu</p>
 
-<p align="center">
 ### \[[Install](INSTALL.md)\] \[[Tutorial](docs/manual/jgmenututorial.7.md)\] \[[Wiki and Screenshots](https://github.com/johanmalm/jgmenu/wiki)\] </h3>
-</p>
 
 <img src="https://i.imgur.com/oS761ww.png" alt="jgmenu" align="right" height="240px">
 
@@ -14,6 +12,10 @@ Although it was originally written to be used with openbox and tint2, it is not 
 It is hackable with a clean, small code base.
 
 It is designed for customisation, scripting, ricing and tweaking
+
+It can optionally use some appearance settings from XSettings, tint2 and GTK.
+
+It does not depend on any toolkits such as GTK and Qt, but uses cairo and pango to render the menu directly onto an X11 window.
 
 <img src="https://i.imgur.com/SpM3UpM.png" alt="jgmenu" align="right" height="240px">
 
@@ -30,10 +32,6 @@ It can display the following types of menu (or any combination of):
 It can display SVG, PNG and XPM icons.
 
 It has UTF-8 search support.
-
-It can optionally use some appearance settings from XSettings, tint2 and GTK.
-
-It does not depend on any toolkits such as GTK and Qt, but uses cairo and pango to render the menu directly onto an X11 window.
 
 It has been compiled and run on OpenBSD, FreeBSD and various Linux distributions including Bunsenlabs, Arch, Ubuntu, Alpine, Void and Mint.
 
