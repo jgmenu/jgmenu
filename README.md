@@ -1,11 +1,16 @@
 <h3 align="center"><img src="https://i.imgur.com/l8uaBVi.png" alt="jgmenu" height="64px"><br />jgmenu </h3>
 <p align="center">A simple X11 menu</p>
 
+<p align="center"><img
+src="https://img.shields.io/github/license/johanmalm/jgmenu.svg" /><a
+href="https://repology.org/metapackage/jgmenu/versions"><img src="https://repology.org/badge/tiny-repos/jgmenu.svg" /></a><a
+href="https://repology.org/metapackage/jgmenu/versions"><img src="https://repology.org/badge/latest-versions/jgmenu.svg" alt="latest packaged version(s)"></a></p>
+
 <h3 align="center">[<a
 href="INSTALL.md">Install</a>] [<a
 href="docs/manual/jgmenututorial.7.md">Tutorial</a>] [<a
 href="https://github.com/johanmalm/jgmenu/wiki">Wiki</a>] [<a
-href="https://github.com/johanmalm/jgmenu/wiki/Screenshots">Screenshots</a>] [</h3>
+href="https://github.com/johanmalm/jgmenu/wiki/Screenshots">Screenshots</a>]</h3>
 
 <img src="https://i.imgur.com/O3E84L3.png" alt="jgmenu" align="right" height="610px" width="512px">
 
