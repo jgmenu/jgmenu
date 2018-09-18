@@ -1,5 +1,5 @@
 INSTALL = install
-variant = --from=markdown_strict+backtick_code_blocks+pipe_tables
+variant = --from=markdown_strict+backtick_code_blocks+pipe_tables+pandoc_title_block
 css     = jg.css
 
 man1pages  = jgmenu.1 jgmenu_run.1

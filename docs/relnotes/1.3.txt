@@ -1,0 +1,14 @@
+jgmenu v1.3 release notes
+=========================
+
+Updates since v1.2.1
+--------------------
+
+  * Add "columns" config option
+
+  * Account for long labels. When searching or using columns less wide
+    than the description, an ellipsis (...) is added to curtail the label
+    at the correct width. Thanks @Vladimir-csp for suggesting this.
+    (issue #59)
+
+  * Fix pipemenu bug which sometimes caused undefined behaviour

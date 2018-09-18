@@ -1,9 +1,6 @@
 WIP
 ---
 
-columns:
-	- add config option to ./noncore/config/jgmenurc
-
 geometry.c:
 	- reivew the below function to see where menu_width is set
           "geo_get_menu_width_from_itemarea_width()"
@@ -24,79 +21,77 @@ widgets.c:
 Cleanliness
 -----------
 
-	Investigate duplicate .desktop entries on Raspberry Pi and nixOS
+Investigate duplicate .desktop entries on Raspberry Pi and nixOS
 
-	Simplify geometry.c by enabling access to config.h variables
+Simplify geometry.c by enabling access to config.h variables
 
-	jgmenu - warn if strange command line argument is given
+jgmenu - warn if strange command line argument is given
 
-	Refactor icon.c
-		- merge struct icon and icon_path
-		- is xdgdirs inited twice?
-		- split icon.c into image.c and icon.c
-		- rename functions (e.g. icon_set_name() --> icon_add())
+Refactor icon.c
+	- merge struct icon and icon_path
+	- is xdgdirs inited twice?
+	- split icon.c into image.c and icon.c
+	- rename functions (e.g. icon_set_name() --> icon_add())
 
-	checkout_parent(): consider the case when current window has child(ren)
+checkout_parent(): consider the case when current window has child(ren)
 
-	free string-lists with builtin sbuf_ function
+free string-lists with builtin sbuf_ function
 
-	Remove parse_caret_action (it was only really good for deleting the
-	closing bracket which we do up-front now anyway)
+Remove parse_caret_action (it was only really good for deleting the
+closing bracket which we do up-front now anyway)
 
-	In x11-ui.c, create
-		- linked list of windows
-		- 'static Window active_window' (instead of ui->w[ui->cur].win)
+In x11-ui.c, create
+	- linked list of windows
+	- 'static Window active_window' (instead of ui->w[ui->cur].win)
 
-	Pipemenu
-		- check duplicate tag names
-		- load icons for pipes
+Pipemenu
+	- check duplicate tag names
+	- load icons for pipes
 
-	parse-ob.c: remove return_cmd
-			Read JGMENU_PREPEND_FILE env var (and read ~/.config/jgmenu/prepend.csv by default)
+parse-ob.c: remove return_cmd
+	Read JGMENU_PREPEND_FILE env var (and read ~/.config/jgmenu/prepend.csv by default)
 
-	Remove spawn from config (make it args_ instead).
+Remove spawn from config (make it args_ instead).
 
-	Replace strdups+free with x-alternatives
-		replace various warn() with BUG_ON
+Replace strdups+free with x-alternatives
+	replace various warn() with BUG_ON
 
-	Set by argv_buf delim by default to make it 'safer'
+Set by argv_buf delim by default to make it 'safer'
 
-	Add explaination on JGMENU_EXEC_PATH
+Add explaination on JGMENU_EXEC_PATH
 
-	Rename filter list (as it clashes with filter_) (maybe 'disp'?)
+Rename filter list (as it clashes with filter_) (maybe 'disp'?)
 
-	Remove harded coded variables (such as 22, etc)
+Remove harded coded variables (such as 22, etc)
 
-	lx: check .desktop files are not Unicode in order to avoid segfault
-	(Add unit test to prove problem - to include extace.desktop)
+lx: check .desktop files are not Unicode in order to avoid segfault
+(Add unit test to prove problem - to include extace.desktop)
 
-	lx: sort items when in 'no_dirs' mode
+lx: sort items when in 'no_dirs' mode
 
 Improvements / New features
 ---------------------------
 
-	Add ^filter()
+Add ^filter()
 
-	Add widgets including icon, rect and text
+Add widgets including icon, rect and text
 
-	Review fields
-		1: name
-		2: command (begin with @ to aviod sh -c '' wrapper and
-                   therefore adhere to XDG spec)
-		3: icon
-		4: comment (for pop up or item spanning two lines)
-		5: working directory (start in $HOME be default)
-		6: meta data (e.g. categories to enable filter buttons)
+Review fields
+	1: name
+	2: command (begin with @ to aviod sh -c '' wrapper and
+	   therefore adhere to XDG spec)
+	3: icon
+	4: comment (for pop up or item spanning two lines)
+	5: working directory (start in $HOME be default)
+	6: meta data (e.g. categories to enable filter buttons)
 
-	init: Parse polybar config files
+init: Parse polybar config files
 
-	Add jgmenu-xdg.c localisation
+Pango markup
 
-	Pango markup
+Add scroll_bar
 
-	Add scroll_bar
+Support for adding favourites in real-time (e.g. keyboard shortcut for
+locking menu-item onto the root menu - or similar)
 
-	Support for adding favourites in real-time (e.g. keyboard shortcut for
-	locking menu-item onto the root menu - or similar)
-
-	Consider "hover" features and "inline expansion" of menus
+Consider "hover" features and "inline expansion" of menus

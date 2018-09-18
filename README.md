@@ -4,7 +4,7 @@
 <p align="center"> <img
 src="https://img.shields.io/github/license/johanmalm/jgmenu.svg" /> <a
 href="https://repology.org/metapackage/jgmenu/versions"><img src="https://repology.org/badge/tiny-repos/jgmenu.svg" /></a> <a
-href="https://repology.org/metapackage/jgmenu/versions"><img src="https://repology.org/badge/latest-versions/jgmenu.svg" alt="latest packaged version(s)"></a> </p>
+href="https://repology.org/metapackage/jgmenu/versions"><img src="https://repology.org/badge/latest-versions/jgmenu.svg"></a> </p>
 
 <h3 align="center">[<a
 href="INSTALL.md">Install</a>] [<a
