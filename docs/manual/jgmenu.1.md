@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 15 Sep, 2018  
+% 18 Sep, 2018  
 
 # NAME
 
@@ -124,9 +124,10 @@ The user interface is generally pretty intuitive. Here follow mouse
 and keyboard events which are not so obvious:  
 
   - F5 - restart  
-  - F10 - force quit  
-  - Right-click - return to parent menu (in single window mode)  
-  - Backspace - return to parent menu (in single window mode)  
+  - F8 - print node tree to stderr  
+  - F9 - exit(1)  
+  - F10 - exit(0)  
+  - Backspace - return to parent menu  
 
 # CONFIGURATION FILE
 
