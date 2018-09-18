@@ -13,19 +13,17 @@ jgmenu \[\--no-spawn] \[\--checkout=<*tag*>] \[\--config-file=<*file*>]
        \[\--simple] \[\--vsimple] \[\--csv-file<*file*>]  
        \[\--csv-cmd=<*command*>] \[\--die-when-loaded]  
 
-jgmenu init \[<*options*>]
+jgmenu init \[\--help | <*options*>]
 
+## Three commands to get started
 
-```
-┌────────────────────┬─────────────────────────┐
-│ jgmenu             │ launch menu             │
-├────────────────────┼─────────────────────────┤
-│ jgmenu init        │ create config file      │
-├────────────────────┼─────────────────────────┤
-│ man jgmenututorial │ read step-by-step guide │
-└────────────────────┴─────────────────────────┘
-```
-
+    ┌────────────────────┬─────────────────────────┐
+    │ jgmenu             │ launch menu             │
+    ├────────────────────┼─────────────────────────┤
+    │ jgmenu init        │ create config file      │
+    ├────────────────────┼─────────────────────────┤
+    │ man jgmenututorial │ read step-by-step guide │
+    └────────────────────┴─────────────────────────┘
 
 # DESCRIPTION
 
@@ -478,11 +476,63 @@ csv_no_dirs = __boolean__ (default 0)
     If set, applications will be listed without any directory  
     structure. This is currently only supported by pmenu and lx.  
 
+# DIAGRAMS
+
+## Vertical
+
+    menu
+    ╔════════════════════════╗  1. menu_padding_top
+    ║            1           ║  2. item_margin_y
+    ╟────────────────────────╢  3. menu_padding_bottom
+    ║            2           ║
+    ╟────────────────────────╢
+    ║          item          ║
+    ╟────────────────────────╢
+    ║            2           ║
+    ╟────────────────────────╢
+    ║          item          ║
+    ╟────────────────────────╢
+    ║            2           ║
+    ╟────────────────────────╢
+    ║            3           ║
+    ╚════════════════════════╝
+
+## Horizontal
+
+    menu
+    ╔═╤═╤════════════════╤═╤═╗  1. item_margin_x
+    ║ │ │                │ │ ║  2. padding_left
+    ║ │ ├────────────────┤ │ ║  3. padding_right
+    ║ │ │ @    web      >│ │ ║  4. icon_size
+    ║ │ ├────────────────┤ │ ║  5. icon_to_text_spacing
+    ║2│1│                │1│3║  6. arrow_width
+    ║ │ ├───┬─┬────────┬─┤ │ ║
+    ║ │ │ 4 │5│        │6│ │ ║
+    ║ │ ├───┴─┴────────┴─┤ │ ║
+    ║ │ │                │ │ ║
+    ║ │ │                │ │ ║
+    ╚═╧═╧════════════════╧═╧═╝
+
+## External to menu
+
+    screen
+    ╔════════════════════════╗  1. menu_margin_x
+    ║    2                   ║  2. menu_margin_y
+    ║ ╭──────┐               ║  3. sub_spacing
+    ║ │ root │ ╭──────┐      ║
+    ║1│ menu │ │ sub  │      ║
+    ║ │      │3│ menu │      ║
+    ║ └──────┘ │      │      ║
+    ║          └──────┘      ║
+    ║                        ║
+    ║                        ║
+    ║                        ║
+    ╚════════════════════════╝
+
 # SEE ALSO
 
 `jgmenu_run(1)`  
 `jgmenututorial(7)`  
-
 
 The jgmenu source code and documentation can be downloaded from  
 <https://github.com/johanmalm/jgmenu/>
