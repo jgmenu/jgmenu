@@ -227,6 +227,8 @@ def read_desktop_entry(path):
         if inside:
           if "=" in line:
             k, v = line.split("=", 1)
+            if k == "NoDisplay" and v == "true":
+                return {}
             entry[k] = v
   except UnicodeDecodeError:
     print("warn: ignoring '{}' as it is unicode (utf-8 needed)".format(path), file=sys.stderr)
