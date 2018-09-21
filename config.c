@@ -60,6 +60,7 @@ void config_set_defaults(void)
 	config.item_halign	   = LEFT;
 
 	config.sep_height	   = 5;
+	config.sep_markup	   = NULL;
 
 	config.font		   = NULL; /* Leave as NULL (see font.c) */
 	config.font_fallback	   = xstrdup("xtg");
@@ -234,6 +235,9 @@ static void process_line(char *line)
 			config.item_halign = RIGHT;
 	} else if (!strcmp(option, "sep_height")) {
 		xatoi(&config.sep_height, value, XATOI_NONNEG, "config.sep_height");
+	} else if (!strcmp(option, "sep_markup")) {
+		xfree(config.sep_markup);
+		config.sep_markup = xstrdup(value);
 
 	} else if (!strcmp(option, "font")) {
 		xfree(config.font);

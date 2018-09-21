@@ -11,6 +11,8 @@ item_padding_x	  = 3
 item_radius	  = 0
 item_border	  = 0
 
+sep_markup        = underline="single"
+
 font		  = Ubuntu 14
 icon_size	  = 22
 icon_theme	  = theme1
@@ -20,3 +22,4 @@ color_norm_bg	  = #76c7d7 0
 color_norm_fg	  = #faf7f3 100
 color_sel_bg	  = #a5ecfa 50
 color_sel_fg	  = #47848f 100
+color_sep_fg	  = #faf7f3 100

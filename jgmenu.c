@@ -441,6 +441,17 @@ void draw_item_sep_without_text(struct item *p)
 void draw_item_sep_with_text(struct item *p)
 {
 	int text_x_coord, width;
+	struct sbuf s;
+
+	sbuf_init(&s);
+	if (config.sep_markup && config.sep_markup[0] != '\0') {
+		sbuf_addstr(&s, "<span ");
+		sbuf_addstr(&s, config.sep_markup);
+		sbuf_addstr(&s, ">");
+	}
+	sbuf_addstr(&s, parse_caret_action(p->name, "^sep("));
+	if (config.sep_markup && config.sep_markup[0] != '\0')
+		sbuf_addstr(&s, "</span>");
 
 	text_x_coord = p->area.x + config.item_padding_x;
 	if (config.icon_size)
@@ -449,9 +460,10 @@ void draw_item_sep_with_text(struct item *p)
 	if (config.icon_size)
 		width -= config.icon_size + config.icon_text_spacing;
 
-	ui_insert_text(parse_caret_action(p->name, "^sep("), text_x_coord,
+	ui_insert_text(s.buf, text_x_coord,
 		       p->area.y, p->area.h, width, config.color_sep_fg,
 		       config.item_halign);
+	xfree(s.buf);
 }
 
 void draw_item_sep(struct item *p)
