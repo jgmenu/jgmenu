@@ -462,7 +462,7 @@ void draw_item_sep_with_text(struct item *p)
 
 	ui_insert_text(s.buf, text_x_coord,
 		       p->area.y, p->area.h, width, config.color_sep_fg,
-		       config.item_halign);
+		       config.sep_halign);
 	xfree(s.buf);
 }
 

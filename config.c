@@ -61,6 +61,7 @@ void config_set_defaults(void)
 
 	config.sep_height	   = 5;
 	config.sep_markup	   = NULL;
+	config.sep_halign	   = CENTER;
 
 	config.font		   = NULL; /* Leave as NULL (see font.c) */
 	config.font_fallback	   = xstrdup("xtg");
@@ -238,6 +239,15 @@ static void process_line(char *line)
 	} else if (!strcmp(option, "sep_markup")) {
 		xfree(config.sep_markup);
 		config.sep_markup = xstrdup(value);
+	} else if (!strcmp(option, "sep_halign")) {
+		if (!value)
+			return;
+		if (!strcasecmp(value, "left"))
+			config.sep_halign = LEFT;
+		else if (!strcasecmp(value, "right"))
+			config.sep_halign = RIGHT;
+		else if (!strcasecmp(value, "center"))
+			config.sep_halign = CENTER;
 
 	} else if (!strcmp(option, "font")) {
 		xfree(config.font);

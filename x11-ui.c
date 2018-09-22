@@ -463,10 +463,16 @@ void ui_insert_text(char *s, int x, int y, int h, int w, double *rgba,
 	offset = (h - ui->font_height_actual) / 2;
 
 	pango_layout_set_width(ui->w[ui->cur].pangolayout, w * PANGO_SCALE);
-	if (align == RIGHT)
+	switch (align) {
+	case RIGHT:
 		pango_layout_set_alignment(ui->w[ui->cur].pangolayout, PANGO_ALIGN_RIGHT);
-	else
+		break;
+	case CENTER:
+		pango_layout_set_alignment(ui->w[ui->cur].pangolayout, PANGO_ALIGN_CENTER);
+		break;
+	default:
 		pango_layout_set_alignment(ui->w[ui->cur].pangolayout, PANGO_ALIGN_LEFT);
+	}
 	pango_layout_set_wrap(ui->w[ui->cur].pangolayout, PANGO_WRAP_WORD_CHAR);
 	pango_layout_set_ellipsize(ui->w[ui->cur].pangolayout, PANGO_ELLIPSIZE_END);
 	pango_layout_set_font_description(ui->w[ui->cur].pangolayout, ui->w[ui->cur].pangofont);

@@ -52,6 +52,7 @@ struct config {
 	enum alignment item_halign;
 	int sep_height;
 	char *sep_markup;
+	enum alignment sep_halign;
 
 	char *font;
 	char *font_fallback;
