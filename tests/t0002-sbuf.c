@@ -14,7 +14,7 @@ int main(void)
 	for (i = 0; i < 5; i++) {
 		sbuf_addch(&s, 'A' + i);
 	}
-	
+
 	sbuf_addstr(&s, "FGHIJKLMNO");
 	sbuf_addch(&s, 'P');
 	sbuf_addch(&s, 'Q');
@@ -47,7 +47,7 @@ int main(void)
 	sbuf_list_append(&sl, "one");
 	sbuf_list_append(&sl, "two");
 	sbuf_list_append(&sl, "three");
-	
+
 	i = 0;
 	list_for_each_entry(tmp, &sl, list)
 		printf("list-item-%d: %s\n", i++, tmp->buf);
@@ -100,6 +100,20 @@ int main(void)
 	printf("_%s_\n", s.buf);
 	sbuf_cpy(&s, "  xxxx  ");
 	sbuf_trim(&s);
+	printf("_%s_\n", s.buf);
+
+	sbuf_cpy(&s, "Sound & Graphics");
+	sbuf_replace(&s, "&", "&amp;");
+	printf("_%s_\n", s.buf);
+
+	sbuf_cpy(&s, "fooooooobksdfklsadjfafoo");
+	printf("_%s_\n", s.buf);
+	sbuf_replace(&s, "foo", "*****");
+	printf("_%s_\n", s.buf);
+
+	sbuf_cpy(&s, "foofoofoofoof");
+	printf("_%s_\n", s.buf);
+	sbuf_replace(&s, "oo", "");
 	printf("_%s_\n", s.buf);
 
 	return 0;
