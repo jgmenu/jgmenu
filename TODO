@@ -3,11 +3,27 @@ See https://github.com/johanmalm/jgmenu/wiki/Timeline.md for further details
 Minor changes (0-3 months)
 --------------------------
 
-columns: support moving left/right between columns
+sep:
+  - Check horizontal alignment - appears to be a few pixels off
+  - Add color_septext_{fg,bg}
+  - Amend jgmenu(1) to explain that sep_height only applies to a sep line
+    without text
+  - jgmenu(1): add sep_markup and sep_halign
+
+columns:
+  - support moving left/right between columns
+  - deal with menu_width for columns > 1
+  - deal with menu_height for columns > 1 (incl dyamic mode)
+
+Deal with ^pipe() that returns error
+
+init:
+  - align center
+  - remove tint2 code
 
 geometry.c:
-	- reivew the below function to see where menu_width is set
-          "geo_get_menu_width_from_itemarea_width()"
+  - reivew the below function to see where menu_width is set
+    "geo_get_menu_width_from_itemarea_width()"
 
 lx:
   - Add JGMENU_SINGLE_WINDOW
@@ -24,39 +40,13 @@ widgets.c:
 
 Investigate duplicate .desktop entries on Raspberry Pi and nixOS
 
-Simplify geometry.c by enabling access to config.h variables
-
 jgmenu - warn if strange command line argument is given
 
-Refactor icon.c
-	- merge struct icon and icon_path
-	- is xdgdirs inited twice?
-	- split icon.c into image.c and icon.c
-	- rename functions (e.g. icon_set_name() --> icon_add())
+modules:
+  - dmenu (based on isprog.c)
+  - emoji
 
-checkout_parent(): consider the case when current window has child(ren)
+^rootmenu()
 
-free string-lists with builtin sbuf_ function
+jgmenu-convert.c
 
-Remove parse_caret_action (it was only really good for deleting the
-closing bracket which we do up-front now anyway)
-
-In x11-ui.c, create
-	- linked list of windows
-	- 'static Window active_window' (instead of ui->w[ui->cur].win)
-
-Pipemenu: check duplicate tag names
-
-parse-ob.c: remove return_cmd
-	Read JGMENU_PREPEND_FILE env var (and read ~/.config/jgmenu/prepend.csv by default)
-
-Remove spawn from config (make it args_ instead).
-
-Replace strdups+free with x-alternatives
-	replace various warn() with BUG_ON
-
-Set by argv_buf delim by default to make it 'safer'
-
-Rename filter list (as it clashes with filter_) (maybe 'visible_')
-
-Remove harded coded variables (such as 22, etc)
