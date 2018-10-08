@@ -21,7 +21,7 @@
 #include <errno.h>
 #include <math.h>
 #include <sys/stat.h>
-#include <time.h>
+#include <sys/time.h>
 
 #include "x11-ui.h"
 #include "config.h"
@@ -53,7 +53,6 @@
 
 static pthread_t thread;	   /* worker thread for loading icons	  */
 static int pipe_fds[2];		   /* talk between threads + catch sig    */
-static timer_t tmr_mouseover;
 static int sw_close_pending;
 static int super_key_pressed;
 
@@ -1832,8 +1831,6 @@ static void move_selection_with_mouse(struct point *mouse_coord)
 		draw_menu();
 }
 
-#define TMR_MOUSEOVER_SIG SIGRTMAX
-
 static void mouseover_handler(int sig, siginfo_t *si, void *uc)
 {
 	int saved_errno;
@@ -1846,23 +1843,13 @@ static void mouseover_handler(int sig, siginfo_t *si, void *uc)
 
 static void tmr_mouseover_init(void)
 {
-	struct sigaction  sa;
-	struct sigevent   se;
-
-	sa.sa_flags = SA_SIGINFO;
-	sa.sa_sigaction = mouseover_handler;
-	sigemptyset(&sa.sa_mask);
-	if (sigaction(TMR_MOUSEOVER_SIG, &sa, NULL) == -1)
-		die("sigaction");
-	se.sigev_notify = SIGEV_SIGNAL;
-	se.sigev_signo = TMR_MOUSEOVER_SIG;
-	if (timer_create(CLOCK_REALTIME, &se, &tmr_mouseover) == -1)
-		die("timer_create");
+	if (signal(SIGALRM, (void (*)(int)) mouseover_handler) == SIG_ERR)
+		die("SIGALRM action");
 }
 
 void tmr_mouseover_set(int msec)
 {
-	struct itimerspec ts;
+	struct itimerval it;
 	static int run_once;
 
 	if (msec >= 1000)
@@ -1871,11 +1858,12 @@ void tmr_mouseover_set(int msec)
 		tmr_mouseover_init();
 		run_once = 1;
 	}
-	ts.it_value.tv_sec = 0;
-	ts.it_value.tv_nsec = msec * 1000000;
-	ts.it_interval.tv_sec = 0;
-	ts.it_interval.tv_nsec = 0;
-	if (timer_settime(tmr_mouseover, 0, &ts, NULL) == -1)
+	it.it_value.tv_sec = 0;
+	it.it_value.tv_usec = msec * 1000;
+	it.it_interval.tv_sec = 0;
+	it.it_interval.tv_usec = 0;
+	/* As timer_*() are not supported on OpenBSD, we use setitimer() */
+	if (setitimer(ITIMER_REAL, &it, NULL) == -1)
 		die("timer_settime");
 }
 
