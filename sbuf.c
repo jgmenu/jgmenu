@@ -137,6 +137,30 @@ void sbuf_trim(struct sbuf *s)
 	sbuf_rtrim(s);
 }
 
+void sbuf_replace(struct sbuf *s, const char *before, const char *after)
+{
+	struct sbuf new;
+	char *p, *src;
+
+	if (!s || !s->buf || !s->len || !before || before[0] == '\0' || !after)
+		return;
+	sbuf_init(&new);
+	src = s->buf;
+	for (;;) {
+		p = strstr(src, before);
+		if (!p)
+			break;
+		*p = '\0';
+		sbuf_addstr(&new, src);
+		sbuf_addstr(&new, after);
+		p += strlen(before);
+		src = p;
+	}
+	sbuf_addstr(&new, src);
+	xfree(s->buf);
+	s->buf = new.buf;
+}
+
 void sbuf_split(struct list_head *sl, const char *data, char field_separator)
 {
 	char *p, *str;

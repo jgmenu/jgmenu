@@ -3,6 +3,7 @@
 (
 printf "%b\n" 'theme1 i1.svg,:,i1'
 printf "%b\n" 'theme2 i2.svg,:,i2'
+printf "%b\n" '^sep(icon alignment)'
 printf "%b\n" 'icon22x22 (png),:,icon22x22png'
 printf "%b\n" 'icon22x22 (xpm),:,icon22x22xpm'
 printf "%b\n" 'icon22x11 (png),:,icon22x11png'

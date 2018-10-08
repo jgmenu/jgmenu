@@ -56,6 +56,7 @@ extern void sbuf_expand_env_var(struct sbuf *s);
 extern void sbuf_ltrim(struct sbuf *s);
 extern void sbuf_rtrim(struct sbuf *s);
 extern void sbuf_trim(struct sbuf *s);
+extern void sbuf_replace(struct sbuf *s, const char *before, const char *after);
 extern void sbuf_split(struct list_head *sl, const char *data, char field_separator);
 extern void sbuf_list_append(struct list_head *sl, const char *data);
 extern void sbuf_list_prepend(struct list_head *sl, const char *data);

@@ -38,6 +38,7 @@ static void print_menu(void)
 
 	cat("~/.config/jgmenu/prepend.csv");
 	list_for_each_entry(m, &menu, list) {
+		sbuf_replace(&m->buf, "&", "&amp;");
 		printf("%s", m->buf.buf);
 		append();
 	}
