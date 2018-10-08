@@ -1868,7 +1868,7 @@ void tmr_mouseover_set(int msec)
 	it.it_interval.tv_usec = 0;
 	/* As timer_*() are not supported on OpenBSD, we use setitimer() */
 	if (setitimer(ITIMER_REAL, &it, NULL) == -1)
-		die("timer_settime");
+		die("setitimer()");
 }
 
 void tmr_mouseover_start(void)
