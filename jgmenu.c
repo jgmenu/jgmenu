@@ -1835,7 +1835,7 @@ static void move_selection_with_mouse(struct point *mouse_coord)
 		draw_menu();
 }
 
-static void mouseover_handler(int sig, siginfo_t *si, void *uc)
+static void mouseover_handler(int sig)
 {
 	int saved_errno;
 
@@ -1847,7 +1847,7 @@ static void mouseover_handler(int sig, siginfo_t *si, void *uc)
 
 static void tmr_mouseover_init(void)
 {
-	if (signal(SIGALRM, (void (*)(int)) mouseover_handler) == SIG_ERR)
+	if (signal(SIGALRM, (void *)mouseover_handler) == SIG_ERR)
 		die("SIGALRM action");
 }
 
