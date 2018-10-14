@@ -440,6 +440,7 @@ void draw_item_sep_without_text(struct item *p)
 void draw_item_sep_with_text(struct item *p)
 {
 	struct sbuf s;
+	int text_x_coord;
 
 	sbuf_init(&s);
 	if (config.sep_markup && config.sep_markup[0] != '\0') {
@@ -451,15 +452,19 @@ void draw_item_sep_with_text(struct item *p)
 	if (config.sep_markup && config.sep_markup[0] != '\0')
 		sbuf_addstr(&s, "</span>");
 
-	ui_insert_text(s.buf, p->area.x + config.item_padding_x,
-		       p->area.y, p->area.h, p->area.w, config.color_sep_fg,
-		       config.sep_halign);
+	text_x_coord = p->area.x;
+	if (config.sep_halign == LEFT)
+		text_x_coord += config.item_padding_x;
+	else if (config.sep_halign == RIGHT)
+		text_x_coord -= config.item_padding_x;
+	ui_insert_text(s.buf, text_x_coord, p->area.y, p->area.h, p->area.w,
+		       config.color_sep_fg, config.sep_halign);
 	xfree(s.buf);
 }
 
 void draw_item_sep(struct item *p)
 {
-	if (p->name[5] == '\0')
+	if (p->name[strlen("^sep(")] == '\0')
 		draw_item_sep_without_text(p);
 	else
 		draw_item_sep_with_text(p);
