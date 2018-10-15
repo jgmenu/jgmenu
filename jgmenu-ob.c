@@ -42,6 +42,7 @@ static struct item *curitem;
 static void print_it(struct tag *tag)
 {
 	struct item *item;
+	struct sbuf label_escaped;
 
 	if (list_empty(&tag->items))
 		return;
@@ -49,13 +50,17 @@ static void print_it(struct tag *tag)
 	if (tag->parent)
 		printf("Back,^back()\n");
 	list_for_each_entry(item, &tag->items, list) {
+		sbuf_init(&label_escaped);
+		sbuf_cpy(&label_escaped, item->label);
+		sbuf_replace(&label_escaped, "&", "&amp;");
 		if (item->pipe)
 			printf("%s,^pipe(jgmenu_run ob --cmd='%s' --tag='%s')\n",
-			       item->label, item->cmd, item->label);
+			       label_escaped.buf, item->cmd, item->label);
 		else if (item->checkout)
-			printf("%s,^checkout(%s)\n", item->label, item->cmd);
+			printf("%s,^checkout(%s)\n", label_escaped.buf, item->cmd);
 		else
-			printf("%s,%s\n", item->label, item->cmd);
+			printf("%s,%s\n", label_escaped.buf, item->cmd);
+		xfree(label_escaped.buf);
 	}
 	printf("\n");
 }
