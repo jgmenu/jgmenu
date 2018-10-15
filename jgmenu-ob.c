@@ -322,10 +322,12 @@ void read_command(const char *cmd, char *template)
 	int link[2];
 	int fd;
 	ssize_t cnt;
+	char *pwd;
 
 	if (pipe(link) == -1)
 		die("pipe");
 
+	pwd = strdup(getenv("PWD"));
 	chdir("/tmp");
 	fd = mkstemp(template);
 	if (fd < 0)
@@ -339,6 +341,7 @@ void read_command(const char *cmd, char *template)
 			warn("close 1");
 		if (dup2(link[1], STDOUT_FILENO) == -1)
 			die("dup2");
+		chdir(pwd);
 		execl("/bin/sh", "/bin/sh", "-c", cmd, NULL);
 		break;
 	default:
@@ -354,6 +357,7 @@ void read_command(const char *cmd, char *template)
 		warn("close 4");
 	if (wait(NULL) == -1)
 		warn("wait");
+	xfree(pwd);
 }
 
 static void unlink_temp_file(void)
