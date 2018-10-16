@@ -1398,6 +1398,8 @@ static void hide_menu(void)
 	filter_reset();
 	XUngrabKeyboard(ui->dpy, CurrentTime);
 	XUngrabPointer(ui->dpy, CurrentTime);
+	menu.current_node->expanded = NULL;
+	menu.sel = NULL;
 	update(1);
 }
 
