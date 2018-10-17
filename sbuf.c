@@ -39,7 +39,10 @@ void sbuf_addstr(struct sbuf *s, const char *data)
 void sbuf_cpy(struct sbuf *s, const char *data)
 {
 	s->len = 0;
-	sbuf_addstr(s, data);
+	if (!data)
+		sbuf_addstr(s, "");
+	else
+		sbuf_addstr(s, data);
 }
 
 void sbuf_prepend(struct sbuf *s, const char *data)

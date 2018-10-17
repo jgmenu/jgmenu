@@ -4,8 +4,6 @@ Minor changes (0-3 months)
 --------------------------
 
 sep:
-  - Check horizontal alignment - appears to be a few pixels off
-  - Add color_septext_{fg,bg}
   - Amend jgmenu(1) to explain that sep_height only applies to a sep line
     without text
   - jgmenu(1): add sep_markup and sep_halign
