@@ -134,7 +134,7 @@ get_icon_theme () {
 	do
 		test -d "${d}"/icons || continue
 		ls -1 "${d}"/icons
-	done | jgmenu --vsimple --no-spawn 2>/dev/null
+	done | jgmenu --vsimple --center --no-spawn 2>/dev/null
 }
 
 print_available_themes () {
@@ -148,7 +148,7 @@ get_theme () {
 	ls -1 "${JGMENU_EXEC_DIR}"/jgmenurc.* 2>/dev/null | while read -r theme
 	do
 		printf "%b\n" ${theme#*.}
-	done | jgmenu --vsimple --no-spawn 2>/dev/null
+	done | jgmenu --vsimple --center --no-spawn 2>/dev/null
 }
 
 restart_jgmenu () {
