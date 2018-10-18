@@ -45,6 +45,10 @@ void args_parse(int argc, char **argv)
 			csv_file = argv[i] + 11;
 		} else if (!strncmp(argv[i], "--csv-cmd=", 10)) {
 			csv_cmd = argv[i] + 10;
+		} else if (!strncmp(argv[i], "--center", 8)) {
+			config.menu_halign = CENTER;
+			config.menu_valign = CENTER;
+			config.tint2_look = 0;
 		}
 	}
 }
