@@ -26,6 +26,7 @@ static const char * const files_to_watch[] = {
 	"/usr/local/share/applications",
 	"/opt/share/applications",
 	"$XDG_DATA_DIRS/applications",
+	"~/.config/openbox/menu.xml",
 	NULL
 };
 
