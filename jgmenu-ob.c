@@ -212,20 +212,19 @@ static void get_full_node_name(struct sbuf *node_name, xmlNode *node)
 	}
 }
 
-static char *get_special_action(xmlNode *node)
+static void get_special_action(xmlNode *node, char **cmd)
 {
 	char *action;
 
 	action = (char *)xmlGetProp(node, (const xmlChar *)"name");
 	if (!action)
-		return NULL;
+		return;
 	if (!strcasecmp(action, "Execute"))
-		return NULL;
+		return;
 	if (!strcasecmp(action, "reconfigure"))
-		return strdup("openbox --reconfigure");
+		*cmd = strdup("openbox --reconfigure");
 	else if (!strcasecmp(action, "restart"))
-		return strdup("openbox --restart");
-	return NULL;
+		*cmd = strdup("openbox --restart");
 }
 
 static void process_node(xmlNode *node)
@@ -248,7 +247,7 @@ static void process_node(xmlNode *node)
 		curitem->cmd = content;
 	else if (strstr(node_name.buf, "item.action"))
 		/* Catch <action name="Reconfigure"> and <action name="Restart"> */
-		curitem->cmd = get_special_action(node);
+		get_special_action(node, &curitem->cmd);
 }
 
 /*
