@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openbox_menu xmlns="http://openbox.org/"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://openbox.org/
+                file:///usr/share/openbox/menu.xsd">
+
+    <menu id="exit-menu" label="Exit">
+        <item label="Reboot">
+            <action name="Execute">
+                <command>
+                    systemctl -i reboot
+                </command>
+            </action>
+        </item>
+        <item label="Power off">
+            <action name="Execute">
+                <command>
+                    systemctl -i poweroff
+                </command>
+            </action>
+        </item>
+    </menu>
+
+    <menu id="root-menu" label="Openbox 3">
+        <item label="Terminal">
+            <action name="Execute">
+                <command>
+                    x-terminal-emulator
+                </command>
+            </action>
+        </item>
+        <item label="Web Browser">
+            <action name="Execute">
+                <command>
+                    x-www-browser
+                </command>
+            </action>
+        </item>
+        <separator />
+        <menu execute="bl-places-pipemenu" id="places" label="Places"/>
+        <menu id="submenu" label="Submenu">
+            <item label="Foo">
+                <action name="Execute">
+                    <command>
+                        foo
+                    </command>
+                </action>
+            </item>
+            <separator label="Separate Foo and Bar"/>
+            <item label="Bar">
+                <action name="Execute">
+                    <command>
+                        bar
+                    </command>
+                </action>
+            </item>
+            <item label="Reconfigure Openbox">
+                <action name="Reconfigure">
+                </action>
+            </item>
+        </menu>
+        <separator/>
+        <menu id="exit-menu"></menu>
+    </menu>
+</openbox_menu>

@@ -1,8 +1,12 @@
-ASAN_FLAGS = -O0 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic -fuse-ld=gold
+ASAN_FLAGS = -O0 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic \
+	     -fuse-ld=gold
 
-all: t1011 t1012 t1013
-#all: t1011
-#all: t0002 t0003 t0005 t0007 t0008
+all:
+	./t1011-hashmap.sh
+	./t1012-argv-buf.sh
+	./t1013-config-amend.sh
+	./t1100-ob.sh
+
 
 # string buffer tests
 t0002:
@@ -28,15 +32,6 @@ t0007:
 t0008: t0008-xpm.c ../xpm-loader.c ../xpm-loader.h
 	gcc -o t0008-xpm t0008-xpm.c ../xpm-loader.c $(ASAN_FLAGS) `pkg-config cairo --cflags --libs`
 	./t0008-xpm t0008/*.xpm
-
-t1011:
-	./t1011-hashmap.sh
-
-t1012:
-	./t1012-argv-buf.sh
-
-t1013:
-	./t1013-config-amend.sh
 
 t9000:
 	@./t9000-icon-load.sh
