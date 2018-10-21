@@ -231,7 +231,6 @@ static void process_node(xmlNode *node)
 {
 	struct sbuf buf;
 	struct sbuf node_name;
-	char *content = NULL;
 
 	sbuf_init(&buf);
 	sbuf_init(&node_name);
@@ -239,12 +238,9 @@ static void process_node(xmlNode *node)
 	if (!node_name.len)
 		return;
 
-	if (node->content)
-		content = strdup(strstrip((char *)node->content));
-
-	if (strstr(node_name.buf, "item.action.command") && content)
+	if (strstr(node_name.buf, "item.action.command") && node->content)
 		/* <command></command> */
-		curitem->cmd = content;
+		curitem->cmd = strdup(strstrip((char *)node->content));
 	else if (strstr(node_name.buf, "item.action"))
 		/* Catch <action name="Reconfigure"> and <action name="Restart"> */
 		get_special_action(node, &curitem->cmd);
