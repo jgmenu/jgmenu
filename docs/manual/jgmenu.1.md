@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 18 Sep, 2018  
+% 22 Oct, 2018  
 
 # NAME
 
@@ -12,6 +12,7 @@ jgmenu \[\--no-spawn] \[\--checkout=<*tag*>] \[\--config-file=<*file*>]
        \[\--icon-size=<*size*>] \[\--at-pointer] \[\--hide-on-startup]  
        \[\--simple] \[\--vsimple] \[\--csv-file<*file*>]  
        \[\--csv-cmd=<*command*>] \[\--die-when-loaded]  
+       \[\--center]
 
 jgmenu init \[\--help | <*options*>]
 
@@ -116,6 +117,10 @@ Icons will be displayed if the third field is populated; for example:
 
 \--die-when-loaded
 :   open menu and then exit(0). This is for debugging and testing.  
+
+\--center
+:   center align menu horizontally and vertically  
+       Also set `tint2_look=0` to disable alignment to tint2 panel  
 
 # USER INTERFACE
 The user interface is generally pretty intuitive. Here follow mouse  
@@ -365,7 +370,29 @@ item_halign = (left | right) (default left)
 
 sep_height = __integer__ (default 5)  
 
-    height of separator (defined by ^sep())  
+    Height of separator without text (defined by ^sep())  
+    Note that separators with text use `item_height`  
+
+sep_halign = (left | center | right) (default left)  
+
+    Horizontal alignment of separator text  
+
+sep_markup = __string__ (unset by default)  
+
+    If specified, `<span $sep_markup>foo</span>` will be passed to pango  
+    for ^sep(foo). See the following link for pango <span> attributes:  
+    https://developer.gnome.org/pango/stable/PangoMarkupFormat.html  
+
+    Keywords include (but are not limited to):  
+        font  
+        size (x-small, small, medium, large, x-large)  
+        style (normal, oblique, italic)  
+        weight (ultralight, light, normal, bold, ultrabold, heavy  
+        foreground (using format #rrggbb or a colour name)  
+        underline (none, single, double)  
+
+    Example:  
+        `sep_markup = font="Sans Italic 12" foreground="blue"`  
 
 font = __string__ (unset by default)  
 
