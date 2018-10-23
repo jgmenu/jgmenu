@@ -1,0 +1,27 @@
+jgmenu v1.4 release notes
+=========================
+
+Updates since v1.3
+------------------
+
+  * Improve openbox module (with support from @johnraff)
+
+     - Handle openbox reconfigure and restart actions correctly
+
+     - Check ~/.config/openbox/menu.xml on awake and reload on change
+
+     - Set $PWD correctly when executing --cmd command
+
+  * Add --center argument
+
+  * Fix sticky submenu bug (with thanks to @johnraff)
+
+  * Re-enable build on OpenBSD by removing calls to timer_create()
+
+  * Enable pango markup for text
+
+  * Add config options "sep_halign" and "sep_markup"
+
+  * pmenu: do not show entries with NoDisplay=true in .desktop file.
+    Reported by ArchLabs Linux forum members Xase and sikkdays (the issue
+    specifically related to multiple entries showing for krita)
