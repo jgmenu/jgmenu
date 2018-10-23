@@ -45,6 +45,8 @@
 #item_halign         = left
 
 #sep_height          = 5
+#sep_halign          = left
+#sep_markup          =
 
 #font                =
 #font_fallback       = xtg

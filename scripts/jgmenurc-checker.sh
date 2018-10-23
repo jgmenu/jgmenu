@@ -9,6 +9,7 @@ files="\
 	noncore/config/jgmenurc \
 	noncore/init/jgmenurc.neon \
 	noncore/init/jgmenurc.bunsenlabs_hydrogen \
+	noncore/init/jgmenurc.bunsenlabs_helium \
 	noncore/init/jgmenurc.archlabs_1803"
 
 printf "%b\n" "*** check config files for completeness ***"

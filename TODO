@@ -3,17 +3,12 @@ See https://github.com/johanmalm/jgmenu/wiki/Timeline.md for further details
 Minor changes (0-3 months)
 --------------------------
 
-And add them to noncore/config
-
 columns:
   - support moving left/right between columns
   - deal with menu_width for columns > 1
   - deal with menu_height for columns > 1 (incl dyamic mode)
 
 Deal with ^pipe() that returns error
-
-init:
-  - remove tint2 code
 
 geometry.c:
   - reivew the below function to see where menu_width is set

@@ -42,6 +42,8 @@ item_border         = 1
 #item_halign         = left
 
 #sep_height          = 5
+#sep_halign          = left
+#sep_markup          =
 
 font		    = Roboto Condensed 9
 #font_fallback       = xtg

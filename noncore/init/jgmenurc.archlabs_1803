@@ -43,6 +43,8 @@ item_border          = 0
 #item_halign         = left
 
 sep_height           = 5
+#sep_halign          = left
+#sep_markup          =
 
 font                 = Ubuntu 12px
 #font_fallback       = xtg
