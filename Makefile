@@ -61,7 +61,11 @@ endif
 
 objects = $(patsubst ./%.c,%.o,$(shell find . -maxdepth 1 -name '*.c' -print))
 mains = $(patsubst %,%.o,$(PROGS))
+ifneq ($(NO_LX),1)
 OBJS = $(filter-out $(mains),$(objects))
+else
+OBJS = $(filter-out $(mains) jgmenu-lx.o,$(objects))
+endif
 SRCS = $(patsubst %.o,%.c,$(OBJS))
 JGMENU_LIB = libjgmenu.a
 
