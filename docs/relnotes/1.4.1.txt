@@ -1,0 +1,7 @@
+jgmenu v1.4.1 release notes
+===========================
+
+Updates since v1.4
+------------------
+
+  * Fix tag issue
