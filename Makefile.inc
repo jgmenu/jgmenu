@@ -23,7 +23,15 @@ jgmenu-ob:  CFLAGS  += `xml2-config --cflags`
 jgmenu-xdg: CFLAGS  += `xml2-config --cflags`
 jgmenu-lx:  CFLAGS  += `pkg-config --cflags glib-2.0 libmenu-cache`
 
-jgmenu:     LIBS += `pkg-config x11 xrandr cairo pango pangocairo librsvg-2.0 --libs`
+jgmenu:     LIBS += `pkg-config x11 xrandr cairo pango pangocairo --libs`
+
+#
+# dpkg-shlibdeps tells us that we do not need all the libs suggested by
+# `pkg-config librsvg-2.0 --libs`
+#
+RSVG_LIBS_MINIMO = -lrsvg-2 -lgobject-2.0 -lglib-2.0 -lcairo
+jgmenu:     LIBS += $(RSVG_LIBS_MINIMO)
+
 jgmenu:     LIBS += -pthread -lpng
 jgmenu-ob:  LIBS += `xml2-config --libs`
 jgmenu-xdg: LIBS += `xml2-config --libs`
