@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include "util.h"
 #include "sbuf.h"
@@ -346,6 +347,7 @@ void read_command(const char *cmd, char *template)
 	fd = mkstemp(template);
 	if (fd < 0)
 		die("unable to create tempfile");
+	fcntl(link[0], F_SETFL, O_NONBLOCK | fcntl(link[0], F_GETFL));
 	switch (fork()) {
 	case -1:
 		die("fork");
@@ -356,6 +358,8 @@ void read_command(const char *cmd, char *template)
 		if (dup2(link[1], STDOUT_FILENO) == -1)
 			die("dup2");
 		chdir(pwd);
+		if (close(link[1] == -1))
+			warn("close 1");
 		execl("/bin/sh", "/bin/sh", "-c", cmd, NULL);
 		break;
 	default:
