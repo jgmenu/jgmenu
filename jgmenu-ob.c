@@ -342,6 +342,7 @@ void read_command(const char *cmd, char *template)
 	if (pipe(link) == -1)
 		die("pipe");
 
+	fcntl(link[0], F_SETFL, O_NONBLOCK | fcntl(link[0], F_GETFL));
 	pwd = strdup(getenv("PWD"));
 	chdir("/tmp");
 	fd = mkstemp(template);
@@ -352,7 +353,6 @@ void read_command(const char *cmd, char *template)
 		die("fork");
 		break;
 	case 0:
-		fcntl(link[0], F_SETFL, O_NONBLOCK | fcntl(link[0], F_GETFL));
 		if (close(link[0] == -1))
 			warn("close 1");
 		if (dup2(link[1], STDOUT_FILENO) == -1)
@@ -363,6 +363,8 @@ void read_command(const char *cmd, char *template)
 	default:
 		break;
 	}
+	if (wait(NULL) == -1)
+		warn("wait");
 	if (close(link[1]) == -1)
 		warn("close 3");
 	while ((cnt = read(link[0], buf, sizeof(buf))) > 0) {
@@ -371,8 +373,6 @@ void read_command(const char *cmd, char *template)
 	}
 	if (close(link[0]) == -1)
 		warn("close 4");
-	if (wait(NULL) == -1)
-		warn("wait");
 	xfree(pwd);
 }
 
