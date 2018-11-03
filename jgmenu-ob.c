@@ -320,10 +320,11 @@ static void xml_tree_walk(xmlNode *node)
 	}
 }
 
-static void parse_xml(const char *filename)
+static void parse_xml(struct sbuf *xmlbuf)
 {
-	xmlDoc *d = xmlReadFile(filename, NULL, 0);
+	xmlDoc *d;
 
+	d = xmlParseMemory(xmlbuf->buf, strlen(xmlbuf->buf));
 	if (!d)
 		exit(1);
 	xml_tree_walk(xmlDocGetRootElement(d));
@@ -393,10 +394,12 @@ void handle_argument_clash(void)
 
 int main(int argc, char **argv)
 {
-	char *filename = NULL;
 	int i;
 	struct sbuf default_file;
 	struct stat sb;
+	FILE *fp = NULL;
+	struct sbuf xmlbuf;
+	char buf[BUFSIZ], *p;
 
 	atexit(cleanup);
 	LIBXML_TEST_VERSION
@@ -404,39 +407,41 @@ int main(int argc, char **argv)
 	i = 1;
 	while (i < argc) {
 		if (argv[i][0] != '-') {
-			if (filename)
-				handle_argument_clash();
-			filename = xstrdup(argv[i]);
 			if (argc > i + 1)
 				die("<file> must be the last argument");
-			break;
+			if (fp)
+				handle_argument_clash();
+			fp = fopen(argv[i], "r");
 		} else if (!strncmp(argv[i], "--tag=", 6)) {
 			root_menu = strdup(argv[i] + 6);
 		} else if (!strncmp(argv[i], "--cmd=", 6)) {
-			if (filename)
-				handle_argument_clash();
-			read_command(argv[i] + 6, template);
-			atexit(unlink_temp_file);
-			filename = xstrdup(template);
+			fp = popen(argv[i] + 6, "r");
 		}
 		i++;
 	}
 	if (!root_menu)
 		root_menu = strdup("root-menu");
-	if (!filename) {
-		sbuf_init(&default_file);
-		sbuf_cpy(&default_file, getenv("HOME"));
-		sbuf_addstr(&default_file, "/.config/openbox/menu.xml");
-		filename = strdup(default_file.buf);
-		xfree(default_file.buf);
-	}
-	if (stat(filename, &sb))
-		die("file '%s' does not exist", filename);
+//	if (!filename) {
+//		sbuf_init(&default_file);
+//		sbuf_cpy(&default_file, getenv("HOME"));
+//		sbuf_addstr(&default_file, "/.config/openbox/menu.xml");
+//		filename = strdup(default_file.buf);
+//		xfree(default_file.buf);
+//	}
+//	if (stat(filename, &sb))
+//		die("file '%s' does not exist", filename);
 	INIT_LIST_HEAD(&tags);
-	parse_xml(filename);
+	sbuf_init(&xmlbuf);
+	for (i = 0; fgets(buf, sizeof(buf), fp); i++) {
+		buf[BUFSIZ - 1] = '\0';
+		p = strrchr(buf, '\n');
+		if (p)
+			*p = '\0';
+		sbuf_addstr(&xmlbuf, buf);
+	}
+	parse_xml(&xmlbuf);
 
 	print_menu();
-	xfree(filename);
 
 	return 0;
 }
