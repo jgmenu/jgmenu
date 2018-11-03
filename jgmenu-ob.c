@@ -18,7 +18,6 @@
 #include "list.h"
 
 static char *root_menu;
-char template[] = "temp_jgmenu_ob_XXXXXX";
 
 struct tag {
 	char *label;
@@ -332,56 +331,6 @@ static void parse_xml(struct sbuf *xmlbuf)
 	xmlCleanupParser();
 }
 
-void read_command(const char *cmd, char *template)
-{
-	char buf[BUFSIZ];
-	int link[2];
-	int fd;
-	ssize_t cnt;
-	char *pwd;
-
-	if (pipe(link) == -1)
-		die("pipe");
-
-	fcntl(link[0], F_SETFL, O_NONBLOCK | fcntl(link[0], F_GETFL));
-	pwd = strdup(getenv("PWD"));
-	chdir("/tmp");
-	fd = mkstemp(template);
-	if (fd < 0)
-		die("unable to create tempfile");
-	switch (fork()) {
-	case -1:
-		die("fork");
-		break;
-	case 0:
-		if (close(link[0] == -1))
-			warn("close 1");
-		if (dup2(link[1], STDOUT_FILENO) == -1)
-			die("dup2");
-		chdir(pwd);
-		execl("/bin/sh", "/bin/sh", "-c", cmd, NULL);
-		break;
-	default:
-		break;
-	}
-	if (wait(NULL) == -1)
-		warn("wait");
-	if (close(link[1]) == -1)
-		warn("close 3");
-	while ((cnt = read(link[0], buf, sizeof(buf))) > 0) {
-		if (write(fd, buf, cnt) != cnt)
-			warn("bad write to temp file '%s'", template);
-	}
-	if (close(link[0]) == -1)
-		warn("close 4");
-	xfree(pwd);
-}
-
-static void unlink_temp_file(void)
-{
-	unlink(template);
-}
-
 static void cleanup(void)
 {
 	xfree(root_menu);
@@ -396,7 +345,6 @@ int main(int argc, char **argv)
 {
 	int i;
 	struct sbuf default_file;
-	struct stat sb;
 	FILE *fp = NULL;
 	struct sbuf xmlbuf;
 	char buf[BUFSIZ], *p;
