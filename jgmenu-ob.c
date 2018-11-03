@@ -412,24 +412,27 @@ int main(int argc, char **argv)
 			if (fp)
 				handle_argument_clash();
 			fp = fopen(argv[i], "r");
+			if (!fp)
+				die("ob: cannot open file '%s'", argv[i]);
 		} else if (!strncmp(argv[i], "--tag=", 6)) {
 			root_menu = strdup(argv[i] + 6);
 		} else if (!strncmp(argv[i], "--cmd=", 6)) {
 			fp = popen(argv[i] + 6, "r");
+			if (!fp)
+				die("ob: cannot run command '%s'", argv[i] + 6);
 		}
 		i++;
 	}
 	if (!root_menu)
 		root_menu = strdup("root-menu");
-//	if (!filename) {
-//		sbuf_init(&default_file);
-//		sbuf_cpy(&default_file, getenv("HOME"));
-//		sbuf_addstr(&default_file, "/.config/openbox/menu.xml");
-//		filename = strdup(default_file.buf);
-//		xfree(default_file.buf);
-//	}
-//	if (stat(filename, &sb))
-//		die("file '%s' does not exist", filename);
+	if (!fp) {
+		sbuf_init(&default_file);
+		sbuf_cpy(&default_file, getenv("HOME"));
+		sbuf_addstr(&default_file, "/.config/openbox/menu.xml");
+		fp = fopen(default_file.buf, "r");
+	}
+	if (!fp)
+		die("ob: cannot open openbox menu file");
 	INIT_LIST_HEAD(&tags);
 	sbuf_init(&xmlbuf);
 	for (i = 0; fgets(buf, sizeof(buf), fp); i++) {
