@@ -144,6 +144,7 @@ static void new_sep(xmlNode *n)
 		sbuf_addstr(&s, label);
 	sbuf_addstr(&s, ")");
 	curitem->label = strdup(s.buf);
+	xfree(s.buf);
 }
 
 static void new_tag(xmlNode *n)
@@ -244,6 +245,8 @@ static void process_node(xmlNode *node)
 	else if (strstr(node_name.buf, "item.action"))
 		/* Catch <action name="Reconfigure"> and <action name="Restart"> */
 		get_special_action(node, &curitem->cmd);
+	xfree(buf.buf);
+	xfree(node_name.buf);
 }
 
 /*
@@ -393,6 +396,7 @@ int main(int argc, char **argv)
 	parse_xml(&xmlbuf);
 
 	print_menu();
+	xfree(xmlbuf.buf);
 
 	return 0;
 }
