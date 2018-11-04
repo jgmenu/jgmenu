@@ -33,6 +33,7 @@ struct item {
 	char *cmd;
 	int pipe;
 	int checkout;
+	int isseparator;
 	struct list_head list;
 };
 
@@ -59,6 +60,8 @@ static void print_it(struct tag *tag)
 			       label_escaped.buf, item->cmd, item->label);
 		else if (item->checkout)
 			printf("%s,^checkout(%s)\n", label_escaped.buf, item->cmd);
+		else if (item->isseparator)
+			printf("^sep(%s),%s\n", label_escaped.buf, item->cmd);
 		else
 			printf("%s,%s\n", label_escaped.buf, item->cmd);
 		xfree(label_escaped.buf);
@@ -115,7 +118,7 @@ out:
 
 static void new_tag(xmlNode *n);
 
-static void new_item(xmlNode *n)
+static void new_item(xmlNode *n, int isseparator)
 {
 	struct item *item;
 	char *label = (char *)xmlGetProp(n, (const xmlChar *)"label");
@@ -130,22 +133,11 @@ static void new_item(xmlNode *n)
 	item->cmd = NULL;
 	item->pipe = 0;
 	item->checkout = 0;
+	if (isseparator)
+		item->isseparator = 1;
+	else
+		item->isseparator = 0;
 	curitem = item;
-}
-
-static void new_sep(xmlNode *n)
-{
-	struct sbuf s;
-	char *label = (char *)xmlGetProp(n, (const xmlChar *)"label");
-
-	sbuf_init(&s);
-	new_item(n);
-	sbuf_cpy(&s, "^sep(");
-	if (label)
-		sbuf_addstr(&s, label);
-	sbuf_addstr(&s, ")");
-	curitem->label = strdup(s.buf);
-	xfree(s.buf);
 }
 
 static void new_tag(xmlNode *n)
@@ -170,7 +162,7 @@ static void new_tag(xmlNode *n)
 	curtag = t;
 
 	if (parent && strcmp(id, root_menu) != 0) {
-		new_item(n);
+		new_item(n, 0);
 		curitem->label = label;
 		curitem->cmd = id;
 		curitem->checkout = 1;
@@ -274,13 +266,13 @@ static int menu_start(xmlNode *n)
 		ret = 1;
 	} else if (execute) {
 		/* pipe-menu */
-		new_item(n);
+		new_item(n, 0);
 		curitem->pipe = 1;
 		curitem->cmd = execute;
 		list_add_tail(&curitem->list, &curtag->items);
 	} else if (id) {
 		/* checkout a menu defined elsewhere */
-		new_item(n);
+		new_item(n, 0);
 		curitem->checkout = 1;
 		curitem->cmd = id;
 		curitem->label = get_tag_label(id);
@@ -304,13 +296,13 @@ static void xml_tree_walk(xmlNode *node)
 			continue;
 		}
 		if (!strcasecmp((char *)n->name, "item")) {
-			new_item(n);
+			new_item(n, 0);
 			list_add_tail(&curitem->list, &curtag->items);
 			xml_tree_walk(n->children);
 			continue;
 		}
 		if (!strcasecmp((char *)n->name, "separator")) {
-			new_sep(n);
+			new_item(n, 1);
 			list_add_tail(&curitem->list, &curtag->items);
 			xml_tree_walk(n->children);
 			continue;
