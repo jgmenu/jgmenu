@@ -17,7 +17,8 @@
 #include "sbuf.h"
 #include "list.h"
 
-static char *root_menu;
+static char root_menu_default[] = "root-menu";
+static char *root_menu = root_menu_default;
 
 struct tag {
 	char *label;
@@ -100,7 +101,7 @@ static struct tag *get_parent_tag(xmlNode *n)
 
 	/* ob pipe-menus don't wrap first level in <menu></menu> */
 	if (!strcmp((char *)n->parent->name, "openbox_pipe_menu"))
-		id = strdup(root_menu);
+		id = root_menu;
 	else
 		id = (char *)xmlGetProp(n->parent, (const xmlChar *)"id");
 	if (!id)
@@ -155,13 +156,13 @@ static void new_tag(xmlNode *n)
 	char *id = (char *)xmlGetProp(n, (const xmlChar *)"id");
 
 	/*
-	 * The pipe-menu "root" has no <menu> element and therefore no LABEL
-	 * or ID.
+	 * The pipe-menu "root" has no <menu> element and therefore no
+	 * LABEL or ID.
 	 */
 	if (id)
 		t->id = id;
 	else
-		t->id = strdup(root_menu);
+		t->id = root_menu;
 	t->label = label;
 	t->parent = parent;
 	INIT_LIST_HEAD(&t->items);
@@ -336,7 +337,18 @@ static void parse_xml(struct sbuf *xmlbuf)
 
 static void cleanup(void)
 {
-	xfree(root_menu);
+	struct tag *tag, *tag_tmp, *item, *i_tmp;
+
+//	list_for_each_entry(tag, &tags, list) {
+//		list_for_each_entry_safe(item, i_tmp, &tag->items, list) {
+//			list_del(&item->list);
+//			xfree(item);
+//		}
+//	}
+	list_for_each_entry_safe(tag, tag_tmp, &tags, list) {
+		list_del(&tag->list);
+		xfree(tag);
+	}
 }
 
 void handle_argument_clash(void)
@@ -366,7 +378,7 @@ int main(int argc, char **argv)
 			if (!fp)
 				die("ob: cannot open file '%s'", argv[i]);
 		} else if (!strncmp(argv[i], "--tag=", 6)) {
-			root_menu = strdup(argv[i] + 6);
+			root_menu = argv[i] + 6;
 		} else if (!strncmp(argv[i], "--cmd=", 6)) {
 			fp = popen(argv[i] + 6, "r");
 			if (!fp)
@@ -374,8 +386,6 @@ int main(int argc, char **argv)
 		}
 		i++;
 	}
-	if (!root_menu)
-		root_menu = strdup("root-menu");
 	if (!fp) {
 		sbuf_init(&default_file);
 		sbuf_cpy(&default_file, getenv("HOME"));
@@ -394,7 +404,6 @@ int main(int argc, char **argv)
 		sbuf_addstr(&xmlbuf, buf);
 	}
 	parse_xml(&xmlbuf);
-
 	print_menu();
 	xfree(xmlbuf.buf);
 
