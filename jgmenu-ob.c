@@ -331,20 +331,22 @@ static void parse_xml(struct sbuf *xmlbuf)
 	if (!d)
 		exit(1);
 	xml_tree_walk(xmlDocGetRootElement(d));
+	print_menu();
 	xmlFreeDoc(d);
 	xmlCleanupParser();
 }
 
 static void cleanup(void)
 {
-	struct tag *tag, *tag_tmp, *item, *i_tmp;
+	struct tag *tag, *tag_tmp;
+	struct item *item, *i_tmp;
 
-//	list_for_each_entry(tag, &tags, list) {
-//		list_for_each_entry_safe(item, i_tmp, &tag->items, list) {
-//			list_del(&item->list);
-//			xfree(item);
-//		}
-//	}
+	list_for_each_entry(tag, &tags, list) {
+		list_for_each_entry_safe(item, i_tmp, &tag->items, list) {
+			list_del(&item->list);
+			xfree(item);
+		}
+	}
 	list_for_each_entry_safe(tag, tag_tmp, &tags, list) {
 		list_del(&tag->list);
 		xfree(tag);
@@ -404,7 +406,6 @@ int main(int argc, char **argv)
 		sbuf_addstr(&xmlbuf, buf);
 	}
 	parse_xml(&xmlbuf);
-	print_menu();
 	xfree(xmlbuf.buf);
 
 	return 0;
