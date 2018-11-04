@@ -17,8 +17,10 @@
 #include "sbuf.h"
 #include "list.h"
 
-static char root_menu_default[] = "root-menu";
-static char *root_menu = root_menu_default;
+static const char reconfigure_command[] = "openbox --reconfigure";
+static const char restart_command[] = "openbox --restart";
+static const char root_menu_default[] = "root-menu";
+static char *root_menu = (char *)root_menu_default;
 
 struct tag {
 	char *label;
@@ -216,9 +218,9 @@ static void get_special_action(xmlNode *node, char **cmd)
 	if (!strcasecmp(action, "Execute"))
 		return;
 	if (!strcasecmp(action, "reconfigure"))
-		*cmd = strdup("openbox --reconfigure");
+		*cmd = (char *)reconfigure_command;
 	else if (!strcasecmp(action, "restart"))
-		*cmd = strdup("openbox --restart");
+		*cmd = (char *)restart_command;
 }
 
 static void process_node(xmlNode *node)
@@ -385,6 +387,7 @@ int main(int argc, char **argv)
 		sbuf_cpy(&default_file, getenv("HOME"));
 		sbuf_addstr(&default_file, "/.config/openbox/menu.xml");
 		fp = fopen(default_file.buf, "r");
+		xfree(default_file.buf);
 	}
 	if (!fp)
 		die("ob: cannot open openbox menu file");
