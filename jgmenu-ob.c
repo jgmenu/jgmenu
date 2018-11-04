@@ -61,7 +61,7 @@ static void print_it(struct tag *tag)
 		else if (item->checkout)
 			printf("%s,^checkout(%s)\n", label_escaped.buf, item->cmd);
 		else if (item->isseparator)
-			printf("^sep(%s),%s\n", label_escaped.buf, item->cmd);
+			printf("^sep(%s)\n", label_escaped.buf);
 		else
 			printf("%s,%s\n", label_escaped.buf, item->cmd);
 		xfree(label_escaped.buf);

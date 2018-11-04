@@ -1,10 +1,10 @@
 Openbox 3,^tag(root-menu)
 Terminal,x-terminal-emulator
 Web Browser,x-www-browser
-^sep(),(null)
+^sep()
 Places,^pipe(jgmenu_run ob --cmd='bl-places-pipemenu' --tag='Places')
 Submenu,^checkout(submenu)
-^sep(),(null)
+^sep()
 Exit,^checkout(exit-menu)
 
 Exit,^tag(exit-menu)
@@ -14,7 +14,7 @@ Power off,systemctl -i poweroff
 Submenu,^tag(submenu)
 Back,^back()
 Foo,foo
-^sep(Separate Foo and Bar),(null)
+^sep(Separate Foo and Bar)
 Bar,bar
 Reconfigure Openbox,openbox --reconfigure
 
