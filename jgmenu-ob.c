@@ -242,7 +242,7 @@ static void process_node(xmlNode *node)
 
 	if (strstr(node_name.buf, "item.action.command") && node->content)
 		/* <command></command> */
-		curitem->cmd = strdup(strstrip((char *)node->content));
+		curitem->cmd = strstrip((char *)node->content);
 	else if (strstr(node_name.buf, "item.action"))
 		/* Catch <action name="Reconfigure"> and <action name="Restart"> */
 		get_special_action(node, &curitem->cmd);
