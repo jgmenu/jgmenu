@@ -117,8 +117,10 @@ do
 			-e 'CamelCase.*xmlCleanupParser' \
 			-e 'CamelCase.*xmlDoc' \
 			-e 'CamelCase.*xmlDocGetRootElement' \
+			-e 'CamelCase.*xmlFree' \
 			-e 'CamelCase.*xmlFreeDoc' \
 			-e 'CamelCase.*xmlNode' \
+			-e 'CamelCase.*xmlParseMemory' \
 			-e 'CamelCase.*xmlReadFile' \
 			-e 'CamelCase.*xmlGetProp' \
 			-e 'CamelCase.*XMotionEvent' \

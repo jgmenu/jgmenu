@@ -102,19 +102,21 @@ static struct tag *get_parent_tag(xmlNode *n)
 	char *id = NULL;
 
 	if (!n || !n->parent)
-		goto out;
-
+		return NULL;
 	/* ob pipe-menus don't wrap first level in <menu></menu> */
 	if (!strcmp((char *)n->parent->name, "openbox_pipe_menu"))
-		id = root_menu;
+		id = xstrdup(root_menu_default);
 	else
 		id = (char *)xmlGetProp(n->parent, (const xmlChar *)"id");
 	if (!id)
-		goto out;
-	list_for_each_entry(tag, &tags, list)
-		if (tag->id && !strcmp(tag->id, id))
+		return NULL;
+	list_for_each_entry(tag, &tags, list) {
+		if (tag->id && !strcmp(tag->id, id)) {
+			xfree(id);
 			return tag;
-out:
+		}
+	}
+	xfree(id);
 	return NULL;
 }
 
@@ -123,15 +125,11 @@ static void new_tag(xmlNode *n);
 static void new_item(xmlNode *n, int isseparator)
 {
 	struct item *item;
-	char *label = (char *)xmlGetProp(n, (const xmlChar *)"label");
 
 	if (!curtag)
 		new_tag(NULL);
-
 	item = xmalloc(sizeof(struct item));
-	item->label = NULL;
-	if (label)
-		item->label = label;
+	item->label = (char *)xmlGetProp(n, (const xmlChar *)"label");
 	item->cmd = NULL;
 	item->pipe = 0;
 	item->checkout = 0;
@@ -154,22 +152,24 @@ static void new_tag(xmlNode *n)
 	 * LABEL or ID.
 	 */
 	if (id)
-		t->id = id;
+		t->id = xstrdup(id);
 	else
-		t->id = root_menu;
-	t->label = label;
+		t->id = xstrdup(root_menu_default);
+	t->label = xstrdup(label);
 	t->parent = parent;
 	INIT_LIST_HEAD(&t->items);
 	list_add_tail(&t->list, &tags);
 	curtag = t;
-
 	if (parent && strcmp(id, root_menu) != 0) {
 		new_item(n, 0);
-		curitem->label = label;
-		curitem->cmd = id;
+		xfree(curitem->label);
+		curitem->label = xstrdup(label);
+		curitem->cmd = xstrdup(id);
 		curitem->checkout = 1;
 		list_add_tail(&curitem->list, &curtag->parent->items);
 	}
+	xmlFree(id);
+	xmlFree(label);
 }
 
 static void revert_to_parent(void)
@@ -214,13 +214,16 @@ static void get_special_action(xmlNode *node, char **cmd)
 
 	action = (char *)xmlGetProp(node, (const xmlChar *)"name");
 	if (!action)
-		return;
+		goto out;
 	if (!strcasecmp(action, "Execute"))
-		return;
+		goto out;
 	if (!strcasecmp(action, "reconfigure"))
-		*cmd = (char *)reconfigure_command;
+		*cmd = xstrdup(reconfigure_command);
 	else if (!strcasecmp(action, "restart"))
-		*cmd = (char *)restart_command;
+		*cmd = xstrdup(restart_command);
+out:
+	if (action)
+		xmlFree(action);
 }
 
 static void process_node(xmlNode *node)
@@ -232,14 +235,15 @@ static void process_node(xmlNode *node)
 	sbuf_init(&node_name);
 	get_full_node_name(&node_name, node);
 	if (!node_name.len)
-		return;
+		goto clean;
 
 	if (strstr(node_name.buf, "item.action.command") && node->content)
 		/* <command></command> */
-		curitem->cmd = strstrip((char *)node->content);
+		curitem->cmd = xstrdup(strstrip((char *)node->content));
 	else if (strstr(node_name.buf, "item.action"))
 		/* Catch <action name="Reconfigure"> and <action name="Restart"> */
 		get_special_action(node, &curitem->cmd);
+clean:
 	xfree(buf.buf);
 	xfree(node_name.buf);
 }
@@ -256,7 +260,7 @@ static int menu_start(xmlNode *n)
 	int ret = 0;
 	char *label;
 	char *execute;
-	char *id = NULL;
+	char *id;
 
 	label = (char *)xmlGetProp(n, (const xmlChar *)"label");
 	execute = (char *)xmlGetProp(n, (const xmlChar *)"execute");
@@ -270,17 +274,20 @@ static int menu_start(xmlNode *n)
 		/* pipe-menu */
 		new_item(n, 0);
 		curitem->pipe = 1;
-		curitem->cmd = execute;
+		curitem->cmd = xstrdup(execute);
 		list_add_tail(&curitem->list, &curtag->items);
 	} else if (id) {
 		/* checkout a menu defined elsewhere */
 		new_item(n, 0);
 		curitem->checkout = 1;
-		curitem->cmd = id;
-		curitem->label = get_tag_label(id);
+		curitem->cmd = xstrdup(id);
+		xfree(curitem->label);
+		curitem->label = xstrdup(get_tag_label(id));
 		list_add_tail(&curitem->list, &curtag->items);
 	}
-
+	xfree(label);
+	xfree(execute);
+	xfree(id);
 	return ret;
 }
 
@@ -335,6 +342,16 @@ static void cleanup(void)
 	struct tag *tag, *tag_tmp;
 	struct item *item, *i_tmp;
 
+	list_for_each_entry(tag, &tags, list) {
+		list_for_each_entry(item, &tag->items, list) {
+			xfree(item->label);
+			xfree(item->cmd);
+		}
+	}
+	list_for_each_entry(tag, &tags, list) {
+		xfree(tag->id);
+		xfree(tag->label);
+	}
 	list_for_each_entry(tag, &tags, list) {
 		list_for_each_entry_safe(item, i_tmp, &tag->items, list) {
 			list_del(&item->list);
