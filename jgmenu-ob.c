@@ -105,7 +105,7 @@ static struct tag *get_parent_tag(xmlNode *n)
 		return NULL;
 	/* ob pipe-menus don't wrap first level in <menu></menu> */
 	if (!strcmp((char *)n->parent->name, "openbox_pipe_menu"))
-		id = xstrdup(root_menu_default);
+		id = xstrdup(root_menu);
 	else
 		id = (char *)xmlGetProp(n->parent, (const xmlChar *)"id");
 	if (!id)
@@ -154,13 +154,14 @@ static void new_tag(xmlNode *n)
 	if (id)
 		t->id = xstrdup(id);
 	else
-		t->id = xstrdup(root_menu_default);
+		t->id = xstrdup(root_menu);
 	t->label = xstrdup(label);
 	t->parent = parent;
 	INIT_LIST_HEAD(&t->items);
 	list_add_tail(&t->list, &tags);
 	curtag = t;
-	if (parent && strcmp(id, root_menu) != 0) {
+//	if (parent && strcmp(id, root_menu) != 0) {
+	if (parent) {
 		new_item(n, 0);
 		xfree(curitem->label);
 		curitem->label = xstrdup(label);
