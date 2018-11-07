@@ -258,7 +258,7 @@ clean:
  */
 static int menu_start(xmlNode *n)
 {
-	int ret = 0;
+	int has_parent = 0;
 	char *label;
 	char *execute;
 	char *id;
@@ -270,7 +270,7 @@ static int menu_start(xmlNode *n)
 	if (label && !execute) {
 		/* new ^tag() */
 		new_tag(n);
-		ret = 1;
+		has_parent = 1;
 	} else if (execute) {
 		/* pipe-menu */
 		new_item(n, 0);
@@ -289,19 +289,19 @@ static int menu_start(xmlNode *n)
 	xfree(label);
 	xfree(execute);
 	xfree(id);
-	return ret;
+	return has_parent;
 }
 
 static void xml_tree_walk(xmlNode *node)
 {
 	xmlNode *n;
-	int ret;
+	int has_parent;
 
 	for (n = node; n && n->name; n = n->next) {
 		if (!strcasecmp((char *)n->name, "menu")) {
-			ret = menu_start(n);
+			has_parent = menu_start(n);
 			xml_tree_walk(n->children);
-			if (ret)
+			if (has_parent)
 				revert_to_parent();
 			continue;
 		}
