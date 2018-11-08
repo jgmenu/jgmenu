@@ -1,3 +1,4 @@
 *.a
 test-hashmap
 test-argv-buf
+filter-out
