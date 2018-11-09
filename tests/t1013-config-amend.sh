@@ -1,5 +1,11 @@
 #!/bin/sh
 
+if ! test -e ./helper/filter-out
+then
+	echo "fatal: need ./helper/filter-out"
+	exit 1
+fi
+
 test_description='test jgmenu-config.py amend'
 . ./test-lib-simple.sh
 
