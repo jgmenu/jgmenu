@@ -1,0 +1,22 @@
+Terminal,^term(bash)
+File Manager,pcmanfm
+Web Browser,firefox
+Text Editor,^term(vim)
+^sep()
+Accessories,^checkout(accessories)
+^sep()
+Places,^pipe(jgmenu_run places)
+^sep()
+Help and Info,^checkout(help)
+^sep()
+Lock Screen,i3lock-fancy -p
+
+^tag(accessories)
+Mail,:
+Messaging,:
+File Sharing,:
+Screenshot,:
+
+^tag(help)
+Help,:
+Information,:

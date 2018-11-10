@@ -6,6 +6,7 @@ all:
 	./t1012-argv-buf.sh
 	./t1013-config-amend.sh
 	./t1100-ob.sh
+	./t1101-i18n.sh
 
 
 # string buffer tests
