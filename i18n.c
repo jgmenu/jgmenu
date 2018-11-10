@@ -35,6 +35,11 @@ static struct map_entry *alloc_entry(int hash, char *key, int klen,
 	return entry;
 }
 
+static const char *get_value(const struct map_entry *e)
+{
+	return e->key + strlen(e->key) + 1;
+}
+
 static void hashput(char *id, char *str)
 {
 	int hash = 0;
@@ -43,11 +48,9 @@ static void hashput(char *id, char *str)
 	hash = strihash(id);
 	entry = alloc_entry(hash, id, strlen(id), str, strlen(str));
 	entry = hashmap_put(&map, entry);
-}
 
-static const char *get_value(const struct map_entry *e)
-{
-	return e->key + strlen(e->key) + 1;
+	/* If an entry has been replaced, free it */
+	xfree(entry);
 }
 
 static char *stripquotes(char *s)
@@ -128,22 +131,43 @@ void i18n_open(const char *filename)
 	xfree(s.buf);
 }
 
-char *i18n_translate(struct sbuf *s)
+char *i18n_translate(const char *s)
 {
-	char *remainder;
 	struct map_entry *entry;
 	int hash = 0;
 
-	remainder = strrchr(s->buf, ',');
+	hash = strihash(s);
+	entry = hashmap_get_from_hash(&map, hash, s);
+	return entry ? (char *)get_value(entry) : NULL;
+}
+
+void i18n_translate_first_field(struct sbuf *s)
+{
+	char *tmp, *remainder = NULL, *translation = NULL;
+
+	BUG_ON(!s || !s->buf);
+	if (s->buf[0] == '\0')
+		return;
+	/* Make a copy as we leave 's' untouched if no translation exists */
+	tmp = xstrdup(s->buf);
+	remainder = strchr(tmp, ',');
 	if (remainder) {
 		*remainder = '\0';
 		++remainder;
 	}
+	/* tmp now contains the first field, which we want to translate */
+	translation = i18n_translate(tmp);
+	if (translation) {
+		sbuf_cpy(s, translation);
+		if (remainder) {
+			sbuf_addch(s, ',');
+			sbuf_addstr(s, remainder);
+		}
+	}
+	xfree(tmp);
+}
 
-	/* s->buf now contains first field, which we want to translate */
-	hash = strihash(s->buf);
-	entry = hashmap_get_from_hash(&map, hash, s->buf);
-	if (entry)
-		sbuf_cpy(s, get_value(entry));
-	return remainder;
+void i18n_cleanup(void)
+{
+	hashmap_free(&map, 1);
 }

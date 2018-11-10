@@ -29,16 +29,12 @@ void usage(void)
 static void translate_and_print(char *buf)
 {
 	struct sbuf s;
-	char *remainder;
 
 	BUG_ON(!buf);
 	sbuf_init(&s);
 	sbuf_cpy(&s, buf);
-	remainder = i18n_translate(&s);	
-	printf("%s", s.buf);
-	if (remainder)
-		printf(",%s", remainder);
-	printf("\n");
+	i18n_translate_first_field(&s);
+	printf("%s\n", s.buf);
 	xfree(s.buf);
 }
 
@@ -76,5 +72,6 @@ int main(int argc, char **argv)
 			die("line %d not correctly terminated", i);
 		translate_and_print(buf);
 	}
+	i18n_cleanup();
 	return 0;
 }
