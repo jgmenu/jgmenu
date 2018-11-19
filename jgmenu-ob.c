@@ -227,6 +227,23 @@ out:
 		xmlFree(action);
 }
 
+/*
+ * In an openbox menu xml file, a menu item (such as a program) is written as
+ * follows:
+ *
+ * <item label="foo">
+ *   <action name="Execute">
+ *     <command>foo</command>
+ *   </action>
+ * </item>
+ *
+ * The tag <execute> can be used instead of <command>. The openbox.org wiki
+ * says that the <execute> tag is depreciated, but one of the examples on the
+ * wiki menu page uses <execute> and so does the /etc/xdg/openbox/menu.xml.
+ *
+ * http://openbox.org/wiki/Help:Menus
+ * http://openbox.org/wiki/Help:Actions#Action_syntax
+ */
 static void process_node(xmlNode *node)
 {
 	struct sbuf buf;
@@ -237,13 +254,19 @@ static void process_node(xmlNode *node)
 	get_full_node_name(&node_name, node);
 	if (!node_name.len)
 		goto clean;
+	if (!strstr(node_name.buf, "item.action"))
+		goto clean;
 
-	if (strstr(node_name.buf, "item.action.command") && node->content)
-		/* <command></command> */
+	if (strstr(node_name.buf, "item.action.execute") ||
+	    strstr(node_name.buf, "item.action.command")) {
+		if (!node->content)
+			goto clean;
 		curitem->cmd = xstrdup(strstrip((char *)node->content));
-	else if (strstr(node_name.buf, "item.action"))
-		/* Catch <action name="Reconfigure"> and <action name="Restart"> */
-		get_special_action(node, &curitem->cmd);
+	}
+
+	/* Catch <action name="Reconfigure"> and <action name="Restart"> */
+	get_special_action(node, &curitem->cmd);
+
 clean:
 	xfree(buf.buf);
 	xfree(node_name.buf);
