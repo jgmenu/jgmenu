@@ -15,9 +15,10 @@
         </item>
         <item label="Power off">
             <action name="Execute">
-                <command>
+<!-- <execute> is depreciated, but we support it -->
+                <execute>
                     systemctl -i poweroff
-                </command>
+                </execute>
             </action>
         </item>
     </menu>
@@ -56,6 +57,7 @@
                 </action>
             </item>
             <item label="Reconfigure Openbox">
+<!-- We hook Reconfigure and Restart -->
                 <action name="Reconfigure">
                 </action>
             </item>
