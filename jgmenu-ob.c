@@ -32,6 +32,7 @@ struct tag {
 
 struct item {
 	char *label;
+	char *icon;
 	char *cmd;
 	int pipe;
 	int checkout;
@@ -57,15 +58,22 @@ static void print_it(struct tag *tag)
 		sbuf_init(&label_escaped);
 		sbuf_cpy(&label_escaped, item->label);
 		sbuf_replace(&label_escaped, "&", "&amp;");
-		if (item->pipe)
+		if (item->pipe) {
 			printf("%s,^pipe(jgmenu_run ob --cmd='%s' --tag='%s')\n",
 			       label_escaped.buf, item->cmd, item->label);
-		else if (item->checkout)
-			printf("%s,^checkout(%s)\n", label_escaped.buf, item->cmd);
-		else if (item->isseparator)
+		} else if (item->checkout) {
+			printf("%s,^checkout(%s)", label_escaped.buf, item->cmd);
+			if (item->icon)
+				printf(",%s", item->icon);
+			printf("\n");
+		} else if (item->isseparator) {
 			printf("^sep(%s)\n", label_escaped.buf);
-		else
-			printf("%s,%s\n", label_escaped.buf, item->cmd);
+		} else {
+			printf("%s,%s", label_escaped.buf, item->cmd);
+			if (item->icon)
+				printf(",%s", item->icon);
+			printf("\n");
+		}
 		xfree(label_escaped.buf);
 	}
 	printf("\n");
@@ -130,6 +138,7 @@ static void new_item(xmlNode *n, int isseparator)
 		new_tag(NULL);
 	item = xmalloc(sizeof(struct item));
 	item->label = (char *)xmlGetProp(n, (const xmlChar *)"label");
+	item->icon = (char *)xmlGetProp(n, (const xmlChar *)"icon");
 	item->cmd = NULL;
 	item->pipe = 0;
 	item->checkout = 0;
@@ -145,6 +154,7 @@ static void new_tag(xmlNode *n)
 	struct tag *t = xcalloc(1, sizeof(struct tag));
 	struct tag *parent = get_parent_tag(n);
 	char *label = (char *)xmlGetProp(n, (const xmlChar *)"label");
+	char *icon = (char *)xmlGetProp(n, (const xmlChar *)"icon");
 	char *id = (char *)xmlGetProp(n, (const xmlChar *)"id");
 
 	/*
@@ -160,17 +170,19 @@ static void new_tag(xmlNode *n)
 	INIT_LIST_HEAD(&t->items);
 	list_add_tail(&t->list, &tags);
 	curtag = t;
-//	if (parent && strcmp(id, root_menu) != 0) {
 	if (parent) {
 		new_item(n, 0);
 		xfree(curitem->label);
 		curitem->label = xstrdup(label);
+		xfree(curitem->icon);
+		curitem->icon = xstrdup(icon);
 		curitem->cmd = xstrdup(id);
 		curitem->checkout = 1;
 		list_add_tail(&curitem->list, &curtag->parent->items);
 	}
-	xmlFree(id);
 	xmlFree(label);
+	xmlFree(icon);
+	xmlFree(id);
 }
 
 static void revert_to_parent(void)
@@ -369,6 +381,7 @@ static void cleanup(void)
 	list_for_each_entry(tag, &tags, list) {
 		list_for_each_entry(item, &tag->items, list) {
 			xfree(item->label);
+			xfree(item->icon);
 			xfree(item->cmd);
 		}
 	}
