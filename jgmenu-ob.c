@@ -69,7 +69,12 @@ static void print_it(struct tag *tag)
 		} else if (item->isseparator) {
 			printf("^sep(%s)\n", label_escaped.buf);
 		} else {
-			printf("%s,%s", label_escaped.buf, item->cmd);
+			if (strchr(label_escaped.buf, ','))
+				printf("\"\"\"");
+			printf("%s", label_escaped.buf);
+			if (strchr(label_escaped.buf, ','))
+				printf("\"\"\"");
+			printf(",%s", item->cmd);
 			if (item->icon)
 				printf(",%s", item->icon);
 			printf("\n");
