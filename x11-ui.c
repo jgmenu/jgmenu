@@ -27,6 +27,7 @@
 
 #include "x11-ui.h"
 #include "util.h"
+#include "config.h"
 
 struct UI *ui;
 
@@ -459,6 +460,7 @@ void ui_insert_text(char *s, int x, int y, int h, int w, double *rgba,
 {
 	/* Used to centre vertical alignment */
 	int offset;
+	PangoTabArray *tabs;
 
 	offset = (h - ui->font_height_actual) / 2;
 
@@ -473,14 +475,17 @@ void ui_insert_text(char *s, int x, int y, int h, int w, double *rgba,
 	default:
 		pango_layout_set_alignment(ui->w[ui->cur].pangolayout, PANGO_ALIGN_LEFT);
 	}
+	tabs = pango_tab_array_new_with_positions(1, TRUE, PANGO_TAB_LEFT, config.tabs);
 	pango_layout_set_wrap(ui->w[ui->cur].pangolayout, PANGO_WRAP_WORD_CHAR);
 	pango_layout_set_ellipsize(ui->w[ui->cur].pangolayout, PANGO_ELLIPSIZE_END);
 	pango_layout_set_font_description(ui->w[ui->cur].pangolayout, ui->w[ui->cur].pangofont);
+	pango_layout_set_tabs(ui->w[ui->cur].pangolayout, tabs);
 	pango_layout_set_markup(ui->w[ui->cur].pangolayout, s, -1);
 	cairo_set_source_rgba(ui->w[ui->cur].c, rgba[0], rgba[1], rgba[2], rgba[3]);
 	pango_cairo_update_layout(ui->w[ui->cur].c, ui->w[ui->cur].pangolayout);
 	cairo_move_to(ui->w[ui->cur].c, x, y + offset);
 	pango_cairo_show_layout(ui->w[ui->cur].c, ui->w[ui->cur].pangolayout);
+	pango_tab_array_free(tabs);
 }
 
 struct point ui_get_text_size(const char *str, const char *fontdesc)

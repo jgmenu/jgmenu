@@ -64,6 +64,7 @@ do
 			-e 'CamelCase.*PangoFontDescription' \
 			-e 'CamelCase.*PangoLayout' \
 			-e 'CamelCase.*PangoLayoutLine' \
+			-e 'CamelCase.*PangoTabArray' \
 			-e 'CamelCase.*PangoRectangle' \
 			-e 'CamelCase.*Pixmap' \
 			-e 'CamelCase.*PointerMotionMask' \

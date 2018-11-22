@@ -273,6 +273,10 @@ columns = __integer__ (default 1)
 
     Specify the number of columns in which to show menu items  
 
+tabs = __integer__ (default 120)  
+
+    Specify the position is pixels of the first tab  
+
 menu_margin_x = __integer__ (default 0)  
 menu_margin_y = __integer__ (default 0)  
 

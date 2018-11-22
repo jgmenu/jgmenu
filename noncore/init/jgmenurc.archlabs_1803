@@ -11,6 +11,7 @@ terminal_args        = -e
 #hover_delay	     = 100
 #hide_back_items     = 1
 #columns             = 1
+#tabs	             = 120
 
 menu_margin_x        = 4
 menu_margin_y        = 32
