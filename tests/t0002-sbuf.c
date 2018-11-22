@@ -116,5 +116,12 @@ int main(void)
 	sbuf_replace(&s, "oo", "");
 	printf("_%s_\n", s.buf);
 
+	sbuf_init(&s);
+	printf("\nXXXXXXXXXXXXXXXXX\n\n");
+	sbuf_cpy(&s, "one  two    three                         four");
+	printf("_%s_\n", s.buf);
+	sbuf_replace_spaces_with_one_tab(&s);
+	printf("_%s_\n", s.buf);
+
 	return 0;
 }

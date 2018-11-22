@@ -164,6 +164,27 @@ void sbuf_replace(struct sbuf *s, const char *before, const char *after)
 	s->buf = new.buf;
 }
 
+void sbuf_replace_spaces_with_one_tab(struct sbuf *s)
+{
+	char *p, pattern[] = "    ";
+	struct sbuf new;
+
+	if (!s || !s->buf || !s->len)
+		return;
+	p = strstr(s->buf, pattern);
+	if (!p)
+		return;
+	*p++ = '\0';
+	sbuf_init(&new);
+	sbuf_addstr(&new, s->buf);
+	sbuf_addch(&new, '\t');
+	while (*p == ' ')
+		++p;
+	sbuf_addstr(&new, p);
+	xfree(s->buf);
+	s->buf = new.buf;
+}
+
 void sbuf_split(struct list_head *sl, const char *data, char field_separator)
 {
 	char *p, *str;

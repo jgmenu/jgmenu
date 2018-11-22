@@ -58,6 +58,7 @@ static void print_it(struct tag *tag)
 		sbuf_init(&label_escaped);
 		sbuf_cpy(&label_escaped, item->label);
 		sbuf_replace(&label_escaped, "&", "&amp;");
+		sbuf_replace_spaces_with_one_tab(&label_escaped);
 		if (item->pipe) {
 			printf("%s,^pipe(jgmenu_run ob --cmd='%s' --tag='%s')\n",
 			       label_escaped.buf, item->cmd, item->label);
