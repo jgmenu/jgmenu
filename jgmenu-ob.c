@@ -51,7 +51,9 @@ static void print_it(struct tag *tag)
 
 	if (list_empty(&tag->items))
 		return;
-	printf("%s,^tag(%s)\n", tag->label, tag->id);
+	if (tag->label)
+		printf("%s,", tag->label);
+	printf("^tag(%s)\n", tag->id);
 	if (tag->parent)
 		printf("Back,^back()\n");
 	list_for_each_entry(item, &tag->items, list) {
@@ -277,9 +279,11 @@ static void process_node(xmlNode *node)
 
 	if (strstr(node_name.buf, "item.action.execute") ||
 	    strstr(node_name.buf, "item.action.command")) {
-		if (!node->content)
-			goto clean;
-		curitem->cmd = xstrdup(strstrip((char *)node->content));
+		xmlChar *c = xmlNodeGetContent(node);
+
+		xfree(curitem->cmd);
+		curitem->cmd = c ? xstrdup(strstrip((char *)c)) : NULL;
+		xmlFree(c);
 	}
 
 	/* Catch <action name="Reconfigure"> and <action name="Restart"> */

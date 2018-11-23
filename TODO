@@ -9,6 +9,7 @@ columns:
   - deal with menu_height for columns > 1 (incl dyamic mode)
 
 Deal with ^pipe() that returns error
+Deal with ^pipe() with the same tag as its parent
 
 geometry.c:
   - reivew the below function to see where menu_width is set
