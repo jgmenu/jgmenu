@@ -1,0 +1,28 @@
+jgmenu v1.5 release notes
+=========================
+
+Updates since v1.4.1
+--------------------
+
+  * Improve openbox module
+
+     - Allow commas in label attribute (issue #66)
+
+     - Tabulate first occurance of 4+ spaces to allow better formatting of
+       BunsenLabs' bl-kb (list of keyboard shortcuts)
+
+     - Support icons (issue #65)
+
+     - Support <execute> tag (issue #65)
+
+     - Improve openbox pipemenu speed performance
+
+     - Parse <![CDATA[]]> tags
+
+     - Clean up to give clear ASAN warnings
+
+  * Progress i18n
+
+     - Add --init option
+
+  * Add 'tags' config option

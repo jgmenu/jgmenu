@@ -8,7 +8,7 @@
 # Change "default_version" before doing a `git tag -a ...`
 #
 
-default_version="1.4.1"
+default_version="1.5"
 
 v=$(git describe --dirty --abbrev=1 2>/dev/null)
 
