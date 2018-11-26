@@ -4,14 +4,15 @@ Install
 Install from repos
 ------------------
 
-| Repo                                                                                   | command                |
-| :---                                                                                   | :---                   |
-| [Arch](https://www.archlinux.org/packages/community/x86_64/jgmenu/)                    | pacman -S jgmenu       |
-| [ArchLabs](https://github.com/ARCHLabs/archlabs_repo/tree/master/x86_64)               | pacman -S jgmenu       |
-| [BunsenLabs](http://eu.pkg.bunsenlabs.org/debian/pool/main/j/jgmenu/)                  | apt-get install jgmenu |
-| [NixOS](https://github.com/NixOS/nixpkgs/tree/master/pkgs/applications/misc/jgmenu)    |                        |
-| [Slackware](https://slackbuilds.org/repository/14.2/desktop/jgmenu/)                   |                        |
-| [Void](https://github.com/voidlinux/void-packages/blob/master/srcpkgs/jgmenu/template) | xbps-install -S jgmenu |
+| Repo                                                                                              | command                |
+| :---                                                                                              | :---                   |
+| [Arch](https://www.archlinux.org/packages/community/x86_64/jgmenu/)                               | pacman -S jgmenu       |
+| [ArchLabs](https://github.com/ARCHLabs/archlabs_repo/tree/master/x86_64)                          | pacman -S jgmenu       |
+| [BunsenLabs](http://eu.pkg.bunsenlabs.org/debian/pool/main/j/jgmenu/)                             | apt-get install jgmenu |
+| [NixOS](https://github.com/NixOS/nixpkgs/tree/master/pkgs/applications/misc/jgmenu)               |                        |
+| [Slackware](https://slackbuilds.org/repository/14.2/desktop/jgmenu/)                              |                        |
+| [Void](https://github.com/voidlinux/void-packages/blob/master/srcpkgs/jgmenu/template)            | xbps-install -S jgmenu |
+| [Mageia Cauldron](http://madb.mageia.org/package/show/application/0/release/cauldron/name/jgmenu) | urpmi jgmenu |
 
 [repology](https://repology.org/metapackage/jgmenu/versions)
 
