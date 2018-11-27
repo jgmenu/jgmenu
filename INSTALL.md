@@ -4,16 +4,16 @@ Install
 Install from repos
 ------------------
 
-[repology](https://repology.org/metapackage/jgmenu/versions)
+[Repology](https://repology.org/metapackage/jgmenu/versions)
 
-| Repo                                                                                              | command                |
-| :---                                                                                              | :---                   |
-| [Arch](https://www.archlinux.org/packages/community/x86_64/jgmenu/)                               | pacman -S jgmenu       |
-| [BunsenLabs](http://eu.pkg.bunsenlabs.org/debian/pool/main/j/jgmenu/)                             | apt-get install jgmenu |
-| [Mageia Cauldron](http://madb.mageia.org/package/show/application/0/release/cauldron/name/jgmenu) | urpmi jgmenu           |
-| [NixOS](https://github.com/NixOS/nixpkgs/tree/master/pkgs/applications/misc/jgmenu)               |                        |
-| [Slackware](https://slackbuilds.org/repository/14.2/desktop/jgmenu/)                              |                        |
-| [Void](https://github.com/voidlinux/void-packages/blob/master/srcpkgs/jgmenu/template)            | xbps-install -S jgmenu |
+| Repo                                                                                              | command                | Version
+| :---                                                                                              | :---                   | :---
+| [Arch](https://www.archlinux.org/packages/community/x86_64/jgmenu/)                               | pacman -S jgmenu       | ![](https://repology.org/badge/version-only-for-repo/arch/jgmenu.svg)
+| [BunsenLabs](http://eu.pkg.bunsenlabs.org/debian/pool/main/j/jgmenu/)                             | apt-get install jgmenu | ![](https://repology.org/badge/version-only-for-repo/bunsenlabs_jessie_backports/jgmenu.svg)
+| [Mageia Cauldron](http://madb.mageia.org/package/show/application/0/release/cauldron/name/jgmenu) | urpmi jgmenu           | ![](https://repology.org/badge/version-only-for-repo/mageia_cauldron/jgmenu.svg)
+| [NixOS](https://github.com/NixOS/nixpkgs/tree/master/pkgs/applications/misc/jgmenu)               |                        | ![](https://repology.org/badge/version-only-for-repo/nix_stable/jgmenu.svg)
+| [Slackware](https://slackbuilds.org/repository/14.2/desktop/jgmenu/)                              |                        | ![](https://repology.org/badge/version-only-for-repo/slackbuilds/jgmenu.svg)
+| [Void](https://github.com/void-linux/void-packages/blob/master/srcpkgs/jgmenu/template)           | xbps-install -S jgmenu |
 
 Build and install in $HOME directory
 ------------------------------------
