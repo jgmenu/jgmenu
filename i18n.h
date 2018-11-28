@@ -17,10 +17,11 @@
 #include "sbuf.h"
 
 /**
- * i18n_open - open translation file and read msg{id,str} data into hashmap
- * @filename: filename of po file to be processed
+ * i18n_set_translation_file - set and open translation file and read
+ *                             msg{id,str} data into hashmap
+ * @filename: file or directory to open
  */
-extern void i18n_open(const char *filename);
+extern void i18n_set_translation_file(const char *filename);
 
 /**
  * i18n_tranlate - translate string

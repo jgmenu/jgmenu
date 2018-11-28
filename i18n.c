@@ -12,6 +12,7 @@
 #include "hashmap.h"
 
 static struct hashmap map;
+static char *translation_file;
 
 struct map_entry {
 	struct hashmap_entry ent;
@@ -108,7 +109,7 @@ static void parse_file(char *filename)
 	fclose(fp);
 }
 
-void i18n_open(const char *filename)
+static void i18n_open(void)
 {
 	struct stat sb;
 	struct sbuf s;
@@ -118,17 +119,83 @@ void i18n_open(const char *filename)
 		hashmap_init(&map, (hashmap_cmp_fn) cmp, 0);
 		has_run = 1;
 	}
-	if (!filename)
-		return;
-	if (filename[0] == '\0')
+	BUG_ON(!translation_file);
+	if (translation_file[0] == '\0')
 		return;
 	sbuf_init(&s);
-	sbuf_cpy(&s, filename);
+	sbuf_cpy(&s, translation_file);
 	sbuf_expand_tilde(&s);
 	if (stat(s.buf, &sb) < 0)
 		die("%s: stat()", __func__);
 	parse_file(s.buf);
 	xfree(s.buf);
+}
+
+/*
+ * Read $LANG and parse ll_CC.UTF8 format where
+ *  - ‘ll’ is an ISO 639 two-letter language code (lowercase).
+ *  - ‘CC’ is an ISO 3166 two-letter country code (uppercase).
+ */
+static void find_translation_file_within_dir(struct sbuf *s)
+{
+	char *p;
+	struct stat st;
+
+	p = getenv("LANG");
+	if (!p) {
+		warn("LANG not set - cannot not find translation file");
+		sbuf_cpy(s, "");
+		return;
+	}
+	sbuf_addstr(s, p);
+
+	/* try ll_CC */
+	if (strchr(getenv("LANG"), '.')) {
+		p = strrchr(s->buf, '.');
+		BUG_ON(!p);
+		*p = '\0';
+	}
+	if (!stat(s->buf, &st))
+		return;
+
+	/* try ll */
+	if (strchr(getenv("LANG"), '_')) {
+		p = strrchr(s->buf, '_');
+		BUG_ON(!p);
+		*p = '\0';
+	}
+	if (stat(s->buf, &st) < 0)
+		sbuf_cpy(s, "");
+}
+
+void i18n_set_translation_file(const char *filename)
+{
+	struct stat st;
+	struct sbuf s;
+
+	sbuf_init(&s);
+	sbuf_cpy(&s, filename);
+	sbuf_expand_tilde(&s);
+
+	if (stat(s.buf, &st) < 0) {
+		warn("i18n: file '%s' does not exist", s.buf);
+		translation_file = NULL;
+		xfree(s.buf);
+		return;
+	}
+	if (S_ISDIR(st.st_mode)) {
+		find_translation_file_within_dir(&s);
+		if (!s.len) {
+			warn("i18n: could not find translation file in dir '%s'",
+			     filename);
+			translation_file = NULL;
+			xfree(s.buf);
+			return;
+		}
+	}
+	translation_file = s.buf;
+	info("i18n: translation file '%s' loaded", translation_file);
+	i18n_open();
 }
 
 char *i18n_translate(const char *s)
