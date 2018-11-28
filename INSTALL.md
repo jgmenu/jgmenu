@@ -77,6 +77,21 @@ Use `prefix` to specify a different target location. For example:
 sudo make prefix=/usr install
 ```
 
+Build a Debian package
+----------------------
+
+A debian package can be built as follows:
+
+```
+dpkg-buildpackage -tc -b -us -uc
+```
+
+Then install the .deb package with
+
+```
+sudo dpkg -i ../jgmenu_<whatever>.deb
+```
+
 Dependencies
 ------------
 
