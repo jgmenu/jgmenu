@@ -1,0 +1,17 @@
+[Desktop Entry]
+Name=Extace Waveform Display
+Name[es]=Extace
+Name[no]=Extace Bølgeformvisning
+Name[fr]=Extace Waveform
+Name[ko]=ÀÍ½ºÅ×ÀÌ½º
+Name[pt]=Extace
+Comment=Audio Waveform Monitor
+Comment[es]=Visualización gráfica de ondas sonoras
+Comment[no]=Lydbølgemonitor
+Comment[fr]=Visualisation graphique d'ondes sonores
+Comment[ko]=¿Àµð¿À ¿þÀÌºê º¸±â
+Comment[pt]=Visualização gráfica das ondas sonoras
+Exec=extace
+Icon=extace.png
+Terminal=0
+Type=Application
