@@ -22,10 +22,8 @@ void sbuf_addstr(struct sbuf *s, const char *data)
 {
 	int len;
 
-	if (!data) {
-		fprintf(stderr, "warn: NULL passed to sbuf_addstr\n");
+	if (!data)
 		return;
-	}
 	len = strlen(data);
 	if (s->bufsiz <= s->len + len + 1) {
 		s->bufsiz = s->bufsiz + len;
