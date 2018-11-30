@@ -133,7 +133,7 @@ static void del_beyond_root(void);
 
 void init_empty_item(void)
 {
-	empty_item.name = xstrdup("<empty>");
+	empty_item.name = xstrdup("&lt;empty&gt;");
 	empty_item.cmd = xstrdup(":");
 	empty_item.iconname = NULL;
 	empty_item.working_dir = NULL;
