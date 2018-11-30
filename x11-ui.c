@@ -458,11 +458,8 @@ void ui_draw_line(double x0, double y0, double x1, double y1, double line_width,
 void ui_insert_text(char *s, int x, int y, int h, int w, double *rgba,
 		    enum alignment align)
 {
-	/* Used to centre vertical alignment */
-	int offset;
 	PangoTabArray *tabs;
-
-	offset = (h - ui->font_height_actual) / 2;
+	int height;
 
 	pango_layout_set_width(ui->w[ui->cur].pangolayout, w * PANGO_SCALE);
 	switch (align) {
@@ -483,7 +480,9 @@ void ui_insert_text(char *s, int x, int y, int h, int w, double *rgba,
 	pango_layout_set_markup(ui->w[ui->cur].pangolayout, s, -1);
 	cairo_set_source_rgba(ui->w[ui->cur].c, rgba[0], rgba[1], rgba[2], rgba[3]);
 	pango_cairo_update_layout(ui->w[ui->cur].c, ui->w[ui->cur].pangolayout);
-	cairo_move_to(ui->w[ui->cur].c, x, y + offset);
+	pango_layout_get_pixel_size(ui->w[ui->cur].pangolayout, NULL, &height);
+	/* use (h - height) / 2 to center-align vertically */
+	cairo_move_to(ui->w[ui->cur].c, x, y + (h - height) / 2);
 	pango_cairo_show_layout(ui->w[ui->cur].c, ui->w[ui->cur].pangolayout);
 	pango_tab_array_free(tabs);
 }
@@ -500,7 +499,6 @@ struct point ui_get_text_size(const char *str, const char *fontdesc)
 	c = cairo_create(cs);
 	layout = pango_cairo_create_layout(c);
 	font = pango_font_description_from_string(fontdesc);
-//	pango_layout_set_text(layout, str, -1);
 	pango_layout_set_font_description(layout, font);
 	pango_layout_set_markup(layout, str, -1);
 	cairo_set_source_rgba(c, 0, 0, 0, 1.0);
