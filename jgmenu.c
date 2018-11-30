@@ -1182,6 +1182,19 @@ static void insert_tag_item(void)
 	list_add_tail(&item->master, &menu.master);
 }
 
+void resolve_newline(char *s)
+{
+	char *p;
+
+	if (!s)
+		return;
+	p = strstr(s, "\\n");
+	if (!p)
+		return;
+	*p = ' ';
+	*(p + 1) = '\n';
+}
+
 void read_csv_file(FILE *fp)
 {
 	char buf[BUFSIZ], *p;
@@ -1223,6 +1236,7 @@ void read_csv_file(FILE *fp)
 		item = xmalloc(sizeof(struct item));
 		item->buf = argv_buf.buf;
 		item->name = argv_buf.argv[0];
+		resolve_newline(item->name);
 		item->cmd = argv_buf.argv[1];
 		item->iconname = argv_buf.argv[2];
 		item->working_dir = argv_buf.argv[3];
