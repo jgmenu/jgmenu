@@ -87,10 +87,14 @@ static void process_app(MenuCacheApp *app)
 		sbuf_init(&s);
 		inited = 1;
 	}
+
+	/* name */
 	fmt_name(&s, menu_cache_item_get_name(MENU_CACHE_ITEM(app)),
 		 menu_cache_app_get_generic_name(MENU_CACHE_APP(app)));
 	sbuf_addstr(&cur->buf, s.buf);
 	sbuf_addstr(&cur->buf, ",");
+
+	/* command */
 	if (menu_cache_app_get_use_terminal(app))
 		sbuf_addstr(&cur->buf, "^term(");
 	sbuf_addstr(&cur->buf, menu_cache_app_get_exec(MENU_CACHE_APP(app)));
@@ -103,7 +107,13 @@ static void process_app(MenuCacheApp *app)
 	if (menu_cache_app_get_use_terminal(app))
 		sbuf_addstr(&cur->buf, ")");
 	sbuf_addstr(&cur->buf, ",");
+
+	/* icon */
 	sbuf_addstr(&cur->buf, menu_cache_item_get_icon(MENU_CACHE_ITEM(app)));
+	sbuf_addstr(&cur->buf, ",");
+
+	/* working directory */
+	sbuf_addstr(&cur->buf, menu_cache_app_get_working_dir(MENU_CACHE_APP(app)));
 	sbuf_addstr(&cur->buf, "\n");
 }
 
