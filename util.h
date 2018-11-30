@@ -10,6 +10,8 @@
 #include <ctype.h>
 #include <limits.h>
 #include <errno.h>
+#include <sys/stat.h>
+//#include <fcntl.h>
 
 #define xfree(pointer) safe_free((void **)&(pointer))
 
@@ -41,5 +43,6 @@ int get_first_num_from_str(const char *s);
 void xatoi(int *var, const char *value, int flags, const char *key);
 void cat(const char *filename);
 void remove_caret_markup_closing_bracket(char *s);
+void mkdir_p(const char *path);
 
 #endif /* UTIL_H */

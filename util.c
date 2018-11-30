@@ -271,3 +271,30 @@ void remove_caret_markup_closing_bracket(char *s)
 			*q = '\0';
 	}
 }
+
+void mkdir_p(const char *path)
+{
+	struct sbuf s;
+	char *p;
+
+	sbuf_init(&s);
+	if (strlen(path) > PATH_MAX) {
+		warn("mkdir_p: path too long");
+		return;
+	}
+	sbuf_cpy(&s, path);
+	if (!s.len)
+		return;
+	sbuf_expand_tilde(&s);
+	if (s.buf[s.len - 1] != '/')
+		sbuf_addch(&s, '/');
+	for (p = s.buf + 1; *p; p++) {
+		if (*p != '/')
+			continue;
+		*p = '\0';
+		if (mkdir(s.buf, S_IRWXU) != 0 && errno != EEXIST)
+			warn("mkdir_p: could not create '%s'", s.buf);
+		*p = '/';
+	}
+}
+
