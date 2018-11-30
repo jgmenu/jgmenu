@@ -500,8 +500,9 @@ struct point ui_get_text_size(const char *str, const char *fontdesc)
 	c = cairo_create(cs);
 	layout = pango_cairo_create_layout(c);
 	font = pango_font_description_from_string(fontdesc);
-	pango_layout_set_text(layout, str, -1);
+//	pango_layout_set_text(layout, str, -1);
 	pango_layout_set_font_description(layout, font);
+	pango_layout_set_markup(layout, str, -1);
 	cairo_set_source_rgba(c, 0, 0, 0, 1.0);
 	pango_cairo_update_layout(c, layout);
 	pango_layout_get_pixel_size(layout, &point.x, &point.y);
