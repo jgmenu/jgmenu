@@ -61,6 +61,10 @@ struct item {
 	char *name;
 	char *cmd;
 	char *iconname;
+	char *working_dir;
+	char *metadata;
+/*	int strict_xdg_exec	*/
+/*	int start_notify;	*/
 	char *tag;
 	struct area area;
 	cairo_surface_t *icon;
@@ -132,6 +136,8 @@ void init_empty_item(void)
 	empty_item.name = xstrdup("<empty>");
 	empty_item.cmd = xstrdup(":");
 	empty_item.iconname = NULL;
+	empty_item.working_dir = NULL;
+	empty_item.metadata = NULL;
 	empty_item.tag = NULL;
 	empty_item.icon = NULL;
 	empty_item.selectable = 1;
@@ -1011,7 +1017,7 @@ static void if_unity_run_hack(void)
 		first_run = 0;
 	}
 	if (isunity)
-		spawn("jgmenu_run unity-hack");
+		spawn("jgmenu_run unity-hack", NULL);
 }
 
 static void awake_menu(void)
@@ -1166,7 +1172,9 @@ static void insert_tag_item(void)
 	item->buf = argv_buf.buf;
 	item->name = argv_buf.argv[0];
 	item->cmd = argv_buf.argv[1];
-	item->iconname = argv_buf.argv[2];
+	item->iconname = NULL;
+	item->working_dir = NULL;
+	item->metadata = NULL;
 	item->icon = NULL;
 	item->tag = item->cmd + 5;
 	item->selectable = 1;
@@ -1217,6 +1225,8 @@ void read_csv_file(FILE *fp)
 		item->name = argv_buf.argv[0];
 		item->cmd = argv_buf.argv[1];
 		item->iconname = argv_buf.argv[2];
+		item->working_dir = argv_buf.argv[3];
+		item->metadata = argv_buf.argv[4];
 		remove_caret_markup_closing_bracket(item->name);
 		remove_caret_markup_closing_bracket(item->cmd);
 		if (!item->cmd)
@@ -1411,7 +1421,7 @@ void hide_or_exit(void)
 		exit(0);
 }
 
-void action_cmd(char *cmd)
+void action_cmd(char *cmd, const char *working_dir)
 {
 	char *p = NULL;
 
@@ -1435,7 +1445,7 @@ void action_cmd(char *cmd)
 		p = parse_caret_action(cmd, "^sub(");
 		if (!p)
 			return;
-		spawn(p);
+		spawn(p, working_dir);
 		hide_or_exit();
 	} else if (!strncmp(cmd, "^back(", 6)) {
 		checkout_parent();
@@ -1449,7 +1459,7 @@ void action_cmd(char *cmd)
 		sbuf_init(&s);
 		term_build_terminal_cmd(&s, strstrip(p), config.terminal_exec,
 					config.terminal_args);
-		spawn(s.buf);
+		spawn(s.buf, working_dir);
 		free(s.buf);
 		hide_or_exit();
 	} else if (!strncmp(cmd, "^pipe(", 6)) {
@@ -1474,7 +1484,7 @@ void action_cmd(char *cmd)
 			update(0);
 		}
 	} else {
-		spawn(cmd);
+		spawn(cmd, working_dir);
 		hide_or_exit();
 	}
 }
@@ -1591,7 +1601,7 @@ void key_event(XKeyEvent *ev)
 	case XK_Return:
 	case XK_KP_Enter:
 		if (menu.sel->selectable)
-			action_cmd(menu.sel->cmd);
+			action_cmd(menu.sel->cmd, menu.sel->working_dir);
 		break;
 	case XK_Down:
 		if (filter_head() == &empty_item ||
@@ -1616,7 +1626,7 @@ void key_event(XKeyEvent *ev)
 		if (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
 		    !strncmp(menu.sel->cmd, "^root(", 6) ||
 		    !strncmp(menu.sel->cmd, "^pipe(", 6))
-			action_cmd(menu.sel->cmd);
+			action_cmd(menu.sel->cmd, NULL);
 		break;
 	case XK_F5:
 		restart();
@@ -1712,7 +1722,7 @@ void mouse_release(XEvent *e)
 		widgets_set_pointer_position(mouse_coords.x, mouse_coords.y);
 		ret = widgets_get_mouseover_action();
 		if (ret && ret[0] != '\0') {
-			action_cmd(ret);
+			action_cmd(ret, NULL);
 			return;
 		}
 
@@ -1727,7 +1737,7 @@ void mouse_release(XEvent *e)
 			return;
 		if (ui_has_child_window_open(menu.current_node->wid))
 			del_beyond_current();
-		action_cmd(menu.sel->cmd);
+		action_cmd(menu.sel->cmd, menu.sel->working_dir);
 	}
 }
 
@@ -2123,7 +2133,8 @@ void run(void)
 					/* open new sub window */
 					if (!sw_close_pending) {
 						menu.current_node->expanded = menu.sel;
-						action_cmd(menu.sel->cmd);
+						action_cmd(menu.sel->cmd,
+							   menu.sel->working_dir);
 					}
 					sw_close_pending = 0;
 					process_pointer_position(&ev, 1);

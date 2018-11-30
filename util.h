@@ -26,7 +26,7 @@
 void info(const char *err, ...);
 void warn(const char *err, ...);
 void die(const char *err, ...);
-void spawn(const char *arg);
+void spawn(const char *arg, const char *working_dir);
 void safe_free(void **ptr);
 char *xstrdup(const char *s);
 void *xmalloc(size_t size);
