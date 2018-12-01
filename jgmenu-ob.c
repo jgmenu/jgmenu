@@ -425,6 +425,7 @@ int main(int argc, char **argv)
 	char buf[BUFSIZ], *p;
 
 	atexit(cleanup);
+	INIT_LIST_HEAD(&tags);
 	LIBXML_TEST_VERSION
 
 	i = 1;
@@ -455,7 +456,6 @@ int main(int argc, char **argv)
 	}
 	if (!fp)
 		die("ob: cannot open openbox menu file");
-	INIT_LIST_HEAD(&tags);
 	sbuf_init(&xmlbuf);
 	for (i = 0; fgets(buf, sizeof(buf), fp); i++) {
 		buf[BUFSIZ - 1] = '\0';
