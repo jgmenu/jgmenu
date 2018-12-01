@@ -127,16 +127,13 @@ static void populate_desktop_and_directory_lists(const char *path, int isdir)
 
 	dp = opendir(path);
 	if (!dp)
-		goto close_dir;
-
+		return;
 	while ((entry = readdir(dp))) {
 		if (!strncmp(entry->d_name, ".", 1) ||
 		    !strncmp(entry->d_name, "..", 2))
 			continue;
 		process_file(entry->d_name, path, isdir);
 	}
-
-close_dir:
 	closedir(dp);
 }
 
