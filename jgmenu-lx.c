@@ -80,6 +80,7 @@ static void process_app(MenuCacheApp *app)
 {
 	/* TODO: Check visibility flag here too */
 	char *p = NULL;
+	char *exec;
 	static struct sbuf s;
 	static int inited;
 
@@ -91,13 +92,23 @@ static void process_app(MenuCacheApp *app)
 	/* name */
 	fmt_name(&s, menu_cache_item_get_name(MENU_CACHE_ITEM(app)),
 		 menu_cache_app_get_generic_name(MENU_CACHE_APP(app)));
+	if (strchr(s.buf, ','))
+		sbuf_addstr(&cur->buf, "\"\"\"");
 	sbuf_addstr(&cur->buf, s.buf);
+	if (strchr(s.buf, ','))
+		sbuf_addstr(&cur->buf, " \"\"\"");
 	sbuf_addstr(&cur->buf, ",");
 
 	/* command */
 	if (menu_cache_app_get_use_terminal(app))
 		sbuf_addstr(&cur->buf, "^term(");
-	sbuf_addstr(&cur->buf, menu_cache_app_get_exec(MENU_CACHE_APP(app)));
+	exec = (char *)menu_cache_app_get_exec(MENU_CACHE_APP(app));
+	if (strchr(exec, ','))
+		sbuf_addstr(&cur->buf, "\"\"\"");
+	sbuf_addstr(&cur->buf, exec);
+	if (strchr(exec, ','))
+		sbuf_addstr(&cur->buf, " \"\"\"");
+	/* TODO: be more sophisticated with handling '%'s */
 	p = strchr(cur->buf.buf, '%');
 	if (p) {
 		*p = '\0';
