@@ -452,6 +452,11 @@ int main(int argc, char **argv)
 		sbuf_cpy(&default_file, getenv("HOME"));
 		sbuf_addstr(&default_file, "/.config/openbox/menu.xml");
 		fp = fopen(default_file.buf, "r");
+		if (fp)
+			goto out;
+		sbuf_cpy(&default_file, "/etc/xdg/openbox/menu.xml");
+		fp = fopen(default_file.buf, "r");
+out:
 		xfree(default_file.buf);
 	}
 	if (!fp)
