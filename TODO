@@ -1,25 +1,25 @@
-See https://github.com/johanmalm/jgmenu/wiki/Timeline.md for further details
+See https://github.com/johanmalm/jgmenu/wiki/Roadmap.md for further details
 
 Minor changes (0-3 months)
 --------------------------
 
-columns:
-  - support moving left/right between columns
-  - deal with menu_width for columns > 1
-  - deal with menu_height for columns > 1 (incl dyamic mode)
+Tidy up INSTALL wrt libgarcon-common  
+
+ob:
+  - unit test for --tag=
+  - update ob man page with /etc/xdg/openbox/...
+
+init:
+  - remove tint2 code
+  - remove prepend.csv and append.csv when changing themes
 
 Deal with ^pipe() that returns error
+
 Deal with ^pipe() with the same tag as its parent
 
 geometry.c:
   - reivew the below function to see where menu_width is set
     "geo_get_menu_width_from_itemarea_width()"
-
-lx:
-  - Add JGMENU_SINGLE_WINDOW
-  - check .desktop files are not Unicode in order to avoid segfault
-    (Add unit test to prove problem - to include extace.desktop)
-  - Sort items when in 'no_dirs' mode
 
 Hide separators when searching
 
@@ -32,10 +32,3 @@ Investigate duplicate .desktop entries on Raspberry Pi and nixOS
 
 jgmenu - warn if strange command line argument is given
 
-modules:
-  - dmenu (based on isprog.c)
-  - emoji
-
-^rootmenu()
-
-jgmenu-convert.c
