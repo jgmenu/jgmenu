@@ -65,10 +65,10 @@ static int ispng(const char *filename)
 	fp = fopen(filename, "rb");
 	if (!fp)
 		return 0;
-        if (fread(header, 1, PNG_BYTES_TO_CHECK, fp) != PNG_BYTES_TO_CHECK){
-                fclose(fp);
+	if (fread(header, 1, PNG_BYTES_TO_CHECK, fp) != PNG_BYTES_TO_CHECK) {
+		fclose(fp);
 		return 0;
-        }
+	}
 	if (png_sig_cmp(header, (png_size_t)0, PNG_BYTES_TO_CHECK)) {
 		warn("file '%s' is not a recognised png file", filename);
 		fclose(fp);
