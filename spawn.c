@@ -27,7 +27,8 @@ static void resolve_and_chdir(const char *working_dir)
 	sbuf_cpy(&s, working_dir);
 	sbuf_expand_tilde(&s);
 	sbuf_expand_env_var(&s);
-	chdir(s.buf);
+	if (chdir(s.buf) < 0)
+		warn("cannot chdir into '%s'", s.buf);
 	xfree(s.buf);
 }
 
@@ -48,10 +49,12 @@ void spawn(const char *arg, const char *working_dir)
 		break;
 	case 0:
 		setsid();
-		if (working_dir && working_dir[0] != '\0')
+		if (working_dir && working_dir[0] != '\0') {
 			resolve_and_chdir(working_dir);
-		else
-			chdir(getenv("HOME"));
+		} else {
+			if (chdir(getenv("HOME")) < 0)
+				warn("cannot chdir into $HOME");
+		}
 		execl(shell, shell, "-c", arg, (char *)NULL);
 		exit(0);
 	default:
