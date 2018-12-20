@@ -369,7 +369,7 @@ static void set_floor(int *var, int floor)
 		*var = floor;
 }
 
-int smallest_of_four(int a, int b, int c, int d)
+static int smallest_of_four(int a, int b, int c, int d)
 {
 	a = a > b ? b : a;
 	a = a > c ? c : a;

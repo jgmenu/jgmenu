@@ -35,6 +35,7 @@
 #include "filter.h"
 #include "icon.h"
 #include "x11-ui.h"
+#include "widgets.h"
 
 enum widget_type { WIDGET_ERROR, ICON, RECT, TEXT, SEARCH };
 

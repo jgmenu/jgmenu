@@ -15,6 +15,7 @@
 #include "list.h"
 #include "sbuf.h"
 #include "util.h"
+#include "watch.h"
 
 static const char * const files_to_watch[] = {
 	"~/.config/jgmenu/jgmenurc",

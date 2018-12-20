@@ -144,7 +144,7 @@ static void cache_init(void)
 	first_run = 0;
 }
 
-void resolve_symlink(struct sbuf *f)
+static void resolve_symlink(struct sbuf *f)
 {
 	struct stat sb;
 	char *linkname;

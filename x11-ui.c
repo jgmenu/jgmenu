@@ -221,7 +221,7 @@ monitor_selected:
 	XRRFreeScreenResources(sr);
 }
 
-void set_wm_class(void)
+static void set_wm_class(void)
 {
 	XClassHint *classhint = XAllocClassHint();
 

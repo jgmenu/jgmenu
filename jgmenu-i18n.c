@@ -34,7 +34,7 @@ static const char jgmenu_i18n_usage[] =
 
 static int arg_init;
 
-void usage(void)
+static void usage(void)
 {
 	printf("%s", jgmenu_i18n_usage);
 	exit(0);

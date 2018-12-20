@@ -411,7 +411,7 @@ static void cleanup(void)
 	}
 }
 
-void handle_argument_clash(void)
+static void handle_argument_clash(void)
 {
 	die("both --cmd=<cmd> and <file> provided");
 }

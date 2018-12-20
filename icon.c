@@ -23,6 +23,7 @@
 #include "xpm-loader.h"
 #include "cache.h"
 #include "config.h"
+#include "icon.h"
 
 #define DEBUG_THEMES 0
 
@@ -33,9 +34,9 @@ struct icon {
 	struct list_head list;
 };
 
-struct list_head icon_cache;
+static struct list_head icon_cache;
 
-struct sbuf icon_theme;
+static struct sbuf icon_theme;
 
 void icon_init(void)
 {

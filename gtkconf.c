@@ -13,6 +13,8 @@
 #include "config.h"
 #include "util.h"
 
+#include "gtkconf.h"
+
 static int parse_gtk_file(struct sbuf *settingsini, struct sbuf *buf,
 			  const char *key)
 {

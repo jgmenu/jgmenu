@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include <string.h>
 
+#include "restart.h"
+
 #define JGMENU_MAX_ARGS (32)
 
 static char *args[JGMENU_MAX_ARGS];

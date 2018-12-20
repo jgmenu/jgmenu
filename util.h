@@ -11,7 +11,6 @@
 #include <limits.h>
 #include <errno.h>
 #include <sys/stat.h>
-//#include <fcntl.h>
 
 #define xfree(pointer) safe_free((void **)&(pointer))
 
