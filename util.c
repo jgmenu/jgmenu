@@ -83,20 +83,6 @@ void *xcalloc(size_t nb, size_t size)
 	return ret;
 }
 
-char *expand_tilde(char *s)
-{
-	char *tmp;
-
-	tmp = xmalloc(strlen(s) + strlen(getenv("HOME")) + 1);
-	strcpy(tmp, getenv("HOME"));
-	strcat(tmp, s + 1);
-
-	free(s);
-	s = NULL;
-
-	return tmp;
-}
-
 char *strstrip(char *s)
 {
 	size_t len;
