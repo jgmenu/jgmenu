@@ -8,8 +8,8 @@
 #include <string.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
+//#include <sys/stat.h>
+//#include <sys/wait.h>
 #include <unistd.h>
 #include <fcntl.h>
 

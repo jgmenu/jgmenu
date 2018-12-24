@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "util.h"
 #include "sbuf.h"
 

@@ -1,3 +1,5 @@
+#include <unistd.h>
+
 #include "unix_sockets.h"
 #include "socket.h"
 #include "util.h"

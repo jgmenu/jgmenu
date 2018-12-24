@@ -8,6 +8,8 @@
  * See the files COPYING.lgpl-v3 and COPYING.gpl-v3 for details.
  */
 
+#include <unistd.h>
+
 #include "unix_sockets.h"
 #include "util.h"
 
