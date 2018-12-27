@@ -235,10 +235,7 @@ def read_desktop_entry(path):
   except:
     print("warn: error reading '{}'".format(path), file=sys.stderr)
   entry["_path"] = path
-  entry = internationalized(entry)
-  if "Name" in entry:
-    entry["Name_markup"] = entry["Name"].replace("&", "&amp;")
-  return entry
+  return internationalized(entry)
 
 # Reference: http://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html
 # Reference: http://standards.freedesktop.org/basedir-spec/basedir-spec-0.8.html
@@ -411,6 +408,9 @@ def cat_file(path):
     with open(path, encoding='utf-8') as data_file:
       print(data_file.read())
 
+def escape_markup(s):
+    return s.replace("&", "&amp;")
+
 # Creates the menu with directories
 def create_menu(arg_append_file, arg_prepend_file):
   single_window = os.getenv("JGMENU_SINGLE_WINDOW")
@@ -423,7 +423,7 @@ def create_menu(arg_append_file, arg_prepend_file):
   if len(categories) <= 1:
     for app in tree['Other']:
       icon = app["Icon"] if "Icon" in app else ""
-      print(app["Name_markup"] + "," + app["cmd"] + "," + icon)
+      print(escape_markup(app["Name"]) + "," + app["cmd"] + "," + icon)
     cat_file(arg_append_file)
     print("warn: no menu package found; displaying apps without directories", file=sys.stderr)
     return
@@ -432,9 +432,9 @@ def create_menu(arg_append_file, arg_prepend_file):
     category = categories[c]
     icon = category["Icon"] if "Icon" in category else "folder"
     if single_window:
-      print(category["Name_markup"] + ",^root(" + category["Name"] + ")," + icon)
+      print(escape_markup(category["Name"]) + ",^root(" + category["Name"] + ")," + icon)
     else:
-      print(category["Name_markup"] + ",^checkout(" + category["Name"] + ")," + icon)
+      print(escape_markup(category["Name"]) + ",^checkout(" + category["Name"] + ")," + icon)
   cat_file(arg_append_file)
   for c in sorted(tree):
     category = categories[c]
@@ -445,7 +445,7 @@ def create_menu(arg_append_file, arg_prepend_file):
     for app in tree[c]:
       icon = app["Icon"] if "Icon" in app else "application-x-executable"
       print("#", app["_path"])
-      print(app["Name_markup"] + "," + app["cmd"] + "," + icon)
+      print(escape_markup(app["Name"]) + "," + app["cmd"] + "," + icon)
 
 # Creates menu without directories
 def create_menu_no_dirs(arg_append_file, arg_prepend_file):
@@ -454,7 +454,7 @@ def create_menu_no_dirs(arg_append_file, arg_prepend_file):
   for app in sorted(menu, key=lambda k: k['Name']):
     icon = app["Icon"] if "Icon" in app else "application-x-executable"
     print("#", app["_path"])
-    print(app["Name_markup"] + "," + app["cmd"] + "," + icon)
+    print(escape_markup(app["Name"]) + "," + app["cmd"] + "," + icon)
   cat_file(arg_append_file)
 
 def setup_gettext():
