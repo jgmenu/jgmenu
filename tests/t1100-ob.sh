@@ -22,3 +22,8 @@ test_ob "menu1.xml" "menu1.csv"
 test_expect_success 'test openbox module with command input (cat menu1.xml)' '
 test_ob_cmd "menu1.xml" "menu1.csv"
 '
+
+test_expect_success 'test openbox module icon support (menu2.xml)' '
+test_ob "menu2.xml" "menu2.csv"
+'
+

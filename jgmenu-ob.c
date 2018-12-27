@@ -8,8 +8,6 @@
 #include <string.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-//#include <sys/stat.h>
-//#include <sys/wait.h>
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -62,8 +60,11 @@ static void print_it(struct tag *tag)
 		sbuf_replace(&label_escaped, "&", "&amp;");
 		sbuf_replace_spaces_with_one_tab(&label_escaped);
 		if (item->pipe) {
-			printf("%s,^pipe(jgmenu_run ob --cmd='%s' --tag='%s')\n",
+			printf("%s,^pipe(jgmenu_run ob --cmd='%s' --tag='%s')",
 			       label_escaped.buf, item->cmd, item->label);
+			if (item->icon)
+				printf(",%s", item->icon);
+			printf("\n");
 		} else if (item->checkout) {
 			printf("%s,^checkout(%s)", label_escaped.buf, item->cmd);
 			if (item->icon)
