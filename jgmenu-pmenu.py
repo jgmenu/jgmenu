@@ -431,10 +431,14 @@ def create_menu(arg_append_file, arg_prepend_file):
   for c in sorted(tree):
     category = categories[c]
     icon = category["Icon"] if "Icon" in category else "folder"
-    if single_window:
-      print(escape_markup(category["Name"]) + ",^root(" + category["Name"] + ")," + icon)
-    else:
-      print(escape_markup(category["Name"]) + ",^checkout(" + category["Name"] + ")," + icon)
+    try:
+      if single_window:
+          print(escape_markup(category["Name"]) + ",^root(" + category["Name"] + ")," + icon)
+      else:
+          print(escape_markup(category["Name"]) + ",^checkout(" + category["Name"] + ")," + icon)
+    except:
+      print("warn: category problem", file=sys.stderr)
+
   cat_file(arg_append_file)
   for c in sorted(tree):
     category = categories[c]
