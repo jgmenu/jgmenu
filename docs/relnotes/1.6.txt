@@ -1,0 +1,59 @@
+jgmenu v1.6 release notes
+=========================
+
+Updates since v1.5
+------------------
+
+  * Resolve '\n' characters in item names (to give new line characters)
+
+    As a result, when using the lx module, a '\n' can be included in
+    csv_name_format in jgmenurc to span several lines. For example:
+
+      csv_name_format = %n\n<span size="x-small">%g</span>
+
+  * Amend CSV API to include 'working directory' and 'metadata'
+
+      field #4 - working_dir (also implemented in spawn())
+      field #5 - metadata (not yet used)
+
+  * Improvements to lx module
+
+     - Allow commas in 'name' and 'command' fields (issue #49)
+       Suggested-by @Vladimir-csp
+
+     - Add working_dir to output, taking the value from the .desktop
+       files' 'Path=' field (issue #49). Suggested-by @Vladimir-csp
+
+  * Improvements to openbox module
+
+     - Support icons with pipe-menu entries (issue #69)
+       Suggested-by: @semeion
+
+     - Use /etc/xdg/openbox/menu.xml as fallback if no file is specified
+       and $HOME/.config/openbox/menu.xml does not exist.
+
+     - Add experimental i18n support. This is not yet documented, but can
+       be used by taking the followint steps (replacing sv with whatever
+       is appropriate for you):
+
+         (a) Run `jgmenu_run ob | jgmenu_run i18n --init >sv`
+         (b) Translate entries in file 'sv'
+         (c) Run 'JGMENU_I18N=sv jgmenu' (with csv_cmd=ob in jgmenurc)
+
+         It is enough to point the environment variable JGMENU_I18N to a
+         directory containing the translation file, in which case the
+         value of $LANG will be used to find the right file.
+
+         See 'jgmenu_run i18n --help' for more details
+
+  * Improvements to pmenu module
+
+     - Fix markup bug, which sometimes results in breakage (apologies)
+       (issue #71) Reported-by: @eoli3n
+
+  * A number of minor fixes, most notably:
+
+     - Escape markup characters in "<empty>" string to show correctly
+
+     - Set menu width correctly taking into account pango markup
+
