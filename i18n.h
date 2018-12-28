@@ -21,7 +21,7 @@
  *                             msg{id,str} data into hashmap
  * @filename: file or directory to open
  */
-extern void i18n_set_translation_file(const char *filename);
+extern char *i18n_set_translation_file(const char *filename);
 
 /**
  * i18n_tranlate - translate string

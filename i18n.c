@@ -168,7 +168,7 @@ static void find_translation_file_within_dir(struct sbuf *s)
 		sbuf_cpy(s, "");
 }
 
-void i18n_set_translation_file(const char *filename)
+char *i18n_set_translation_file(const char *filename)
 {
 	struct stat st;
 	struct sbuf s;
@@ -181,7 +181,7 @@ void i18n_set_translation_file(const char *filename)
 		warn("i18n: file '%s' does not exist", s.buf);
 		translation_file = NULL;
 		xfree(s.buf);
-		return;
+		return NULL;
 	}
 	if (S_ISDIR(st.st_mode)) {
 		find_translation_file_within_dir(&s);
@@ -190,12 +190,13 @@ void i18n_set_translation_file(const char *filename)
 			     filename);
 			translation_file = NULL;
 			xfree(s.buf);
-			return;
+			return NULL;
 		}
 	}
 	translation_file = s.buf;
 	info("i18n: translation file '%s' loaded", translation_file);
 	i18n_open();
+	return translation_file;
 }
 
 char *i18n_translate(const char *s)

@@ -102,7 +102,7 @@ int main(int argc, char **argv)
 	}
 
 	if (i18nfile)
-		i18n_set_translation_file(i18nfile);
+		i18nfile = i18n_set_translation_file(i18nfile);
 
 	for (i = 0; fgets(buf, BUFSIZ, stdin); i++) {
 		buf[BUFSIZ - 1] = '\0';
