@@ -79,7 +79,7 @@ jgmenu: jgmenu.o x11-ui.o config.o util.o geometry.o isprog.o sbuf.o \
 	charset.o watch.o spawn.o
 jgmenu-xdg: jgmenu-xdg.o util.o sbuf.o xdgdirs.o xdgapps.o argv-buf.o \
 	charset.o
-jgmenu-ob: jgmenu-ob.o util.o sbuf.o
+jgmenu-ob: jgmenu-ob.o util.o sbuf.o i18n.o hashmap.o
 jgmenu-socket: jgmenu-socket.o util.o sbuf.o unix_sockets.o socket.o
 ifneq ($(NO_LX),1)
 jgmenu-lx: jgmenu-lx.o util.o sbuf.o xdgdirs.o argv-buf.o back.o fmt.o
