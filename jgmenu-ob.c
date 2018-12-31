@@ -66,7 +66,8 @@ static void print_it(struct tag *tag)
 		sbuf_replace(&label_escaped, "&", "&amp;");
 		sbuf_replace_spaces_with_one_tab(&label_escaped);
 		if (item->pipe) {
-			printf("%s,^pipe(jgmenu_run ob --cmd='%s' --tag='%s')",
+			/* Use double quotes to support bl-places-pipemenu */
+			printf("%s,^pipe(jgmenu_run ob --cmd=\"%s\" --tag=\"%s\")",
 			       label_escaped.buf, item->cmd, item->label);
 			if (item->icon)
 				printf(",%s", item->icon);
