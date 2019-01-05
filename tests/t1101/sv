@@ -1,53 +1,269 @@
-msgid "File Manager"
-msgstr "Filhanterare"
+# Translation file for BunsenLabs Helium openbox menu
 
-msgid "Web Browser"
-msgstr "Webbläsare"
+# Main Menu
 
-msgid "Text Editor"
-msgstr "Textredigerare"
-
-msgid "Graphics"
-msgstr "Grafik"
-
-msgid "Accessories"
-msgstr "Tillbehör"
-
-msgid "Places"
-msgstr "Platser"
-
-msgid "Preferences"
-msgstr "Inställningar"
-
-msgid "Help and Info"
-msgstr "Hjälp och Information"
-
-msgid "Keybinds"
-msgstr "Tangentbindningar"
-
-msgid "Lock Screen"
-msgstr "Lås skärmen"
-
-msgid "Accessories"
-msgstr "Tillbehör"
+msgid "Run Program"
+msgstr "Kör program"
 
 msgid "Terminal"
 msgstr "Terminal"
 
-msgid "Mail"
-msgstr "Post"
+msgid "Web Browser"
+msgstr "Webbläsare"
 
-msgid "Messaging"
-msgstr "Meddelande"
+msgid "File Manager"
+msgstr "Filhanterare"
 
-msgid "File Sharing"
-msgstr "Fildelning"
+msgid "Text Editor"
+msgstr "Textredigerare"
 
-msgid "Screenshot"
-msgstr "Skärmbild"
+msgid "Media Player"
+msgstr "Mediaspelare"
 
-msgid "Help"
-msgstr "Hjälp"
+msgid "Accessories"
+msgstr "Tillbehör"
 
-msgid "Information"
-msgstr "Information"
+msgid "Graphics"
+msgstr "Grafik"
+
+msgid "Multimedia"
+msgstr "Multimedia"
+
+msgid "Network"
+msgstr "Nätverk"
+
+msgid "Office"
+msgstr "Kontor"
+
+msgid "Places"
+msgstr "Platser"
+
+msgid "Recent Files"
+msgstr "Nyligen använda filer"
+
+msgid "Preferences"
+msgstr "Inställningar"
+
+msgid "System"
+msgstr "System"
+
+msgid "Help & Resources"
+msgstr "Hjälp och resurser"
+
+msgid "Display Keybinds"
+msgstr "Visa tangentbindningar"
+
+msgid "Lock Screen"
+msgstr "Lås skärmen"
+
+msgid "Exit"
+msgstr "Avsluta"
+
+# Accessories Menu
+
+msgid "Catfish File Search"
+msgstr "Catfish fil sökning"
+
+msgid "Archive Manager"
+msgstr "Arkiveringshanterare"
+
+msgid "Task Manager (htop)"
+msgstr "Program hanterare (htop)"
+
+msgid "System Information (hardinfo)"
+msgstr "System information (hardinfo)"
+
+# Graphics Menu (pipe-menu)
+
+msgid "Mirage Image Viewer"
+msgstr "Mirage bild visare"
+
+msgid "Screenshots"
+msgstr "Skärmdumpar"
+
+msgid "Xfce4 Screenshooter"
+msgstr "Xfce4 skärmdump"
+
+msgid "scrot Screenshooter"
+msgstr "scrot skärmdump"
+
+msgid "Install"
+msgstr "Installera"
+
+# Multimedia Menu (pipe-menu)
+
+msgid "Vlc Media Player"
+msgstr "Vlc mediaspelare"
+
+msgid "utilities"
+msgstr "verktyg"
+
+# Network Menu
+
+msgid "WWW Browsers"
+msgstr "WWW utforskare"
+
+msgid "Select Default Browser"
+msgstr "Välj standard utforskare"
+
+msgid "Filezilla FTP Client"
+msgstr "Filezilla FTP klient"
+
+msgid "Transmission BitTorrent Client"
+msgstr "Transmission BitTorrent klient"
+
+msgid "HexChat IRC Client"
+msgstr "HexChat IRC klient"
+
+msgid "Remote Filesystems"
+msgstr "Avseläget filsystem"
+
+msgid "Remote Desktop"
+msgstr "Avseläget skrivbord"
+
+msgid "SSH"
+msgstr "SSH"
+
+# Office Menu
+
+msgid "LibreOffice"
+msgstr "Libreoffice"
+
+msgid "Gnumeric Spreadsheet"
+msgstr "Gnumeric kalkylark"
+
+msgid "Calculator"
+msgstr "Miniräknare"
+
+msgid "Evince PDF Viewer"
+msgstr "Evince PDF visare"
+
+# Places Menu
+
+msgid "Browse here..."
+msgstr "Bläddra här..."
+
+# Recent Files Menu
+
+msgid "Clear recent files"
+msgstr "Rensa nyligen använda filer"
+
+# Preferences Menu
+
+msgid "Openbox"
+msgstr "Openbox"
+
+msgid "Compositor"
+msgstr "Kompositör"
+
+msgid "Conky"
+msgstr "Conky"
+
+msgid "Tint2"
+msgstr "Tint2"
+
+msgid "Appearance"
+msgstr "Utseende"
+
+msgid "Font configuration"
+msgstr "Font konfigurering"
+
+msgid "BLOB Themes Manager"
+msgstr "BLOB tema hanterare"
+
+msgid "Wallpaper"
+msgstr "Bakgrund"
+
+msgid "Notifications"
+msgstr "Underrättelse"
+
+msgid "Power Management"
+msgstr "Strömhanterare"
+
+msgid "dmenu"
+msgstr "dmenu"
+
+msgid "gmrun"
+msgstr "gmrun"
+
+msgid "Display"
+msgstr "Skärm"
+
+msgid "Edit menu.xml"
+msgstr "Redigera menu.xml"
+
+msgid "Edit rc.xml"
+msgstr "Redigera rc.xml"
+
+msgid "Edit autostart"
+msgstr "Redigera autostart"
+
+msgid "Menu Editor"
+msgstr "Meny redigerare"
+
+msgid "WM Preferences"
+msgstr "WM preferencer"
+
+msgid "How to Edit Menu"
+msgstr "Hur man redigerarer menyn"
+
+msgid "Reconfigure"
+msgstr "Omkonfigurera"
+
+msgid "Restart"
+msgstr "Starta om"
+
+msgid "Edit Start-up Script"
+msgstr "Redigera uppstarts script"
+
+msgid "man page"
+msgstr "Manual sidor"
+
+msgid "Edit Config File"
+msgstr "Redigera config fil"
+
+msgid "ARandR Screen Layout Editor"
+msgstr "ARandR skärm layout redigerare"
+
+msgid "man xrandr"
+msgstr "xrandr manual"
+
+msgid "System"
+msgstr "System"
+
+msgid "Printers"
+msgstr "Skrivare"
+
+msgid "Synaptic Package Manager"
+msgstr "Synaptic paket hanterare"
+
+msgid "Login Settings"
+msgstr "Inloggnings inställningar"
+
+msgid "GParted"
+msgstr "GParted"
+
+msgid "Edit Debian Alternatives"
+msgstr "Redigera Debian alternativ"
+
+msgid "About Bunsen Alternatives"
+msgstr "Om Bunsen alternativ"
+
+msgid "Bunsen Help Files"
+msgstr "Bunsen hjälp filer"
+
+msgid "Openbox 3"
+msgstr "Openbox 3"
+
+msgid "Log out"
+msgstr "Logga ut"
+
+msgid "Suspend"
+msgstr "Vänteläge"
+
+msgid "Reboot"
+msgstr "Start om"
+
+msgid "Power off"
+msgstr "Stäng av"
+
