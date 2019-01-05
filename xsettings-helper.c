@@ -44,30 +44,23 @@ static void print_settings(struct xsetting *settings, size_t count, const char *
 	}
 }
 
-int xsettings_get(struct sbuf *s, const char *key)
+void xsettings_get(struct sbuf *s, const char *key)
 {
 	Display *display;
 	size_t count;
-	int ret = 0;
 	struct xsetting *settings;
 
 	if (!key)
-		return 1;
-
+		return;
 	display = XOpenDisplay(NULL);
 	if (!display)
-		return 1;
+		return;
 
 	settings = get_xsettings(display, &count);
 	if (settings) {
 		print_settings(settings, count, key, s);
 		free_xsettings(settings, count);
-	} else {
-		ret = 1;
-		goto close_disp;
 	}
 
-close_disp:
 	XCloseDisplay(display);
-	return ret;
 }

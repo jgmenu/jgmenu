@@ -41,7 +41,8 @@ void font_set(void)
 		case 'x':
 			if (t2conf_get_override_xsettings())
 				break;
-			if (xsettings_get(&font, "Gtk/FontName") == 0) {
+			xsettings_get(&font, "Gtk/FontName");
+			if (font.len) {
 				info("got font from xsettings");
 				return;
 			}

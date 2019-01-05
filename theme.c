@@ -29,7 +29,8 @@ void theme_set(struct sbuf *theme)
 		case 'x':
 			if (t2conf_get_override_xsettings())
 				break;
-			if (xsettings_get(theme, "Net/IconThemeName") == 0) {
+			xsettings_get(theme, "Net/IconThemeName");
+			if (theme->len) {
 				info("got icon theme from xsettings");
 				return;
 			}

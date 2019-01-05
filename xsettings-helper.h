@@ -6,6 +6,6 @@
 
 #include "sbuf.h"
 
-int xsettings_get(struct sbuf *s, const char *key);
+void xsettings_get(struct sbuf *s, const char *key);
 
 #endif /* XSETTINGS_HELPER_H */
