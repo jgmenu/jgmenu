@@ -3,6 +3,14 @@ See https://github.com/johanmalm/jgmenu/wiki/Roadmap.md for further details
 Minor changes (0-3 months)
 --------------------------
 
+Add to jgmenu man page what xsettings fields are read (Gtk/FontName and Net/IconThemeName)
+
+Update man pages following v1.6 (e.g. fields #4+#5 and i18n)
+
+Write unit-test for pmenu to prove recent markup bug
+
+Keep init and config to one file each
+
 Tidy up INSTALL wrt libgarcon-common  
 
 ob:
