@@ -228,7 +228,8 @@ static Window get_xsettings_manager(Display *display)
 	char screen_name[256];
 	Atom _XSETTINGS_SCREEN;
 
-	sprintf(screen_name, "_XSETTINGS_S%d", DefaultScreen(display));
+	snprintf(screen_name, sizeof(screen_name),
+		 "_XSETTINGS_S%d", DefaultScreen(display));
 	_XSETTINGS_SCREEN = XInternAtom(display, screen_name, False);
 	return XGetSelectionOwner(display, _XSETTINGS_SCREEN);
 }
