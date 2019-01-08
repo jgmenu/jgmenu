@@ -21,4 +21,5 @@ addons:
 script: make && make test
 
 after_success:
+  - export CODECOV_TOKEN="786edde0-bf90-4e6b-9299-cc3f18033616"
   - bash <(curl -s https://codecov.io/bash)
