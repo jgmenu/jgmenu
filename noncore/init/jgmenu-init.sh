@@ -208,24 +208,20 @@ you have more than 100 backup files - consider removing a few"
 }
 
 backup_jgmenurc () {
-	local files_to_backup=".config/jgmenu/jgmenurc \
-		.config/jgmenu/prepend.csv \
-		.config/jgmenu/append.csv \
-		.config/tint2/tint2rc"
+	local files_to_backup="${HOME}/.config/jgmenu/jgmenurc \
+		${HOME}/.config/jgmenu/prepend.csv \
+		${HOME}/.config/jgmenu/append.csv \
+		${HOME}/.config/tint2/tint2rc"
+	local backup_dir="${HOME}/.config/jgmenu/backup/$(date +%Y%m%d%H%M%S)"
 
-	mkdir -p ~/.config/jgmenu/backup
+	test -d ${backup_dir} && die "duplicate backup directory"
+	mkdir -p "${backup_dir}"
 	say "Backing up config files..."
-	cd ${HOME}
-	tar_name=${HOME}/.config/jgmenu/backup/"$(date +%Y%m%d%H%M%S)".tar
-	# create empty tarball to append files to
-	tar -cf ${tar_name} -T /dev/null
 	for f in ${files_to_backup}
 	do
-		test -e ${f} || continue
-		tar -rhf ${tar_name} "${f}"
+		test -e "${f}" || continue
+		cp -p "${f}" "${backup_dir}"
 	done
-	gzip ${tar_name}
-	say "${tar_name}"
 }
 
 analyse () {
