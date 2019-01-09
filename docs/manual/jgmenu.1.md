@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 22 Oct, 2018  
+% 08 Jan, 2019  
 
 # NAME
 
@@ -16,7 +16,7 @@ jgmenu \[\--no-spawn] \[\--checkout=<*tag*>] \[\--config-file=<*file*>]
 
 jgmenu init \[\--help | <*options*>]
 
-## Three commands to get started
+## Use these three commands to get started
 
     ┌────────────────────┬─────────────────────────┐
     │ jgmenu             │ launch menu             │
@@ -32,11 +32,12 @@ jgmenu is a small menu application for Linux/BSD. It is intended to
 be used with openbox and tint2, but is not dependent on these.  
 
 jgmenu reads a list of new-line ('\\n') separated items from a file  
-and creates a menu. Each line is parsed into *description*, *command*  
-and *icon*, using comma as a field separator. Empty lines and lines  
-beginning with '#' are ignored. When the user selects an item (by  
-left-clicking or pressing enter), the `command` of their selection  
-is executed as a new process.  
+and creates a menu. Each line is parsed into (1) *description*,  
+(2) *command*, (3) *icon*, (4) *working directory* and  
+(5) *metadata*, using comma as a field separator. Empty lines and  
+lines beginning with '#' are ignored. When the user selects an item  
+(by left-clicking or pressing enter), the `command` of their  
+selection is executed as a new process.  
 
 For example:
 
@@ -408,7 +409,8 @@ font = __string__ (unset by default)
 
 font_fallback = __string__ (default xtg)  
 
-    The same as 'icon_theme_fallback' (see below)  
+    The same as 'icon_theme_fallback' (see below), except that  
+    the xsettings variable 'Gtk/FontName' is read.  
 
 icon_size = __integer__ (default 22)  
 
@@ -421,12 +423,7 @@ icon_text_spacing = __integer__ (default 10)
 
 icon_theme = __string__ (unset by default)  
 
-    If an xsettings-daemon is running, the icon theme will be  
-    obtained from that daemon. Otherwise, the variable above will be  
-    read.
-
-    The behaviour described above can be over-ruled by defining the  
-    following two:
+    Specify icon theme.  
 
 icon_theme_fallback = __string__ (default xtg)  
 
@@ -435,7 +432,7 @@ icon_theme_fallback = __string__ (default xtg)
     with the highest precedence. The following are acceptable  
     characters:  
 
-    x = xsettings  
+    x = xsettings 'Net/IconThemeName'  
     t = tint2 config file  
     g = gtk3.0 config file  
 
@@ -567,3 +564,4 @@ csv_no_dirs = __boolean__ (default 0)
 
 The jgmenu source code and documentation can be downloaded from  
 <https://github.com/johanmalm/jgmenu/>
+
