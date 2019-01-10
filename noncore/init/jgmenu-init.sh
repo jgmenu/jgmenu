@@ -182,25 +182,6 @@ set_theme () {
 	esac
 }
 
-restart_tint2 () {
-	unset TINT2_BUTTON_ALIGNED_X1
-	unset TINT2_BUTTON_ALIGNED_X2
-	unset TINT2_BUTTON_ALIGNED_Y1
-	unset TINT2_BUTTON_ALIGNED_Y2
-	unset TINT2_BUTTON_PANEL_X1
-	unset TINT2_BUTTON_PANEL_X2
-	unset TINT2_BUTTON_PANEL_Y1
-	unset TINT2_BUTTON_PANEL_Y2
-	unset TINT2_CONFIG
-	killall tint2 2>/dev/null
-	if test -z $1
-	then
-		nohup tint2 >/dev/null 2>&1 &
-	else
-		nohup tint2 -c ${1} >/dev/null 2>&1 &
-	fi
-}
-
 check_nr_backups () {
 	nr=$(ls -1 ~/.config/jgmenu/backup/ 2>/dev/null | wc -l)
 	test $nr -gt 100 && warn "\
@@ -210,8 +191,7 @@ you have more than 100 backup files - consider removing a few"
 backup_jgmenurc () {
 	local files_to_backup="${HOME}/.config/jgmenu/jgmenurc \
 		${HOME}/.config/jgmenu/prepend.csv \
-		${HOME}/.config/jgmenu/append.csv \
-		${HOME}/.config/tint2/tint2rc"
+		${HOME}/.config/jgmenu/append.csv"
 	local backup_dir="${HOME}/.config/jgmenu/backup/$(date +%Y%m%d%H%M%S)"
 
 	test -d ${backup_dir} && die "duplicate backup directory"

@@ -46,20 +46,6 @@ Poweroff,systemctl -i poweroff,system-shutdown
 EOF
 }
 
-
-setup_tint2_neon_theme () {
-	type tint2 >/dev/null  || return
-	warn "your current tint2rc will over-written if you answer 'y'"
-	say "Do you wish to create a tint2 config file to match this menu [yN]"
-	read answer
-	if test "$answer" = "y" || test "$answer" = "Y"
-	then
-		mkdir -p ~/.config/tint2
-		cp -f "${JGMENU_EXEC_DIR}"/tint2rc.neon ~/.config/tint2/tint2rc
-		restart_tint2
-	fi
-}
-
 setup_theme () {
 	rm -f ${prepend_file}
 	rm -f ${append_file}
@@ -71,5 +57,4 @@ setup_theme () {
 		add_neon_append_items
 		say "Theme 'neon' has been set"
 	fi
-	setup_tint2_neon_theme
 }

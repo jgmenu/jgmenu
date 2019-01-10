@@ -3,9 +3,9 @@ See https://github.com/johanmalm/jgmenu/wiki/Roadmap.md for further details
 Minor changes (0-3 months)
 --------------------------
 
-Add to jgmenu man page what xsettings fields are read (Gtk/FontName and Net/IconThemeName)
+Update ob man page wrt i18n
 
-Update man pages following v1.6 (e.g. fields #4+#5 and i18n)
+Add i18n config option
 
 Write unit-test for pmenu to prove recent markup bug
 
@@ -18,7 +18,6 @@ ob:
   - update ob man page with /etc/xdg/openbox/...
 
 init:
-  - remove tint2 code
   - remove prepend.csv and append.csv when changing themes
 
 Deal with ^pipe() that returns error

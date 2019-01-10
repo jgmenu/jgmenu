@@ -43,7 +43,6 @@ FRAGMENTS      = noncore/init/jgmenu-init--prepend.sh \
                  noncore/init/jgmenurc.bunsenlabs_helium \
                  noncore/init/jgmenu-init--neon.sh \
                  noncore/init/jgmenurc.neon \
-                 noncore/init/tint2rc.neon \
                  noncore/config/jgmenurc
 
 SCRIPTS_PYTHON = jgmenu-pmenu.py jgmenu-unity-hack.py \
