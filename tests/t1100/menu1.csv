@@ -2,7 +2,7 @@ Openbox 3,^tag(root-menu)
 Terminal,x-terminal-emulator
 Web Browser,x-www-browser
 ^sep()
-Places,^pipe(jgmenu_run ob --cmd='bl-places-pipemenu' --tag='Places')
+Places,^pipe(jgmenu_run ob --cmd="bl-places-pipemenu" --tag="Places")
 Submenu,^checkout(submenu)
 ^sep()
 Exit,^checkout(exit-menu)
