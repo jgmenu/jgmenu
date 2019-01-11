@@ -125,8 +125,8 @@ unicode files are not XDG compliant and may give unpredicted results"
 icon_theme_last_used_by_jgmenu () {
 	icon_theme=$(grep -i 'Inherits' ~/.cache/jgmenu/icons/index.theme)
 	icon_size=$(grep -i 'Size' ~/.cache/jgmenu/icons/index.theme)
-	printf "last time, icon-theme '%s-%s' was used\n" ${icon_theme#Inherits=} \
-		${icon_size#Size=}
+	printf "last time, icon-theme '%s-%s' was used\n" "${icon_theme#Inherits=}" \
+		"${icon_size#Size=}"
 }
 
 get_icon_theme () {
@@ -140,14 +140,14 @@ get_icon_theme () {
 print_available_themes () {
 	ls -1 "${JGMENU_EXEC_DIR}"/jgmenurc.* 2>/dev/null | while read -r theme
 	do
-		printf "%b\n" ${theme#*.}
+		printf "%b\n" "${theme#*.}"
 	done
 }
 
 get_theme () {
 	ls -1 "${JGMENU_EXEC_DIR}"/jgmenurc.* 2>/dev/null | while read -r theme
 	do
-		printf "%b\n" ${theme#*.}
+		printf "%b\n" "${theme#*.}"
 	done | jgmenu --vsimple --center --no-spawn 2>/dev/null
 }
 
@@ -160,8 +160,8 @@ restart_jgmenu () {
 set_theme () {
 	test $# -eq 0 && die "set_theme(): no theme specified"
 	filename="$(jgmenu_run --exec-path)"/jgmenurc."$1"
-	test -e $filename || die "theme '$1' does not exist"
-	cp -f $filename ~/.config/jgmenu/jgmenurc
+	test -e "${filename}" || die "theme '$1' does not exist"
+	cp -f "${filename}" ~/.config/jgmenu/jgmenurc
 	rm -f "${prepend_file}" "${append_file}"
 
 	case "$1" in
@@ -185,7 +185,7 @@ set_theme () {
 
 check_nr_backups () {
 	nr=$(ls -1 ~/.config/jgmenu/backup/ 2>/dev/null | wc -l)
-	test $nr -gt 100 && warn "\
+	test "$nr" -gt 100 && warn "\
 you have more than 100 backup files - consider removing a few"
 }
 
@@ -195,7 +195,7 @@ backup_jgmenurc () {
 		${HOME}/.config/jgmenu/append.csv"
 	local backup_dir="${HOME}/.config/jgmenu/backup/$(date +%Y%m%d%H%M%S)"
 
-	test -d ${backup_dir} && die "duplicate backup directory"
+	test -d "${backup_dir}" && die "duplicate backup directory"
 	mkdir -p "${backup_dir}"
 	say "Backing up config files..."
 	for f in ${files_to_backup}
@@ -249,7 +249,7 @@ prompt () {
 		analyse
 		;;
 	theme|t)
-		set_theme $(get_theme)
+		set_theme "$(get_theme)"
 		;;
 	prepend|p)
 		prepend_items
@@ -306,7 +306,7 @@ do
 		exit 0
 		;;
 	*)
-		printf "fatal: unknown option: '%s'\n" $1
+		printf "fatal: unknown option: '%s'\n" "$1"
 		usage
 		exit 1
 		;;
@@ -315,7 +315,7 @@ do
 done
 
 backup_jgmenurc
-test -z ${theme} || { set_theme $theme ; exit 0 ; }
+test -z "${theme}" || { set_theme "$theme" ; exit 0 ; }
 initial_checks
 if test "${interactive}" = "t"
 then
