@@ -162,6 +162,7 @@ set_theme () {
 	filename="$(jgmenu_run --exec-path)"/jgmenurc."$1"
 	test -e $filename || die "theme '$1' does not exist"
 	cp -f $filename ~/.config/jgmenu/jgmenurc
+	rm -f "${prepend_file}" "${append_file}"
 
 	case "$1" in
 	archlabs*)
