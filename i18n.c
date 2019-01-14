@@ -147,6 +147,8 @@ static void find_translation_file_within_dir(struct sbuf *s)
 		sbuf_cpy(s, "");
 		return;
 	}
+	if (s->buf[s->len] != '/')
+		sbuf_addch(s, '/');
 	sbuf_addstr(s, p);
 
 	/* try ll_CC */
