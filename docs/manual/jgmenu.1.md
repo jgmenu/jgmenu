@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 08 Jan, 2019  
+% 15 Jan, 2019  
 
 # NAME
 
@@ -503,6 +503,12 @@ csv_no_dirs = __boolean__ (default 0)
 
     If set, applications will be listed without any directory  
     structure. This is currently only supported by pmenu and lx.  
+
+csv_i18n = __string__ (no default)  
+
+    If set, the ob module will look for a translation file in the  
+    specified file or directory. See `jgmenu_run i18n --help` for  
+    further details.  
 
 # DIAGRAMS
 

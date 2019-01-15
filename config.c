@@ -86,6 +86,7 @@ void config_set_defaults(void)
 	config.csv_name_format	   = NULL; /* Leave as NULL (see in fmt.c) */
 	config.csv_single_window   = 0;
 	config.csv_no_dirs	   = 0;
+	config.csv_i18n		   = NULL;
 }
 
 void config_cleanup(void)
@@ -298,6 +299,9 @@ static void process_line(char *line)
 		xatoi(&config.csv_single_window, value, XATOI_NONNEG, "config.csv_single_window");
 	} else if (!strcmp(option, "csv_no_dirs")) {
 		xatoi(&config.csv_no_dirs, value, XATOI_NONNEG, "config.csv_no_dirs");
+	} else if (!strcmp(option, "csv_i18n")) {
+		xfree(config.csv_i18n);
+		config.csv_i18n = xstrdup(value);
 	}
 }
 
@@ -436,4 +440,6 @@ void config_post_process(void)
 		setenv("JGMENU_NO_DIRS", "1", 1);
 	else
 		unsetenv("JGMENU_NO_DIRS");
+	if (config.csv_i18n)
+		setenv("JGMENU_I18N", config.csv_i18n, 1);
 }
