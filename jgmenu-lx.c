@@ -76,6 +76,17 @@ static void process_dir(MenuCacheApp *app)
 	sbuf_addstr(&cur->buf, ",^back(),go-previous\n");
 }
 
+static void add_metadata(const char * const * categories)
+{
+	const char **c = (const char **)categories;
+	int i;
+
+	for (i = 0; c && c[i]; i++) {
+		sbuf_addstr(&cur->buf, "#");
+		sbuf_addstr(&cur->buf, c[i]);
+	}
+}
+
 static void process_app(MenuCacheApp *app)
 {
 	/* TODO: Check visibility flag here too */
@@ -125,6 +136,11 @@ static void process_app(MenuCacheApp *app)
 
 	/* working directory */
 	sbuf_addstr(&cur->buf, menu_cache_app_get_working_dir(MENU_CACHE_APP(app)));
+	sbuf_addstr(&cur->buf, ",");
+
+	/* metadata */
+	add_metadata(menu_cache_app_get_categories(MENU_CACHE_APP(app)));
+
 	sbuf_addstr(&cur->buf, "\n");
 }
 
