@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 15 Jan, 2019  
+% 20 Jan, 2019  
 
 # NAME
 
@@ -220,13 +220,13 @@ hide_on_startup = __boolean__ (default 0)
 csv_cmd = __string__ (default `pmenu`)  
 
     Defines the command to produce the jgmenu flavoured CSV for  
-    `jgmenu`. Accpetable keyword include pmenu, xdg, lx and ob.  
+    `jgmenu`. Accpetable keyword include pmenu, lx and ob.  
     If a value is given other than these keywords, it will be  
     executed in a shell (so be careful!). If left blank, jgmenu  
     will read from __stdin__. Examples:  
 
-    csv_cmd = xdg
-    csv_cmd = jgmenu_run xdg --no-dirs  
+    csv_cmd = lx
+    csv_cmd = jgmenu_run lx --no-dirs  
     csv_cmd = cat ~/mymenu.csv  
 
 tint2_look = __boolean__ (default 1)  

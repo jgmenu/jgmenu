@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 23 Aug, 2018  
+% 20 Jan, 2019  
 
 # NAME
 
@@ -209,8 +209,7 @@ Lesson 7 - XDG Application Menus
 
 freedesktop.org have developed a menu standard which is adhered to  
 by the big Desktop Environments. We will refer to this type of menu  
-as XDG. jgmenu can run three types of XDG(ish) menus: pmenu, lx and  
-xdg.
+as XDG. jgmenu can run two types of XDG(ish) menus: pmenu and lx.  
 
 To understand the subtleties between them, you need a basic  
 appreciataion of the XDG menu-spec and desktop-entry-spec. See:  
@@ -251,13 +250,26 @@ are included in the menu.
 including separators and internationalization. It requires a recent  
 version of libmenu-cache, so may not be included in your build.  
 
-`xdg` uses libxml2 to parse the .menu file, but is otherwise written  
-from scratch. It is not as sophisticated as pmenu and lx.  
-
-See the github jgmenu wiki for a comparison of the three.  
-
 Set `csv_cmd` in jgmenurc to specify which of these csv-commands you  
 wish to run.  
+
+This table summarise the key features of each module:  
+
+    ╔═══════════════════════╤═════════════════╤═════════════════════╗
+    ║                       │ pmenu           │ lx                  ║ 
+    ║ ──────────────────────│─────────────────│─────────────────────║
+    ║ speed (my machine)    │ 400 ms          │ 99 ms               ║
+    ║ language              │ python          │ C                   ║
+    ║ dependencies          │ python3         │ glib, libmenu-cache ║
+    ║ XDG compliance        │ not intended    │ yes                 ║
+    ║ localisation support  │ yes             │ yes                 ║
+    ║ ──────────────────────│─────────────────│─────────────────────║ 
+    ║ {ap,pre}pend support  │ yes             │ yes                 ║
+    ║ 'no-dirs' support     │ yes             │ yes                 ║
+    ║ single window support │ yes             │ no                  ║
+    ║ formatting            │ no              │ yes                 ║
+    ║ generic name support  │ no              │ yes                 ║
+    ╚═══════════════════════╧═════════════════╧═════════════════════╝
 
 Lesson 8 - Disable directory structure
 --------------------------------------
@@ -276,7 +288,7 @@ a menu without a directory structure.
 Lesson 9 - Apprend/Prepend and Separators
 -----------------------------------------
 
-When running pmenu, xdg or lx, you can add menu items to the top and  
+When running pmenu or lx, you can add menu items to the top and  
 bottom of the root menu by editing append.csv and/or prepend.csv in  
 ~/.config/jgmenu. For example, try the following:
 
@@ -301,7 +313,7 @@ separator displaying "foo"
 Lesson 10 - CSV generators
 --------------------------
 
-In lesson 7, we introduced pmenu, xdg and lx. These commands are  
+In lesson 7, we introduced pmenu and lx. These commands are  
 referred to as "CSV generators" and are invoked as follows:  
 
     jgmenu_run <command>
@@ -310,9 +322,7 @@ This is the full list of built-in "CSV generators":
 
   - pmenu  
   - lx  
-  - xdg  
   - ob  
-  - ff-bookmarks (requires a recent version of firefox) 
 
 They are documented by a man page or a simple --help message.  
 
