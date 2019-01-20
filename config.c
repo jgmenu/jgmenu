@@ -415,9 +415,6 @@ void config_post_process(void)
 	if (!strcmp(config.csv_cmd, "pmenu")) {
 		xfree(config.csv_cmd);
 		config.csv_cmd = xstrdup("jgmenu_run pmenu");
-	} else if (!strcmp(config.csv_cmd, "xdg")) {
-		xfree(config.csv_cmd);
-		config.csv_cmd = xstrdup("jgmenu_run xdg");
 	} else if (!strcmp(config.csv_cmd, "lx")) {
 		xfree(config.csv_cmd);
 		config.csv_cmd = xstrdup("jgmenu_run lx");
