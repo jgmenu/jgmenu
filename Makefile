@@ -48,7 +48,7 @@ FRAGMENTS      = noncore/init/jgmenu-init--prepend.sh \
 SCRIPTS_PYTHON = jgmenu-pmenu.py jgmenu-unity-hack.py \
                  noncore/config/jgmenu-config.py
 
-PROGS	 = jgmenu jgmenu-xdg jgmenu-ob jgmenu-socket jgmenu-i18n
+PROGS	 = jgmenu jgmenu-ob jgmenu-socket jgmenu-i18n
 
 # wrap in ifneq to ensure we respect user defined NO_LX=1
 ifneq ($(NO_LX),1)
@@ -76,8 +76,6 @@ jgmenu: jgmenu.o x11-ui.o config.o util.o geometry.o isprog.o sbuf.o \
 	t2env.o unix_sockets.o bl.o cache.o back.o terminal.o restart.o \
 	theme.o gtkconf.o font.o args.o widgets.o pm.o socket.o workarea.o \
 	charset.o watch.o spawn.o
-jgmenu-xdg: jgmenu-xdg.o util.o sbuf.o xdgdirs.o xdgapps.o argv-buf.o \
-	charset.o
 jgmenu-ob: jgmenu-ob.o util.o sbuf.o i18n.o hashmap.o
 jgmenu-socket: jgmenu-socket.o util.o sbuf.o unix_sockets.o socket.o
 ifneq ($(NO_LX),1)
