@@ -253,6 +253,8 @@ version of libmenu-cache, so may not be included in your build.
 Set `csv_cmd` in jgmenurc to specify which of these csv-commands you  
 wish to run.  
 
+### Comparison of application menu modules
+
 This table summarise the key features of each module:  
 
     ╔═══════════════════════╤═════════════════╤═════════════════════╗
