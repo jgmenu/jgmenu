@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 20 Jan, 2019  
+% 21 Jan, 2019  
 
 # NAME
 
@@ -124,14 +124,21 @@ Icons will be displayed if the third field is populated; for example:
        Also set `tint2_look=0` to disable alignment to tint2 panel  
 
 # USER INTERFACE
-The user interface is generally pretty intuitive. Here follow mouse  
-and keyboard events which are not so obvious:  
 
+  - Up/Down - select previous/next item  
+  - Left/Right - move to parent/sub menu  
+  - PgUp/PgDn - scroll up/down by one menu's worth of items  
+  - Home/End - select first/last item  
+  - Enter - select an item or open a submenu  
   - F5 - restart  
   - F8 - print node tree to stderr  
   - F9 - exit(1)  
   - F10 - exit(0)  
   - Backspace - return to parent menu  
+
+Type any string to invoke a search. Words separated by space will  
+be searched for using OR logic (i.e. the match of either word is  
+sufficient to display an item).  
 
 # CONFIGURATION FILE
 
