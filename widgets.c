@@ -73,7 +73,9 @@ static enum widget_type parse_type(const char *field)
 		return RECT;
 	if (!strcmp(field, "search"))
 		return SEARCH;
-	return TEXT;
+	if (!strcmp(field, "text"))
+		return TEXT;
+	return WIDGET_ERROR;
 }
 
 static void draw_icon(struct widget **w)
@@ -88,9 +90,9 @@ static void draw_icon(struct widget **w)
 static void draw_rect(struct widget **w)
 {
 	ui_draw_rectangle((*w)->x, (*w)->y, (*w)->w, (*w)->h, (*w)->r,
-			  1.0, 0, (*w)->fgcol);
-	ui_draw_rectangle((*w)->x, (*w)->y, (*w)->w, (*w)->h, (*w)->r,
 			  0.0, 1, (*w)->bgcol);
+	ui_draw_rectangle((*w)->x, (*w)->y, (*w)->w, (*w)->h, (*w)->r,
+			  1.0, 0, (*w)->fgcol);
 }
 
 static void draw_search(struct widget **w)
@@ -105,6 +107,12 @@ static void draw_search(struct widget **w)
 	ui_insert_text(t, (*w)->x + padding_left, (*w)->y, (*w)->h, (*w)->w,
 		       (*w)->fgcol, LEFT);
 	xfree(t);
+}
+
+static void draw_text(struct widget **w)
+{
+	ui_insert_text((*w)->content, (*w)->x, (*w)->y, (*w)->h, (*w)->w,
+		       (*w)->fgcol, LEFT);
 }
 
 static int ismouseover(struct widget **w)
@@ -127,7 +135,7 @@ static void draw_selection(struct widget **w)
 	ui_draw_rectangle((*w)->x, (*w)->y, (*w)->w, (*w)->h, (*w)->r,
 			  0.0, 1, config.color_sel_bg);
 	ui_draw_rectangle((*w)->x, (*w)->y, (*w)->w, (*w)->h, (*w)->r,
-			  1.0, 0, config.color_sel_fg);
+			  1.0, 0, config.color_sel_border);
 }
 
 int widgets_mouseover(void)
@@ -183,6 +191,8 @@ void widgets_draw(void)
 			draw_rect(&w);
 		else if (w->type == SEARCH)
 			draw_search(&w);
+		else if (w->type == TEXT)
+			draw_text(&w);
 		else
 			warn("widget type not recognised");
 	}
@@ -209,8 +219,8 @@ void widgets_add(const char *s)
 	xatoi(&w->w, argv_buf.argv[4], XATOI_NONNEG, "w->w");
 	xatoi(&w->h, argv_buf.argv[5], XATOI_NONNEG, "w->h");
 	xatoi(&w->r, argv_buf.argv[6], XATOI_NONNEG, "w->r");
-//	enum alignment halign;
-//	enum alignment valign;
+/*	enum alignment halign; */
+/*	enum alignment valign; */
 	parse_hexstr(argv_buf.argv[9], w->fgcol);
 	parse_hexstr(argv_buf.argv[10], w->bgcol);
 	w->content = argv_buf.argv[11];
