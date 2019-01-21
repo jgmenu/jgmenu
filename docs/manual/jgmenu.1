@@ -54,30 +54,45 @@ jgmenu reads a list of new\-line (`\[rs]n') separated items from a file
 .P
 .PD
 and creates a menu.
-Each line is parsed into (1) \f[I]description\f[R],
+Each line is parsed into the following fields
 .PD 0
 .P
 .PD
-(2) \f[I]command\f[R], (3) \f[I]icon\f[R], (4) \f[I]working
-directory\f[R] and
+using comma as a field separator:
+.IP "(1)" 4
+\f[I]description\f[R]
 .PD 0
 .P
 .PD
-(5) \f[I]metadata\f[R], using comma as a field separator.
-Empty lines and
+.IP "(2)" 4
+\f[I]command\f[R]
 .PD 0
 .P
 .PD
-lines beginning with `#' are ignored.
-When the user selects an item
+.IP "(3)" 4
+\f[I]icon\f[R],
 .PD 0
 .P
 .PD
-(by left\-clicking or pressing enter), the \f[C]command\f[R] of their
+.IP "(4)" 4
+\f[I]working directory\f[R]
 .PD 0
 .P
 .PD
-selection is executed as a new process.
+.IP "(5)" 4
+\f[I]metadata\f[R]
+.PP
+Empty lines and lines beginning with `#' are ignored.
+When the user
+.PD 0
+.P
+.PD
+selects an item by left\-clicking or pressing enter), the
+\f[C]command\f[R]
+.PD 0
+.P
+.PD
+of their selection is executed as a new process.
 .PP
 For example:
 .IP
@@ -101,12 +116,20 @@ For example:
 foo,\[dq]\[dq]\[dq]\[ha]pipe(find . \-printf \[aq]%f,display %p,%p\[rs]n\[aq])\[dq]\[dq]\[dq]
 \f[R]
 .fi
+.SS Markup
 .PP
-The following mark\-up is supported in the \f[I]description\f[R] field:
+The syntax \[ha]foo(bar) is used to carry out action \[lq]foo\[rq] with
+argument
+.PD 0
+.P
+.PD
+\[lq]bar\[rq].
+.PP
+The following markup is supported in the \f[I]description\f[R] field:
 .IP \[bu] 2
 \[ha]sep() \- define a separator (with or without text)
 .PP
-The following mark\-up is supported in the \f[I]command\f[R] field:
+The following markup is supported in the \f[I]command\f[R] field:
 .IP \[bu] 2
 \[ha]tag() \- define a submenu (can be in the \f[I]description\f[R]
 field if
@@ -134,6 +157,9 @@ field if
 .P
 .PD
 \ \ stdout.
+.IP \[bu] 2
+\[ha]filter() \- invoke search
+.SS Icons
 .PP
 Icons will be displayed if the third field is populated; for example:
 .IP

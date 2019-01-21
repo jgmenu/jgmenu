@@ -356,7 +356,8 @@ void update_filtered_list(void)
 			    !strncmp("^back(", item->cmd, 6))
 				continue;
 			if (filter_ismatch(item->name) ||
-			    filter_ismatch(item->cmd))
+			    filter_ismatch(item->cmd) ||
+			    filter_ismatch(item->metadata))
 				add_if_unique(item);
 		}
 	} else {
@@ -805,6 +806,7 @@ void find_subtail(const char *tag)
 
 void checkout_tag(const char *tag)
 {
+	filter_reset();
 	find_subhead(tag);
 	find_subtail(tag);
 }
@@ -1497,6 +1499,13 @@ void action_cmd(char *cmd, const char *working_dir)
 		} else {
 			update(0);
 		}
+	} else if (!strncmp(cmd, "^filter(", 8)) {
+		p = parse_caret_action(cmd, "^filter(");
+		if (!p)
+			return;
+		filter_reset();
+		filter_addstr(p, strlen(p));
+		update(1);
 	} else {
 		spawn(cmd, working_dir);
 		hide_or_exit();
@@ -2437,6 +2446,7 @@ int main(int argc, char *argv[])
 	watch_init();
 	ui_init();
 	geo_init();
+	filter_init();
 
 	if (config.tint2_look)
 		read_tint2rc();
@@ -2512,7 +2522,6 @@ int main(int argc, char *argv[])
 			    font_get());
 
 	init_empty_item();
-	filter_init();
 	update_filtered_list();
 	init_menuitem_coordinates();
 	if (config.hide_on_startup) {

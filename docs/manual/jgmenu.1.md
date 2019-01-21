@@ -32,12 +32,18 @@ jgmenu is a small menu application for Linux/BSD. It is intended to
 be used with openbox and tint2, but is not dependent on these.  
 
 jgmenu reads a list of new-line ('\\n') separated items from a file  
-and creates a menu. Each line is parsed into (1) *description*,  
-(2) *command*, (3) *icon*, (4) *working directory* and  
-(5) *metadata*, using comma as a field separator. Empty lines and  
-lines beginning with '#' are ignored. When the user selects an item  
-(by left-clicking or pressing enter), the `command` of their  
-selection is executed as a new process.  
+and creates a menu. Each line is parsed into the following fields  
+using comma as a field separator:  
+
+  (1) *description*  
+  (2) *command*  
+  (3) *icon*,  
+  (4) *working directory*  
+  (5) *metadata*  
+
+Empty lines and lines beginning with '#' are ignored. When the user  
+selects an item by left-clicking or pressing enter), the `command`  
+of their selection is executed as a new process.  
 
 For example:
 
@@ -50,11 +56,16 @@ For example:
 
     foo,"""^pipe(find . -printf '%f,display %p,%p\n')"""
 
-The following mark-up is supported in the *description* field:
+## Markup
+
+The syntax ^foo(bar) is used to carry out action "foo" with argument  
+"bar".
+
+The following markup is supported in the *description* field:
 
   - ^sep() - define a separator (with or without text)
 
-The following mark-up is supported in the *command* field:
+The following markup is supported in the *command* field:
 
   - ^tag() - define a submenu (can be in the *description* field if  
   no other field is defined on that line)
@@ -73,7 +84,11 @@ The following mark-up is supported in the *command* field:
   - ^pipe() - execute sub-process and checkout a menu based on its  
   stdout.
 
-Icons will be displayed if the third field is populated; for example:
+  - ^filter() - invoke search  
+
+## Icons
+
+Icons will be displayed if the third field is populated; for example:  
 
     Terminal,xterm,utilities-terminal
     Firefox,firefox,firefox
