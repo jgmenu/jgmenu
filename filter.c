@@ -5,6 +5,7 @@
 #include "filter.h"
 #include "sbuf.h"
 #include "util.h"
+#include "argv-buf.h"
 
 static struct sbuf needle;
 static int has_been_inited;
@@ -79,11 +80,28 @@ int filter_needle_length(void)
 
 int filter_ismatch(const char *haystack)
 {
-	int ret = 0;
+	struct argv_buf a;
+	int i, ret = 1;
 
-	if (!needle.len || strcasestr(haystack, needle.buf))
-		ret = 1;
-
+	if (!haystack)
+		return 0;
+	if (!needle.len)
+		return 1;
+	argv_init(&a);
+	argv_set_delim(&a, ' ');
+	argv_strdup(&a, needle.buf);
+	argv_parse(&a);
+	for (i = 0; i < a.argc; i++) {
+		if (a.argv[i][0] == '\0')
+			continue;
+		if (!strcmp(a.argv[i], "*"))
+			goto out;
+		if (strcasestr(haystack, a.argv[i]))
+			goto out;
+	}
+	ret = 0;
+out:
+	argv_free(&a);
 	return ret;
 }
 
