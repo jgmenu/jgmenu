@@ -3,22 +3,12 @@ See https://github.com/johanmalm/jgmenu/wiki/Roadmap.md for further details
 Minor changes (0-3 months)
 --------------------------
 
-Update ob man page wrt i18n
-
-Add i18n config option
-
 Write unit-test for pmenu to prove recent markup bug
 
-Keep init and config to one file each
-
-Tidy up INSTALL wrt libgarcon-common  
+Keep init and config to one file each + remove fragments + add jgmenurc to python file
 
 ob:
   - unit test for --tag=
-  - update ob man page with /etc/xdg/openbox/...
-
-init:
-  - remove prepend.csv and append.csv when changing themes
 
 Deal with ^pipe() that returns error
 
@@ -38,4 +28,3 @@ widgets.c:
 Investigate duplicate .desktop entries on Raspberry Pi and nixOS
 
 jgmenu - warn if strange command line argument is given
-
