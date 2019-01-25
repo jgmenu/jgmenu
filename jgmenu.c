@@ -580,7 +580,7 @@ void draw_items_below_indicator(void)
 	if (b < 1)
 		return;
 	ui_draw_line(l, geo_get_menu_height() - b - 0.5, geo_get_menu_width() - r,
-		     geo_get_menu_height() - b - 0.5, 1.0, config.color_norm_fg);
+		     geo_get_menu_height() - b - 0.5, 1.0, config.color_scroll_ind);
 }
 
 void draw_items_above_indicator(void)
@@ -599,7 +599,7 @@ void draw_items_above_indicator(void)
 	if (t < 1)
 		return;
 	ui_draw_line(l, t + 0.5, geo_get_menu_width() - r, t + 0.5, 1.0,
-		     config.color_norm_fg);
+		     config.color_scroll_ind);
 }
 
 void draw_menu(void)

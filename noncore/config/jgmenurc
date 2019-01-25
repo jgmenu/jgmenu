@@ -70,6 +70,7 @@
 #color_sel_border    = #eeeeee 8
 
 #color_sep_fg        = #ffffff 20
+#color_scroll_ind    # #eeeeee 40
 
 #csv_name_format     = %n (%g)
 #csv_single_window   = 0

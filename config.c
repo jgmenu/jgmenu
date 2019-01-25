@@ -82,6 +82,7 @@ void config_set_defaults(void)
 	parse_hexstr("#eeeeee 100", config.color_sel_fg);
 	parse_hexstr("#eeeeee 8", config.color_sel_border);
 	parse_hexstr("#ffffff 20", config.color_sep_fg);
+	parse_hexstr("#eeeeee 40", config.color_scroll_ind);
 
 	config.csv_name_format	   = NULL; /* Leave as NULL (see in fmt.c) */
 	config.csv_single_window   = 0;
@@ -292,6 +293,8 @@ static void process_line(char *line)
 		parse_hexstr(value, config.color_sel_border);
 	} else if (!strcmp(option, "color_sep_fg")) {
 		parse_hexstr(value, config.color_sep_fg);
+	} else if (!strcmp(option, "color_scroll_ind")) {
+		parse_hexstr(value, config.color_scroll_ind);
 	} else if (!strcmp(option, "csv_name_format")) {
 		xfree(config.csv_name_format);
 		config.csv_name_format = xstrdup(value);

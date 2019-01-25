@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 21 Jan, 2019  
+% 25 Jan, 2019  
 
 # NAME
 
@@ -498,6 +498,11 @@ color_sel_border = __color__ (default #eeeeee 8)
 color_sep_fg = __color__ (default #ffffff 20)  
 
     Colour of seperator  
+
+color_scroll_ind = __color__ (default #eeeeee 40)  
+
+    Colour of scroll indicator lines (which show if there are menu  
+    items above or below those which are visible).  
 
 ## CSV generator variables
 
