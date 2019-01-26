@@ -56,14 +56,14 @@ ifneq ($(NO_LX),1)
 PROGS += jgmenu-lx
 endif
 
-objects = $(patsubst ./%.c,%.o,$(shell find . -maxdepth 1 -name '*.c' -print))
-mains = $(patsubst %,%.o,$(PROGS))
+objects = $(patsubst ./src/%.c,%.o,$(shell find ./src -maxdepth 1 -name '*.c' -print))
+mains = $(patsubst src/%,%.o,$(PROGS))
 ifneq ($(NO_LX),1)
 OBJS = $(filter-out $(mains),$(objects))
 else
 OBJS = $(filter-out $(mains) jgmenu-lx.o,$(objects))
 endif
-SRCS = $(patsubst %.o,%.c,$(OBJS))
+SRCS = $(patsubst %.o,src/%.c,$(OBJS))
 JGMENU_LIB = libjgmenu.a
 
 all: $(PROGS)
@@ -84,8 +84,8 @@ jgmenu-i18n: jgmenu-i18n.o i18n.o hashmap.o util.o sbuf.o
 $(PROGS):
 	$(QUIET_LINK)$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-%.o : %.c
-%.o : %.c $(DEPDIR)/%.d
+%.o : src/%.c
+%.o : src/%.c $(DEPDIR)/%.d
 	$(QUIET_CC)$(CC) $(DEPFLAGS) $(CFLAGS) -c $<
 	@mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 
@@ -154,8 +154,8 @@ ex:
 	@$(MAKE) --no-print-directory -C examples/ all
 
 check:
-	@./scripts/checkpatch-wrapper.sh *.c
-	@./scripts/checkpatch-wrapper.sh *.h
+	@./scripts/checkpatch-wrapper.sh src/*.c
+	@./scripts/checkpatch-wrapper.sh src/*.h
 
 print-%:
 	@echo '$*=$($*)'
