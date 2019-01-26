@@ -154,8 +154,8 @@ ex:
 	@$(MAKE) --no-print-directory -C examples/ all
 
 check:
-	@./scripts/checkpatch-wrapper.sh *.c
-	@./scripts/checkpatch-wrapper.sh *.h
+	@./scripts/checkpatch-wrapper.sh src/*.c
+	@./scripts/checkpatch-wrapper.sh src/*.h
 
 print-%:
 	@echo '$*=$($*)'
