@@ -8,6 +8,7 @@ href="https://repology.org/metapackage/jgmenu/versions"><img src="https://repolo
 
 <h3 align="center">[<a
 href="INSTALL.md">Install</a>] [<a
+href="https://github.com/johanmalm/jgmenu/tree/master/docs/relnotes">Release&nbsp;notes</a>] [<a
 href="docs/manual/jgmenututorial.7.md">Tutorial</a>] [<a
 href="https://github.com/johanmalm/jgmenu/wiki">Wiki</a>] [<a
 href="https://github.com/johanmalm/jgmenu/wiki/Screenshots">Screenshots</a>]</h3>
@@ -60,7 +61,7 @@ There many who have contributed in other ways including, but not limited to:
 
 Vladimir-csp
 
-  - has contributed a great deal with suggestions, bug reports and advice on XDG compliance
+  - has contributed a great deal with bug reports, advice on XDG compliance and many helpful suggestions
 
 Various members of the BunsenLabs and ArchLabs communities have also helped with testing, documentation, ideas and inspiration to keep this project going.
 
