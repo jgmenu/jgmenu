@@ -31,7 +31,7 @@ DEPDIR := .d
 $(shell mkdir -p $(DEPDIR) >/dev/null)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
-SCRIPTS_SHELL  = jgmenu_run noncore/init/jgmenu-init.sh
+SCRIPTS_SHELL  = src/jgmenu_run noncore/init/jgmenu-init.sh
 
 FRAGMENTS      = noncore/init/jgmenu-init--prepend.sh \
                  noncore/init/jgmenu-init--append.sh \
@@ -43,7 +43,7 @@ FRAGMENTS      = noncore/init/jgmenu-init--prepend.sh \
                  noncore/init/jgmenurc.neon \
                  noncore/config/jgmenurc
 
-SCRIPTS_PYTHON = jgmenu-pmenu.py jgmenu-unity-hack.py \
+SCRIPTS_PYTHON = src/jgmenu-pmenu.py src/jgmenu-unity-hack.py \
                  noncore/config/jgmenu-config.py
 
 PROGS	 = jgmenu jgmenu-ob jgmenu-socket jgmenu-i18n
@@ -94,7 +94,7 @@ $(DEPDIR)/%.d: ;
 
 install: $(PROGS)
 	@install -d $(DESTDIR)$(bindir)
-	@install -m755 jgmenu jgmenu_run $(DESTDIR)$(bindir)
+	@install -m755 jgmenu src/jgmenu_run $(DESTDIR)$(bindir)
 	@install -d $(DESTDIR)$(libexecdir)
 	@install -m755 $(PROGS) $(SCRIPTS_SHELL) $(DESTDIR)$(libexecdir)
 	@install -m755 $(SCRIPTS_PYTHON) $(DESTDIR)$(libexecdir)
