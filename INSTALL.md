@@ -11,7 +11,7 @@ Install from repos
 | [Arch](https://www.archlinux.org/packages/community/x86_64/jgmenu/)                               | pacman -S jgmenu       | ![](https://repology.org/badge/version-only-for-repo/arch/jgmenu.svg)
 | [BunsenLabs](http://eu.pkg.bunsenlabs.org/debian/pool/main/j/jgmenu/)                             | apt-get install jgmenu | ![](https://repology.org/badge/version-only-for-repo/bunsenlabs_jessie_backports/jgmenu.svg)
 | [Mageia Cauldron](http://madb.mageia.org/package/show/application/0/release/cauldron/name/jgmenu) | urpmi jgmenu           | ![](https://repology.org/badge/version-only-for-repo/mageia_cauldron/jgmenu.svg)
-| [Manjaro]()                                                                                       | pacman -S jgmenu       | ![](https://repology.org/badge/version-for-repo/manjaro_stable/jgmenu.svg)
+| [Manjaro]()                                                                                       | pacman -S jgmenu       | ![](https://repology.org/badge/version-only-for-repo/manjaro_stable/jgmenu.svg)
 | [Slackware](https://slackbuilds.org/repository/14.2/desktop/jgmenu/)                              |                        | ![](https://repology.org/badge/version-only-for-repo/slackbuilds/jgmenu.svg)
 | [Void](https://github.com/void-linux/void-packages/tree/master/srcpkgs/jgmenu)                    | xbps-install -S jgmenu | ![](https://repology.org/badge/version-only-for-repo/void_x86_64/jgmenu.svg)
 
