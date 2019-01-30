@@ -46,7 +46,7 @@ FRAGMENTS      = noncore/init/jgmenu-init--prepend.sh \
 SCRIPTS_PYTHON = src/jgmenu-pmenu.py src/jgmenu-unity-hack.py \
                  noncore/config/jgmenu-config.py
 
-PROGS	 = jgmenu jgmenu-ob jgmenu-socket jgmenu-i18n
+PROGS	 = jgmenu jgmenu-ob jgmenu-socket jgmenu-i18n jgmenu-greeneye
 
 # wrap in ifneq to ensure we respect user defined NO_LX=1
 ifneq ($(NO_LX),1)
@@ -80,6 +80,7 @@ ifneq ($(NO_LX),1)
 jgmenu-lx: jgmenu-lx.o util.o sbuf.o xdgdirs.o argv-buf.o back.o fmt.o
 endif
 jgmenu-i18n: jgmenu-i18n.o i18n.o hashmap.o util.o sbuf.o
+jgmenu-greeneye: jgmenu-greeneye.o
 
 $(PROGS):
 	$(QUIET_LINK)$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
