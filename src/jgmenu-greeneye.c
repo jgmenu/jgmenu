@@ -5,7 +5,7 @@
 static int ah = 40;
 static int bw = 150;
 static int cw = 300;
-static int ch = 460;
+static int ch = 470;
 static int pad = 4;
 static int item_height = 30;
 
