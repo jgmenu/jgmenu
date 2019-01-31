@@ -3,27 +3,15 @@ See https://github.com/johanmalm/jgmenu/wiki/Roadmap.md for further details
 Minor changes (0-3 months)
 --------------------------
 
-Write unit-test for pmenu to prove recent markup bug
+Remove polyglot script
 
 Keep init and config to one file each + remove fragments + add jgmenurc to python file
-
-ob:
-  - unit test for --tag=
 
 Deal with ^pipe() that returns error
 
 Deal with ^pipe() with the same tag as its parent
 
-geometry.c:
-  - reivew the below function to see where menu_width is set
-    "geo_get_menu_width_from_itemarea_width()"
-
 Hide separators when searching
-
-widgets.c:
-	- use struct area instead of x,y,w,h
-	- parse align
-	- add 'text'
 
 Investigate duplicate .desktop entries on Raspberry Pi and nixOS
 
