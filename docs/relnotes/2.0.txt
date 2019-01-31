@@ -1,0 +1,107 @@
+jgmenu v2.0 release notes
+=========================
+
+Updates since v1.6
+------------------
+
+New features
+
+  * Support ^filter() markup, whereby ^filter(foo) in the command field
+    invokes a search for the inner value 'foo'
+
+  * filter: support multi-word search. Words separated by a space will be
+    treated as separate strings and searched for on an OR logic basis. A
+    standalone '*' matches everything
+
+  * Improve widgets API and fix minor issues
+
+      - add @text type (to insert text)
+
+      - draw @rect fill and border in correct order, i.e. border on top of
+        fill
+
+      - when drawing selection borders, use color_sel_border rather than
+        color_sel_fg
+
+  * lx: output application categories as metadata
+
+    Categories as taken from the desktop files' "Categories" field and
+    each category is prepended by a '#'
+
+    For example, xterm.desktop contains the line
+
+        Categories=System;TerminalEmulator;
+
+    The fifth CSV field therefore becomes "#System#TerminalEmulator"
+
+  * Add the following config options
+
+      - 'color_scroll_ind' to enable setting the colour of the lines
+        indicating that menu items exist outside those which are visible.
+
+      - 'csv_i18n' to specify translation file/directory for the ob
+        module
+
+  * Add greeneye module
+
+    'jgmenu_run greeneye' outputs a config file and widget lines for a
+    menu with the following layout:
+
+        +----------------+-----------------------+
+        |                |  a - search box       |
+        |                |-----------------------|
+        |                |                       |
+        | b - categories |                       |
+        |                |  c - applications     |
+        |                |                       |
+        |                |                       |
+        +----------------+-----------------------+
+
+    Example usage
+
+        jgmenu_run greeneye --config >$HOME/.config/jgmenu/jgmenurc
+        jgmenu_run greeneye --widgets >$HOME/.config/jgmenu/prepend.csv
+
+Prepare for OpenBSD port
+
+  * util.c: remove strcat() (commit 38e4e11a)
+
+  * xsettings.c:231: use snprintf() (commit 26ea4c2d)
+
+  * init: replace "tar -T" as it is not POSIX (commit 4ad9fcff)
+
+Fix bugs and issues
+
+  * Fix KeyError bug in pmenu module (commit 3b4ba92)
+
+  * Handle missing xsettings variables. If xsettings is running but does
+    not contain Gtk/FontName or Net/IconThemeName, we proceed to the next
+    icon/theme fallback.
+
+  * i18n: support dirirectory name without '/' at end
+
+  * ob: quote output correctly (issue #76). This avoids causing a crash
+    when opening directory names with spaces when using
+    bl-places-pipemenu. Reported-by: @johnraff
+
+  * debian/rules: omit broken dh_auto_clean target (and add some
+    buildflags). Provided-by: @2ion
+
+Cody clean up. The changes below break backward compatibility, although
+it is believed that the majority of users will not notices these changes.
+
+  * Retire 'xdg' module (now in noncore/). Its functionality is covered
+    by pmenu and lx.
+
+  * Do not install 'ff-bookmarks' and 'places', just leave them in
+    noncore/ for reference or manual install. These are not considered
+    part of the core application and are too time-consuming to maintain
+    across OSs.
+
+  * Tidy up init module
+
+      - remove {ap,pre}pend.csv files when setting new theme
+
+      - remove tint2 related code (because it seems simplier to just
+        handle jgmenu config files)
+
