@@ -298,6 +298,73 @@ restart_jgmenu () {
 	nohup jgmenu >/dev/null 2>&1 &
 }
 
+neon__add_widgets () {
+cat >${prepend_file} <<'EOF'
+# Search box
+@rect,,10,10,252,25,2,left,top,#666666 15,#000000 0,content
+@search,,10,10,252,25,2,left,top,#666666 90,#222222 3,Type to search...
+
+# Icon 1
+@rect,^root(fav),25,40,42,42,2,left,top,#000000 0,#000000 0,
+@icon,,30,45,32,32,2,left,top,#e6e6e6 100,#444444 90,/usr/share/icons/breeze/actions/32/bookmark-new.svg
+
+# Icon 2
+@rect,^root(pmenu),85,40,42,42,2,left,top,#000000 0,#000000 0,
+@icon,,90,45,32,32,2,left,top,#e6e6e6 100,#444444 90,/usr/share/icons/breeze/actions/32/view-list-icons.svg
+
+# Icon 3
+@rect,^root(history),145,40,42,42,2,left,top,#000000 0,#000000 0,
+@icon,,150,45,32,32,2,left,top,#e6e6e6 100,#444444 90,/usr/share/icons/breeze/actions/32/appointment-new.svg
+
+# Icon 4
+@rect,^root(exit),205,40,42,42,2,left,top,#000000 0,#000000 0,
+@icon,,210,45,32,32,2,left,top,#e6e6e6 100,#444444 90,/usr/share/icons/breeze/actions/32/system-log-out.svg
+EOF
+}
+
+neon__add_append_items () {
+cat >>${append_file} <<'EOF'
+
+^tag(fav)
+Terminal,uxterm,utilities-terminal
+Browser,firefox,firefox
+File manager,pcmanfm,system-file-manager
+
+^tag(history)
+foo
+bar
+
+^tag(exit)
+Lock,i3lock -c 000000,system-lock-screen
+Exit to prompt,openbox --exit,system-log-out
+Suspend,systemctl -i suspend,system-log-out
+Reboot,systemctl -i reboot,system-reboot
+Poweroff,systemctl -i poweroff,system-shutdown
+
+EOF
+}
+
+neon__setup_theme () {
+	rm -f ${prepend_file}
+	rm -f ${append_file}
+	if ! test -d "/usr/share/icons/breeze"
+	then
+		warn "warn: icon theme 'breeze' is required to complete this theme"
+	else
+		neon__add_widgets
+		neon__add_append_items
+		say "Theme 'neon' has been set"
+	fi
+}
+bunsenlabs__setup_theme () {
+	# not all systems support openbox menus
+	if ! test -e ~/.config/openbox/menu.xml
+	then
+		echo "set csv_cmd=pmenu"
+		#TODO: jgmenu_run config set csv_cmd pmenu
+	fi
+}
+
 set_theme () {
 	test $# -eq 0 && die "set_theme(): no theme specified"
 	filename="$(jgmenu_run --exec-path)"/jgmenurc."$1"
@@ -311,14 +378,12 @@ set_theme () {
 		restart_jgmenu
 		;;
 	bunsenlabs*)
-		. "${JGMENU_EXEC_DIR}"/jgmenu-init--bunsenlabs.sh
-		setup_theme
+		bunsenlabs__setup_theme
 		say "Theme '$1' has been set"
 		restart_jgmenu
 		;;
 	neon)
-		. "${JGMENU_EXEC_DIR}"/jgmenu-init--neon.sh
-		setup_theme
+		neon__setup_theme
 		restart_jgmenu
 		;;
 	esac
