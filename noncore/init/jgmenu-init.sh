@@ -19,8 +19,6 @@ color_title_bg show_title search_all_items ignore_xsettings arrow_show \
 read_tint2rc tint2_rules tint2_button multi_window color_menu_fg"
 
 JGMENU_EXEC_DIR=$(jgmenu_run --exec-path)
-. "${JGMENU_EXEC_DIR}"/jgmenu-init--prepend.sh
-. "${JGMENU_EXEC_DIR}"/jgmenu-init--append.sh
 
 say () {
 	printf "%b\n" "$@"
@@ -53,6 +51,149 @@ Options include:\n\
     --list-themes         Display all available themes\n\
     --regression-check    Only check for config options no longer valid\n\
     --verbose             Be more verbose\n"
+}
+
+append__add () {
+	printf "%b\n" "$@" >>"${append_file}"
+}
+
+append__sep () {
+	test -e ${append_file} && return
+	append__add "^sep()"
+}
+
+append__lock () {
+	if grep -i 'lock' ${append_file} >/dev/null 2>&1
+	then
+		say "append.csv already contains a lock entry"
+		return
+	fi
+	if type i3lock-fancy >/dev/null 2>&1
+	then
+		append__add "Lock,i3lock-fancy -p,system-lock-screen"
+		say "Append i3lock-fancy"
+	elif type i3lock >/dev/null 2>&1
+	then
+		append__add "Lock,i3lock -c 000000,system-lock-screen"
+		say "Append i3lock"
+	fi
+}
+
+append__exit () {
+	if grep -i 'exit' ${append_file} >/dev/null 2>&1
+	then
+		say "append.csv already contains an exit entry"
+		return
+	fi
+	if type systemctl >/dev/null
+	then
+		say "Append exit options (systemctl)"
+		append__add "Exit,^checkout(exit),system-shutdown"
+		append__add "^tag(exit)"
+		if pgrep openbox >/dev/null
+		then
+			append__add "exit to prompt,openbox --exit,system-log-out"
+		fi
+		append__add "Suspend,systemctl -i suspend,system-log-out"
+		append__add "Reboot,systemctl -i reboot,system-reboot"
+		append__add "Poweroff,systemctl -i poweroff,system-shutdown"
+	fi
+}
+
+append_items () {
+	append__sep
+	append__lock
+	append__exit
+}
+
+prepend__terminals="x-terminal-emulator terminator uxterm xterm gnome-terminal \
+lxterminal qterminal urxvt rxvt xfce4-terminal konsole sakura st"
+
+prepend__browsers="firefox iceweasel chromium midori"
+
+prepend__file_managers="pcmanfm thunar nautilus caja"
+
+prepend__add () {
+	printf "%b\n" "$@" >>"${prepend_file}"
+}
+
+prepend__add_sep () {
+	if grep -i "\^sep(" ${prepend_file} >/dev/null 2>&1
+	then
+		say "prepend.csv already contains a separator"
+		return
+	fi
+	prepend__add "^sep()"
+}
+
+prepend__add_terminal () {
+	# Don't add if terminal already exists in prepend.csv
+	test -e ${prepend_file} && for x in ${prepend__terminals}
+	do
+		# Don't grep for "st" - it's contained in too many strings :)
+		test "${x}" = "st" && break
+		if grep -i ${x} ${prepend_file} >/dev/null 2>&1
+		then
+			say "prepend.csv already contains a terminal entry"
+			return
+		fi
+	done
+	for x in ${prepend__terminals}
+	do
+		if type ${x} >/dev/null 2>&1
+		then
+			prepend__add "Terminal,${x},utilities-terminal"
+			printf "Prepend %b\n" "${x}"
+			break
+		fi
+	done
+}
+
+prepend__add_browser () {
+	test -e ${prepend_file} && for x in ${prepend__browsers}
+	do
+		if grep -i ${x} ${prepend_file} >/dev/null 2>&1
+		then
+			say "prepend.csv already contains a browser entry"
+			return
+		fi
+	done
+	for x in ${prepend__browsers}
+	do
+		if type ${x} >/dev/null 2>&1
+		then
+			prepend__add "Browser,${x},${x}"
+			printf "Prepend %b\n" "${x}"
+			break
+		fi
+	done
+}
+
+prepend__add_file_manager () {
+	test -e ${prepend_file} && for x in ${prepend__file_managers}
+	do
+		if grep -i ${x} ${prepend_file} >/dev/null 2>&1
+		then
+			say "prepend.csv already contains a file manager entry"
+			return
+		fi
+	done
+	for x in ${prepend__file_managers}
+	do
+		if type ${x} >/dev/null 2>&1
+		then
+			prepend__add "File manager,${x},system-file-manager"
+			printf "Prepend %b\n" "${x}"
+			break
+		fi
+	done
+}
+
+prepend_items () {
+	prepend__add_terminal
+	prepend__add_browser
+	prepend__add_file_manager
+	prepend__add_sep
 }
 
 check_config_file () {

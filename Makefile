@@ -33,9 +33,7 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
 SCRIPTS_SHELL  = src/jgmenu_run noncore/init/jgmenu-init.sh
 
-FRAGMENTS      = noncore/init/jgmenu-init--prepend.sh \
-                 noncore/init/jgmenu-init--append.sh \
-                 noncore/init/jgmenu-init--bunsenlabs.sh \
+FRAGMENTS      = noncore/init/jgmenu-init--bunsenlabs.sh \
                  noncore/init/jgmenurc.archlabs_1803 \
                  noncore/init/jgmenurc.bunsenlabs_hydrogen \
                  noncore/init/jgmenurc.bunsenlabs_helium \
