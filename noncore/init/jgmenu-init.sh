@@ -53,6 +53,120 @@ Options include:\n\
     --verbose             Be more verbose\n"
 }
 
+jgmenurc_archlabs_1803 () {
+cat >${config_file} <<'EOF'
+stay_alive           = 1
+csv_cmd              = pmenu
+tint2_look           = 0
+at_pointer           = 0
+terminal_exec        = termite
+terminal_args        = -e
+menu_margin_x        = 4
+menu_margin_y        = 32
+menu_width           = 200
+menu_padding_top     = 10
+menu_padding_right   = 2
+menu_padding_bottom  = 5
+menu_padding_left    = 2
+menu_radius          = 0
+menu_border          = 1
+menu_halign          = left
+menu_valign          = top
+sub_hover_action     = 1
+item_margin_y        = 5
+item_height          = 30
+item_padding_x       = 8
+item_radius          = 0
+item_border          = 0
+sep_height           = 5
+font                 = Ubuntu 12px
+icon_size            = 24
+color_menu_bg        = #2b303b 100
+color_norm_bg        = #2b303b 0
+color_norm_fg        = #8fa1b3 100
+color_sel_bg         = #8fa1b3 60
+color_sel_fg         = #2b303b 100
+color_sep_fg         = #8fa1b3 40
+EOF
+}
+
+jgmenurc_bunsenlabs_hydrogen () {
+cat >${config_file} <<'EOF'
+tint2_look          = 0
+at_pointer          = 1
+csv_cmd             = ob
+menu_width          = 120
+menu_padding_top    = 0
+menu_padding_right  = 0
+menu_padding_bottom = 0
+menu_padding_left   = 0
+menu_radius         = 1
+sub_spacing         = 3
+item_margin_x       = 1
+item_margin_y       = 1
+item_height         = 19
+sep_height          = 4
+sep_halign          = right
+icon_size           = 0
+arrow_width         = 8
+color_menu_bg       = #3a3a3a 100
+EOF
+}
+
+jgmenurc_bunsenlabs_helium () {
+cat >${config_file} <<'EOF'
+tint2_look          = 0
+at_pointer          = 1
+csv_cmd             = ob
+menu_width          = 134
+menu_padding_top    = 0
+menu_padding_right  = 0
+menu_padding_bottom = 0
+menu_padding_left   = 0
+menu_radius         = 1
+sub_spacing         = 6
+item_margin_x       = 1
+item_margin_y       = 1
+item_height         = 21
+sep_height          = 4
+sep_halign          = right
+font                = Sans 10
+icon_size           = 0
+arrow_string        = ›
+arrow_width         = 8
+color_menu_bg       = #C8CFCB 100
+color_menu_border   = #C8CFCB 8
+color_norm_bg       = #C8CFCB 00
+color_norm_fg       = #13071B 100
+color_sel_bg        = #74998B 100
+color_sel_fg        = #101010 100
+color_sel_border    = #74998B 8
+color_sep_fg        = #101010 80
+EOF
+}
+
+jgmenurc_neon () {
+cat >${config_file} <<'EOF'
+tint2_look          = 0
+menu_margin_y       = 30
+menu_width          = 272
+menu_padding_top    = 100
+menu_padding_right  = 10
+menu_padding_bottom = 10
+menu_padding_left   = 10
+menu_valign         = bottom
+item_radius         = 2
+item_border         = 1
+font		    = Roboto Condensed 9
+color_menu_bg       = #cecece 90
+color_menu_border   = #888888 100
+color_norm_fg       = #444444 100
+color_sel_bg        = #e6e6e6 100
+color_sel_fg        = #444444 100
+color_sel_border    = #888888 100
+EOF
+}
+
 append__add () {
 	printf "%b\n" "$@" >>"${append_file}"
 }
@@ -286,9 +400,10 @@ print_available_themes () {
 }
 
 get_theme () {
-	ls -1 "${JGMENU_EXEC_DIR}"/jgmenurc.* 2>/dev/null | while read -r theme
+	themes="archlabs_1803 bunsenlabs_hydrogen bunsenlabs_helium neon"
+	for t in ${themes}
 	do
-		printf "%b\n" "${theme#*.}"
+		printf "%b\n" "${t}"
 	done | jgmenu --vsimple --center --no-spawn 2>/dev/null
 }
 
@@ -367,22 +482,25 @@ bunsenlabs__setup_theme () {
 
 set_theme () {
 	test $# -eq 0 && die "set_theme(): no theme specified"
-	filename="$(jgmenu_run --exec-path)"/jgmenurc."$1"
-	test -e "${filename}" || die "theme '$1' does not exist"
-	cp -f "${filename}" ~/.config/jgmenu/jgmenurc
 	rm -f "${prepend_file}" "${append_file}"
 
 	case "$1" in
-	archlabs*)
-		say "Theme '$1' has been set"
+	archlabs_1803)
+		jgmenurc_archlabs_1803
 		restart_jgmenu
 		;;
-	bunsenlabs*)
+	bunsenlabs_hydrogen)
+		jgmenurc_bunsenlabs_hydrogen
 		bunsenlabs__setup_theme
-		say "Theme '$1' has been set"
+		restart_jgmenu
+		;;
+	bunsenlabs_helium)
+		jgmenurc_bunsenlabs_helium
+		bunsenlabs__setup_theme
 		restart_jgmenu
 		;;
 	neon)
+		jgmenurc_neon
 		neon__setup_theme
 		restart_jgmenu
 		;;
