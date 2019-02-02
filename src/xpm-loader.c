@@ -56,11 +56,6 @@ struct file_handle {
 	uint buffer_size;
 };
 
-struct mem_handle {
-	const char **data;
-	int offset;
-};
-
 /* The following 2 routines (parse_color, find_color) come from Tk, via the Win32
  * port of GDK. The licensing terms on these (longer than the functions) is:
  *
