@@ -5,13 +5,13 @@ First of all, thanks for contributing or considering to contribute.
 
 We have two high level development rules:  
 
-  - Friendship, ideas and code are valued in said order  
-  - There are no deadlines  
+-   Friendship, ideas and code are valued in said order  
+-   There are no deadlines  
 
 Issues and bugs
 ---------------
 
-Reporting issues and bugs is a very helpful contribution.  The preferred
+Reporting issues and bugs is a very helpful contribution. The preferred
 route for reporting these is to raise github issues, but we are happy
 with any method including forums threads and e-mails. If you are able
 to help resolve them, that is also greatly appreciated.
@@ -21,21 +21,20 @@ to help resolve them, that is also greatly appreciated.
 It would be useful if you could simply start by describing what you did
 and what happened. It may help if you could also do the following:
 
-1. Run jgmenu from the terminal and copy/paste any output
+1.  Run jgmenu from the terminal and copy/paste any output
 
-2. Provide the output of `jgmenu --version`
+2.  Provide the output of `jgmenu --version`
 
-3. Provide the output of `type jgmenu` (i.e. the location of the
-   binary)
+3.  Provide the output of `type jgmenu` (i.e. the location of the binary)
 
-4. Provide the command you used to run jgmenu
+4.  Provide the command you used to run jgmenu
 
-5. Provide the config file
+5.  Provide the config file
 
-6. Provide some basic information about your system (e.g. distribution,
-   window manager, composite manager)
+6.  Provide some basic information about your system (e.g. distribution, window
+    manager, composite manager)
 
-7. Run `jgmenu init -i` then choose 'check' and report any warnings
+7.  Run `jgmenu init -i` then choose 'check' and report any warnings
 
 ### Debugging
 
@@ -112,11 +111,11 @@ In order to get a useful stack trace with gdb, you need binaries with
 debug symbols. Release packages have generally been 'stripped' of these,
 so you have two options:
 
-  - Install a package with debug symbols (e.g. jgmenu-dbgsym on
+-   Install a package with debug symbols (e.g. jgmenu-dbgsym on
     BunsenLabs Linux). This option has the advantage of not needing to
     build the binaries.
 
-  - Compile with `-g` and `-Og' flags as a minimum.
+-   Compile with `-g` and `-Og' flags as a minimum.
     jgmenu CFLAGS are set in `Makefile.inc`
 
 There are two ways of producing a stack trace with gdb. Either run the
@@ -169,20 +168,21 @@ you can run the following and include the output in your bug report.
 Upversion
 ---------
 
-  - update `default_version` in scripts/version-gen.sh  
-  - update debian/changelog  
-  - create docs/relnotes/X.Y.txt  
-  - git tag -a 'vX.Y'  
+-   update `default_version` in scripts/version-gen.sh  
+-   update debian/changelog  
+-   create docs/relnotes/X.Y.txt  
+-   add and commit the above files  
+-   git tag -a 'vX.Y'  
 
 Add new config variables
 ------------------------
 
 Any new config variables need to be added to the following:  
 
-  - config.c  
-  - config.h  
-  - noncore/config/jgmenurc  
-  - docs/manual/jgmenu.1.md  
+-   config.c  
+-   config.h  
+-   noncore/config/jgmenurc  
+-   docs/manual/jgmenu.1.md  
 
 Run ./scripts/jgmenurc-checker.sh
 
@@ -209,36 +209,34 @@ https://www.kernel.org/pub/software/scm/git/docs/technical/api-hashmap.html
 Architecture
 ------------
 
-`jgmenu_run` is a wrapper which call jgmenu-\<*command*> where `command`  
+`jgmenu_run` is a wrapper which call jgmenu-\<*command*> where `command`
 is the first argument provided to `jgmenu_run`.  
 
 `jgmenu_run` makes jgmenu easier to use by  
 
-  - creating a simple interface for common commands  
-  - saving the user having to remember script file extensions  
-  - ensures the correct modules are called if multiple version of jgmenu  
-    are installed on the system.  
+-   creating a simple interface for common commands  
+-   saving the user having to remember script file extensions  
+-   ensures the correct modules are called if multiple version of jgmenu are
+    installed on the system.  
 
-It also helps keep $prefix/bin tidier by putting all the other scripts in  
+It also helps keep $prefix/bin tidier by putting all the other scripts in
 $libexecdir.
 
-Although it is recommended to do a `make install`, it is possible to run  
+Although it is recommended to do a `make install`, it is possible to run
 `./jgmenu_run` from the source directory by setting `JGMENU_EXEC_PATH`.  
 
 Grammar and Language
 --------------------
 
-jgmenu is always written with a lowercase "j". It should be obvious from  
-the context if we refer to the entire application or just the binary  
+jgmenu is always written with a lowercase "j". It should be obvious from
+the context if we refer to the entire application or just the binary
 file.  
 
-The language used in documentation shall follow British English rules.  
-Although, for variable names and configuration options, US spelling is  
+The language used in documentation shall follow British English rules.
+Although, for variable names and configuration options, US spelling is
 used (e.g. color and center)  
 
 Git
 ---
 
 Keep commit messages lines to 74 characters.  
-
-
