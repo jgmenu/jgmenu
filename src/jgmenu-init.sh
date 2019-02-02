@@ -7,7 +7,7 @@ prepend_file=~/.config/jgmenu/prepend.csv
 append_file=~/.config/jgmenu/append.csv
 
 xdg_config_dirs="${XDG_CONFIG_HOME:-$HOME/.config} ${XDG_CONFIG_DIRS:-/etc/xdg}"
-xdg_data_dirs="$XDG_DATA_HOME $HOME/.local/share $XDG_DATA_DIRS \
+_xdg_data_dirs="$XDG_DATA_HOME $HOME/.local/share $XDG_DATA_DIRS \
 /usr/share /usr/local/share /opt/share"
 
 theme=
@@ -17,6 +17,9 @@ interactive=f
 regression_items="max_items min_items ignore_icon_cache color_noprog_fg \
 color_title_bg show_title search_all_items ignore_xsettings arrow_show \
 read_tint2rc tint2_rules tint2_button multi_window color_menu_fg"
+
+available_themes="archlabs_1803 bunsenlabs_hydrogen bunsenlabs_helium neon \
+greeneye"
 
 JGMENU_EXEC_DIR=$(jgmenu_run --exec-path)
 
@@ -246,7 +249,7 @@ prepend__add_terminal () {
 	do
 		# Don't grep for "st" - it's contained in too many strings :)
 		test "${x}" = "st" && break
-		if grep -i ${x} ${prepend_file} >/dev/null 2>&1
+		if grep -i "${x}" "${prepend_file}" >/dev/null 2>&1
 		then
 			say "prepend.csv already contains a terminal entry"
 			return
@@ -254,7 +257,7 @@ prepend__add_terminal () {
 	done
 	for x in ${prepend__terminals}
 	do
-		if type ${x} >/dev/null 2>&1
+		if type "${x}" >/dev/null 2>&1
 		then
 			prepend__add "Terminal,${x},utilities-terminal"
 			printf "Prepend %b\n" "${x}"
@@ -266,7 +269,7 @@ prepend__add_terminal () {
 prepend__add_browser () {
 	test -e ${prepend_file} && for x in ${prepend__browsers}
 	do
-		if grep -i ${x} ${prepend_file} >/dev/null 2>&1
+		if grep -i "${x}" "${prepend_file}" >/dev/null 2>&1
 		then
 			say "prepend.csv already contains a browser entry"
 			return
@@ -274,7 +277,7 @@ prepend__add_browser () {
 	done
 	for x in ${prepend__browsers}
 	do
-		if type ${x} >/dev/null 2>&1
+		if type "${x}" >/dev/null 2>&1
 		then
 			prepend__add "Browser,${x},${x}"
 			printf "Prepend %b\n" "${x}"
@@ -286,7 +289,7 @@ prepend__add_browser () {
 prepend__add_file_manager () {
 	test -e ${prepend_file} && for x in ${prepend__file_managers}
 	do
-		if grep -i ${x} ${prepend_file} >/dev/null 2>&1
+		if grep -i "${x}" "${prepend_file}" >/dev/null 2>&1
 		then
 			say "prepend.csv already contains a file manager entry"
 			return
@@ -294,7 +297,7 @@ prepend__add_file_manager () {
 	done
 	for x in ${prepend__file_managers}
 	do
-		if type ${x} >/dev/null 2>&1
+		if type "${x}" >/dev/null 2>&1
 		then
 			prepend__add "File manager,${x},system-file-manager"
 			printf "Prepend %b\n" "${x}"
@@ -314,7 +317,7 @@ check_config_file () {
 	if ! test -e ${config_file}
 	then
 		say "info: creating config file 'jgmenurc'"
-		cp ${JGMENU_EXEC_DIR}/jgmenurc ${config_file}
+		cp "${JGMENU_EXEC_DIR}/jgmenurc" "${config_file}"
 	else
 		jgmenu_run config amend --file "${config_file}"
 	fi
@@ -324,7 +327,7 @@ check_config_file () {
 check_regression () {
 	for r in ${regression_items}
 	do
-		if grep ${r} ${config_file} >/dev/null 2>&1
+		if grep "${r}" "${config_file}" >/dev/null 2>&1
 		then
 			warn "${r} is no longer a valid key"
 		fi
@@ -363,7 +366,7 @@ check_lx_installed () {
 }
 
 check_search_for_unicode_files () {
-	for x in $xdg_data_dirs
+	for x in $_xdg_data_dirs
 	do
 		test -d "${x}"/applications/ || continue
 		if file -i "${x}"/applications/*.desktop \
@@ -385,7 +388,7 @@ icon_theme_last_used_by_jgmenu () {
 }
 
 get_icon_theme () {
-	for d in $xdg_data_dirs
+	for d in $_xdg_data_dirs
 	do
 		test -d "${d}"/icons || continue
 		ls -1 "${d}"/icons
@@ -393,18 +396,14 @@ get_icon_theme () {
 }
 
 print_available_themes () {
-	ls -1 "${JGMENU_EXEC_DIR}"/jgmenurc.* 2>/dev/null | while read -r theme
+	for t in ${available_themes}
 	do
-		printf "%b\n" "${theme#*.}"
+		printf "%b\n" "${t}"
 	done
 }
 
 get_theme () {
-	themes="archlabs_1803 bunsenlabs_hydrogen bunsenlabs_helium neon"
-	for t in ${themes}
-	do
-		printf "%b\n" "${t}"
-	done | jgmenu --vsimple --center --no-spawn 2>/dev/null
+	print_available_themes | jgmenu --vsimple --center --no-spawn 2>/dev/null
 }
 
 restart_jgmenu () {
@@ -504,6 +503,11 @@ set_theme () {
 		neon__setup_theme
 		restart_jgmenu
 		;;
+	greeneye)
+		jgmenu_run greeneye --widgets >"${prepend_file}"
+		jgmenu_run greeneye --config >"${config_file}"
+		restart_jgmenu
+		;;
 	esac
 }
 
@@ -517,8 +521,9 @@ backup_jgmenurc () {
 	local files_to_backup="${HOME}/.config/jgmenu/jgmenurc \
 		${HOME}/.config/jgmenu/prepend.csv \
 		${HOME}/.config/jgmenu/append.csv"
-	local backup_dir="${HOME}/.config/jgmenu/backup/$(date +%Y%m%d%H%M%S)"
+	local backup_dir
 
+	backup_dir="${HOME}/.config/jgmenu/backup/$(date +%Y%m%d%H%M%S)"
 	test -d "${backup_dir}" && die "duplicate backup directory"
 	mkdir -p "${backup_dir}"
 	say "Backing up config files..."
