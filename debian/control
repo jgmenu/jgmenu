@@ -3,7 +3,7 @@ Maintainer: Johan Malm <jgm323@gmail.com>
 Section: x11
 Priority: optional
 Standards-Version: 3.9.7
-Build-Depends: debhelper (>= 9),
+Build-Depends: debhelper (>= 10),
                libx11-dev,
                libxrandr-dev,
                libcairo2-dev,
