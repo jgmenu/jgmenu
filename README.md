@@ -32,13 +32,13 @@ It does not depend on any toolkits such as GTK and Qt, but uses cairo and pango 
 
 It can display the following types of menu (or any combination of):
 
-- bespoke menu using a jgmenu flavoured CSV format
+-   bespoke menu using a jgmenu flavoured CSV format
 
-- application menu (XDG compatible) with localisation support
+-   application menu (XDG compatible) with localisation support
 
-- pipe menus
+-   pipe menus
 
-- openbox XML menu including openbox pipe-menus
+-   openbox XML menu including openbox pipe-menus
 
 It can display SVG, PNG and XPM icons.
 
@@ -52,19 +52,19 @@ Authors
 Authors who have contributed more than a few of lines of code to at least two files in the top-level directory include:
 
 @johanmalm
-  - main author
+-   main author
 
 @o9000
-  - wrote the pmenu module
-  - produced the xsettings client and xpm loader
-  - provided much advice on early design choices
-  - provided much technical guidance on icon related code, inter-process communication (IPC), the main loop select() and self-pipe constructs, and more (see git log for full details)
+-   wrote the pmenu module
+-   produced the xsettings client and xpm loader
+-   provided much advice on early design choices
+-   provided much technical guidance on icon related code, inter-process communication (IPC), the main loop select() and self-pipe constructs, and more (see git log for full details)
 
 There many who have contributed in other ways including, but not limited to:
 
 Vladimir-csp
 
-  - has contributed a great deal with bug reports, advice on XDG compliance and many helpful suggestions
+-   has contributed a great deal with bug reports, advice on XDG compliance and many helpful suggestions
 
 Various members of the BunsenLabs and ArchLabs communities have also helped with testing, documentation, ideas and inspiration to keep this project going.
 
@@ -72,5 +72,4 @@ Versioning
 ----------
 
 We use [semver 2.0.0](http://www.semver.org), except that at patch-level zero, the ".0" is omitted. For example, 1.0.0 would become 1.0.
-
 
