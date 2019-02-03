@@ -3,9 +3,6 @@
 #
 # Define VERBOSE=1 for a more verbose compilation
 #
-# Define PYTHON3_POLYGLOT=1 if '#!/usr/bin/env python3' is not going to work
-# on your system.
-#
 # Define NO_LX=1 if you do not want to build jgmenu-lx (which requires
 # libmenu-cache >=v1.1)
 #
@@ -94,12 +91,6 @@ install: $(PROGS)
 	@install -m644 $(FRAGMENTS) $(DESTDIR)$(libexecdir)
 	@./scripts/set-exec-path.sh $(DESTDIR)$(bindir)/jgmenu_run $(libexecdir)
 	@./scripts/set-exec-path.sh $(DESTDIR)$(libexecdir)/jgmenu_run $(libexecdir)
-ifdef PYTHON3_POLYGLOT
-	@./scripts/python3-polyglot.sh $(DESTDIR)$(libexecdir) $(notdir $(SCRIPTS_PYTHON))
-else
-	@type python3 >/dev/null 2>&1 || printf "%s\n" "warning: python3 not \
-	found. Suggest defining PYTHON3_POLYGLOT"
-endif
 	@$(MAKE) --no-print-directory -C docs/manual/ prefix=$(prefix) install
 	@install -d $(DESTDIR)$(datarootdir)/icons/hicolor/scalable/apps/
 	@install -d $(DESTDIR)$(datarootdir)/applications/
