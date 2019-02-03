@@ -28,6 +28,8 @@
 #include <sys/types.h>
 #include <errno.h>
 
+#include "util.h"
+
 #ifndef MIN
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
@@ -269,7 +271,7 @@ static int xpm_read_string(FILE *infile, char **buffer, uint *buffer_size)
 			else
 				goto out;
 
-			buf = (char *)realloc(buf, bufsiz);
+			buf = (char *)xrealloc(buf, bufsiz);
 			buf[bufsiz - 1] = '\0';
 		}
 
