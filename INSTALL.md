@@ -21,11 +21,8 @@ Build and install in $HOME directory
 This is for users who:
 
 -   wish to use/test a feature/fix which is not yet in the latest version in their repo.
-
 -   wish to experiement with the code or contribute code
-
 -   use a distro without jgmenu in their repo and run a single-user system
-
 -   do not like to or are not permitted to use sudo
 
 ```bash
@@ -94,13 +91,9 @@ Dependencies
 | lx      | glib-2.0, libmenu-cache (>=1.1.0)        |
 
 -   A *menu* package  is required for "lx". Recommended *menu* packages include: lxmenu-data and gnome-menus. Xfce's libgarcon-common does not yet work with lx.
-
 -   "pmenu" uses any installed *menu* packages if they exist, but also works without these by showing applications in the menu's root directory.
-
 -   python3 is required by "pmenu"
-
--   A Composite Manager such as `compton` is required to enable transparency.  Most Desktop Environments already have one installed.
-
+-   A Composite Manager such as `compton` is required to enable transparency. Most Desktop Environments already have one installed.
 -   To build the man pages, you need to have `pandoc` installed. However, as many users do not have this package, the man pages are commited in the git repo (i.e. you only need pandoc if you want to contribute to or change the man pages.)
 
 Build Options

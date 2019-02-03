@@ -3,12 +3,34 @@
  *
  * Parses XML .menu file and outputs a csv formatted jgmenu file
  *
- * This is still completely experimental and only just works
- *
- * It aim to be XDG compliant, although it has a long way to go!
- *
  * See this spec for further details:
  * https://specifications.freedesktop.org/menu-spec/menu-spec-1.0.html
+ *
+ * Generate jgmenu flavoured CSV menu data for an XDGish menu
+ *
+ * `jgmenu_run xdg` \[--no-dirs] \[<*.menu file*>]
+ *
+ * `jgmenu_run xdg` generates jgmenu flavoured CSV menu data for a menu
+ * based on XML .menu files loosely in accordance with the XDG spec:
+ *
+ * http://standards.freedesktop.org/menu-spec/
+ * http://standards.freedesktop.org/basedir-spec/
+ * http://standards.freedesktop.org/desktop-entry-spec/
+ * http://standards.freedesktop.org/desktop-entry-spec/
+ *
+ * `jgmenu_run xdg` is a very simple XDG implementation.
+ * It understands the XML elements <*Menu*>, <*Name*>, <*Directory*>
+ * and <*Include*><*And*><*Category*>, but ignores everything else.
+ *
+ * The .menu file is sought in `${XDG_CONFIG_DIRS:-/etc/xdg}` with
+ * user configuration override in `${XDG_CONFIG_HOME:-$HOME/.config}`
+ *
+ * `$XDG_MENU_PREFIX` can be used to specity a .menu file. For example
+ * `$XDG_MENU_PREFIX=lxde-` will load lxde-applications.menu
+ * This can be useful if there are several .menu files on the system.
+ *
+ * \--no-dirs
+ * :   ignore .menu and .directory files
  */
 
 #include <stdio.h>

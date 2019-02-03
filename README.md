@@ -33,11 +33,8 @@ It does not depend on any toolkits such as GTK and Qt, but uses cairo and pango 
 It can display the following types of menu (or any combination of):
 
 -   bespoke menu using a jgmenu flavoured CSV format
-
 -   application menu (XDG compatible) with localisation support
-
 -   pipe menus
-
 -   openbox XML menu including openbox pipe-menus
 
 It can display SVG, PNG and XPM icons.
