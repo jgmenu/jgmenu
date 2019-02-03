@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # This file is designed to be sourced before running jgmenu
 # Uncomment the variable which controls the message(s) you wish to see
 

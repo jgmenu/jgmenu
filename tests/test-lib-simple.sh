@@ -1,3 +1,4 @@
+#!/bin/sh
 #
 # Hughly simplified version of git's test-lib.sh
 # Included to test hashmap.c
