@@ -1267,7 +1267,7 @@ void read_csv_file(FILE *fp)
 		list_add_tail(&item->master, &menu.master);
 	}
 
-	if (!item || i <= 0)
+	if (!item || i == 0)
 		die("input file contains no menu items");
 }
 
