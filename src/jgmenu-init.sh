@@ -366,14 +366,18 @@ check_lx_installed () {
 }
 
 check_search_for_unicode_files () {
-	for x in $_xdg_data_dirs
+	for d in $_xdg_data_dirs
 	do
-		test -d "${x}"/applications/ || continue
-		if file -i "${x}"/applications/*.desktop \
-			| grep -v 'utf-8\|ascii\|symlink'
-		then
-			unicode_found=y
-		fi
+		test -d "${d}"/applications/ || continue
+		ls "${d}"/applications/*.desktop >/dev/null 2>&1 || continue
+		for f in "${d}"/applications/*.desktop
+		do
+			if file -i "${f}" | grep -v 'utf-8\|ascii\|symlink'
+			then
+				say "${f}"
+				unicode_found=y
+			fi
+		done
 	done
 
 	test "${unicode_found}" = "y" && warn "\
