@@ -33,7 +33,7 @@ static const char jgmenu_i18n_usage[] =
 " 3) Run `jgmenu_run ob | jgmenu_run i18n sv | jgmenu --simple`\n";
 
 static int arg_init;
-static char *i18nfile = NULL;
+static char *i18nfile;
 
 static void usage(void)
 {

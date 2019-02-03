@@ -69,6 +69,7 @@ static void print_categories(void)
 	}
 }
 
+#define SEARCH_ICON "/usr/share/icons/breeze-dark/actions/22/system-search.svg"
 static void output_widgets(void)
 {
 	/* Search box */
@@ -76,8 +77,8 @@ static void output_widgets(void)
 	       bw + pad, pad, cw - pad * 2, ah - pad);
 	printf("@search,,%d,%d,%d,%d,2,left,top,#eeeeee 80,#000000 0,\n",
 	       bw + pad + 5, pad, cw - pad * 2, ah - pad);
-	printf("@icon,,%d,%d,22,22,2,left,top,#000000 50,#000000 50,/usr/share/icons/breeze-dark/actions/22/system-search.svg\n",
-	       bw + cw - pad - 30, pad + 8);
+	printf("@icon,,%d,%d,22,22,2,left,top,#000000 50,#000000 50,%s\n",
+	       bw + cw - pad - 30, pad + 8, SEARCH_ICON);
 
 	/* Grey area for menus items */
 	printf("@rect,,%d,%d,%d,%d,2,left,top,#000000 0,#282828 90,\n",

@@ -76,7 +76,7 @@ static void process_dir(MenuCacheApp *app)
 	sbuf_addstr(&cur->buf, ",^back(),go-previous\n");
 }
 
-static void add_metadata(const char * const * categories)
+static void add_metadata(const char * const *categories)
 {
 	const char **c = (const char **)categories;
 	int i;
