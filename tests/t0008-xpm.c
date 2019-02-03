@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../xpm-loader.h"
+#include "../src/xpm-loader.h"
 
 int main(int argc, char **argv)
 {

@@ -159,7 +159,8 @@ static int find_color(const char *name, struct xpm_color *color_ptr)
 static int parse_color(const char *spec, struct xpm_color *color_ptr)
 {
 	if (spec[0] == '#') {
-		int i, red, green, blue;
+		int i;
+		unsigned int red, green, blue;
 
 		i = strlen(spec + 1);
 		if (i % 3)
