@@ -13,6 +13,7 @@
 #include "sbuf.h"
 #include "list.h"
 #include "charset.h"
+#include "compat.h"
 
 struct list_head desktop_files_all;
 struct list_head desktop_files_filtered;
@@ -97,11 +98,13 @@ static int parse_desktop_file(FILE *fp)
 static void process_file(char *filename, const char *path, int isdir)
 {
 	FILE *fp;
-	char fullname[BUFSIZ];
+	char fullname[4096];
 	int ret;
+	size_t len;
 
-	strncpy(fullname, path, strlen(path));
-	strncpy(fullname + strlen(path), filename, strlen(filename) + 1);
+	len = strlen(path);
+	strlcpy(fullname, path, sizeof(fullname));
+	strlcpy(fullname + len, filename, sizeof(fullname) - len);
 	fp = fopen(fullname, "r");
 	if (!fp) {
 		warn("could not open file %s", filename);
