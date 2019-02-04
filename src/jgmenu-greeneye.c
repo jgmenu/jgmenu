@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "compat.h"
+
 static int ah = 40;
 static int bw = 150;
 static int cw = 300;
@@ -55,7 +57,7 @@ static void print_categories(void)
 
 	y = pad;
 	for (i = 0; categories[i]; i++) {
-		strncpy(buf, categories[i], sizeof(buf));
+		strlcpy(buf, categories[i], sizeof(buf));
 		buf[1023] = '\0';
 		p = strchr(buf, ':');
 		if (p)
