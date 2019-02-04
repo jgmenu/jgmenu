@@ -187,6 +187,7 @@ int get_first_num_from_str(const char *s)
 
 static void xatoi_warn(const char *msg, const char *val, const char *key)
 {
+	BUG_ON(!msg || !val || !key);
 	fprintf(stderr, "warning: %s; value='%s'; key='%s'\n", msg, val, key);
 }
 
