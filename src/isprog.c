@@ -5,8 +5,9 @@
 #include <unistd.h>
 #include <string.h>
 
-#include "list.h"
 #include "isprog.h"
+#include "list.h"
+#include "compat.h"
 
 struct path_segment {
 	char *path;
@@ -49,7 +50,7 @@ int isprog(const char *filename)
 {
 	char prog[4096], *p;
 	struct path_segment *tmp;
-	int pos, cmd_length;
+	int pos;
 	static int is_path_parsed;
 
 	if (!is_path_parsed) {
@@ -57,20 +58,16 @@ int isprog(const char *filename)
 		++is_path_parsed;
 	}
 
-	/* ignore options/arguments */
-	p = strchr(filename, ' ');
-	if (p)
-		cmd_length = p - filename;
-	else
-		cmd_length = strlen(filename);
-
 	list_for_each_entry(tmp, &head, list) {
-		strcpy(prog, tmp->path);
+		strlcpy(prog, tmp->path, sizeof(prog));
 		pos = strlen(tmp->path);
 		prog[pos++] = '/';
-		strncpy(prog + pos, filename, cmd_length);
-		prog[pos + cmd_length] = '\0';
+		strlcpy(prog + pos, filename, sizeof(prog) - pos);
 
+		/* ignore options/arguments */
+		p = strchr(prog, ' ');
+		if (p)
+			*p = '\0';
 		if (is_ixoth(prog))
 			return 1;
 	}

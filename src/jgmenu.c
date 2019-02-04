@@ -27,7 +27,6 @@
 #include "config.h"
 #include "util.h"
 #include "geometry.h"
-#include "isprog.h"
 #include "sbuf.h"
 #include "icon.h"
 #include "filter.h"
