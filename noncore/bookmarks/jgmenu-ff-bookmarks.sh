@@ -48,7 +48,7 @@ process_folders () {
 	done
 }
 
-if test $1 = "--help"
+if test "$1" = "--help"
 then
 	usage
 	exit 0
