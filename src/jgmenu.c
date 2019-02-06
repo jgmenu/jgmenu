@@ -774,14 +774,25 @@ struct item *get_item_from_tag(const char *tag)
 	return NULL;
 }
 
+static char *tag_of_first_item(void)
+{
+	struct item *item;
+
+	item = list_first_entry_or_null(&menu.master, struct item, master);
+	if (!item)
+		die("no items in master list");
+	return item->tag;
+}
+
 void find_subhead(const char *tag)
 {
 	BUG_ON(!tag);
-	if (!tag_exists(tag)) {
+	if (tag_exists(tag)) {
+		menu.current_node = get_node_from_tag(tag);
+	} else {
 		warn("tag '%s' does not exist", tag);
-		return;
+		menu.current_node = get_node_from_tag(tag_of_first_item());
 	}
-	menu.current_node = get_node_from_tag(tag);
 	if (!menu.current_node)
 		die("node '%s' does not exist", tag);
 	menu.subhead = container_of((menu.current_node->item)->master.next,
@@ -2301,16 +2312,6 @@ void set_theme(void)
 	icon_set_size(config.icon_size);
 	info("set icon theme to '%s'", theme.buf);
 	icon_set_theme(theme.buf);
-}
-
-static char *tag_of_first_item(void)
-{
-	struct item *item;
-
-	item = list_first_entry_or_null(&menu.master, struct item, master);
-	if (!item)
-		die("no items in master list");
-	return item->tag;
 }
 
 static void quit(int signum)
