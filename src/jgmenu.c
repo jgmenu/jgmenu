@@ -801,7 +801,7 @@ void find_subhead(const char *tag)
 		die("no menu.subhead");
 }
 
-void find_subtail(const char *tag)
+void find_subtail(void)
 {
 	struct item *item;
 
@@ -818,7 +818,7 @@ void checkout_tag(const char *tag)
 {
 	filter_reset();
 	find_subhead(tag);
-	find_subtail(tag);
+	find_subtail();
 }
 
 void checkout_submenu(char *tag)
