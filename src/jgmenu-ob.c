@@ -52,8 +52,6 @@ static void print_it(struct tag *tag)
 
 	if (list_empty(&tag->items))
 		return;
-	if (tag->label)
-		printf("%s,", tag->label);
 	printf("^tag(%s)\n", tag->id);
 	if (tag->parent)
 		printf("Back,^back()\n");
