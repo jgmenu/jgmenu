@@ -63,6 +63,10 @@ static void print_it(struct tag *tag)
 		sbuf_cpy(&label_escaped, t9n ? t9n : item->label);
 		sbuf_replace(&label_escaped, "&", "&amp;");
 		sbuf_replace_spaces_with_one_tab(&label_escaped);
+		if (strchr(label_escaped.buf, ',')) {
+			sbuf_prepend(&label_escaped, "\"\"\"");
+			sbuf_addstr(&label_escaped, "\"\"\"");
+		}
 		if (item->pipe) {
 			/* Use double quotes to support bl-places-pipemenu */
 			printf("%s,^pipe(jgmenu_run ob --cmd=\"%s\" --tag=\"%s\")",
@@ -78,12 +82,7 @@ static void print_it(struct tag *tag)
 		} else if (item->isseparator) {
 			printf("^sep(%s)\n", label_escaped.buf);
 		} else {
-			if (strchr(label_escaped.buf, ','))
-				printf("\"\"\"");
-			printf("%s", label_escaped.buf);
-			if (strchr(label_escaped.buf, ','))
-				printf("\"\"\"");
-			printf(",%s", item->cmd);
+			printf("%s,%s", label_escaped.buf, item->cmd);
 			if (item->icon)
 				printf(",%s", item->icon);
 			printf("\n");
