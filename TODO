@@ -3,15 +3,25 @@ See https://github.com/johanmalm/jgmenu/wiki/Roadmap.md for further details
 Minor changes (0-3 months)
 --------------------------
 
-Remove polyglot script
-
-Keep init and config to one file each + remove fragments + add jgmenurc to python file
+jgmenu-ob(1): update --tag= description
 
 Deal with ^pipe() that returns error
 
-Deal with ^pipe() with the same tag as its parent
+Make sure ^pipe()s have unique tag names
+
+Add snap_to_edge_x = <from-distance>
+
+Remove jgmenu and jgmenu_run from $libexecdir
+
+Incorporate Makefile.inc into Makefile
+
+Add --root= option
+
+Move jgmenu-config.py to top-level and include jgmenurc in it
 
 Hide separators when searching
+
+Trim argv-buf fields
 
 Investigate duplicate .desktop entries on Raspberry Pi and nixOS
 
