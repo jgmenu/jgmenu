@@ -1086,6 +1086,10 @@ struct node *walk_tagged_items(struct item *this, struct node *parent)
 	struct node *current_node;
 
 	BUG_ON(!this);
+	if (node_exists(this->tag)) {
+		warn("node not added as tag (%s) already exists");
+		return NULL;
+	}
 	create_node(this->tag, parent);
 	/* move to next item, as this points to a ^tag() item */
 	p = container_of((this)->master.next, struct item, master);
