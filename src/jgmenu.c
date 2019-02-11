@@ -1080,7 +1080,7 @@ void create_node(const char *name, struct node *parent)
 }
 
 /* Create nodal tree from tagged items */
-struct node *walk_tagged_items(struct item *this, struct node *parent)
+struct node *node_add_new(struct item *this, struct node *parent)
 {
 	struct item *child, *p;
 	struct node *current_node;
@@ -1105,7 +1105,7 @@ struct node *walk_tagged_items(struct item *this, struct node *parent)
 				continue;
 			if (child->tag && node_exists(child->tag))
 				continue;
-			walk_tagged_items(child, current_node);
+			node_add_new(child, current_node);
 		} else if (!strncmp("^tag(", p->cmd, 5)) {
 			break;
 		}
@@ -1133,7 +1133,7 @@ void build_tree(void)
 	BUG_ON(!item->tag);
 	BUG_ON(list_is_singular(&menu.master));
 
-	root_node = walk_tagged_items(get_item_from_tag(item->tag), NULL);
+	root_node = node_add_new(get_item_from_tag(item->tag), NULL);
 
 	/*
 	 * Add any remaining ^tag()s - i.e. those without a corresponding
@@ -1394,7 +1394,7 @@ void pipemenu_add(const char *s)
 		rm_back_items();
 	/* FIXME: walk_tag_items means 'add new nodes' - consider renaming */
 	parent_node = menu.current_node;
-	walk_tagged_items(pipe_head, parent_node);
+	node_add_new(pipe_head, parent_node);
 	checkout_submenu(pipe_head->tag);
 	pm_push(menu.current_node, parent_node);
 }
