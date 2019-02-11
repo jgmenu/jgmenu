@@ -1334,6 +1334,35 @@ void del_beyond_root(void)
 	pipemenu_del_all();
 }
 
+static int check_pipe_tags_unique(struct item *from)
+{
+	struct item *p;
+
+	p = from;
+	list_for_each_entry_from(p, &menu.master, master) {
+		BUG_ON(!p);
+		if (!p->tag)
+			continue;
+		if (node_exists(p->tag)) {
+			info("tag (%s) already exists", p->tag);
+			return -1;
+		}
+	}
+	return 0;
+}
+
+void destroy_master_list_from(struct item *from)
+{
+	struct item *i, *i_tmp;
+
+	i = from;
+	list_for_each_entry_safe_from(i, i_tmp, &menu.master, master) {
+		xfree(i->buf);
+		list_del(&i->master);
+		xfree(i);
+	}
+}
+
 void pipemenu_add(const char *s)
 {
 	FILE *fp = NULL;
@@ -1347,10 +1376,19 @@ void pipemenu_add(const char *s)
 		return;
 	}
 
-	/* FIXME: how do we handle pipemenu without tag? */
 	pipe_head = list_last_entry(&menu.master, struct item, master);
 	read_csv_file(fp);
+	if (fp && fp != stdin)
+		fclose(fp);
 	pipe_head = container_of(pipe_head->master.next, struct item, master);
+	/* pipe_head now points to first item of pipe */
+
+	if (check_pipe_tags_unique(pipe_head) < 0) {
+		destroy_master_list_from(pipe_head);
+		info("pipe menu removed");
+		return;
+	}
+
 	if (config.hide_back_items)
 		rm_back_items();
 	/* FIXME: walk_tag_items means 'add new nodes' - consider renaming */
@@ -1367,16 +1405,10 @@ void pipemenu_add(const char *s)
  */
 void pipemenu_del_from(struct node *node)
 {
-	struct item *i, *i_tmp;
 	struct node *n_tmp;
 
 	pm_pop();
-	i = node->item;
-	list_for_each_entry_safe_from(i, i_tmp, &menu.master, master) {
-		xfree(i->buf);
-		list_del(&i->master);
-		xfree(i);
-	}
+	destroy_master_list_from(node->item);
 	list_for_each_entry_safe_from(node, n_tmp, &menu.nodes, node) {
 		list_del(&node->node);
 		xfree(node);
@@ -2384,7 +2416,6 @@ static void cleanup(void)
 		icon_cleanup();
 	widgets_cleanup();
 	watch_cleanup();
-
 	delete_empty_item();
 	destroy_node_tree();
 	destroy_master_list();
