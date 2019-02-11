@@ -1094,10 +1094,7 @@ struct node *walk_tagged_items(struct item *this, struct node *parent)
 	/* move to next item, as this points to a ^tag() item */
 	p = container_of((this)->master.next, struct item, master);
 	/* p now points to first menu-item under tag "this->tag" */
-	if (p == list_last_entry(&menu.master, struct item, master))
-		return NULL;
 
-	/* FIXME: Check if node(s.buf) already exists */
 	current_node = list_last_entry(&menu.nodes, struct node, node);
 
 	/* walk the items under current node and put into tree structure */
