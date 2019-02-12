@@ -1,4 +1,4 @@
-Openbox 3,^tag(root-menu)
+^tag(root-menu)
 Terminal,x-terminal-emulator,utilities-terminal
 Web Browser,x-www-browser,firefox
 Places,^pipe(jgmenu_run ob --cmd="bl-places-pipemenu" --tag="Places"),system-run

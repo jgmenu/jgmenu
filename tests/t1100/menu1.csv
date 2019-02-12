@@ -1,4 +1,4 @@
-Openbox 3,^tag(root-menu)
+^tag(root-menu)
 Terminal,x-terminal-emulator
 Web Browser,x-www-browser
 ^sep()
@@ -7,11 +7,11 @@ Submenu,^checkout(submenu)
 ^sep()
 Exit,^checkout(exit-menu)
 
-Exit,^tag(exit-menu)
+^tag(exit-menu)
 Reboot,systemctl -i reboot
 Power off,systemctl -i poweroff
 
-Submenu,^tag(submenu)
+^tag(submenu)
 Back,^back()
 Foo,foo
 ^sep(Separate Foo and Bar)
