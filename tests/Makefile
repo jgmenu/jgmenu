@@ -4,7 +4,7 @@ ASAN_FLAGS = -O0 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynami
 all:
 	./t1011-hashmap.sh
 	./t1012-argv-buf.sh
-	./t1013-config-amend.sh
+#	./t1013-config-amend.sh
 	./t1100-ob.sh
 	./t1101-i18n.sh
 

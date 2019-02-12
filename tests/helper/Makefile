@@ -1,14 +1,25 @@
--include ../../config.mk
-include ../../Makefile.inc
+CC         = @echo '     CC    '$@;gcc
+CFLAGS     = -g -Wall
+ASAN_FLAGS = -O0 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic
+CFLAGS    += $(ASAN_FLAGS)
+LDFLAGS   += $(ASAN_FLAGS) -fuse-ld=gold
+RM         = rm -f
 
-JGMENU_LIB = ../../libjgmenu.a
+src = ../../src/
+util = $(src)util.c $(src)sbuf.c
 
-TEST_PROGS = $(basename $(shell find . -maxdepth 1 -name "*.c"))
+TEST_PROGS = filter-out test-argv-buf test-hashmap
 
-all: $(TEST_PROGS) $(JGMENU_LIB)
+all: $(TEST_PROGS)
 
-$(TEST_PROGS): % : %.c
-	$(QUIET_CC)$(CC) $(CFLAGS) -o $@ $^ $(JGMENU_LIB) -I../../src
+filter-out: filter-out.c
+	$(CC) $(CFLAGS) -o $@ $^ -I$(src) $(LDFLAGS)
+
+test-hashmap: test-hashmap.c $(src)hashmap.c $(util)
+	$(CC) $(CFLAGS) -o $@ $^ -I$(src) $(LDFLAGS)
+
+test-argv-buf: test-argv-buf.c $(src)argv-buf.c $(util)
+	$(CC) $(CFLAGS) -o $@ $^ -I$(src) $(LDFLAGS)
 
 clean :
 	@$(RM) $(TEST_PROGS)
