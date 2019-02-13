@@ -72,7 +72,8 @@ FRAGMENTS      = noncore/config/jgmenurc
 SCRIPTS_PYTHON = src/jgmenu-pmenu.py src/jgmenu-unity-hack.py \
                  noncore/config/jgmenu-config.py
 
-PROGS	 = jgmenu jgmenu-ob jgmenu-socket jgmenu-i18n jgmenu-greeneye
+PROGS_LIBEXEC  = jgmenu-ob jgmenu-socket jgmenu-i18n jgmenu-greeneye
+PROGS          = jgmenu $(PROGS_LIBEXEC)
 
 # wrap in ifneq to ensure we respect user defined NO_LX=1
 ifneq ($(NO_LX),1)
@@ -122,11 +123,10 @@ install: $(PROGS)
 	@install -d $(DESTDIR)$(bindir)
 	@install -m755 jgmenu src/jgmenu_run $(DESTDIR)$(bindir)
 	@install -d $(DESTDIR)$(libexecdir)
-	@install -m755 $(PROGS) $(SCRIPTS_SHELL) $(DESTDIR)$(libexecdir)
+	@install -m755 $(PROGS_LIBEXEC) $(SCRIPTS_SHELL) $(DESTDIR)$(libexecdir)
 	@install -m755 $(SCRIPTS_PYTHON) $(DESTDIR)$(libexecdir)
 	@install -m644 $(FRAGMENTS) $(DESTDIR)$(libexecdir)
 	@./scripts/set-exec-path.sh $(DESTDIR)$(bindir)/jgmenu_run $(libexecdir)
-	@./scripts/set-exec-path.sh $(DESTDIR)$(libexecdir)/jgmenu_run $(libexecdir)
 	@$(MAKE) --no-print-directory -C docs/manual/ prefix=$(prefix) install
 	@install -d $(DESTDIR)$(datarootdir)/icons/hicolor/scalable/apps/
 	@install -d $(DESTDIR)$(datarootdir)/applications/
