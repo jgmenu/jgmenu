@@ -6,7 +6,7 @@
 
 ## Recent releases
 
-[v2.0](docs/relnotes/v2.0.txt)
-[v1.6](docs/relnotes/v1.6.txt)
-[v1.5](docs/relnotes/v1.5.txt)
+[v2.0](https://github.com/johanmalm/jgmenu/blob/master/docs/relnotes/2.0.txt)  
+[v1.6](https://github.com/johanmalm/jgmenu/blob/master/docs/relnotes/1.6.txt)  
+[v1.5](https://github.com/johanmalm/jgmenu/blob/master/docs/relnotes/1.5.txt)  
 
