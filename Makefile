@@ -67,21 +67,21 @@ DEPDIR := .d
 $(shell mkdir -p $(DEPDIR) >/dev/null)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
-SCRIPTS_SHELL  = src/jgmenu_run src/jgmenu-init.sh
-FRAGMENTS      = noncore/config/jgmenurc
-SCRIPTS_PYTHON = src/jgmenu-pmenu.py src/jgmenu-unity-hack.py \
-                 noncore/config/jgmenu-config.py
+SCRIPTS_LIBEXEC = src/jgmenu-init.sh src/jgmenu-pmenu.py \
+                  src/jgmenu-unity-hack.py noncore/config/jgmenu-config.py
+FRAGMENTS       = noncore/config/jgmenurc
 
-PROGS_LIBEXEC  = jgmenu-ob jgmenu-socket jgmenu-i18n jgmenu-greeneye
-PROGS          = jgmenu $(PROGS_LIBEXEC)
+PROGS_LIBEXEC   = jgmenu-ob jgmenu-socket jgmenu-i18n jgmenu-greeneye
 
 # wrap in ifneq to ensure we respect user defined NO_LX=1
 ifneq ($(NO_LX),1)
 NO_LX := $(shell pkg-config "libmenu-cache >= 1.1.0" "glib-2.0" || echo "1")
 endif
 ifneq ($(NO_LX),1)
-PROGS += jgmenu-lx
+PROGS_LIBEXEC += jgmenu-lx
 endif
+
+PROGS           = jgmenu $(PROGS_LIBEXEC)
 
 objects = $(patsubst ./src/%.c,%.o,$(shell find ./src -maxdepth 1 -name '*.c' -print))
 mains = $(patsubst src/%,%.o,$(PROGS))
@@ -123,8 +123,7 @@ install: $(PROGS)
 	@install -d $(DESTDIR)$(bindir)
 	@install -m755 jgmenu src/jgmenu_run $(DESTDIR)$(bindir)
 	@install -d $(DESTDIR)$(libexecdir)
-	@install -m755 $(PROGS_LIBEXEC) $(SCRIPTS_SHELL) $(DESTDIR)$(libexecdir)
-	@install -m755 $(SCRIPTS_PYTHON) $(DESTDIR)$(libexecdir)
+	@install -m755 $(PROGS_LIBEXEC) $(SCRIPTS_LIBEXEC) $(DESTDIR)$(libexecdir)
 	@install -m644 $(FRAGMENTS) $(DESTDIR)$(libexecdir)
 	@./scripts/set-exec-path.sh $(DESTDIR)$(bindir)/jgmenu_run $(libexecdir)
 	@$(MAKE) --no-print-directory -C docs/manual/ prefix=$(prefix) install
