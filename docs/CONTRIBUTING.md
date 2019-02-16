@@ -171,8 +171,9 @@ Upversion
 -   update `default_version` in scripts/version-gen.sh  
 -   update debian/changelog  
 -   create docs/relnotes/X.Y.txt  
+-   update NEWS.md  
 -   add and commit the above files  
--   git tag -a 'vX.Y'  
+-   git tag -a 'vX.Y' (using the release notes as the commit message)  
 
 Add new config variables
 ------------------------
