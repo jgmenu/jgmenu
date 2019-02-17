@@ -1,43 +1,60 @@
-ASAN_FLAGS = -O0 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic \
-	     -fuse-ld=gold
+# Run tests
+#
+# Copyright (c) 2011-2012 Mathias Lafeldt
+# Copyright (c) 2005-2012 Git project
+# Copyright (c) 2005-2012 Junio C Hamano
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see http://www.gnu.org/licenses/ .
 
-all:
-	./t1011-hashmap.sh
-	./t1012-argv-buf.sh
-#	./t1013-config-amend.sh
-	./t1100-ob.sh
-	./t1101-i18n.sh
+SHELL_PATH ?= $(SHELL)
+SHELL_PATH_SQ = $(subst ','\'',$(SHELL_PATH))
+RM ?= rm -f
+PROVE ?= prove
+AGGREGATE_SCRIPT ?= aggregate-results.sh
+DEFAULT_TEST_TARGET ?= test
 
+T = $(sort $(wildcard *.t))
 
-# string buffer tests
-t0002:
-	gcc -o t0002-sbuf t0002-sbuf.c ../src/sbuf.c ../src/util.c
-	./t0002-sbuf
+all: $(DEFAULT_TEST_TARGET)
 
-# icon-lookup tests
-t0003:
-	gcc -o t0003-icon-find t0003-icon-find.c ../src/icon-find.c ../src/xdgdirs.c \
-		../src/sbuf.c ../src/util.c
-	./t0003-icon-find
-	@echo ""
+test: pre-clean
+	$(MAKE) aggregate-results-and-cleanup
 
-t0005:
-	gcc -o t0005-xdgdirs t0005-xdgdirs.c ../src/xdgdirs.c ../src/sbuf.c
-	./t0005-xdgdirs
+prove: pre-clean
+	@echo "*** prove ***"; $(PROVE) --exec '$(SHELL_PATH_SQ)' $(PROVE_OPTS) $(T) :: $(TEST_OPTS)
+	$(MAKE) clean-except-prove-cache
 
-t0007:
-	gcc -o t0007-xdgapps t0007-xdgapps.c ../src/xdgapps.c ../src/sbuf.c ../src/util.c \
-		../src/xdgdirs.c $(ASAN_FLAGS)
-	./t0007-xdgapps
+$(T):
+	@echo "*** $@ ***"; '$(SHELL_PATH_SQ)' $@ $(TEST_OPTS)
 
-t0008: t0008-xpm.c ../src/xpm-loader.c ../src/xpm-loader.h
-	gcc -o t0008-xpm t0008-xpm.c ../src/xpm-loader.c $(ASAN_FLAGS) `pkg-config cairo --cflags --libs`
-	./t0008-xpm t0008/*.xpm
+pre-clean:
+	$(RM) -r test-results
 
-t9000:
-	@./t9000-icon-load.sh
-	@./t9000-icon-load.sh
-	@./t9000-icon-load.sh
+clean-except-prove-cache:
+	$(RM) -r 'trash directory'.* test-results
 
-clean:
-	@$(RM) actual expect
+clean: clean-except-prove-cache
+	$(RM) .prove
+
+aggregate-results-and-cleanup: $(T)
+	$(MAKE) aggregate-results
+	$(MAKE) clean
+
+aggregate-results:
+	for f in test-results/*.counts; do \
+		echo "$$f"; \
+	done | '$(SHELL_PATH_SQ)' '$(AGGREGATE_SCRIPT)'
+
+.PHONY: all test prove $(T) pre-clean clean
+.PHONY: aggregate-results-and-cleanup aggregate-results
