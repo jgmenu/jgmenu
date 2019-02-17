@@ -9,19 +9,13 @@ then
 	exit 1
 fi
 
-printf "%b\n" "Running tests..."
+printf "%b\n" "Running tests ${cycles} times..."
 
 start=$(date +%s.%N)
 for i in $(seq "${cycles}"); do
 	${execpath}/jgmenu-pmenu.py >/dev/null 2>&1
 done
 dur_pmenu=$(printf "%b\n" "$(date +%s.%N) - $start" | bc)
-
-start=$(date +%s.%N)
-for i in $(seq "${cycles}"); do
-	${execpath}/jgmenu-xdg >/dev/null 2>&1
-done
-dur_xdg=$(printf "%b\n" "$(date +%s.%N) - $start" | bc)
 
 start=$(date +%s.%N)
 for i in $(seq "${cycles}"); do
@@ -33,7 +27,6 @@ start=$(date +%s.%N) 2>&1
 dur_nothing=$(printf "%b\n" "$(date +%s.%N) - $start" | bc)
 
 printf "pmenu:%.3fs;   " ${dur_pmenu}
-printf "xdg:%.3fs;   " ${dur_xdg}
 printf "lx:%.3fs;   " ${dur_lx}
 printf "nothing:%.3fs\n" ${dur_nothing}
 
