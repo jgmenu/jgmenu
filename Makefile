@@ -82,15 +82,6 @@ endif
 
 PROGS           = jgmenu $(PROGS_LIBEXEC)
 
-objects = $(patsubst ./src/%.c,%.o,$(shell find ./src -maxdepth 1 -name '*.c' -print))
-mains = $(patsubst src/%,%.o,$(PROGS))
-ifneq ($(NO_LX),1)
-OBJS = $(filter-out $(mains),$(objects))
-else
-OBJS = $(filter-out $(mains) jgmenu-lx.o,$(objects))
-endif
-SRCS = $(patsubst %.o,src/%.c,$(OBJS))
-
 all: $(PROGS)
 
 jgmenu: jgmenu.o x11-ui.o config.o util.o geometry.o isprog.o sbuf.o \
@@ -160,7 +151,7 @@ clean:
 	@$(MAKE) --no-print-directory -C tests/ clean
 	@$(MAKE) --no-print-directory -C tests/helper/ clean
 
-test: $(OBJS)
+test:
 	@$(MAKE) --no-print-directory -C tests/helper/ all
 	@$(MAKE) --no-print-directory -C tests/ all
 
@@ -174,4 +165,5 @@ check:
 print-%:
 	@echo '$*=$($*)'
 
+SRCS = $(patsubst ./%,%,$(shell find ./src -maxdepth 1 -name '*.c' -print))
 include $(wildcard $(patsubst %,$(DEPDIR)/%.d,$(basename $(SRCS))))
