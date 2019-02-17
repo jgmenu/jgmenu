@@ -1,4 +1,0 @@
-Terminal,x-terminal-emulator,utilities-terminal
-Web Browser,x-www-browser,applications-internet
-File Manager,xdg-open ~,system-file-manager
-^sep()
