@@ -12,7 +12,7 @@ import os
 DEFAULT_CONFIG_FILE = "~/.config/jgmenu/jgmenurc"
 
 def jgmenurc():
-    """ return config file keys and values """
+    """ return dict with config file keys and values """
     keys_and_values = {
         "stay_alive": "1",
         "hide_on_startup": "0",
@@ -104,7 +104,7 @@ def get_keys(lines):
     return keys
 
 def get_missing_keys(conf_lines):
-    """ compare {config,template} lists and return missing keys """
+    """ compare config file with built-in dict and return missing keys """
     conf_keys = get_keys(conf_lines)
     return [item for item in jgmenurc() if item not in set(conf_keys)]
 
@@ -114,18 +114,19 @@ def resolve(filename):
         die("filename must be specified")
     filename = os.path.expanduser(filename)
     filename = os.path.expandvars(filename)
-    if not os.path.exists(filename):
-        die("file '{}' does not exist".format(filename))
     return filename
 
 def amend(conf_filename, isdryrun):
     """ amend config-file with missing items """
     conf_filename = resolve(conf_filename)
+    if not os.path.exists(conf_filename):
+        die("file '{}' does not exist".format(conf_filename))
     with open(conf_filename, "r+") as f:
         conf_lines = f.read().split("\n")
 
     missing_keys = get_missing_keys(conf_lines)
     if not missing_keys:
+        print("info: there are no missing items in {}".format(conf_filename))
         return
 
     if isdryrun:
@@ -141,11 +142,27 @@ def amend(conf_filename, isdryrun):
         for line in conf_lines:
             f.write("{}\n".format(line))
 
+def create(conf_filename):
+    """ create new config file """
+    conf_filename = resolve(conf_filename)
+    if os.path.exists(conf_filename):
+        die("file '{}' already exists".format(conf_filename))
+    l = []
+    d = jgmenurc()
+    for key in d:
+        l.append("#{} = {}".format(key, d[key]))
+    with open(conf_filename, "w") as f:
+        for line in l:
+            f.write("{}\n".format(line))
+
 def main():
     """ script main program """
     parser = argparse.ArgumentParser(prog="jgmenu_run config")
     subparsers = parser.add_subparsers(dest="command", help="commands")
     subparsers.required = True
+    create_parser = subparsers.add_parser("create", help="create config-file")
+    create_parser.add_argument("--file", default=DEFAULT_CONFIG_FILE,
+                               help="specify config file", metavar="FILE")
     amend_parser = subparsers.add_parser("amend", help="amend config-file \
                                          with missing items")
     amend_parser.add_argument("--file", metavar="FILE", help="specify config \
@@ -153,7 +170,9 @@ def main():
     amend_parser.add_argument("--dryrun", action="store_true",
                               help="list missing items, but do not amend file")
     args = parser.parse_args()
-    if args.command == "amend":
+    if args.command == "create":
+        create(args.file)
+    elif args.command == "amend":
         amend(args.file, args.dryrun)
     else:
         parser.print_help(sys.stderr)
