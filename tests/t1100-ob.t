@@ -1,7 +1,7 @@
 #!/bin/sh
 
 test_description='test openbox menu parser'
-. ./test-lib-simple.sh
+. ./sharness.sh
 
 test_ob() {
 	cat t1100/"$2" >expect
@@ -27,3 +27,4 @@ test_expect_success 'test openbox module icon support (menu2.xml)' '
 test_ob "menu2.xml" "menu2.csv"
 '
 
+test_done

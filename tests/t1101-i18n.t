@@ -1,7 +1,7 @@
 #!/bin/sh
 
 test_description='test i18n'
-. ./test-lib-simple.sh
+. ./sharness.sh
 
 # $1: menu file
 # $2: po file
@@ -17,3 +17,4 @@ test_expect_success 'test i18n module with Swedish po file' '
 test_i18n "menu" "sv" "menu.sv"
 '
 
+test_done

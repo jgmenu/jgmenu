@@ -1,10 +1,10 @@
 #!/bin/sh
 
 test_description='test argv-buf'
-. ./test-lib-simple.sh
+. ./sharness.sh
 
 test_argvbuf() {
-	echo "$1" | ./helper/test-argv-buf > actual &&
+	echo "$1" | ../helper/test-argv-buf > actual &&
 	echo "$2" > expect &&
 	test_cmp expect actual
 }
@@ -39,11 +39,11 @@ argc" "a,aa@b,bb@c,cc
 
 '
 
-test_expect_failure 'triple quote with missing end quotes' '
+test_expect_success 'triple quote with missing end quotes' '
 
-test_argvbuf "strdup@aaa,\"\"\"b,bb,ccc
-parse
-print
-argc"
+printf "%b\n" "strdup@aaa,\"\"\"b,bb,ccc\nparse\nprint\nargc" >expect
+test_must_fail ../helper/test-argv-buf <expect
 
 '
+
+test_done

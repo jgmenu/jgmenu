@@ -5,10 +5,10 @@
 #
 
 test_description='test hashmap and string hash functions'
-. ./test-lib-simple.sh
+. ./sharness.sh
 
 test_hashmap() {
-	echo "$1" | ./helper/test-hashmap $3 > actual &&
+	echo "$1" | ../helper/test-hashmap $3 > actual &&
 	echo "$2" > expect &&
 	test_cmp expect actual
 }
@@ -222,3 +222,5 @@ value2
 value2"
 
 '
+
+test_done
