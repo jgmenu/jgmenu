@@ -8,3 +8,4 @@ all:
 	@./ex05.sh
 	@./ex06.sh
 	@./ex07.sh
+	@./ex08.sh

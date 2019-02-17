@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo "^tag(not_a_clash)"

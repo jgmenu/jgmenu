@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "^tag(clash1)"
+echo "bbbb.1"
+echo "bbbb.1"

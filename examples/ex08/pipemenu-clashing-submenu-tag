@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "cccc.1"
+echo "cccc.2"
+echo "^checkout(clash2)"
+
+
+echo "^tag(clash2)"
+echo "cccc.clash2.1"
+echo "cccc.clash2.2"

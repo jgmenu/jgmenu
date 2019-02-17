@@ -1,0 +1,16 @@
+^tag(clash1)
+1
+2
+pipe pipemenu-clashing-root-tag,^pipe(./ex08/pipemenu-clashing-root-tag)
+pipe pipemenu-clashing-submenu-tag,^pipe(./ex08/pipemenu-clashing-submenu-tag)
+pipe only-one-item,^pipe(./ex08/only-one-item)
+pipe tag-but-no-items,^pipe(./ex08/tag-but-no-items)
+pipe command which does not exist,^pipe(this-command-does-not-exist)
+3
+4
+^checkout(clash2)
+
+^tag(clash2)
+clash2.1
+clash2.2
+clash2.3
