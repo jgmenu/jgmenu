@@ -7,6 +7,8 @@ The tools / helpers in this directory:
 
 -   have sometimes been entirely contributed by others;
 
+-   are not installed by `make install`;
+
 -   may have completely different dependencies to the core jgmenu application (e.g. ff-bookmarks depends on sqlite3 and arguably also firefox/iceweasel);
 
 -   do not always adhere to the jgmenu coding guidelines.

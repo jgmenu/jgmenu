@@ -1,3 +1,7 @@
+These scripts are generally intended to be run from the project top-level
+directory, like this: ./scripts/foo.sh
+
+
 Check C code
 ------------
 
