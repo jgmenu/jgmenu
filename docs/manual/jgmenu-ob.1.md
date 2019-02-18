@@ -1,6 +1,6 @@
 % JGMENU-OB(1)  
 % Johan Malm  
-% 15 Jan, 2019  
+% 18 Feb, 2019  
 
 # NAME
 
@@ -24,16 +24,14 @@ file or directory. See `jgmenu_run i18n --help` for further details.
 # OPTIONS
 
 <*file*>
-:   specify openbox XML file.  
+:   Specify openbox XML file.  
 
 \--cmd=<*cmd*>
-:   specify command to produce openbox XML menu data.  
+:   Specify command to produce openbox XML menu data.  
 
 \--tag=<*tag*>
-:   specify menu element id value in XML file i.e.:  
-       <*menu id="root-menu" label="Openbox 3"*>  
-       If unset, "root-menu" is used as this is the default in  
-       openbox's menu.xml.  
+:   Specify value of root ^tag(). This can be useful for pipemenus  
+       to avoid clashing tag-names  
 
 # EXAMPLES
 
