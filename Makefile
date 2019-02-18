@@ -86,7 +86,7 @@ ifneq ($(NO_LX),1)
 jgmenu-lx: jgmenu-lx.o util.o sbuf.o xdgdirs.o argv-buf.o back.o fmt.o
 endif
 jgmenu-i18n: jgmenu-i18n.o i18n.o hashmap.o util.o sbuf.o
-jgmenu-greeneye: jgmenu-greeneye.o compat.o
+jgmenu-greeneye: jgmenu-greeneye.o compat.o util.o sbuf.o
 
 $(PROGS):
 	$(QUIET_LINK)$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)

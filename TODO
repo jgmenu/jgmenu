@@ -3,22 +3,10 @@ See https://github.com/johanmalm/jgmenu/wiki/Roadmap.md for further details
 Minor changes (0-3 months)
 --------------------------
 
-jgmenu-ob(1): update --tag= description
-
-Deal with ^pipe() that returns error (give read_csv_file() a return value)
-
-If pipemenu found to not work, set selectable = 0 ??
-
 ob: set ^tag() to command rather than name to reduce risk of duplication
 
-Add snap_to_edge_x = <from-distance>
+Trim argv-buf fields on parse
 
-Add --root= option
-
-Hide separators when searching
-
-Trim argv-buf fields
-
-Investigate duplicate .desktop entries on Raspberry Pi and nixOS
+pmenu: handle .desktop override $XDG_DATA_DIRS without showing duplicates
 
 jgmenu - warn if strange command line argument is given
