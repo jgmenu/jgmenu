@@ -8,7 +8,7 @@ RM         = rm -f
 src = ../../src/
 util = $(src)util.c $(src)sbuf.c
 
-TEST_PROGS = filter-out test-argv-buf test-hashmap
+TEST_PROGS = filter-out test-argv-buf test-hashmap test-sbuf
 
 all: $(TEST_PROGS)
 
@@ -19,6 +19,9 @@ test-hashmap: test-hashmap.c $(src)hashmap.c $(util)
 	$(CC) $(CFLAGS) -o $@ $^ -I$(src) $(LDFLAGS)
 
 test-argv-buf: test-argv-buf.c $(src)argv-buf.c $(util)
+	$(CC) $(CFLAGS) -o $@ $^ -I$(src) $(LDFLAGS)
+
+test-sbuf: test-sbuf.c $(src)sbuf.c $(util)
 	$(CC) $(CFLAGS) -o $@ $^ -I$(src) $(LDFLAGS)
 
 clean :
