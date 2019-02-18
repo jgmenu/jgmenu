@@ -9,6 +9,7 @@
 
 static struct sbuf needle;
 static int has_been_inited;
+static int clear_on_keyboard_input;
 
 void filter_init(void)
 {
@@ -21,13 +22,26 @@ char *filter_strdup_needle(void)
 	return xstrdup(needle.buf);
 }
 
+/**
+ * filter_clear_on_keyboard_input - should we clear needle on key stroke?
+ * Note this handles relationship bewteen type-to-search and ^filter()
+ */
+int filter_get_clear_on_keyboard_input(void)
+{
+	return clear_on_keyboard_input;
+}
+
+void filter_set_clear_on_keyboard_input(int clear)
+{
+	clear_on_keyboard_input = clear;
+}
+
 void filter_addstr(const char *str, size_t n)
 {
 	size_t i;
 
-	if (!has_been_inited)
-		die("filter has not been initiated");
-
+	BUG_ON(!has_been_inited);
+	/* Byte-by-byte to handle XKeyEvent buf properly */
 	for (i = 0; i < n; i++)
 		sbuf_addch(&needle, str[i]);
 }
@@ -68,8 +82,8 @@ void filter_backspace(void)
 
 void filter_reset(void)
 {
-	if (!has_been_inited)
-		die("filter has not been initiated");
+	BUG_ON(!has_been_inited);
+	filter_set_clear_on_keyboard_input(0);
 	sbuf_cpy(&needle, "");
 }
 

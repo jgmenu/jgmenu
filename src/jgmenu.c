@@ -1557,6 +1557,7 @@ void action_cmd(char *cmd, const char *working_dir)
 		if (!p)
 			return;
 		filter_reset();
+		filter_set_clear_on_keyboard_input(1);
 		filter_addstr(p, strlen(p));
 		update(1);
 	} else {
@@ -1730,6 +1731,8 @@ void key_event(XKeyEvent *ev)
 		}
 		break;
 	default:
+		if (filter_get_clear_on_keyboard_input())
+			filter_reset();
 		filter_addstr(buf, len);
 		update(0);
 		break;
