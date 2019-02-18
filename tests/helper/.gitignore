@@ -3,3 +3,4 @@ test-hashmap
 test-argv-buf
 filter-out
 test-sbuf
+test-xpm
