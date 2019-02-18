@@ -1209,7 +1209,13 @@ void resolve_newline(char *s)
 	*(p + 1) = '\n';
 }
 
-void read_csv_file(FILE *fp)
+/**
+ * read_csv_file - read lines from FILE to "master" list
+ * @fp: file to be read
+ *
+ * Return number of lines read
+ */
+int read_csv_file(FILE *fp)
 {
 	char buf[BUFSIZ], *p;
 	size_t i;
@@ -1279,8 +1285,7 @@ void read_csv_file(FILE *fp)
 		list_add_tail(&item->master, &menu.master);
 	}
 
-	if (!item || i == 0)
-		die("input file contains no menu items");
+	return i;
 }
 
 void rm_back_items(void)
@@ -1370,6 +1375,7 @@ void pipemenu_add(const char *s)
 	FILE *fp = NULL;
 	struct item *pipe_head;
 	struct node *parent_node;
+	int nr_lines;
 
 	BUG_ON(!s);
 	fp = popen(s, "r");
@@ -1379,9 +1385,13 @@ void pipemenu_add(const char *s)
 	}
 
 	pipe_head = list_last_entry(&menu.master, struct item, master);
-	read_csv_file(fp);
+	nr_lines = read_csv_file(fp);
 	if (fp && fp != stdin)
 		fclose(fp);
+	if (!nr_lines) {
+		warn("empty pipemenu");
+		return;
+	}
 	pipe_head = container_of(pipe_head->master.next, struct item, master);
 	/* pipe_head now points to first item of pipe */
 
@@ -1393,7 +1403,6 @@ void pipemenu_add(const char *s)
 
 	if (config.hide_back_items)
 		rm_back_items();
-	/* FIXME: walk_tag_items means 'add new nodes' - consider renaming */
 	parent_node = menu.current_node;
 	node_add_new(pipe_head, parent_node);
 	checkout_submenu(pipe_head->tag);
