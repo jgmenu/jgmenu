@@ -352,7 +352,8 @@ void update_filtered_list(void)
 			if (!strncmp("^checkout(", item->cmd, 10) ||
 			    !strncmp("^tag(", item->cmd, 5) ||
 			    !strncmp("^pipe(", item->cmd, 6) ||
-			    !strncmp("^back(", item->cmd, 6))
+			    !strncmp("^back(", item->cmd, 6) ||
+			    !strncmp("^sep(", item->cmd, 5))
 				continue;
 			if (filter_ismatch(item->name) ||
 			    filter_ismatch(item->cmd) ||
