@@ -7,16 +7,6 @@
 # libmenu-cache >=v1.1)
 #
 
-REQUIRED_BINS := pkg-config $(CC) xml2-config
-$(foreach bin,$(REQUIRED_BINS), \
-        $(if $(shell type $(bin) 2>/dev/null),, \
-                $(error fatal: could not find '$(bin)')))
-
-REQUIRED_LIBS := x11 xrandr cairo pango pangocairo librsvg-2.0
-$(foreach lib,$(REQUIRED_LIBS), \
-        $(if $(shell pkg-config $(lib) && echo 1),, \
-                $(error fatal: could not find library '$(lib)')))
-
 VER      = $(shell ./scripts/version-gen.sh)
 
 # Allow user to override build settings without making tree dirty
@@ -82,7 +72,7 @@ endif
 
 PROGS           = jgmenu $(PROGS_LIBEXEC)
 
-all: $(PROGS)
+all: checkdeps $(PROGS)
 
 jgmenu: jgmenu.o x11-ui.o config.o util.o geometry.o isprog.o sbuf.o \
 	icon-find.o icon.o xpm-loader.o xdgdirs.o xsettings.o \
@@ -109,7 +99,7 @@ $(PROGS):
 $(DEPDIR)/%.d: ;
 .PRECIOUS: $(DEPDIR)/%.d
 
-install: $(PROGS)
+install: checkdeps $(PROGS)
 	@install -d $(DESTDIR)$(bindir)
 	@install -m755 jgmenu src/jgmenu_run $(DESTDIR)$(bindir)
 	@install -d $(DESTDIR)$(libexecdir)
@@ -146,7 +136,7 @@ endif
 	@-rmdir ~/.local/share/icons 2>/dev/null || true
 
 clean:
-	@$(RM) $(PROGS) *.o *.a $(DEPDIR)/*.d
+	@$(RM) $(PROGS) *.o *.a $(DEPDIR)/*.d checkdeps
 	@$(RM) -r .d/
 	@$(MAKE) --no-print-directory -C tests/ clean
 	@$(MAKE) --no-print-directory -C tests/helper/ clean
@@ -161,6 +151,18 @@ ex:
 check:
 	@./scripts/checkpatch-wrapper.sh src/*.c
 	@./scripts/checkpatch-wrapper.sh src/*.h
+
+REQUIRED_BINS := pkg-config xml2-config
+REQUIRED_LIBS := x11 xrandr cairo pango pangocairo librsvg-2.0
+checkdeps:
+	@echo '     CHECK build dependencies'
+	@for b in $(REQUIRED_BINS); do \
+                type $${b} >/dev/null 2>&1 || echo "warn: require ($${b})"; \
+        done
+	@for l in $(REQUIRED_LIBS); do \
+                pkg-config $${l} || echo "fatal: require ($${l})"; \
+        done
+	@touch checkdeps
 
 print-%:
 	@echo '$*=$($*)'

@@ -11,3 +11,4 @@ config.mk
 valgrind.log
 binsiz.log
 .d/
+checkdeps
