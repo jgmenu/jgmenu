@@ -314,10 +314,10 @@ prepend_items () {
 }
 
 check_config_file () {
-	if ! test -e ${config_file}
+	if ! test -e "${config_file}"
 	then
 		say "info: creating config file 'jgmenurc'"
-		cp "${JGMENU_EXEC_DIR}/jgmenurc" "${config_file}"
+		jgmenu_run config create --file "${config_file}"
 	else
 		jgmenu_run config amend --file "${config_file}" --dryrun
 	fi
