@@ -1,4 +1,5 @@
 #include <string.h>
+#include <time.h>
 
 #include "util.h"
 #include "sbuf.h"
@@ -287,3 +288,13 @@ void mkdir_p(const char *path)
 	}
 }
 
+void msleep(unsigned int duration)
+{
+	struct timespec ts;
+	unsigned int sec = duration / 1000;
+	unsigned int msec = duration % 1000;
+
+	ts.tv_sec  = sec;
+	ts.tv_nsec =  msec * 1000000;
+	nanosleep(&ts, NULL);
+}

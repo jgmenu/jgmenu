@@ -2295,7 +2295,7 @@ void run(void)
 				if (super_key_pressed) {
 					super_key_pressed = 0;
 					/* avoid passing super key to WM */
-					usleep(30000);
+					msleep(30);
 					hide_or_exit();
 				}
 				break;

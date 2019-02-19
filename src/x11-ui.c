@@ -23,7 +23,6 @@
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/Xrandr.h>
-#include <unistd.h>		/* for usleep */
 
 #include "x11-ui.h"
 #include "util.h"
@@ -79,12 +78,12 @@ void grabkeyboard(void)
 	/* The "waiting" trick has been copied from dmenu-4.5 */
 	int i;
 
-	for (i = 0; i < 1000; i++) {
+	for (i = 0; i < 50; i++) {
 		if (XGrabKeyboard(ui->dpy, DefaultRootWindow(ui->dpy), True,
 				  GrabModeAsync, GrabModeAsync,
 				  CurrentTime) == GrabSuccess)
 			return;
-		usleep(1000);
+		msleep(20);
 	}
 	die("cannot grab keyboard");
 }
@@ -101,7 +100,7 @@ void grabpointer(void)
 	 * Setting the third argument of XGrabPointer() to "False"
 	 * gives (x,y) wrt root window.
 	 */
-	for (i = 0; i < 1000; i++) {
+	for (i = 0; i < 50; i++) {
 		if (XGrabPointer(ui->dpy, DefaultRootWindow(ui->dpy),
 				 False,
 				 ButtonPressMask | ButtonReleaseMask |
@@ -110,7 +109,7 @@ void grabpointer(void)
 				 GrabModeAsync, GrabModeAsync, None, None,
 				 CurrentTime) == GrabSuccess)
 			return;
-		usleep(1000);
+		msleep(20);
 	}
 	die("cannot grab pointer");
 }

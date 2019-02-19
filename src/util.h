@@ -41,5 +41,6 @@ void xatoi(int *var, const char *value, int flags, const char *key);
 void cat(const char *filename);
 void remove_caret_markup_closing_bracket(char *s);
 void mkdir_p(const char *path);
+void msleep(unsigned int duration);
 
 #endif /* UTIL_H */
