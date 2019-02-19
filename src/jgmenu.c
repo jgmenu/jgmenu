@@ -53,6 +53,7 @@
 static pthread_t thread;	   /* worker thread for loading icons	  */
 static int pipe_fds[2];		   /* talk between threads + catch sig    */
 static int sw_close_pending;
+static int menu_is_hidden;
 static int super_key_pressed;
 
 struct item {
@@ -1035,6 +1036,7 @@ static void if_unity_run_hack(void)
 
 static void awake_menu(void)
 {
+	menu_is_hidden = 0;
 	if_unity_run_hack();
 	if (watch_files_have_changed())
 		restart();
@@ -1469,6 +1471,23 @@ void checkout_parent(void)
 		set_submenu_height();
 }
 
+static void clear_self_pipe(void)
+{
+	fd_set readfds;
+
+	if (!FD_ISSET(pipe_fds[0], &readfds))
+		return;
+	for (;;) {
+		char ch;
+
+		if (read(pipe_fds[0], &ch, 1) == -1) {
+			if (errno == EAGAIN)
+				break;
+			warn("error reading pipe");
+		}
+	}
+}
+
 static void hide_menu(void)
 {
 	tmr_mouseover_stop();
@@ -1480,6 +1499,8 @@ static void hide_menu(void)
 	menu.current_node->expanded = NULL;
 	menu.sel = NULL;
 	update(1);
+	clear_self_pipe();
+	menu_is_hidden = 1;
 }
 
 void hide_or_exit(void)
@@ -2118,7 +2139,6 @@ void run(void)
 	XEvent ev;
 	struct item *item;
 
-	char ch;
 	int ready, nfds, x11_fd;
 	fd_set readfds;
 	static int all_icons_have_been_requested;
@@ -2193,6 +2213,8 @@ void run(void)
 		 */
 		if (FD_ISSET(pipe_fds[0], &readfds) && ready) {
 			for (;;) {
+				char ch;
+
 				if (read(pipe_fds[0], &ch, 1) == -1) {
 					if (errno == EAGAIN)
 						break;
@@ -2210,7 +2232,7 @@ void run(void)
 					BUG_ON(!menu.sel);
 					del_beyond_current();
 					/* open new sub window */
-					if (!sw_close_pending) {
+					if (!sw_close_pending && !menu_is_hidden) {
 						menu.current_node->expanded = menu.sel;
 						action_cmd(menu.sel->cmd,
 							   menu.sel->working_dir);
