@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 25 Jan, 2019  
+% 19 Feb, 2019  
 
 # NAME
 
@@ -262,6 +262,12 @@ at_pointer = __boolean__ (default 0)
 
     If enabled, the menu is launched at the pointer position,  
     ignoring `menu_margin_?` and `menu_?align` values.  
+
+edge_snap_x = __integer__ (default 30)  
+
+    Specify the distance (in pixles) from the left hand edge, within  
+    which the menu will snap to the edge.  
+    Note that this only applies in `at_pointer` mode.  
 
 terminal_exec = __string__ (default x-terminal-emulator)  
 terminal_args = __string__ (default -e)

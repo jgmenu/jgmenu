@@ -14,6 +14,7 @@ struct config {
 	char *csv_cmd;
 	int tint2_look;
 	int at_pointer;
+	int edge_snap_x;
 	char *terminal_exec;
 	char *terminal_args;
 	int monitor;

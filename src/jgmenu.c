@@ -900,6 +900,8 @@ void launch_menu_at_pointer(void)
 	geo_update_monitor_coords();
 	XQueryPointer(ui->dpy, DefaultRootWindow(ui->dpy), &dw, &dw, &di, &di,
 		      &pos.x, &pos.y, &du);
+	if (pos.x < config.edge_snap_x)
+		pos.x = 0;
 
 	/* We use config.menu_{v,h}align to tell us where the panel is */
 	if (config.menu_valign == TOP)

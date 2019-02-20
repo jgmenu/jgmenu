@@ -153,8 +153,8 @@ void geo_init(void)
 	 * variables below will be changed in init_geo_variables_from_config()
 	 * in jgmenu.c
 	 */
-	menu_margin_x = 1;
-	menu_margin_y = 30;
+	menu_margin_x = 0;
+	menu_margin_y = 0;
 	win[cur].menu_width = 200;
 	win[cur].menu_height = 500;
 	menu_padding_top = 5;

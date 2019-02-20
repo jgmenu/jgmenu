@@ -19,6 +19,7 @@ def jgmenurc():
         "csv_cmd": "pmenu",
         "tint2_look": "1",
         "at_pointer": "0",
+        "edge_snap_x": "30",
         "terminal_exec": "x-terminal-emulator",
         "terminal_args": "-e",
         "monitor": "0",

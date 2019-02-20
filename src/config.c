@@ -22,6 +22,7 @@ void config_set_defaults(void)
 	config.csv_cmd		   = xstrdup("pmenu");
 	config.tint2_look	   = 1;
 	config.at_pointer	   = 0;
+	config.edge_snap_x	   = 30;
 	config.terminal_exec	   = xstrdup("x-terminal-emulator");
 	config.terminal_args	   = xstrdup("-e");
 	config.monitor		   = 0;
@@ -122,6 +123,8 @@ static void process_line(char *line)
 		xatoi(&config.tint2_look, value, XATOI_NONNEG, "config.tint2_look");
 	} else if (!strcmp(option, "at_pointer")) {
 		xatoi(&config.at_pointer, value, XATOI_NONNEG, "config.at_pointer");
+	} else if (!strcmp(option, "edge_snap_x")) {
+		xatoi(&config.edge_snap_x, value, XATOI_NONNEG, "config.edge_snap_x");
 	} else if (!strcmp(option, "terminal_exec")) {
 		xfree(config.terminal_exec);
 		config.terminal_exec = xstrdup(value);
