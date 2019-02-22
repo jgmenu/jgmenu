@@ -1,0 +1,62 @@
+jgmenu v2.1 release notes
+=========================
+
+Updates since v2.0
+------------------
+
+  * The following improvements were made to 'jgmenu' (the binary)
+
+      - Hide separators when searching
+
+      - Make ^filter() happily co-exist with type-to-search, by clearing
+        any ^filer() invocation on type-to-search.  So, for example, if
+        ^filter(#Network) has been applied and the user then starts
+        typing, '#Network' is cleared.
+
+      - Survive bad ^pipe() - i.e. one that returns error or no items
+
+      - Make checkout_tag() survive invalid tag by simply reverting to
+        the first menu item. This means that we now also sensibly handle
+        --checkout=foo where foo does not exist. (Reported-by: @johnraff)
+
+      - Check that pipe-menu tags are unique before loading. Trying deal
+        with duplicate tags after the node structure has been created does
+        not work, because we cannot tell which ^tag() correspond to which
+        ^checkout().
+
+      - Add config option 'edge_snap_x'. Snap to left hand edge if within
+        specified distance from it. Note that this option is only
+        applicable in at_pointer mode.
+
+  * 'config' module
+
+      - Simplify command 'amend' and also add --dryrun option to check for
+        missing items, but without modifying jgmenurc
+
+      - Add command 'create' to create a new config file (jgmenurc) based
+        on built-in default values.
+
+  * 'ob' module
+
+      - Cope with commas in all fields (thanks @johnraff)
+
+  * 'init' module
+
+      - Add greeneye to the built-in themes
+        Try greeneye with `jgmenu init --theme=greeneye`
+
+  * Add sharness (https://github.com/chriscool/sharness) and modify
+    current unit-tests to run with it (Thanks @chriscool et al)
+
+  * Cleanup
+
+      - Remove redundant/superseded code, scripts, examples and tests
+
+      - Lots of minor coding style and flawfinder fixes
+
+      - Simplify Makefile
+
+      - Move 'init' and 'config' from noncore/ to src/
+
+      - Make sure self_pipe is cleared in hide_menu() and positively
+        check that menu is not hidden when opening a submenu.

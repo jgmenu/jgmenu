@@ -3,6 +3,13 @@ See https://github.com/johanmalm/jgmenu/wiki/Roadmap.md for further details
 Minor changes (0-3 months)
 --------------------------
 
+init:
+	- don't restart jgmenu on setting theme
+	- add command to amend (and possibly --dry-run)
+
+greeneye:
+	- shorten searchbox so that the ...s do not clash with the icon
+
 ob: set ^tag() to command rather than name to reduce risk of duplication
 
 Trim argv-buf fields on parse
