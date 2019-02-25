@@ -410,6 +410,7 @@ get_theme () {
 	print_available_themes | jgmenu --vsimple --center --no-spawn 2>/dev/null
 }
 
+# not currently used
 restart_jgmenu () {
 	say "Restarting jgmenu..."
 	killall jgmenu >/dev/null 2>&1
@@ -513,28 +514,23 @@ set_theme () {
 	case "$1" in
 	archlabs_1803)
 		jgmenurc_archlabs_1803
-		restart_jgmenu
 		;;
 	bunsenlabs_hydrogen)
 		jgmenurc_bunsenlabs_hydrogen
 		bunsenlabs__setup_theme
-		restart_jgmenu
 		;;
 	bunsenlabs_helium)
 		jgmenurc_bunsenlabs_helium
 		bunsenlabs__setup_theme
-		restart_jgmenu
 		;;
 	neon)
 		jgmenurc_neon
 		neon__setup_theme
-		restart_jgmenu
 		;;
 	greeneye)
 		create_icon_greeneye
 		jgmenu_run greeneye --widgets >"${prepend_file}"
 		jgmenu_run greeneye --config >"${config_file}"
-		restart_jgmenu
 		;;
 	esac
 }

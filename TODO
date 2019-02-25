@@ -4,7 +4,6 @@ Minor changes (0-3 months)
 --------------------------
 
 init:
-	- don't restart jgmenu on setting theme
 	- add command to amend (and possibly --dry-run)
 
 greeneye:
