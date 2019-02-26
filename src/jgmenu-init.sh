@@ -318,8 +318,6 @@ check_config_file () {
 	then
 		say "info: creating config file 'jgmenurc'"
 		jgmenu_run config create --file "${config_file}"
-	else
-		jgmenu_run config amend --file "${config_file}" --dryrun
 	fi
 }
 
@@ -585,11 +583,13 @@ initial_checks () {
 print_commands () {
 	printf "%b" "\
 *** commands ***\n\
-c, check   = run a number of jgmenu related checks on system\n\
-t, theme   = create config files based on templates\n\
-p, prepend = add items at top of root-menu (e.g. web browser and terminal)\n\
-a, append  = add items at bottom of root-menu (e.g. lock and exit)\n\
-q, quit    = quit init process\n"
+a, append    = add items at bottom of root-menu (e.g. lock and exit)\n\
+c, check     = run a number of jgmenu related checks on system\n\
+h, help      = show this message
+m, missing   = add any missing config options to config file\n\
+p, prepend   = add items at top of root-menu (e.g. web browser and terminal)\n\
+q, quit      = quit init process\n\
+t, theme     = create config files based on templates\n"
 }
 
 prompt () {
@@ -598,23 +598,26 @@ prompt () {
 	printf "%b" "What now> "
 	read -r cmd
 	case "$cmd" in
+	append|a)
+		append_items
+		;;
 	check|c)
 		analyse
 		;;
-	theme|t)
-		set_theme "$(get_theme)"
+	help|h)
+		print_commands
+		;;
+	missing|m)
+		jgmenu_run config amend --file "${config_file}"
 		;;
 	prepend|p)
 		prepend_items
 		;;
-	append|a)
-		append_items
-		;;
 	quit|q)
 		return 1
 		;;
-	help|h)
-		print_commands
+	theme|t)
+		set_theme "$(get_theme)"
 		;;
 	clear)
 		clear ;;
