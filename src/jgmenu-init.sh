@@ -500,8 +500,7 @@ bunsenlabs__setup_theme () {
 	# not all systems support openbox menus
 	if ! test -e ~/.config/openbox/menu.xml
 	then
-		echo "set csv_cmd=pmenu"
-		#TODO: jgmenu_run config set csv_cmd pmenu
+		printf "\n%s\n" "csv_cmd = pmenu" >"${config_file}"
 	fi
 }
 
