@@ -1,8 +1,10 @@
 CC         = @echo '     CC    '$@;gcc
 CFLAGS     = -g -Wall
+ifdef ASAN
 ASAN_FLAGS = -O0 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic
 CFLAGS    += $(ASAN_FLAGS)
 LDFLAGS   += $(ASAN_FLAGS) -fuse-ld=gold
+endif
 RM         = rm -f
 
 src = ../../src/
