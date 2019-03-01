@@ -218,6 +218,7 @@ append__exit () {
 }
 
 append_items () {
+	backup_config_files
 	append__sep
 	append__lock
 	append__exit
@@ -307,6 +308,7 @@ prepend__add_file_manager () {
 }
 
 prepend_items () {
+	backup_config_files
 	prepend__add_terminal
 	prepend__add_browser
 	prepend__add_file_manager
@@ -484,8 +486,6 @@ EOF
 }
 
 neon__setup_theme () {
-	rm -f ${prepend_file}
-	rm -f ${append_file}
 	if ! test -d "/usr/share/icons/breeze"
 	then
 		warn "warn: icon theme 'breeze' is required to complete this theme"
@@ -506,6 +506,7 @@ bunsenlabs__setup_theme () {
 
 set_theme () {
 	test $# -eq 0 && die "set_theme(): no theme specified"
+	backup_config_files
 	rm -f "${prepend_file}" "${append_file}"
 
 	case "$1" in
@@ -538,7 +539,7 @@ check_nr_backups () {
 you have more than 100 backup files - consider removing a few"
 }
 
-backup_jgmenurc () {
+backup_config_files () {
 	local files_to_backup="${HOME}/.config/jgmenu/jgmenurc \
 		${HOME}/.config/jgmenu/prepend.csv \
 		${HOME}/.config/jgmenu/append.csv"
@@ -607,6 +608,7 @@ prompt () {
 		print_commands
 		;;
 	missing|m)
+		backup_config_files
 		jgmenu_run config amend --file "${config_file}"
 		;;
 	prepend|p)
@@ -669,7 +671,6 @@ do
 	shift
 done
 
-backup_jgmenurc
 test -z "${theme}" || { set_theme "$theme" ; exit 0 ; }
 initial_checks
 if test "${interactive}" = "t"
