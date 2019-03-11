@@ -74,6 +74,9 @@ struct config {
 	double color_sel_fg[4];
 	double color_sel_border[4];
 	double color_sep_fg[4];
+	double color_title_fg[4];
+	double color_title_bg[4];
+	double color_title_border[4];
 	double color_scroll_ind[4];
 
 	char *csv_name_format;

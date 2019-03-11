@@ -465,8 +465,14 @@ void draw_item_sep_with_text(struct item *p)
 		text_x_coord += config.item_padding_x;
 	else if (config.sep_halign == RIGHT)
 		text_x_coord -= config.item_padding_x;
+	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
+			  p->area.h, config.item_radius, 0.0, 1,
+			  config.color_title_bg);
+	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
+			  p->area.h, config.item_radius, 1.0, 0,
+			  config.color_title_border);
 	ui_insert_text(s.buf, text_x_coord, p->area.y, p->area.h, p->area.w,
-		       config.color_sep_fg, config.sep_halign);
+		       config.color_title_fg, config.sep_halign);
 	xfree(s.buf);
 }
 
