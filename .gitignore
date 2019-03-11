@@ -6,6 +6,7 @@ jgmenu-lx
 jgmenu-socket
 jgmenu-i18n
 jgmenu-greeneye
+jgmenu-obtheme
 README.html
 config.mk
 valgrind.log

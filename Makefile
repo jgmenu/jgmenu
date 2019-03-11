@@ -34,11 +34,13 @@ CFLAGS  += -DVERSION='"$(VER)"'
 jgmenu:     CFLAGS  += `pkg-config cairo pango pangocairo librsvg-2.0 --cflags`
 jgmenu-ob:  CFLAGS  += `xml2-config --cflags`
 jgmenu-lx:  CFLAGS  += `pkg-config --cflags glib-2.0 libmenu-cache`
+jgmenu-obtheme: CFLAGS  += `xml2-config --cflags`
 
 jgmenu:     LIBS += `pkg-config x11 xrandr cairo pango pangocairo librsvg-2.0 --libs`
 jgmenu:     LIBS += -pthread -lpng
 jgmenu-ob:  LIBS += `xml2-config --libs`
 jgmenu-lx:  LIBS += `pkg-config --libs glib-2.0 libmenu-cache`
+jgmenu-obtheme: LIBS += `xml2-config --libs`
 
 LDFLAGS += $(LIBS)
 
@@ -60,7 +62,8 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 SCRIPTS_LIBEXEC = src/jgmenu-init.sh src/jgmenu-pmenu.py \
                   src/jgmenu-unity-hack.py src/jgmenu-config.py
 
-PROGS_LIBEXEC   = jgmenu-ob jgmenu-socket jgmenu-i18n jgmenu-greeneye
+PROGS_LIBEXEC   = jgmenu-ob jgmenu-socket jgmenu-i18n jgmenu-greeneye \
+                  jgmenu-obtheme
 
 # wrap in ifneq to ensure we respect user defined NO_LX=1
 ifneq ($(NO_LX),1)
@@ -87,6 +90,7 @@ jgmenu-lx: jgmenu-lx.o util.o sbuf.o xdgdirs.o argv-buf.o back.o fmt.o
 endif
 jgmenu-i18n: jgmenu-i18n.o i18n.o hashmap.o util.o sbuf.o
 jgmenu-greeneye: jgmenu-greeneye.o compat.o util.o sbuf.o
+jgmenu-obtheme: jgmenu-obtheme.o util.o sbuf.o compat.o
 
 $(PROGS):
 	$(QUIET_LINK)$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
