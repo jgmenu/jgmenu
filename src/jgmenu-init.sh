@@ -533,6 +533,11 @@ set_theme () {
 	esac
 }
 
+apply_obtheme () {
+	backup_config_files
+	jgmenu_run obtheme "${config_file}" >>"${config_file}"
+}
+
 check_nr_backups () {
 	nr=$(ls -1 ~/.config/jgmenu/backup/ 2>/dev/null | wc -l)
 	test "$nr" -gt 100 && warn "\
@@ -587,6 +592,7 @@ a, append    = add items at bottom of root-menu (e.g. lock and exit)\n\
 c, check     = run a number of jgmenu related checks on system\n\
 h, help      = show this message
 m, missing   = add any missing config options to config file\n\
+o, obtheme   = apply openbox theme
 p, prepend   = add items at top of root-menu (e.g. web browser and terminal)\n\
 q, quit      = quit init process\n\
 t, theme     = create config files based on templates\n"
@@ -610,6 +616,9 @@ prompt () {
 	missing|m)
 		backup_config_files
 		jgmenu_run config amend --file "${config_file}"
+		;;
+	obtheme|o)
+		apply_obtheme
 		;;
 	prepend|p)
 		prepend_items
@@ -648,6 +657,10 @@ do
 		config_file="${1#--config-file=}" ;;
 	--theme=*)
 		theme="${1#--theme=}" ;;
+	--apply-obtheme)
+		apply_obtheme
+		exit 0
+		;;
 	--list-themes)
 		print_available_themes
 		exit 0
