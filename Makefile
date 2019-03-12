@@ -114,9 +114,6 @@ install: checkdeps $(PROGS)
 	@install -d $(DESTDIR)$(datarootdir)/applications/
 	@install -m644 ./data/jgmenu.svg $(DESTDIR)$(datarootdir)/icons/hicolor/scalable/apps/
 	@install -m644 ./data/jgmenu.desktop $(DESTDIR)$(datarootdir)/applications/
-ifeq ($(NO_LX),1)
-	@echo "info: lx module not included as libmenu-cache >=1.1.0 not found"
-endif
 
 # We are not brave enough to uninstall in /usr/, /usr/local/ etc
 uninstall:
@@ -166,6 +163,11 @@ checkdeps:
 	@for l in $(REQUIRED_LIBS); do \
                 pkg-config $${l} || echo "fatal: require ($${l})"; \
         done
+	@if ! pkg-config "libmenu-cache >= 1.1.0" "glib-2.0"; then \
+                echo "      - Cannot install lx module as build dependencies are missing"; \
+	        echo "        libmenu-cache >= 1.1.0 and glib-2.0 are needed"; \
+	        echo "        This will not prevent you from running jgmenu"; \
+	fi
 	@touch checkdeps
 
 print-%:
