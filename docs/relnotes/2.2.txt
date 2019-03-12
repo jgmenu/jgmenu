@@ -1,0 +1,28 @@
+jgmenu v2.2 release notes
+=========================
+
+Updates since v2.1
+------------------
+
+  * Fix --hide-on-startup bug
+
+  * Add 'obtheme' module which:
+    
+      - Reads content of <theme><name></name></theme> in openbox's rc.xml
+      - Finds and parses the associated openbox-3/themerc file
+      - Sets the corresponding jgmenurc key/value pairs
+    
+    Thanks to @hhhorb for suggesting this
+
+  * Improvements to 'init' module:
+
+      - add --apply-obtheme (as a wrapper for the new obtheme module)
+      - use pmenu if ob does not exist for lab themes
+      - add "missing" option to interactive mode
+      - do not launch jgmenu on theme change
+      - only backup when needed
+
+  * Add config options color_title_{fg,bg,border} (where title refers
+    to a separator with text)
+
+  * tests/helper/Makefile: disable ASAN by default (issue #84)
