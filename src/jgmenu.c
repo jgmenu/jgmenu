@@ -2194,6 +2194,9 @@ void run(void)
 	if (sigaction(SIGUSR1, &sa, NULL) == -1)
 		die("sigaction");
 
+	if (config.hide_on_startup)
+		hide_menu();
+
 	for (;;) {
 		FD_ZERO(&readfds);
 		FD_SET(x11_fd, &readfds);
@@ -2599,12 +2602,10 @@ int main(int argc, char *argv[])
 	init_empty_item();
 	update_filtered_list();
 	init_menuitem_coordinates();
-	if (config.hide_on_startup) {
+	if (config.hide_on_startup)
 		info("menu started in 'hidden' mode; show by `jgmenu_run`");
-		hide_menu();
-	} else {
+	else
 		XMapRaised(ui->dpy, ui->w[ui->cur].win);
-	}
 	draw_menu();
 
 	atexit(cleanup);
