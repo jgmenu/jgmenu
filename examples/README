@@ -3,9 +3,6 @@ EXAMPLE FILES
 
 Most example scripts need to be run from the examples/ directory.
 
-Categories
-----------
-
 ex0* are for testing purposes.
   - They are intended to be used by invoking `make && make ex` from the top
     level directory whilst coding
@@ -14,9 +11,6 @@ ex0* are for testing purposes.
     properties.
   - They may change over time depending on what the devs need.
 
-ex1* are showcases for jgmenu with tint2
-  - These will stop any running instances of tint2 and jgmenu
-
 Specific files
 --------------
 
@@ -24,6 +18,3 @@ ex01	Menu based on simple CSV file. Tests right-aligned items.
 ex02	Tests separators, scroll, pgup/pgdown, etc.
 ex03	Tests long text, at-pointer
 ex04	Tests icon positioning and icon theme inheritance
---
-ex10	Demo of all tint2rc config files in /usr/share/tint2
-ex11	Vanilla tint2rc with button - no jgmenurc
