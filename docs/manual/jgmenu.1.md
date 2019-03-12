@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 19 Feb, 2019  
+% 12 Mar, 2019  
 
 # NAME
 
@@ -503,7 +503,15 @@ color_sel_border = __color__ (default #eeeeee 8)
 
 color_sep_fg = __color__ (default #ffffff 20)  
 
-    Colour of seperator  
+    Colour of seperators without text  
+
+color_title_fg = __color__ (default #eeeeee 50)  
+color_title_bg = __color__ (default #000000 0)  
+color_title_border = __color__ (default #000000 0)  
+
+    Foreground (=font), background and border colours of separators  
+    with text (also known as 'title')  
+    The font colour can be overriden by 'sep_markup'  
 
 color_scroll_ind = __color__ (default #eeeeee 40)  
 
