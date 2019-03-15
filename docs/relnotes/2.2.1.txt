@@ -1,0 +1,7 @@
+jgmenu v2.2.1 release notes
+===========================
+
+Updates since v2.2
+------------------
+
+  * Fix init module bug which prevents config file from being created
