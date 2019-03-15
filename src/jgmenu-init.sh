@@ -684,6 +684,7 @@ do
 	shift
 done
 
+mkdir -p "${HOME}/.config/jgmenu"
 test -z "${theme}" || { set_theme "$theme" ; exit 0 ; }
 initial_checks
 if test "${interactive}" = "t"
