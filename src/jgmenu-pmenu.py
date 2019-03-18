@@ -346,9 +346,12 @@ def get_cmd(app):
 # Returns the start menu hierarchy and the main application categories
 # The menu is a dictionary category-name -> list of application entries
 # The categories are in the same form as returned by load_categories()
-def load_applications():
-  categories = load_categories()
-  menu = {}
+def load_applications(hide_dirs):
+  if hide_dirs:
+    menu = []
+  else:
+    menu = {}
+    categories = load_categories()
   all_filenames = []  # keep track of filenames to respect user overrides
   for d in get_setting_locations():
     d = d + "/applications/"
@@ -364,6 +367,9 @@ def load_applications():
           if "Name" not in entry:
             entry["Name"] = filename.replace(".desktop", "")
             entry["Name"] = entry["Name"][:1].upper() + entry["Name"][1:]
+          if hide_dirs:
+            menu.append(entry)
+            continue
           app_categories = []
           if "Categories" in entry:
             app_categories = [s.strip() for s in entry["Categories"].split(";") if s.strip()]
@@ -390,29 +396,13 @@ def load_applications():
                 break
             if added:
               break
-  for c in menu:
-    menu[c] = sorted(menu[c], key=lambda item: item["Name"])
-  return menu, categories
-
-def load_applications_no_dirs():
-  menu = []
-  all_filenames = []  # keep track of filenames to respect user overrides
-  for d in get_setting_locations():
-    d = d + "/applications/"
-    for (dirpath, dirnames, filenames) in os.walk(d):
-      for filename in filenames:
-        if filename in all_filenames:
-          continue
-        all_filenames.append(filename)
-        entry = read_desktop_entry(os.path.join(dirpath, filename))
-        cmd = get_cmd(entry)
-        if "Type" in entry and entry["Type"] == "Application" and cmd:
-          entry["cmd"] = cmd
-          if "Name" not in entry:
-            entry["Name"] = filename.replace(".desktop", "")
-            entry["Name"] = entry["Name"][:1].upper() + entry["Name"][1:]
-          menu.append(entry)
-  return menu
+  if not hide_dirs:
+    for c in menu:
+      menu[c] = sorted(menu[c], key=lambda item: item["Name"])
+  if hide_dirs:
+    return menu
+  else:
+    return menu, categories
 
 def cat_file(path):
   if path and os.path.isfile(path):
@@ -428,7 +418,7 @@ def create_menu(arg_append_file, arg_prepend_file):
 
   print("jgmenu,^tag(pmenu)")
   cat_file(arg_prepend_file)
-  tree, categories = load_applications()
+  tree, categories = load_applications(False)
 
   # If no menu-package exists, just dump the apps in the menu-root
   if len(categories) <= 1:
@@ -465,7 +455,7 @@ def create_menu(arg_append_file, arg_prepend_file):
 # Creates menu without directories
 def create_menu_no_dirs(arg_append_file, arg_prepend_file):
   cat_file(arg_prepend_file)
-  menu = load_applications_no_dirs()
+  menu = load_applications(True)
   for app in sorted(menu, key=lambda k: k['Name']):
     icon = app["Icon"] if "Icon" in app else "application-x-executable"
     print("#", app["_path"])
