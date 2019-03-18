@@ -240,7 +240,8 @@ def read_desktop_entry(path):
 # Reference: http://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html
 # Reference: http://standards.freedesktop.org/basedir-spec/basedir-spec-0.8.html
 def get_setting_locations():
-  locations = ["/usr/share", "/usr/local/share", os.path.expanduser("~/.local/share")]
+  locations = []
+  locations.append(os.path.expanduser("~/.local/share"))
   if "XDG_DATA_DIRS" in os.environ:
     dirs = os.environ["XDG_DATA_DIRS"]
     if dirs:
@@ -250,6 +251,8 @@ def get_setting_locations():
           d = d[:-1]
         if d not in locations:
           locations.append(d)
+  locations.append("/usr/share")
+  locations.append("/usr/local/share")
   return locations
 
 
@@ -346,10 +349,14 @@ def get_cmd(app):
 def load_applications():
   categories = load_categories()
   menu = {}
+  all_filenames = []  # keep track of filenames to respect user overrides
   for d in get_setting_locations():
     d = d + "/applications/"
     for (dirpath, dirnames, filenames) in os.walk(d):
       for filename in filenames:
+        if filename in all_filenames:
+          continue
+        all_filenames.append(filename)
         entry = read_desktop_entry(os.path.join(dirpath, filename))
         cmd = get_cmd(entry)
         if "Type" in entry and entry["Type"] == "Application" and cmd:
@@ -389,10 +396,14 @@ def load_applications():
 
 def load_applications_no_dirs():
   menu = []
+  all_filenames = []  # keep track of filenames to respect user overrides
   for d in get_setting_locations():
     d = d + "/applications/"
     for (dirpath, dirnames, filenames) in os.walk(d):
       for filename in filenames:
+        if filename in all_filenames:
+          continue
+        all_filenames.append(filename)
         entry = read_desktop_entry(os.path.join(dirpath, filename))
         cmd = get_cmd(entry)
         if "Type" in entry and entry["Type"] == "Application" and cmd:
