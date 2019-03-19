@@ -2,8 +2,8 @@
 #
 # License: GPLv2
 #
-# Copyright (C) 2016 Ovidiu M <mrovi9000@gmail.com>
-# Modified by Johan Malm <jgm323@gmail.com>
+# Copyright (C) 2016-2017 Ovidiu M <mrovi9000@gmail.com>
+# Copyright (C) 2017-2019 Johan Malm <jgm323@gmail.com>
 #
 
 import argparse
