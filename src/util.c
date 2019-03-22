@@ -110,26 +110,27 @@ char *strstrip(char *s)
 int parse_config_line(char *line, char **option, char **value)
 {
 	char *p;
+	int iscomment = 0;
 
 	p = line;
 	while ((p[0] == ' ') || (p[0] == '\t'))
 		p++;
-	if ((p[0] == '#') || (p[0] == '\n'))
+	if (p[0] == '\n')
 		return 0;
-
+	if (p[0] == '#')
+		iscomment = 1;
 	p = strchr(line, '=');
 	if (!p)
 		return 0;
-	p[0] = 0;
-
+	p[0] = '\0';
 	*option = strstrip(line);
+	if (*option[0] == '#')
+		++(*option);
 	*value  = strstrip(++p);
-
 	p = strchr(p, '\n');
 	if (p)
-		p[0] = 0;
-
-	return 1;
+		p[0] = '\0';
+	return iscomment ? 0 : 1;
 }
 
 int hex_to_dec(char c)
