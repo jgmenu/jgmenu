@@ -65,9 +65,6 @@ static void process_line(char *line)
 	/* menu colours */
 	if (!strncmp(line, "menu.items.bg.color:", 20)) {
 		vset("color_menu_bg", "%s 100", strstrip(line + 20));
-	} else if (!strncmp(line, "menu.items.bg.border.color:", 34)) {
-		vset("color_sel_border", "%s 100", strstrip(line + 34));
-		set_set("item_border", "1");
 	} else if (!strncmp(line, "menu.items.text.color:", 22)) {
 		vset("color_norm_fg", "%s 100", strstrip(line + 22));
 
@@ -76,10 +73,15 @@ static void process_line(char *line)
 		vset("color_menu_border", "%s 100", strstrip(line + 18));
 	} else if (!strncmp(line, "menu.border.width:", 18)) {
 		set_set("menu_border", strstrip(line + 18));
+	/*
+	 * Tried using menu.items.bg.border.color for color_sel_border, but
+	 * it did not work well.
+	 */
 
 	/* selected item */
 	} else if (!strncmp(line, "menu.items.active.bg.color:", 27)) {
 		vset("color_sel_bg", "%s 100", strstrip(line + 27));
+		vset("color_sel_border", "%s 100", strstrip(line + 27));
 	} else if (!strncmp(line, "menu.items.active.text.color:", 29)) {
 		vset("color_sel_fg", "%s 100", strstrip(line + 29));
 
