@@ -92,7 +92,7 @@ jgmenu-i18n: jgmenu-i18n.o i18n.o hashmap.o util.o sbuf.o
 jgmenu-greeneye: jgmenu-greeneye.o compat.o util.o sbuf.o
 jgmenu-apps: jgmenu-apps.o compat.o util.o sbuf.o desktop.o charset.o \
              xdgdirs.o argv-buf.o
-jgmenu-obtheme: jgmenu-obtheme.o util.o sbuf.o compat.o
+jgmenu-obtheme: jgmenu-obtheme.o util.o sbuf.o compat.o set.o
 
 $(PROGS):
 	$(QUIET_LINK)$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)

@@ -1,0 +1,24 @@
+#ifndef SET_H
+#define SET_H
+
+/**
+ * set_write - write config file including changes to stdout
+ */
+void set_write(const char *filename);
+
+/**
+ * set_set - set/add value in config file
+ *
+ * If key already exists, it will be overwritten.
+ * If it does not exist, it will be added.
+ */
+void set_set(const char *key, const char *value);
+
+/**
+ * set_read - read config file
+ *
+ * This is needed before setting/adding key/value pairs
+ */
+void set_read(const char *filename);
+
+#endif /* SET_H */
