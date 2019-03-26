@@ -535,7 +535,7 @@ set_theme () {
 
 apply_obtheme () {
 	backup_config_files
-	jgmenu_run obtheme "${config_file}" >>"${config_file}"
+	jgmenu_run obtheme "${config_file}"
 }
 
 check_nr_backups () {
@@ -550,7 +550,7 @@ backup_config_files () {
 		${HOME}/.config/jgmenu/append.csv"
 	local backup_dir
 
-	backup_dir="${HOME}/.config/jgmenu/backup/$(date +%Y%m%d%H%M%S)"
+	backup_dir="${HOME}/.config/jgmenu/backup/$(date +%Y%m%d%H%M%S%N)"
 	test -d "${backup_dir}" && die "duplicate backup directory"
 	mkdir -p "${backup_dir}"
 	say "Backing up config files..."
