@@ -63,7 +63,7 @@ SCRIPTS_LIBEXEC = src/jgmenu-init.sh src/jgmenu-pmenu.py \
                   src/jgmenu-unity-hack.py src/jgmenu-config.py
 
 PROGS_LIBEXEC   = jgmenu-ob jgmenu-socket jgmenu-i18n jgmenu-greeneye \
-                  jgmenu-obtheme
+                  jgmenu-obtheme jgmenu-apps
 
 # wrap in ifneq to ensure we respect user defined NO_LX=1
 ifneq ($(NO_LX),1)
