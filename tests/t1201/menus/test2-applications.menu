@@ -1,0 +1,53 @@
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+ "http://www.freedesktop.org/standards/menu-spec/1.0/menu.dtd">
+
+<Menu>
+
+	<Name>Applications</Name>
+	<Directory>lxde-menu-applications.directory</Directory>
+
+	<DefaultAppDirs/>
+	<DefaultDirectoryDirs/>
+
+	<Menu>
+		<Name>1</Name>
+		<Directory>1.directory</Directory>
+		<Include><And><Category>1</Category></And></Include>
+	</Menu>
+
+	<Menu>
+		<Name>2</Name>
+		<Directory>2.directory</Directory>
+		<Include><And><Category>2</Category></And></Include>
+
+		<Menu>
+			<Name>3</Name>
+			<Directory>3.directory</Directory>
+			<Include><And><Category>3</Category></And></Include>
+		</Menu>
+
+		<Menu>
+			<Name>4</Name>
+			<Directory>4.directory</Directory>
+			<Include><And><Category>4</Category></And></Include>
+
+		</Menu>
+
+		<Include><Filename>6-1.desktop</Filename></Include>
+
+		<Layout>
+			<Merge type="menus"/>
+			<Merge type="files"/>
+		</Layout>
+
+	</Menu>
+
+	<Include><Filename>5-1.desktop</Filename></Include>
+	<Layout>
+		<Merge type="files"/>
+		<Merge type="menus"/>
+		<Separator/>
+		<Menuname>2</Menuname>
+	</Layout>
+
+</Menu>
