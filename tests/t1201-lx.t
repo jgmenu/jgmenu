@@ -4,6 +4,12 @@ test_description='lx module'
 
 . ./sharness.sh
 
+if ! test -e ../../jgmenu-lx >/dev/null 2>&1
+then
+     skip_all='lx module is required'
+     test_done
+fi
+
 generate_directories () {
 	d="${PWD}/../t1201/desktop-directories"
 	rm -rf "${d}"
