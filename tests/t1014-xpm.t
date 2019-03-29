@@ -10,12 +10,12 @@ then
      test_done
 fi
 
-rm -f ../t0008/*.png
-../helper/test-xpm ../t0008/*.xpm 2>/dev/null
+rm -f ../t1014/*.png
+../helper/test-xpm ../t1014/*.xpm 2>/dev/null
 
 for s in gimp mc python
 do
-	test_expect_success "${s}.xpm" "cmp ../t0008/${s}.expect ../t0008/${s}.xpm.png"
+	test_expect_success "${s}.xpm" "cmp ../t1014/${s}.expect ../t1014/${s}.xpm.png"
 done
 
 test_done
