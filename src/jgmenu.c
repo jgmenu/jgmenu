@@ -2567,6 +2567,15 @@ int main(int argc, char *argv[])
 		fclose(fp);
 	if (config.hide_back_items)
 		rm_back_items();
+
+	/*
+	 * read_csv_file() ensures that the first item is a ^tag() one.
+	 * In addition to this, we need at least one menu item to enable us
+	 * to generate a menu.
+	 */
+	if (list_empty(&menu.master) || list_is_singular(&menu.master))
+		die("file did not contain any menu items");
+
 	build_tree();
 
 	if (args_checkout())
