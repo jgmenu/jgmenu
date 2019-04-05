@@ -141,6 +141,9 @@ color_norm_fg       = #13071B 100
 color_sel_bg        = #74998B 100
 color_sel_fg        = #101010 100
 color_sel_border    = #74998B 8
+color_title_fg      = #101010 100
+color_title_bg      = #74998B 100
+color_title_border  = #74998B 8
 color_sep_fg        = #101010 80
 EOF
 }
