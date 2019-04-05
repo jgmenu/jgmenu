@@ -10,9 +10,7 @@ include /usr/share/dpkg/buildflags.mk
 	dh $@
 
 override_dh_auto_clean:
-	# Broken due to `make clean` relying on dependencies like pkg-config being
-	# installed and executing.
-	@true
+	dh_auto_clean
 
 override_dh_auto_configure:
 	@true
