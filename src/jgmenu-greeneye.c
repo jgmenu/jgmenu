@@ -106,7 +106,6 @@ static void output_config(void)
 {
 	printf("csv_cmd             = lx\n");
 	printf("tint2_look          = 0\n");
-	printf("menu_margin_y       = 30\n");
 	printf("menu_width          = %d\n", bw + cw);
 	printf("menu_height_min     = %d\n", ah + ch);
 	printf("menu_height_max     = %d\n", ah + ch);
@@ -115,7 +114,6 @@ static void output_config(void)
 	printf("menu_padding_bottom = 1\n");
 	printf("menu_padding_left   = %d\n", bw + 1);
 	printf("menu_border         = 1\n");
-	printf("menu_valign         = top\n");
 	printf("item_height         = %d\n", item_height);
 	printf("item_radius         = 2\n");
 	printf("item_border         = 1\n");
