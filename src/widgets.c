@@ -1,7 +1,7 @@
 /*
  * widgets.c
  *
- * Copyright (C) Johan Malm 2017
+ * Copyright (C) Johan Malm 2017-2019
  *
  * A very simple widget implementation
  *
@@ -40,10 +40,12 @@
 enum widget_type { WIDGET_ERROR, ICON, RECT, TEXT, SEARCH };
 
 static LIST_HEAD(widgets);
-static struct point mouse;
 
 /* indicates if mouse is over any of the widgets */
 static int mouseover;
+
+/* "widgets" has control of keyboard movement keys */
+static int keyboard_grabbed;
 
 struct widget {
 	char *buf;
@@ -62,6 +64,8 @@ struct widget {
 	cairo_surface_t *surface;
 	struct list_head list;
 };
+
+static struct widget *selection;
 
 static enum widget_type parse_type(const char *field)
 {
@@ -115,27 +119,61 @@ static void draw_text(struct widget **w)
 		       (*w)->fgcol, LEFT);
 }
 
-static int ismouseover(struct widget **w)
-{
-	struct area a;
-
-	a.x = (*w)->x;
-	a.y = (*w)->y;
-	a.w = (*w)->w;
-	a.h = (*w)->h;
-	return ui_is_point_in_area(mouse, a);
-}
-
 static void draw_selection(struct widget **w)
 {
-	if (!ismouseover(w))
-		return;
 	if (!(*w)->action || (*w)->action[0] == '\0')
 		return;
 	ui_draw_rectangle((*w)->x, (*w)->y, (*w)->w, (*w)->h, (*w)->r,
 			  0.0, 1, config.color_sel_bg);
 	ui_draw_rectangle((*w)->x, (*w)->y, (*w)->w, (*w)->h, (*w)->r,
 			  1.0, 0, config.color_sel_border);
+}
+
+void widgets_select(const char *ksym)
+{
+	struct widget *w;
+	enum direction {UNKNOWN, NEXT, PREV};
+	enum direction direction = UNKNOWN;
+
+	/*
+	 * 'selection' is set when widgets are initiates
+	 * if selection == 0, there are no selectable widgets
+	 */
+	if (!selection)
+		return;
+	w = selection;
+	if (!strcmp(ksym, "XK_Down"))
+		direction = NEXT;
+	else if (!strcmp(ksym, "XK_Up"))
+		direction = PREV;
+	if (direction == UNKNOWN)
+		warn("unknown string passed to %s", __func__);
+	for (;;) {
+		switch (direction) {
+		case NEXT:
+			w = container_of(w->list.next, struct widget, list);
+			break;
+		case PREV:
+			w = container_of(w->list.prev, struct widget, list);
+			break;
+		case UNKNOWN:
+			return;
+		}
+		if (!w->action || w->action[0] == '\0')
+			continue;
+		selection = w;
+		break;
+	}
+}
+
+int widgets_get_kb_grabbed(void)
+{
+	return keyboard_grabbed;
+}
+
+void widgets_toggle_kb_grabbed(void)
+{
+	keyboard_grabbed = keyboard_grabbed ? 0 : 1;
 }
 
 int widgets_mouseover(void)
@@ -146,13 +184,19 @@ int widgets_mouseover(void)
 void widgets_set_pointer_position(int x, int y)
 {
 	struct widget *w;
+	struct area widget_area;
+	struct point pointer;
 
 	mouseover = 0;
-	mouse.x = x;
-	mouse.y = y;
-
+	pointer.x = x;
+	pointer.y = y;
 	list_for_each_entry(w, &widgets, list) {
-		if (ismouseover(&w)) {
+		widget_area.x = w->x;
+		widget_area.y = w->y;
+		widget_area.w = w->w;
+		widget_area.h = w->h;
+		if (ui_is_point_in_area(pointer, widget_area)) {
+			selection = w;
 			mouseover = 1;
 			break;
 		}
@@ -163,12 +207,12 @@ void widgets_set_pointer_position(int x, int y)
  * widgets_set_point_position() should be run just before calling
  * this function
  */
-char *widgets_get_mouseover_action(void)
+char *widgets_get_selection_action(void)
 {
 	struct widget *w;
 
 	list_for_each_entry(w, &widgets, list) {
-		if (ismouseover(&w)) {
+		if (selection == w) {
 			if (!w->action || w->action[0] == '\0')
 				continue;
 			return w->action;
@@ -184,7 +228,8 @@ void widgets_draw(void)
 	if (list_empty(&widgets))
 		return;
 	list_for_each_entry(w, &widgets, list) {
-		draw_selection(&w);
+		if (selection == w)
+			draw_selection(&w);
 		if (w->type == ICON)
 			draw_icon(&w);
 		else if (w->type == RECT)
@@ -226,6 +271,10 @@ void widgets_add(const char *s)
 	w->content = argv_buf.argv[11];
 	w->surface = NULL;
 	list_add_tail(&w->list, &widgets);
+	if (selection)
+		return;
+	if (w->action && w->action[0] != '\0')
+		selection = w;
 }
 
 void widgets_cleanup(void)

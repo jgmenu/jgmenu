@@ -1627,6 +1627,9 @@ void key_event(XKeyEvent *ev)
 		menu.sel = menu.current_node->last_sel;
 
 	switch (ksym) {
+	case XK_Tab:
+		widgets_toggle_kb_grabbed();
+		break;
 	case XK_End:
 		if (filter_head() == &empty_item)
 			break;
@@ -1660,6 +1663,12 @@ void key_event(XKeyEvent *ev)
 		draw_menu();
 		break;
 	case XK_Up:
+		if (widgets_get_kb_grabbed()) {
+			widgets_select("XK_Up");
+			draw_menu();
+			action_cmd(widgets_get_selection_action(), NULL);
+			break;
+		}
 		if (filter_head() == &empty_item ||
 		    menu.sel == filter_head())
 			break;
@@ -1710,6 +1719,12 @@ void key_event(XKeyEvent *ev)
 			action_cmd(menu.sel->cmd, menu.sel->working_dir);
 		break;
 	case XK_Down:
+		if (widgets_get_kb_grabbed()) {
+			widgets_select("XK_Down");
+			draw_menu();
+			action_cmd(widgets_get_selection_action(), NULL);
+			break;
+		}
 		if (filter_head() == &empty_item ||
 		    menu.sel == filter_tail())
 			break;
@@ -1828,7 +1843,7 @@ void mouse_release(XEvent *e)
 
 		/* widgets */
 		widgets_set_pointer_position(mouse_coords.x, mouse_coords.y);
-		ret = widgets_get_mouseover_action();
+		ret = widgets_get_selection_action();
 		if (ret && ret[0] != '\0') {
 			action_cmd(ret, NULL);
 			return;
