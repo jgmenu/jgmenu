@@ -2043,11 +2043,6 @@ void close_sub_window(void)
 
 void hover(void)
 {
-	if (widgets_mouseover()) {
-		tmr_mouseover_stop();
-		close_sub_window();
-		return;
-	}
 	/*
 	 * Mouse is over an already "expanded" item (i.e. one that caused a
 	 * sub window to open
@@ -2067,6 +2062,11 @@ void hover(void)
 	if (!sw_close_pending) {
 		tmr_mouseover_stop();
 		close_sub_window();
+	}
+	if (widgets_mouseover()) {
+		tmr_mouseover_stop();
+		close_sub_window();
+		return;
 	}
 }
 
