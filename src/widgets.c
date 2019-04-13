@@ -243,6 +243,14 @@ void widgets_draw(void)
 	}
 }
 
+static void color_copy(double to[4], double from[4])
+{
+	int i;
+
+	for (i = 0; i < 4; i++)
+		to[i] = from[i];
+}
+
 void widgets_add(const char *s)
 {
 	struct argv_buf argv_buf;
@@ -266,7 +274,10 @@ void widgets_add(const char *s)
 	xatoi(&w->r, argv_buf.argv[6], XATOI_NONNEG, "w->r");
 /*	enum alignment halign; */
 /*	enum alignment valign; */
-	parse_hexstr(argv_buf.argv[9], w->fgcol);
+	if (!strcasecmp(argv_buf.argv[9], "auto"))
+		color_copy(w->fgcol, config.color_norm_fg);
+	else
+		parse_hexstr(argv_buf.argv[9], w->fgcol);
 	parse_hexstr(argv_buf.argv[10], w->bgcol);
 	w->content = argv_buf.argv[11];
 	w->surface = NULL;
