@@ -1,6 +1,6 @@
 % JGMENU-LX(1)  
 % Johan Malm  
-% 20 Aug, 2018
+% 16 Apr, 2019
 
 # NAME
 
@@ -25,6 +25,9 @@ libmenu-cache.
 JGMENU_NO_DIRS
 :   If set, applications will be listed without a directory  
        structure  
+
+JGMENU_NO_PEND
+:   Do not read append.csv or prepend.csv  
 
 # KNOWN ISSUES
 

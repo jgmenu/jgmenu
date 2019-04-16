@@ -21,12 +21,13 @@ struct menu {
 static struct list_head menu;
 static struct menu *cur;
 static int no_dirs;
+static int no_pend; /* no append or prepend */
 
 static void append(void)
 {
 	static int done;
 
-	if (done)
+	if (done || no_pend)
 		return;
 	cat("~/.config/jgmenu/append.csv");
 	done = 1;
@@ -36,7 +37,8 @@ static void print_menu(void)
 {
 	struct menu *m;
 
-	cat("~/.config/jgmenu/prepend.csv");
+	if (!no_pend)
+		cat("~/.config/jgmenu/prepend.csv");
 	list_for_each_entry(m, &menu, list) {
 		sbuf_replace(&m->buf, "&", "&amp;");
 		printf("%s", m->buf.buf);
@@ -197,6 +199,8 @@ int main(int argc, char **argv)
 
 	if (getenv("JGMENU_NO_DIRS"))
 		no_dirs = 1;
+	if (getenv("JGMENU_NO_PEND"))
+		no_pend = 1;
 
 	set_if_unset_xdg_menu_prefix();
 	cache = menu_cache_lookup_sync("applications.menu");
