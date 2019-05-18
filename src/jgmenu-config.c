@@ -111,7 +111,7 @@ static void create(void)
 	struct option *o;
 
 	for (o = options; o->key; o++)
-		printf("%s = %s\n", o->key, o->value);
+		printf("# %s = %s\n", o->key, o->value);
 }
 
 static void check_file(struct sbuf *f, const char *filename)
