@@ -18,8 +18,13 @@ regression_items="max_items min_items ignore_icon_cache color_noprog_fg \
 color_title_bg show_title search_all_items ignore_xsettings arrow_show \
 read_tint2rc tint2_rules tint2_button multi_window color_menu_fg"
 
-available_themes="archlabs_1803 bunsenlabs_hydrogen bunsenlabs_helium neon \
-greeneye"
+available_themes="\
+	archlabs_1803 \
+	bunsenlabs_hydrogen \
+	bunsenlabs_helium \
+	bunsenlabs_lithium_rc1 \
+	neon \
+	greeneye"
 
 JGMENU_EXEC_DIR=$(jgmenu_run --exec-path)
 
@@ -500,7 +505,7 @@ bunsenlabs__setup_theme () {
 	# not all systems support openbox menus
 	if ! test -e ~/.config/openbox/menu.xml
 	then
-		printf "\n%s\n" "csv_cmd = pmenu" >"${config_file}"
+		jgmenu_run config -s "${config_file}" -k csv_cmd -v pmenu
 	fi
 }
 
@@ -519,6 +524,11 @@ set_theme () {
 		;;
 	bunsenlabs_helium)
 		jgmenurc_bunsenlabs_helium
+		bunsenlabs__setup_theme
+		;;
+	bunsenlabs_lithium_rc1)
+		jgmenu_run themes bunsenlabs_lithium_rc1_config >"${config_file}"
+		jgmenu_run themes bunsenlabs_lithium_rc1_prepend >"${prepend_file}"
 		bunsenlabs__setup_theme
 		;;
 	neon)

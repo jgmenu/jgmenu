@@ -59,8 +59,10 @@ DEPDIR := .d
 $(shell mkdir -p $(DEPDIR) >/dev/null)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
-SCRIPTS_LIBEXEC = src/jgmenu-init.sh src/jgmenu-pmenu.py \
-                  src/jgmenu-unity-hack.py
+SCRIPTS_LIBEXEC = src/jgmenu-init.sh \
+                  src/jgmenu-pmenu.py \
+                  src/jgmenu-unity-hack.py \
+                  src/jgmenu-themes.sh
 
 PROGS_LIBEXEC   = jgmenu-ob jgmenu-socket jgmenu-i18n jgmenu-greeneye \
                   jgmenu-obtheme jgmenu-apps jgmenu-config
