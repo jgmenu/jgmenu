@@ -25,7 +25,7 @@ tint2_look          = 0
 at_pointer          = 1
 csv_cmd             = pmenu
 menu_width          = 134
-menu_padding_top    = 0
+menu_padding_top    = 24
 menu_padding_right  = 0
 menu_padding_bottom = 0
 menu_padding_left   = 0
@@ -58,6 +58,9 @@ bunsenlabs_lithium_rc1_prepend () {
 cat <<'EOF'
 # BunsenLabs Main Menu
 
+@search,,1,3,150,20,2,left,top,auto,#000000 0,Search...
+
+^sep()
 Run Program,gmrun
 ^sep()
 Terminal,x-terminal-emulator
