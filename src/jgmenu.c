@@ -1669,13 +1669,18 @@ void key_event(XKeyEvent *ev)
 			action_cmd(widgets_get_selection_action(), NULL);
 			break;
 		}
-		if (filter_head() == &empty_item ||
-		    menu.sel == filter_head())
+		if (filter_head() == &empty_item)
 			break;
-		menu.sel = prev_selectable(menu.sel, &isoutside);
-		if (isoutside) {
-			menu.first = menu.sel;
-			menu.last = fill_from_top(menu.first);
+		if (menu.sel == filter_head()) {
+			menu.last = filter_tail();
+			menu.first = fill_from_bottom(menu.last);
+			menu.sel = menu.last;
+		} else {
+			menu.sel = prev_selectable(menu.sel, &isoutside);
+			if (isoutside) {
+				menu.first = menu.sel;
+				menu.last = fill_from_top(menu.first);
+			}
 		}
 		init_menuitem_coordinates();
 		menu.current_node->last_sel = menu.sel;
@@ -1725,13 +1730,18 @@ void key_event(XKeyEvent *ev)
 			action_cmd(widgets_get_selection_action(), NULL);
 			break;
 		}
-		if (filter_head() == &empty_item ||
-		    menu.sel == filter_tail())
+		if (filter_head() == &empty_item)
 			break;
-		menu.sel = next_selectable(menu.sel, &isoutside);
-		if (isoutside) {
-			menu.last = menu.sel;
-			menu.first = fill_from_bottom(menu.last);
+		if (menu.sel == filter_tail()) {
+			menu.first = filter_head();
+			menu.last = fill_from_top(menu.first);
+			menu.sel = menu.first;
+		} else {
+			menu.sel = next_selectable(menu.sel, &isoutside);
+			if (isoutside) {
+				menu.last = menu.sel;
+				menu.first = fill_from_bottom(menu.last);
+			}
 		}
 		init_menuitem_coordinates();
 		menu.current_node->last_sel = menu.sel;
