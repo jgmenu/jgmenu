@@ -73,7 +73,7 @@ static struct option options[] = {
 	{ "icon_theme_fallback", "xtg" },
 	{ "arrow_string", "▸" },
 	{ "arrow_width", "15" },
-	{ "color_menu_bg", "#000000 85" },
+	{ "color_menu_bg", "#000000 100" },
 	{ "color_menu_border", "#eeeeee 8" },
 	{ "color_norm_bg", "#000000 00" },
 	{ "color_norm_fg", "#eeeeee 100" },

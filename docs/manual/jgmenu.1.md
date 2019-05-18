@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 12 Mar, 2019  
+% 18 May, 2019  
 
 # NAME
 
@@ -480,7 +480,7 @@ arrow_width = __integer__ (default 15)
 
     Width of area allocated for arrow. Set to 0 to hide arrow.  
 
-color_menu_bg = __color__ (default #000000 85)  
+color_menu_bg = __color__ (default #000000 100)  
 
     Background colour of menu window  
 

@@ -75,7 +75,7 @@ void config_set_defaults(void)
 	config.arrow_string	   = xstrdup("▸");
 	config.arrow_width	   = 15;
 
-	parse_hexstr("#000000 85", config.color_menu_bg);
+	parse_hexstr("#000000 100", config.color_menu_bg);
 	parse_hexstr("#eeeeee 8", config.color_menu_border);
 	parse_hexstr("#000000 00", config.color_norm_bg);
 	parse_hexstr("#eeeeee 100", config.color_norm_fg);
