@@ -85,34 +85,12 @@ Lock Screen,bl-lock
 Exit,bl-exit
 
 ^tag(bl-pipes)
-Accessories,^checkout(bl-accessories)
 Graphics,^pipe(jgmenu_run ob --cmd="bl-graphics-pipemenu" --tag="bl-graphics-pipemenu")
 Multimedia,^pipe(jgmenu_run ob --cmd="bl-multimedia-pipemenu" --tag="bl-multimedia-pipemenu")
-Network,^checkout(bl-network)
-Office,^checkout(bl-office)
-
-Accessories,^tag(bl-accessories)
-Back,^back()
-Catfish File Search,catfish
-Archive Manager,file-roller
-System Information (hardinfo),hardinfo
-
-Network,^tag(bl-network)
-Back,^back()
 WWW Browsers,^pipe(jgmenu_run ob --cmd="bl-x-www-browser-pipemenu" --tag="bl-x-www-browser-pipemenu")
-Filezilla FTP Client,filezilla
-Transmission BitTorrent Client,transmission-gtk
-HexChat IRC Client,hexchat
-Remote Filesystems,gigolo
 Remote Desktop,^pipe(jgmenu_run ob --cmd="bl-remote-desktop-pipemenu" --tag="bl-remote-desktop-pipemenu")
 SSH,^pipe(jgmenu_run ob --cmd="bl-sshconfig-pipemenu" --tag="bl-sshconfig-pipemenu")
-
-Office,^tag(bl-office)
-Back,^back()
 LibreOffice,^pipe(jgmenu_run ob --cmd="bl-libreoffice-pipemenu" --tag="bl-libreoffice-pipemenu")
-Gnumeric Spreadsheet,gnumeric
-Calculator,galculator
-Evince PDF Viewer,evince
 
 Preferences,^tag(bl-preferences)
 Back,^back()
