@@ -95,7 +95,6 @@ Accessories,^tag(bl-accessories)
 Back,^back()
 Catfish File Search,catfish
 Archive Manager,file-roller
-Task Manager (htop),x-terminal-emulator -T 'htop task manager' -e htop
 System Information (hardinfo),hardinfo
 
 Network,^tag(bl-network)
@@ -165,6 +164,7 @@ man xrandr,x-terminal-emulator -T 'man xrandr' -e man xrandr
 System,^tag(bl-system)
 Back,^back()
 Printers,^pipe(jgmenu_run ob --cmd="bl-printing-pipemenu" --tag="bl-printing-pipemenu")
+Task Manager (htop),x-terminal-emulator -T 'htop task manager' -e htop
 Synaptic Package Manager,pkexec synaptic
 Login Settings,pkexec bl-text-editor /etc/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm.conf
 GParted,pkexec gparted
