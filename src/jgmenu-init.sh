@@ -319,7 +319,7 @@ check_config_file () {
 	if ! test -e "${config_file}"
 	then
 		say "info: creating config file 'jgmenurc'"
-		jgmenu_run config create --file "${config_file}"
+		jgmenu_run config -c >"${config_file}"
 	fi
 }
 
@@ -615,7 +615,7 @@ prompt () {
 		;;
 	missing|m)
 		backup_config_files
-		jgmenu_run config amend --file "${config_file}"
+		jgmenu_run config -a "${config_file}"
 		;;
 	obtheme|o)
 		apply_obtheme

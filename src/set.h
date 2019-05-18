@@ -6,6 +6,8 @@
  */
 void set_write(const char *filename);
 
+int set_key_exists(const char *key);
+
 /**
  * set_set - set/add value in config file
  *

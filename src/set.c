@@ -66,6 +66,19 @@ void set_write(const char *filename)
 	fclose(fp);
 }
 
+int set_key_exists(const char *key)
+{
+	int i;
+
+	for (i = 0; i < nr_entries; i++) {
+		if (!entries[i].key)
+			continue;
+		if (!strcmp(entries[i].key, key))
+			return 1;
+	}
+	return 0;
+}
+
 void set_set(const char *key, const char *value)
 {
 	int i;
