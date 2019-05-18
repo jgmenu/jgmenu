@@ -251,7 +251,7 @@ csv_cmd = __string__ (default `pmenu`)
     csv_cmd = jgmenu_run lx --no-dirs  
     csv_cmd = cat ~/mymenu.csv  
 
-tint2_look = __boolean__ (default 1)  
+tint2_look = __boolean__ (default 0)  
 
     Reads tint2rc and parses config options for colours, dimensions  
     and alignment. Also reads tint2 button environment variables.  

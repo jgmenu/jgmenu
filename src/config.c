@@ -20,7 +20,7 @@ void config_set_defaults(void)
 	config.stay_alive	   = 1;
 	config.hide_on_startup	   = 0;
 	config.csv_cmd		   = xstrdup("pmenu");
-	config.tint2_look	   = 1;
+	config.tint2_look	   = 0;
 	config.at_pointer	   = 0;
 	config.edge_snap_x	   = 30;
 	config.terminal_exec	   = xstrdup("x-terminal-emulator");

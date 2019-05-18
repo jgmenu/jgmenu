@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)  
 % Johan Malm  
-% 20 Jan, 2019  
+% 18 May, 2019  
 
 # NAME
 
@@ -40,9 +40,6 @@ There are three points worth noting about what you have just done:
 
   - You should see a "Linux/BSD system" menu showing installed  
     applications. We call this menu "pmenu" (explained in lesson 7).  
-
-  - If you use tint2, jgmenu should have based its appearance and  
-    alignment on tint2rc.  
 
   - You have just started a long-running application. If you click  
     outside the menu, press escape or select a menu item (using  

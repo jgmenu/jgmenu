@@ -25,7 +25,7 @@ static struct option options[] = {
 	{ "stay_alive", "1" },
 	{ "hide_on_startup", "0" },
 	{ "csv_cmd", "pmenu" },
-	{ "tint2_look", "1" },
+	{ "tint2_look", "0" },
 	{ "at_pointer", "0" },
 	{ "edge_snap_x", "30" },
 	{ "terminal_exec", "x-terminal-emulator" },
