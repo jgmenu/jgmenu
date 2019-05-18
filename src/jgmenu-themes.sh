@@ -71,12 +71,7 @@ Media Player,bl-media-player
 ^sep()
 Applications,^checkout(lx-apps)
 ^sep()
-Accessories,^checkout(bl-accessories)
-Graphics,^pipe(jgmenu_run ob --cmd="bl-graphics-pipemenu" --tag="bl-graphics-pipemenu")
-Multimedia,^pipe(jgmenu_run ob --cmd="bl-multimedia-pipemenu" --tag="bl-multimedia-pipemenu")
-Network,^checkout(bl-network)
-Office,^checkout(bl-office)
-^sep()
+BL Pipes,^checkout(bl-pipes)
 Places,^pipe(jgmenu_run ob --cmd="bl-places-pipemenu" --tag="bl-places-pipemenu")
 Recent Files,^pipe(jgmenu_run ob --cmd="bl-recent-files-pipemenu -rl15" --tag="bl-recent-files-pipemenu")
 ^sep()
@@ -88,6 +83,13 @@ Display Keybinds,^pipe(jgmenu_run ob --cmd="bl-kb-pipemenu" --tag="bl-kb-pipemen
 ^sep()
 Lock Screen,bl-lock
 Exit,bl-exit
+
+^tag(bl-pipes)
+Accessories,^checkout(bl-accessories)
+Graphics,^pipe(jgmenu_run ob --cmd="bl-graphics-pipemenu" --tag="bl-graphics-pipemenu")
+Multimedia,^pipe(jgmenu_run ob --cmd="bl-multimedia-pipemenu" --tag="bl-multimedia-pipemenu")
+Network,^checkout(bl-network)
+Office,^checkout(bl-office)
 
 Accessories,^tag(bl-accessories)
 Back,^back()
