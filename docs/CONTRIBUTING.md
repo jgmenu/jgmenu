@@ -182,7 +182,7 @@ Any new config variables need to be added to the following:
 
 -   config.c  
 -   config.h  
--   noncore/config/jgmenurc  
+-   src/jgmenu-config.c  
 -   docs/manual/jgmenu.1.md  
 
 Run ./scripts/jgmenurc-checker.sh
