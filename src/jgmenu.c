@@ -846,7 +846,6 @@ void find_subtail(void)
 
 void checkout_tag(const char *tag)
 {
-	filter_reset();
 	find_subhead(tag);
 	find_subtail();
 }
@@ -1592,6 +1591,8 @@ void action_cmd(char *cmd, const char *working_dir)
 		update(1);
 	} else if (!strncmp(cmd, "^root(", 6)) {
 		/* Two nodes with the same wid breaks get_node_from_wid() */
+		del_beyond_root();
+		filter_reset();
 		menu.current_node->last_sel = menu.sel;
 		menu.current_node->last_first = menu.first;
 		menu.current_node->wid = 0;
