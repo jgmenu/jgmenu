@@ -1,0 +1,51 @@
+jgmenu v3.0 release notes
+=========================
+
+Updates since v2.2.1
+--------------------
+
+  * This release has a MAJOR bump as we have changed a few things in a
+    non-backward compatible way.
+
+      - The menu background colour is set to have no transparency by
+        default (alpha changed from 85% to 100%)
+
+      - tint2_look is set to 0 (false) by default. Although the alignment
+        with tint2's config file can be convenient, it has caused confusion
+        for a number of users.
+
+      - The config module has been re-written in C (previously python).
+        It has very similar functionality, but slighly different command
+        line options. It is predominantly an internal command used by
+        'init', so most users should not notice a difference.
+    
+  * Support scroll past top/bottom when using keyboard arrows (issue #90).
+    When scrolling past the last item, the selection moves to the top, and
+    vice versa. Suggested-by: @hhhorb
+
+  * Add lithium-rc1 theme
+
+  * Teach widgets module to accept keyword "auto" for fgcol.  If "auto" is
+    specified instead of a "#rrggbb aa" value, the jgmenurc config file
+    color_norm_fg value will be used. This is useful if you want widget
+    text to take on the same colour as ordinary menu items.
+
+  * Give menu items higher Z-order priority than widgets
+
+  * Support movement betweeen widgets and items using keyboard. Simply
+    press the <tab> button to toggle between the two. The 'greeneye' theme
+    is a good place to try this out.
+
+  * Use apps module in greeneye theme rather than lx. This enables users
+    without the lx module to try it. The apps module will be a pmenu
+    successor. Although it is not quite ready yet, it is good enough for
+    this. 
+
+  * In the pmenu module, respect override .desktop files (issue #86). We
+    now do not show .desktop files with the same filenames more than once.
+    We look for .desktop files in "~/.local/share" and "$XDG_DATA_DIRS"
+    before "/usr/share" and "/usr/local/share".
+
+  * Lots of minor improvements, tweaks and fixes. See git log for full
+    details.
+
