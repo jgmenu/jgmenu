@@ -517,6 +517,8 @@ set_theme () {
 	case "$1" in
 	archlabs_1803)
 		jgmenurc_archlabs_1803
+		append_items
+		prepend_items
 		;;
 	bunsenlabs_hydrogen)
 		jgmenurc_bunsenlabs_hydrogen
@@ -524,6 +526,11 @@ set_theme () {
 		;;
 	bunsenlabs_helium)
 		jgmenurc_bunsenlabs_helium
+		bunsenlabs__setup_theme
+		;;
+	bunsenlabs_lithium)
+		jgmenu_run themes bunsenlabs_lithium_rc1_config >"${config_file}"
+		jgmenu_run themes bunsenlabs_lithium_rc1_prepend >"${prepend_file}"
 		bunsenlabs__setup_theme
 		;;
 	bunsenlabs_lithium_rc1)
