@@ -309,6 +309,28 @@ struct item *prev_selectable(struct item *cur, int *isoutside)
 	return p;
 }
 
+struct item *first_selectable(void)
+{
+	int isoutside;
+	struct item *item;
+
+	item = filter_head();
+	if (!item->selectable)
+		item = next_selectable(item, &isoutside);
+	return item;
+}
+
+struct item *last_selectable(void)
+{
+	int isoutside;
+	struct item *item;
+
+	item = filter_tail();
+	if (!item->selectable)
+		item = prev_selectable(item, &isoutside);
+	return item;
+}
+
 void add_if_unique(struct item *item)
 {
 	struct item *p;
@@ -1635,7 +1657,7 @@ void key_event(XKeyEvent *ev)
 			break;
 		menu.last = filter_tail();
 		menu.first = fill_from_bottom(menu.last);
-		menu.sel = menu.last;
+		menu.sel = last_selectable();
 		init_menuitem_coordinates();
 		menu.current_node->last_sel = menu.sel;
 		draw_menu();
@@ -1657,7 +1679,7 @@ void key_event(XKeyEvent *ev)
 			break;
 		menu.first = filter_head();
 		menu.last = fill_from_top(menu.first);
-		menu.sel = menu.first;
+		menu.sel = first_selectable();
 		init_menuitem_coordinates();
 		menu.current_node->last_sel = menu.sel;
 		draw_menu();
@@ -1671,10 +1693,11 @@ void key_event(XKeyEvent *ev)
 		}
 		if (filter_head() == &empty_item)
 			break;
-		if (menu.sel == filter_head()) {
+		if (menu.sel == first_selectable()) {
+			/* bounce to bottom */
 			menu.last = filter_tail();
 			menu.first = fill_from_bottom(menu.last);
-			menu.sel = menu.last;
+			menu.sel = last_selectable();
 		} else {
 			menu.sel = prev_selectable(menu.sel, &isoutside);
 			if (isoutside) {
@@ -1732,10 +1755,10 @@ void key_event(XKeyEvent *ev)
 		}
 		if (filter_head() == &empty_item)
 			break;
-		if (menu.sel == filter_tail()) {
+		if (menu.sel == last_selectable()) {
 			menu.first = filter_head();
 			menu.last = fill_from_top(menu.first);
-			menu.sel = menu.first;
+			menu.sel = first_selectable();
 		} else {
 			menu.sel = next_selectable(menu.sel, &isoutside);
 			if (isoutside) {
