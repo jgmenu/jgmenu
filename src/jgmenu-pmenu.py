@@ -416,7 +416,7 @@ def escape_markup(s):
 def create_menu(arg_append_file, arg_prepend_file):
   single_window = os.getenv("JGMENU_SINGLE_WINDOW")
 
-  print("jgmenu,^tag(pmenu)")
+#  print("jgmenu,^tag(pmenu)")
   cat_file(arg_prepend_file)
   tree, categories = load_applications(False)
 
