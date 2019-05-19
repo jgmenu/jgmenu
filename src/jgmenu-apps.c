@@ -12,6 +12,19 @@
 #include "util.h"
 #include "sbuf.h"
 
+static void replace_semicolons_with_hashes(char *s)
+{
+	char *p;
+
+	if (!s)
+		return;
+	while ((p = strchr(s, ';')))
+		*p = '#';
+	p = s + strlen(s) - 1;
+	if (*p == '#')
+		*p = '\0';
+}
+
 static void print_desktop_files(struct app *apps, int nr_apps)
 {
 	int i;
@@ -20,7 +33,11 @@ static void print_desktop_files(struct app *apps, int nr_apps)
 	for (i = 0; i < nr_apps; i++) {
 		if (!apps[i].name)
 			continue;
-		printf("%s,%s,%s\n", apps[i].name, apps[i].exec, apps[i].icon);
+		printf("%s,%s,%s,,", apps[i].name, apps[i].exec, apps[i].icon);
+		if (!apps[i].categories)
+			continue;
+		replace_semicolons_with_hashes(apps[i].categories);
+		printf("#%s\n", apps[i].categories);
 	}
 	cat("~/.config/jgmenu/append.csv");
 }

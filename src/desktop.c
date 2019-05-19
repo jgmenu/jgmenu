@@ -20,16 +20,18 @@
 static struct app *apps;
 static int nr_apps, alloc_apps;
 
-//static void format_exec(void)
-//{
-//	// FIXME: tidy up
-//	/* Remove %U, %f, etc at the end of Exec cmd */
-//	if (desktop_file->exec) {
-//		p = strchr(desktop_file->exec, '%');
-//		if (p)
-//			*p = '\0';
-//	}
-//}
+/* TODO: parse this properly and share code with lx */
+static void format_exec(char *s)
+{
+	char *p;
+
+	if (!s)
+		return;
+	/* Remove %U, %f, etc at the end of Exec cmd */
+	p = strchr(s, '%');
+	if (p)
+		*p = '\0';
+}
 
 static void parse_line(char *line, struct app *app, int *is_desktop_entry)
 {
@@ -87,10 +89,9 @@ static int add_app(FILE *fp)
 			return -1;
 		parse_line(line, app, &is_desktop_entry);
 	}
+	format_exec(app->exec);
 	if (app->nodisplay || !app->name)
 		--nr_apps;
-	if (app->nodisplay)
-		info("app %s is NoDisplay", app->name);
 	return 0;
 }
 
@@ -151,10 +152,10 @@ struct app *desktop_read_files(void)
 	struct list_head xdg_data_dirs;
 	struct sbuf *dir;
 	struct sbuf s;
-	static int run;
+	static int has_already_run;
 
-	BUG_ON(run);
-	run = 1;
+	BUG_ON(has_already_run);
+	has_already_run = 1;
 
 	INIT_LIST_HEAD(&xdg_data_dirs);
 	xdgdirs_get_basedirs(&xdg_data_dirs);
