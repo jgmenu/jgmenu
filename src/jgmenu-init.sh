@@ -58,6 +58,7 @@ Options include:\n\
     --theme=<theme>       Create config file with a particular theme\n\
     --list-themes         Display all available themes\n\
     --regression-check    Only check for config options no longer valid\n\
+    --apply-obtheme       Apply current openbox theme to menu\n\
     --verbose             Be more verbose\n"
 }
 
