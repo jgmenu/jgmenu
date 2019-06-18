@@ -1,6 +1,6 @@
 % JGMENU(1)  
 % Johan Malm  
-% 18 May, 2019  
+% 18 June, 2019  
 
 # NAME
 
@@ -18,13 +18,16 @@ jgmenu init \[\--help | <*options*>]
 
 ## Use these three commands to get started
 
-    ┌────────────────────┬─────────────────────────┐
-    │ jgmenu             │ launch menu             │
-    ├────────────────────┼─────────────────────────┤
-    │ jgmenu init        │ create config file      │
-    ├────────────────────┼─────────────────────────┤
-    │ man jgmenututorial │ read step-by-step guide │
-    └────────────────────┴─────────────────────────┘
+    ┌────────────────────┬───────────────────────────┐
+    │ jgmenu_run         │ Launch menu               │
+    ├────────────────────┼───────────────────────────┤
+    │ jgmenu init        │ Create config file        │
+    │                    │ ~/.config/jgmenu/jgmenurc │
+    ├────────────────────┼───────────────────────────┤
+    │ jgmenu init -i     │ Interactive setup         │
+    ├────────────────────┼───────────────────────────┤
+    │ man jgmenututorial │ Read step-by-step guide   │
+    └────────────────────┴───────────────────────────┘
 
 # DESCRIPTION
 
