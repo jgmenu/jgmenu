@@ -11,7 +11,8 @@ then
 fi
 
 generate_directories () {
-	d="${PWD}/../t1201/desktop-directories"
+	d="${PWD}/t1201/desktop-directories"
+	printf "%b\n" ".directory files generated in: $d"
 	rm -rf "${d}"
 	mkdir -p "${d}"
 	for i in $(seq 9)
@@ -23,7 +24,8 @@ generate_directories () {
 }
 
 generate_apps () {
-	d="${PWD}/../t1201/applications"
+	d="${PWD}/t1201/applications"
+	printf "%b\n" ".desktop files generated in: $d"
 	rm -rf "${d}"
 	mkdir -p "${d}"
 	for i in $(seq 9)
@@ -39,16 +41,25 @@ generate_apps () {
 	done
 }
 
+generate_menu_file () {
+	d="${PWD}/t1201/menus"
+	rm -rf "${d}"
+	mkdir -p "${d}"
+	cp ../t1201/menus/test2-applications.menu "$d"
+}
+
 test_menu () {
 
-	d="${PWD}/../t1201"
+	d="${PWD}/t1201"
 	export XDG_CONFIG_DIRS="${d}"
 	export XDG_DATA_HOME="${d}"
+	printf "%b\n" "XDG_DATA_HOME=$XDG_DATA_HOME"
 	export XDG_MENU_PREFIX="${1}-"
 
 	rm -rf ~/.cache/menus &&
+	cp "../t1201/${1}.expect" expect &&
 	LANG=C LC_ALL=C ../../jgmenu-lx >actual &&
-	cp "${d}/${1}.expect" expect &&
+	cp "../t1201/${1}.expect" expect &&
 	test_cmp expect actual
 }
 
@@ -56,6 +67,7 @@ test_expect_success 'nested lx menu with <layout>' '
 
 generate_directories &&
 generate_apps &&
+generate_menu_file &&
 test_menu "test2"
 
 '
