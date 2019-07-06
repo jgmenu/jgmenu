@@ -1,0 +1,14 @@
+jgmenu v3.1 release notes
+=========================
+
+Updates since v3.0
+------------------
+
+  * In obtheme module, support openbox config file (rc.xml) user override
+    by setting environment variable JGMENU_RCXML. For example:
+    JGMENU_RCXML=$HOME/.config/openbox/bl-rc.xml jgmenu_run obtheme jgmenurc
+    JGMENU_RCXML=$HOME/.config/openbox/bl-rc.xml jgmenu init --apply-obtheme
+
+  * Minor updates to man pages
+
+  * Fix incorrect relative path in unit test t1201-lx.t
