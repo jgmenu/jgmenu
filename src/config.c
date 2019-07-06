@@ -433,6 +433,9 @@ void config_post_process(void)
 	} else if (!strcmp(config.csv_cmd, "lx")) {
 		xfree(config.csv_cmd);
 		config.csv_cmd = xstrdup("jgmenu_run lx");
+	} else if (!strcmp(config.csv_cmd, "apps")) {
+		xfree(config.csv_cmd);
+		config.csv_cmd = xstrdup("jgmenu_run apps");
 	} else if (!strcmp(config.csv_cmd, "ob")) {
 		xfree(config.csv_cmd);
 		config.csv_cmd = xstrdup("jgmenu_run ob");
