@@ -5,7 +5,7 @@
 #
 
 test -d "debian" || { echo "fatal: need to run from project root"; exit 1; }
-test -f "jgmenu.c" || { echo "fatal: need to run from project root"; exit 1; }
+test -f "src/jgmenu.c" || { echo "fatal: need to run from project root"; exit 1; }
 
 ver=$(./scripts/version-gen.sh | sed -e 's/^jgmenu v//' | cut -f1 -d"-")
 #git describe --exact-match HEAD 2>/dev/null || echo "warn: not at tag"
