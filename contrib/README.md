@@ -1,5 +1,5 @@
-Noncore Software
-================
+contrib/ software
+=================
 
 The tools / helpers in this directory:
 
@@ -13,8 +13,7 @@ The tools / helpers in this directory:
 
 -   do not always adhere to the jgmenu coding guidelines.
 
-The tools in this directory are included in the git-repo to give users easier
-access to them.
+The tools in this directory are included in the git-repo to give users easier access to them.
 
 Although I will try to maintain this code, my main focus will remain on
 the jgmenu app itself (top level directory code).
