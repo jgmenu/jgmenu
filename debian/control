@@ -17,4 +17,7 @@ Build-Depends: debhelper (>= 10),
 Package: jgmenu
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, python3
-Description: simple X11 menu intended to be used with tint2 and openbox
+Description: Simple X11 menu
+ A stand-alone, contemporary-looking menu application for Linux and BSD.
+ Independent of window manager and panel.
+ Designed for customisation, scripting, ricing and tweaking
