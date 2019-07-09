@@ -74,10 +74,8 @@ static int get_lang(char *b)
 	char *s;
 
 	s = getenv("LANG");
-	if (!s || strlen(s) < 2) {
-		warn("LANG is not set");
+	if (!s || strlen(s) < 2)
 		return -1;
-	}
 	b[0] = s[0];
 	b[1] = s[1];
 	b[2] = '\0';
