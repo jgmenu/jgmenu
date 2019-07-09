@@ -149,7 +149,7 @@ clean:
 
 test:
 	@$(MAKE) --no-print-directory -C tests/helper/ all
-	@$(MAKE) --no-print-directory -C tests/ prove
+	@$(MAKE) --no-print-directory -C tests/ all
 
 ex:
 	@$(MAKE) --no-print-directory -C examples/ all
