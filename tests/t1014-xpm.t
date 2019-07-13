@@ -17,5 +17,6 @@ for s in gimp mc python
 do
 	test_expect_success "${s}.xpm" "cmp ../t1014/${s}.expect ../t1014/${s}.xpm.png"
 done
+rm -f ../t1014/*.png
 
 test_done
