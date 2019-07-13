@@ -52,8 +52,8 @@ test_menu () {
 
 	d="${PWD}/t1201"
 	export XDG_CONFIG_DIRS="${d}"
-	export XDG_DATA_HOME="${d}"
-	printf "%b\n" "XDG_DATA_HOME=$XDG_DATA_HOME"
+	export XDG_DATA_DIRS="${d}"
+	printf "%b\n" "XDG_DATA_DIRS=$XDG_DATA_DIRS"
 	export XDG_MENU_PREFIX="${1}-"
 
 	rm -rf ~/.cache/menus &&
