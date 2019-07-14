@@ -8,7 +8,7 @@ compiler:
   - gcc
   - clang
 
-sudo: false
+sudo: true
 
 addons:
   apt:
@@ -17,8 +17,13 @@ addons:
       - libxrandr-dev
       - libpango1.0-dev
       - libmenu-cache-dev
-
-script: make && make test
+      - checkinstall
+      - clang-3.5
+      - clang
+      - clang++-3.5
+      - gcc
+      
+script: make && make test && sudo checkinstall --install=no -y
 
 env:
   global:
@@ -27,3 +32,12 @@ env:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+  - #https://github.com/probonopd/uploadtool/
+  - # ls -lh out/* Assuming you have some files in out/ that you would like to upload
+  - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+  - bash upload.sh jgmenu_*_amd64.deb
+
+branches:
+  except:
+    - # Do not build tags that we create when we upload to GitHub Releases
+    - /^(?i:continuous)$/
