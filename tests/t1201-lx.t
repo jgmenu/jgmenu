@@ -10,6 +10,12 @@ then
      test_done
 fi
 
+if test -d /build
+then
+     skip_all='libmenu-cache does not like running in chroot'
+     test_done
+fi
+
 generate_directories () {
 	d="${PWD}/t1201/desktop-directories"
 	printf "%b\n" ".directory files generated in: $d"
