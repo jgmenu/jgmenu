@@ -412,7 +412,7 @@ void update_filtered_list(void)
 	if (!filter_needle_length() && menu.current_node->last_sel) {
 		menu.sel = menu.current_node->last_sel;
 		if (!isvisible(menu.sel))
-			menu.sel = menu.first;
+			menu.sel = first_selectable();
 	} else {
 		menu.sel = menu.first;
 		if (!menu.sel->selectable)
