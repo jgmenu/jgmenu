@@ -3,7 +3,6 @@ See https://github.com/johanmalm/jgmenu/wiki/Roadmap.md for further details
 Minor changes (0-3 months)
 --------------------------
 
-- Deal with ^sep() as first item - it gets selected sometimes
 - set.c: when 'amending', comment out new lines
 - Fault find around `menu_valign=bottom`
 - Sort out neon theme ^root() items
