@@ -62,7 +62,8 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 SCRIPTS_LIBEXEC = src/jgmenu-init.sh \
                   src/jgmenu-pmenu.py \
                   src/jgmenu-unity-hack.py \
-                  src/jgmenu-themes.sh
+                  src/jgmenu-themes.sh \
+                  src/jgmenu-hide-app.sh
 
 PROGS_LIBEXEC   = jgmenu-ob jgmenu-socket jgmenu-i18n jgmenu-greeneye \
                   jgmenu-obtheme jgmenu-apps jgmenu-config
