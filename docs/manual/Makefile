@@ -1,13 +1,5 @@
-INSTALL = install
-variant = --from=markdown_strict+backtick_code_blocks+pipe_tables+pandoc_title_block
-css     = jg.css
-
-man1pages  = jgmenu.1 jgmenu_run.1
-
-man1pages += jgmenu-pmenu.1 jgmenu-lx.1 jgmenu-ob.1
-
+man1pages  = jgmenu.1 jgmenu_run.1 jgmenu-pmenu.1 jgmenu-lx.1 jgmenu-ob.1
 man7pages  = jgmenututorial.7
-
 manpages   = $(man1pages) $(man7pages)
 
 prefix ?= /usr/local
@@ -20,13 +12,12 @@ all: $(manpages)
 $(manpages): % : %.md
 	@echo "    PANDOC    " $^
 	@pandoc -s -t man $^ -o $@
-	@pandoc -s $(variant) --css=$(css) -o $@.html $^
 
 install:
-	@$(INSTALL) -d -m 755 $(DESTDIR)$(man1dir)
-	@$(INSTALL) -d -m 755 $(DESTDIR)$(man7dir)
-	@$(INSTALL) -m 644 $(man1pages) $(DESTDIR)$(man1dir)
-	@$(INSTALL) -m 644 $(man7pages) $(DESTDIR)$(man7dir)
+	@install -d -m 755 $(DESTDIR)$(man1dir)
+	@install -d -m 755 $(DESTDIR)$(man7dir)
+	@install -m 644 $(man1pages) $(DESTDIR)$(man1dir)
+	@install -m 644 $(man7pages) $(DESTDIR)$(man7dir)
 
 clean:
-	rm -f $(manpages) *.html
+	@rm -f $(manpages)
