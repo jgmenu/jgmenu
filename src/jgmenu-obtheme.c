@@ -21,7 +21,8 @@
 static char obtheme[80];
 
 static char *rcxml_files[] = {
-	"~/.config/openbox/rc.xml", "/etc/xdg/openbox/rc.xml", NULL
+	"~/.config/openbox/bl-rc.xml", "~/.config/openbox/rc.xml",
+	"/etc/xdg/openbox/rc.xml", NULL
 };
 
 static char *theme_paths[] = {
@@ -29,11 +30,14 @@ static char *theme_paths[] = {
 };
 
 static const char obtheme_usage[] =
-"Usage: jgmenu_run obtheme <jgmenurc filename>\n\n"
-"The theme name will be obtained from:\n"
+"Usage: jgmenu_run obtheme <jgmenu-config-filename>\n"
+"Immitate look of current openbox menu by parsing current openbox theme and\n"
+"setting variables in specified jgmenu config file. The theme name will be\n"
+"obtained from the following list (in order of precedence):\n"
+"  * ~/.config/openbox/bl-rc.xml\n"
 "  * ~/.config/openbox/rc.xml\n"
 "  * /etc/xdg/openbox/rc.xml\n"
-"Set environment variable JGMENU_RCXML to specify a different file\n\n"
+"The above list can be overridden by setting environment variable JGMENU_RCXML.\n"
 "Openbox theme files will be searched for in:\n"
 "  * ~/.themes/\n"
 "  * /usr/share/themes/\n";
