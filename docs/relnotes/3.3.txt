@@ -1,0 +1,10 @@
+jgmenu v3.3 release notes
+=========================
+
+Updates since v3.2
+------------------
+
+  * In the obtheme module, add support for parsing BunsenLabs Lithium's
+    `bl-rc.xml` to obtain the current openbox theme, thereby supporting
+    `jgmenu init --apply-obtheme` without having to set an environment
+    variable.
