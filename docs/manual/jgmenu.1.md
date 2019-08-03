@@ -1,6 +1,6 @@
 % JGMENU(1)
 % Johan Malm
-% 31 July, 2019
+% 3 July, 2019
 
 # NAME
 
@@ -98,13 +98,15 @@ Icons will be displayed if the third field is populated, for example:
 :   Start menu is hidden state.
 
 \--simple
-:   Ignore tint2 settings; Run in 'short-lived' mode (i.e. exit after mouse click or enter/escape); read menu items from _stdin_.
+:   Ignore tint2 settings; Run in 'short-lived' mode (i.e. exit after mouse
+    click or enter/escape); read menu items from _stdin_.
 
 \--vsimple
 :   Same as --simple, but also disables icons and ignores jgmenurc.
 
 \--csv-file=<*file*>
-:   Specify menu file (in jgmenu flavoured CSV format). If file cannot be opened, input is reverted to *stdin*.
+:   Specify menu file (in jgmenu flavoured CSV format). If file cannot be
+    opened, input is reverted to *stdin*.
 
 \--csv-cmd=<*command*>
 :   Specify command to produce menu data, for example `jgmenu_run pmenu`
@@ -113,7 +115,8 @@ Icons will be displayed if the third field is populated, for example:
 :   Open menu and then exit(0). Useful for debugging and testing.
 
 \--center
-:   Center align menu horizontally and vertically. Also set `tint2_look=0` to disable alignment to tint2 panel
+:   Center align menu horizontally and vertically. Also set `tint2_look=0` to
+    disable alignment to tint2 panel
 
 # USER INTERFACE
 
@@ -128,11 +131,14 @@ Icons will be displayed if the third field is populated, for example:
   - F10 - exit(0)
   - Backspace - return to parent menu
 
-Type any string to invoke a search. Words separated by space will be searched for using OR logic (i.e. the match of either word is sufficient to display an item).
+Type any string to invoke a search. Words separated by space will be searched
+for using OR logic (i.e. the match of either word is sufficient to display an
+item).
 
 # CONFIGURATION FILE
 
-If no file is specified using the --config-file= option, the XDG Base Directory Specification is adhered to. I.e:
+If no file is specified using the --config-file= option, the XDG Base Directory
+Specification is adhered to. I.e:
 
 - Global config in `${XDG_CONFIG_DIRS:-/etc/xdg}`
 - User config override in `${XDG_CONFIG_HOME:-$HOME/.config}`
@@ -163,7 +169,8 @@ Unless otherwise specified, values as treated as simple strings.
 
 Here follow some specific types:
 
-`boolean`: When a variable takes a boolean value, only 0 and 1 are accepted. 0 means false; 1 means true.
+`boolean`: When a variable takes a boolean value, only 0 and 1 are accepted. 0
+means false; 1 means true.
 
 `integer`: When a variable takes an integer value, only numerical values are
 accepted. The only valid characters are digits (0-9) and minus-sign. All
@@ -184,20 +191,15 @@ environment variable $HOME just as a shell would expand it.
 
 ## Variables
 
-`stay_alive` = __boolean__ (default 1)  
+`stay_alive` = __boolean__ (default 1)
+:   If set to 1, the menu will "hide" rather than "exit" when the following
+    events occur: clicking on menu item; clicking outside the menu; pressing
+    escape. When in the hidden mode, a USR1 signal will "un-hide" the menu.
 
-    If set to 1, the menu will "hide" rather than "exit" when the  
-    following events occur:  
-      - clicking on menu item  
-      - clicking outside the menu  
-      - pressing escape  
-    When in the hidden mode, a USR1 signal will "un-hide" the menu.  
-
-`hide_on_startup` = __boolean__ (default 0)  
-
-    If set to 1, jgmenu start in "hidden" mode. This is useful for  
-    starting jgmenu during the boot process and then sending a   
-    `killall -SIGUSR1 jgmenu` to show the menu.  
+`hide_on_startup` = __boolean__ (default 0)
+:   If set to 1, jgmenu start in "hidden" mode. This is useful for starting
+    jgmenu during the boot process and then sending a `killall -SIGUSR1 jgmenu`
+    to show the menu.
 
 `csv_cmd` = __string__ (default `pmenu`)  
 
@@ -511,7 +513,7 @@ csv_i18n = __string__ (no default)
     specified file or directory. See `jgmenu_run i18n --help` for  
     further details.  
 
-# DIAGRAMS
+# DIAGRAMS {#diagrams}
 
 ## Vertical Menu
 
@@ -563,10 +565,11 @@ csv_i18n = __string__ (no default)
 
 ## External to menu
 
+```
     screen
-    ╔════════════════════════╗  1. menu_margin_x
-    ║    2                   ║  2. menu_margin_y
-    ║ ╭──────┐               ║  3. sub_spacing
+    ╔════════════════════════╗
+    ║    2                   ║
+    ║ ╭──────┐               ║
     ║ │ root │ ╭──────┐      ║
     ║1│ menu │ │ sub  │      ║
     ║ │      │3│ menu │      ║
@@ -576,6 +579,11 @@ csv_i18n = __string__ (no default)
     ║                        ║
     ║                        ║
     ╚════════════════════════╝
+
+1. menu_margin_x
+2. menu_margin_y
+3. sub_spacing
+```
 
 # SEE ALSO
 
