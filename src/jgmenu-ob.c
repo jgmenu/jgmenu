@@ -21,6 +21,7 @@ static const char restart_command[] = "openbox --restart";
 static const char root_menu_default[] = "root-menu";
 static char *root_menu = (char *)root_menu_default;
 static char *i18nfile;
+static int ispipemenu;
 
 struct tag {
 	char *label;
@@ -52,7 +53,10 @@ static void print_it(struct tag *tag)
 
 	if (list_empty(&tag->items))
 		return;
+	if (ispipemenu && !strcmp(tag->id, root_menu))
+		goto dont_print_tag;
 	printf("^tag(%s)\n", tag->id);
+dont_print_tag:
 	if (tag->parent)
 		printf("Back,^back()\n");
 	list_for_each_entry(item, &tag->items, list) {
@@ -96,10 +100,12 @@ static void print_menu(void)
 {
 	struct tag *tag;
 
+	/* print root menu first */
 	list_for_each_entry(tag, &tags, list)
 		if (tag->id && !strcmp(tag->id, root_menu))
 			print_it(tag);
 
+	/* then print all other nodes */
 	list_for_each_entry(tag, &tags, list)
 		if (tag->id && strcmp(tag->id, root_menu))
 			print_it(tag);
@@ -162,6 +168,11 @@ static void new_item(xmlNode *n, int isseparator)
 	curitem = item;
 }
 
+/**
+ *  new_tag - create new tag (to generate ^tag() markup)
+ *  @n - <menu label="" id=""></menu> node to create tag against
+ *       If NULL is provided, we create a root-menu tag
+ */
 static void new_tag(xmlNode *n)
 {
 	struct tag *t = xcalloc(1, sizeof(struct tag));
@@ -183,6 +194,8 @@ static void new_tag(xmlNode *n)
 	INIT_LIST_HEAD(&t->items);
 	list_add_tail(&t->list, &tags);
 	curtag = t;
+
+	/* Create an item to generate the ^checkout() markup */
 	if (parent) {
 		new_item(n, 0);
 		xfree(curitem->label);
@@ -369,6 +382,9 @@ static void xml_tree_walk(xmlNode *node)
 		}
 		if (!strcasecmp((char *)n->name, "Comment"))
 			continue;
+		if (!strcasecmp((char *)n->name, "openbox_pipe_menu")) {
+			ispipemenu = 1;
+		}
 
 		process_node(n);
 		xml_tree_walk(n->children);
