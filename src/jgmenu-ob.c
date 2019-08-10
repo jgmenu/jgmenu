@@ -383,6 +383,8 @@ static void xml_tree_walk(xmlNode *node)
 		if (!strcasecmp((char *)n->name, "Comment"))
 			continue;
 		if (!strcasecmp((char *)n->name, "openbox_pipe_menu")) {
+			if (!curtag)
+				new_tag(NULL);
 			ispipemenu = 1;
 		}
 
