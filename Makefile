@@ -152,6 +152,10 @@ test:
 	@$(MAKE) --no-print-directory -C tests/helper/ all
 	@$(MAKE) --no-print-directory -C tests/ all
 
+prove:
+	@$(MAKE) --no-print-directory -C tests/helper/ all
+	@$(MAKE) --no-print-directory -C tests/ prove
+
 ex:
 	@$(MAKE) --no-print-directory -C examples/ all
 
