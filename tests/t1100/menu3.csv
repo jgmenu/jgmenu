@@ -1,0 +1,14 @@
+item1,item1
+sub1,^checkout(sub1)
+sub2,^checkout(sub2)
+
+^tag(sub1)
+Back,^back()
+item1.1,item1.1
+item1.2,item1.2
+
+^tag(sub2)
+Back,^back()
+item2.1,item2.1
+item2.2,item2.2
+

@@ -1,0 +1,17 @@
+<!-- menu4.xml: - Test pipemenu with inline menu AS first node -->
+
+<openbox_pipe_menu>
+
+    <menu id="sub1" label="sub1">
+        <item label="item1.1"><action name="Execute"><command>item1.1</command></action></item>
+	<item label="item1.2"><action name="Execute"><command>item1.2</command></action></item>
+    </menu>
+
+    <menu id="sub2" label="sub2">
+        <item label="item2.1"><action name="Execute"><command>item2.1</command></action></item>
+	<item label="item2.2"><action name="Execute"><command>item2.2</command></action></item>
+    </menu>
+
+    <item label="item1"><action name="Execute"><command>item1</command></action></item>
+
+</openbox_pipe_menu>
