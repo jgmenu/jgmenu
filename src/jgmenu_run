@@ -30,7 +30,7 @@ print_exec_path () {
 # Pipe to UNIX socket if tint2 button was used.
 send_tint2_env_vars_to_jgmenu () {
 	# Check set/unset with ${parameter+word}
-	test -z ${TINT2_BUTTON_ALIGNED_X+x} && return
+	test -z ${TINT2_BUTTON_ALIGNED_X1+x} && return
 	printf "%b" \
 		"TINT2_BUTTON_ALIGNED_X1=${TINT2_BUTTON_ALIGNED_X1}\n" \
 		"TINT2_BUTTON_ALIGNED_X2=${TINT2_BUTTON_ALIGNED_X2}\n" \
