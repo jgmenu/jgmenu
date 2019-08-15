@@ -1,1 +1,5 @@
 On debian, install libgtk-3-dev xfce4-panel-dev
+
+Launch at button with
+
+    xfce4-panel --plugin-event=jgmenu-applet:popup:bool:false
