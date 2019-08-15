@@ -989,6 +989,7 @@ int tint2_getenv(int *var, const char *key)
 void tint2_align(void)
 {
 	int bx1, bx2, by1, by2, px1, px2, py1, py2;
+	int panel_is_horizontal;
 
 	if (tint2_getenv(&bx1, "TINT2_BUTTON_ALIGNED_X1") == -1 ||
 	    tint2_getenv(&bx2, "TINT2_BUTTON_ALIGNED_X2") == -1 ||
@@ -1000,11 +1001,10 @@ void tint2_align(void)
 	    tint2_getenv(&py2, "TINT2_BUTTON_PANEL_Y2") == -1)
 		return;
 
-	if (t2conf_is_horizontal_panel() == -1) {
-		warn("invalid value for tint2 panel orientation");
-		return;
-	}
-	if (t2conf_is_horizontal_panel()) {
+	panel_is_horizontal = (px2 - px1) > (py2 - py1) ? 1 : 0;
+
+	if (panel_is_horizontal) {
+		/* align to horizontal panel */
 		if (bx1 >= geo_get_screen_x0() + geo_get_screen_width() ||
 		    bx1 < geo_get_screen_x0()) {
 			geo_set_use_tint2_vars(0);
@@ -1025,6 +1025,7 @@ void tint2_align(void)
 		else
 			geo_set_menu_margin_y(py2);
 	} else {
+		/* align to vertical panel */
 		if (by1 >= geo_get_screen_y0() + geo_get_screen_height() ||
 		    by1 < geo_get_screen_y0()) {
 			geo_set_use_tint2_vars(0);
