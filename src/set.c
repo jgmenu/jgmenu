@@ -17,6 +17,7 @@ struct entry {
 	char line[strsiz];
 	char key[strsiz];
 	char value[strsiz];
+	int is_commented_out;
 };
 
 static struct entry *entries;
@@ -44,7 +45,11 @@ static void process_line(char *line)
 
 	entry = add_entry();
 	strlcpy(entry->line, line, sizeof(entry->line));
-	parse_config_line(line, &key, &value);
+
+	/* we parse commented out lines too */
+	if (line[0] == '#')
+		entry->is_commented_out = 1;
+	parse_config_line(line + entry->is_commented_out, &key, &value);
 	if (!key || !value)
 		return;
 	strlcpy(entry->key, key, sizeof(entry->key));
@@ -79,7 +84,7 @@ int set_key_exists(const char *key)
 	return 0;
 }
 
-void set_set(const char *key, const char *value)
+void set_set(const char *key, const char *value, int is_commented_out)
 {
 	int i;
 	struct entry *e = NULL;
@@ -97,7 +102,11 @@ void set_set(const char *key, const char *value)
 	}
 	e = add_entry();
 entry_already_exists:
-	snprintf(e->line, sizeof(e->line), "%s = %s", key, value);
+	e->is_commented_out = is_commented_out;
+	if (e->is_commented_out)
+		snprintf(e->line, sizeof(e->line), "# %s = %s", key, value);
+	else
+		snprintf(e->line, sizeof(e->line), "%s = %s", key, value);
 	strlcpy(e->key, key, sizeof(e->key));
 	strlcpy(e->value, value, sizeof(e->value));
 }

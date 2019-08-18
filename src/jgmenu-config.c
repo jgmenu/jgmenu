@@ -82,6 +82,9 @@ static struct option options[] = {
 	{ "color_sel_border", "#eeeeee 8" },
 	{ "color_sep_fg", "#ffffff 20" },
 	{ "color_scroll_ind", "#eeeeee 40" },
+	{ "color_title_fg", "#eeeeee 50" },
+	{ "color_title_bg", "#000000 0" },
+	{ "color_title_border", "#000000 0" },
 	{ "csv_name_format", "%n (%g)" },
 	{ "csv_single_window", "0" },
 	{ "csv_no_dirs", "0" },
@@ -137,7 +140,7 @@ static void amend(const char *filename)
 	for (o = options; o->key; o++) {
 		if (!set_key_exists(o->key)) {
 			info("add '%s = %s'", o->key, o->value);
-			set_set(o->key, o->value);
+			set_set(o->key, o->value, 1);
 		}
 	}
 	set_write(f.buf);
@@ -152,7 +155,7 @@ static void set_key_value_pair(const char *filename, const char *key,
 	sbuf_init(&f);
 	check_file(&f, filename);
 	set_read(f.buf);
-	set_set(key, value);
+	set_set(key, value, 0);
 	set_write(f.buf);
 	xfree(f.buf);
 }

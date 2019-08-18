@@ -66,7 +66,7 @@ static void vset(const char *key, const char *fmt, ...)
 	va_end(ap);
 	if (size < 0)
 		goto out;
-	set_set(key, p);
+	set_set(key, p, 0);
 out:
 	xfree(p);
 }
@@ -83,7 +83,7 @@ static void process_line(char *line)
 	} else if (!strncmp(line, "menu.border.color:", 18)) {
 		vset("color_menu_border", "%s 100", strstrip(line + 18));
 	} else if (!strncmp(line, "menu.border.width:", 18)) {
-		set_set("menu_border", strstrip(line + 18));
+		set_set("menu_border", strstrip(line + 18), 0);
 	/*
 	 * Tried using menu.items.bg.border.color for color_sel_border, but
 	 * it did not work well.
@@ -103,15 +103,15 @@ static void process_line(char *line)
 		vset("color_title_border", "%s 100", strstrip(line + 27));
 	} else if (!strncmp(line, "menu.title.text.color:", 22)) {
 		vset("color_title_fg", "%s 100", strstrip(line + 22));
-		set_set("sep_markup", "");
+		set_set("sep_markup", "", 0);
 	} else if (!strncmp(line, "menu.title.text.justify:", 24)) {
-		set_set("sep_halign", strstrip(line + 24));
+		set_set("sep_halign", strstrip(line + 24), 0);
 	} else if (!strncmp(line, "menu.separator.color:", 21)) {
 		vset("color_sep_fg", "%s 100", strstrip(line + 21));
 
 	/* general */
 	} else if (!strncmp(line, "*.text.justify:", 15)) {
-		set_set("sep_halign", strstrip(line + 15));
+		set_set("sep_halign", strstrip(line + 15), 0);
 	} else if (!strncmp(line, "menu.overlap:", 13)) {
 		vset("sub_spacing", "%d", -1 * atoi(line + 13));
 	}
