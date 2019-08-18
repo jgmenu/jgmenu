@@ -17,6 +17,8 @@ int set_key_exists(const char *key);
  */
 void set_set(const char *key, const char *value, int is_commented_out);
 
+int set_is_already_set_correctly(const char *key, const char *value);
+
 /**
  * set_read - read config file
  *

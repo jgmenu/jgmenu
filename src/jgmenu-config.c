@@ -155,8 +155,17 @@ static void set_key_value_pair(const char *filename, const char *key,
 	sbuf_init(&f);
 	check_file(&f, filename);
 	set_read(f.buf);
+
+	/*
+	 * Aborting at this point if the key/value pair is already set
+	 * correctly, avoid updating the config file and thereby indirectly
+	 * avoids restarting jgmenu too.
+	 */
+	if (set_is_already_set_correctly(key, value))
+		goto out;
 	set_set(key, value, 0);
 	set_write(f.buf);
+out:
 	xfree(f.buf);
 }
 

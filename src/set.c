@@ -111,6 +111,21 @@ entry_already_exists:
 	strlcpy(e->value, value, sizeof(e->value));
 }
 
+int set_is_already_set_correctly(const char *key, const char *value)
+{
+	int i;
+
+	for (i = 0; i < nr_entries; i++) {
+		if (!entries[i].key)
+			continue;
+		if (strcmp(entries[i].key, key) != 0)
+			continue;
+		if (!strcmp(entries[i].value, value) != 0)
+			return 1;
+	}
+	return 0;
+}
+
 void set_read(const char *filename)
 {
 	FILE *fp;
