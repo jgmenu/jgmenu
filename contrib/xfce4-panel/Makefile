@@ -1,8 +1,14 @@
 LIBDIR     = /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins
 PLUGIN_DIR = /usr/share/xfce4/panel/plugins
 
+CFLAGS  += -s -Wall -shared -std=c99 -fPIC
+CFLAGS  += -Wextra -Wno-format-zero-length \
+	   -Wold-style-definition -Woverflow -Wpointer-arith \
+	   -Wunused -Wvla -Wunused-result
+CFLAGS  += -Wno-unused-parameter
+
 all:
-	gcc -s -Wall -shared -o libjgmenu.so -fPIC jgmenu-applet.c `pkg-config --cflags --libs libxfce4panel-1.0 gtk+-3.0`
+	gcc $(CFLAGS) -o libjgmenu.so jgmenu-applet.c `pkg-config --cflags --libs libxfce4panel-1.0 gtk+-3.0`
 
 install:
 	install -d $(LIBDIR)

@@ -19,7 +19,7 @@
 
 
 static void jgmenu_about (XfcePanelPlugin *plugin)
-{ 
+{
   GdkPixbuf *icon;
 
   const gchar *auth[] =
@@ -65,10 +65,13 @@ static void button_clicked(GtkWidget *button, XfcePanelPlugin *plugin)
     GdkScreen *screen;
     gint screen_width, screen_height;
 
-    if ((screen = gdk_screen_get_default()) != NULL) {
-        screen_width = gdk_screen_get_width(screen);
-        screen_height = gdk_screen_get_height(screen);
-        }
+    screen = gdk_screen_get_default();
+    if (!screen) {
+	    fprintf(stderr, "xfce4-plugin: gdk_screen_get_default() failed");
+	    return;
+    }
+    screen_width = gdk_screen_get_width(screen);
+    screen_height = gdk_screen_get_height(screen);
 
     screen_width = screen_width / 2;
     screen_height = screen_height / 2;
