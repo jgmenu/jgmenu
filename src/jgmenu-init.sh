@@ -613,6 +613,7 @@ m, missing   = add any missing config options to config file\n\
 o, obtheme   = apply openbox theme
 p, prepend   = add items at top of root-menu (e.g. web browser and terminal)\n\
 q, quit      = quit init process\n\
+R, reset     = delete all config files and create a default jgmenurc\n\
 t, theme     = create config files based on templates\n"
 }
 
@@ -643,6 +644,11 @@ prompt () {
 		;;
 	quit|q)
 		return 1
+		;;
+	reset|R)
+		backup_config_files
+		rm -f "${config_file}" "${prepend_file}" "${append_file}"
+		check_config_file
 		;;
 	theme|t)
 		set_theme "$(get_theme)"
