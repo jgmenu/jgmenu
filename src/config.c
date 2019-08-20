@@ -147,8 +147,8 @@ static void process_line(char *line)
 		} else if (!strcasecmp(value, "center")) {
 			config.position_mode = POSITION_MODE_CENTER;
 			config.respect_workarea = 0;
-			config.valign = CENTER;
-			config.halign = CENTER;
+			config.menu_valign = CENTER;
+			config.menu_halign = CENTER;
 		} else {
 			warn("position_mode value '%s' not recognised", value);
 		}
