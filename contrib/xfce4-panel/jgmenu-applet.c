@@ -195,7 +195,6 @@ static void button_clicked(GtkWidget *button, XfcePanelPlugin *plugin)
 		}
 	}
 
-	gchar * command[] = { DEFAULT_RUN_COMMAND, NULL };
 	gchar **envp = g_get_environ();
 
 	envp = g_environ_unsetenv(envp, "TINT2_BUTTON_ALIGNED_X1");
@@ -218,8 +217,21 @@ static void button_clicked(GtkWidget *button, XfcePanelPlugin *plugin)
 		envp = extend_env(panel_y2, "TINT2_BUTTON_PANEL_Y2", envp);
 	}
 
+	/*
+	 * Set IPC mode to ensure jgmenu reads the above environment variables
+	 * The jgmenurc config file will only be updated if not already in IPC
+	 * mode
+	 */
+	gchar * command_setup[] = { "jgmenu_run", "config", "-s",
+				    "~/.config/jgmenu/jgmenurc", "-k",
+				    "position_mode", "-v", "ipc", NULL };
+	gchar * command[] = { DEFAULT_RUN_COMMAND, NULL };
 	GError *error = NULL;
 
+	g_spawn_sync(".", command_setup, envp, G_SPAWN_SEARCH_PATH,
+		      NULL, NULL, NULL, NULL, NULL, &error);
+	if (error)
+		g_warning("unable to launch: %s", error->message);
 	g_spawn_async(".", command, envp, G_SPAWN_SEARCH_PATH,
 		      NULL, NULL, NULL, &error);
 	if (error)
