@@ -37,7 +37,7 @@ void args_parse(int argc, char **argv)
 		} else if (!strncmp(argv[i], "--die-when-loaded", 17)) {
 			die_when_loaded = 1;
 		} else if (!strncmp(argv[i], "--at-pointer", 12)) {
-			config.at_pointer = 1;
+			config.position_mode = POSITION_MODE_PTR;
 		} else if (!strncmp(argv[i], "--hide-on-startup", 17)) {
 			config.hide_on_startup = 1;
 		} else if (!strncmp(argv[i], "--simple", 8)) {
@@ -49,7 +49,7 @@ void args_parse(int argc, char **argv)
 		} else if (!strncmp(argv[i], "--center", 8)) {
 			config.menu_halign = CENTER;
 			config.menu_valign = CENTER;
-			config.tint2_look = 0;
+			config.position_mode = POSITION_MODE_CENTER;
 		}
 	}
 }

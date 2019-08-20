@@ -22,7 +22,7 @@ Output config files for themes\n\
 bunsenlabs_lithium_rc1_config () {
 cat <<'EOF'
 tint2_look          = 0
-at_pointer          = 1
+position_mode       = pointer
 csv_cmd             = pmenu
 menu_width          = 134
 menu_padding_top    = 24

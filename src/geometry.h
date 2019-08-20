@@ -78,7 +78,6 @@ void geo_set_menu_padding_top(int padding);
 void geo_set_menu_padding_right(int padding);
 void geo_set_menu_padding_bottom(int padding);
 void geo_set_menu_padding_left(int padding);
-void geo_set_use_tint2_vars(int use);
 
 int geo_get_menu_x0(void);
 int geo_get_menu_y0(void);

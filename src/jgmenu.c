@@ -741,11 +741,12 @@ void set_submenu_width(void)
 	if (mw < config.menu_width)
 		mw = config.menu_width;
 
-	if (!config.at_pointer)
+	if (config.position_mode != POSITION_MODE_PTR)
 		goto set_width;
 	/* grow from right hand edge if too near it */
 	if (config.menu_halign == LEFT && reqw > maxarea.x) {
-		geo_set_menu_margin_x(geo_get_screen_x0() + geo_get_screen_width() -
+		geo_set_menu_margin_x(geo_get_screen_x0() +
+				      geo_get_screen_width() -
 				      reqw);
 		mw = reqw;
 	}
@@ -1007,12 +1008,11 @@ void tint2_align(void)
 		/* align to horizontal panel */
 		if (bx1 >= geo_get_screen_x0() + geo_get_screen_width() ||
 		    bx1 < geo_get_screen_x0()) {
-			geo_set_use_tint2_vars(0);
-			info("pointer outside tint2 range - no alignment");
+			warn("pointer outside IPC varable range");
 			return;
 		}
-		geo_set_use_tint2_vars(1);
-		info("aligning to tint2 horizontal panel env vars");
+		if (config.verbose)
+			info("[jgmenu-ipc] aligning to horizontal panel");
 		if (bx1 < px2 - geo_get_menu_width()) {
 			geo_set_menu_margin_x(bx1);
 			geo_set_menu_halign(LEFT);
@@ -1028,12 +1028,11 @@ void tint2_align(void)
 		/* align to vertical panel */
 		if (by1 >= geo_get_screen_y0() + geo_get_screen_height() ||
 		    by1 < geo_get_screen_y0()) {
-			geo_set_use_tint2_vars(0);
-			info("pointer outside tint2 range - no alignment");
+			warn("pointer outside IPC varable range");
 			return;
 		}
-		geo_set_use_tint2_vars(1);
-		info("aligning to tint2 vertical panel env vars\n");
+		if (config.verbose)
+			info("[jgmenu-ipc] aligning to vertical panel");
 		if (by1 < py2 - geo_get_menu_height()) {
 			geo_set_menu_margin_y(by1);
 			geo_set_menu_valign(TOP);
@@ -1070,12 +1069,12 @@ static void awake_menu(void)
 	if_unity_run_hack();
 	if (watch_files_have_changed())
 		restart();
-	if (config.at_pointer) {
+	if (config.position_mode == POSITION_MODE_PTR) {
 		launch_menu_at_pointer();
 		resize();
 	}
 	tint2env_read_socket();
-	if (config.tint2_look && !config.at_pointer) {
+	if (config.position_mode == POSITION_MODE_IPC) {
 		tint2_align();
 		update(1);
 	}
@@ -2426,7 +2425,8 @@ void init_geo_variables_from_config(void)
 void set_font(void)
 {
 	font_set();
-	info("set font to '%s'", font_get());
+	if (config.verbose)
+		info("set font to '%s'", font_get());
 }
 
 void set_theme(void)
@@ -2439,7 +2439,8 @@ void set_theme(void)
 	theme_set(&theme);
 	icon_init();
 	icon_set_size(config.icon_size);
-	info("set icon theme to '%s'", theme.buf);
+	if (config.verbose)
+		info("set icon theme to '%s'", theme.buf);
 	icon_set_theme(theme.buf);
 }
 
@@ -2583,8 +2584,10 @@ int main(int argc, char *argv[])
 	 * If _NET_WORKAREA is supported by the Window Manager, set
 	 * config.menu_margin_{x|y} and config.{v|h}align if possible
 	 */
-	workarea_set_margin();
-	workarea_set_panel_pos();
+	if (config.respect_workarea) {
+		workarea_set_margin();
+		workarea_set_panel_pos();
+	}
 
 	/* Parse jgmenurc again to overrule tint2rc and workarea values */
 	if (!arg_vsimple)
@@ -2639,7 +2642,7 @@ int main(int argc, char *argv[])
 	grabkeyboard();
 	grabpointer();
 
-	if (config.at_pointer)
+	if (config.position_mode == POSITION_MODE_PTR)
 		launch_menu_at_pointer();
 
 	if (config.menu_height_mode == CONFIG_DYNAMIC)

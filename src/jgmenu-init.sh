@@ -67,7 +67,7 @@ cat >${config_file} <<'EOF'
 stay_alive           = 1
 csv_cmd              = pmenu
 tint2_look           = 0
-at_pointer           = 0
+position_mode        = fixed
 terminal_exec        = termite
 terminal_args        = -e
 menu_width           = 200
@@ -99,7 +99,7 @@ EOF
 jgmenurc_bunsenlabs_hydrogen () {
 cat >${config_file} <<'EOF'
 tint2_look          = 0
-at_pointer          = 1
+position_mode       = pointer
 csv_cmd             = ob
 menu_width          = 120
 menu_padding_top    = 0
@@ -122,7 +122,7 @@ EOF
 jgmenurc_bunsenlabs_helium () {
 cat >${config_file} <<'EOF'
 tint2_look          = 0
-at_pointer          = 1
+position_mode       = pointer
 csv_cmd             = ob
 menu_width          = 134
 menu_padding_top    = 0

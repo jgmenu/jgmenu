@@ -204,7 +204,8 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height, int monitor)
 		if (!ci->noutput)
 			continue;
 		if (intersect(x, y, 1, 1, ci)) {
-			info("using monitor '%d'", i + 1);
+			if (config.verbose)
+				info("using monitor '%d'", i + 1);
 			break;
 		}
 	}

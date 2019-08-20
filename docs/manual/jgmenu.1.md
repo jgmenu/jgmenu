@@ -1,6 +1,6 @@
 % JGMENU(1)
 % Johan Malm
-% 3 July, 2019
+% 20 August, 2019
 
 # NAME
 
@@ -213,17 +213,20 @@ environment variable $HOME just as a shell would expand it.
     csv_cmd = jgmenu_run lx --no-dirs  
     csv_cmd = cat ~/mymenu.csv  
 
-`tint2_look` = __boolean__ (default 0)  
+`tint2_look` = __boolean__ (default 0)
+:   Read tint2rc and parse config options for colours, dimensions
+    and alignment.
 
-    Reads tint2rc and parses config options for colours, dimensions  
-    and alignment. Also reads tint2 button environment variables.  
-    These give more accurate alignment along the length of the panel  
-    than what parsing the tint2 config file can achieve.  
+`position_mode` = (fixed | ipc | pointer | center) (default fixed)
+:   Define menu positioning mode
 
-`at_pointer` = __boolean__ (default 0)  
+    fixed: Align to margin_{x,y} in jgmenurc. Respect `_NET_WORKAREA`.
 
-    If enabled, the menu is launched at the pointer position,  
-    ignoring `menu_margin_?` and `menu_?align` values.  
+    ipc: Use IPC to read environment variables set by panel.
+
+    pointer: Launch at pointer. Respect `_NET_WORKAREA` and `edge_snap_x`.
+
+    center: Launch at center of screen. Ignore `_NET_WORKAREA`. Takess precedence over `menu_valign` and `menu_halign`
 
 `edge_snap_x` = __integer__ (default 30)  
 
@@ -506,12 +509,29 @@ csv_no_dirs = __boolean__ (default 0)
 
     If set, applications will be listed without any directory  
     structure. This is currently only supported by pmenu and lx.  
-
 csv_i18n = __string__ (no default)  
 
     If set, the ob module will look for a translation file in the  
     specified file or directory. See `jgmenu_run i18n --help` for  
     further details.  
+
+# Inter-process Communication (IPC)
+
+`jgmenu_run` reads the environment variables listed below and passes
+them via a unix socket to the long-running instance of jgmenu. On
+'wake up' (=show menu), jgmenu aligns the menu to these variables.
+
+`TINT2_BUTTON_ALIGNED_X1`  
+`TINT2_BUTTON_ALIGNED_X2`  
+`TINT2_BUTTON_ALIGNED_Y1`  
+`TINT2_BUTTON_ALIGNED_Y2`  
+`TINT2_BUTTON_PANEL_X1`  
+`TINT2_BUTTON_PANEL_X2`  
+`TINT2_BUTTON_PANEL_Y1`  
+`TINT2_BUTTON_PANEL_Y2`  
+
+If thse variables are not set, jgmenurc config variables `margin_{x,y}`
+are reverted to.
 
 # DIAGRAMS {#diagrams}
 

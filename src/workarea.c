@@ -11,7 +11,6 @@
 static enum alignment panel_pos = UNKNOWN;
 static int margin_x;
 static int margin_y;
-static int verbose;
 
 /*
  * WMs that support _NET_WORKAREA include (but are not limited to):
@@ -30,8 +29,6 @@ static void workarea_init(void)
 	if (done)
 		return;
 	done = 1;
-	if (getenv("JGMENU_WORKAREA_INFO"))
-		verbose = 1;
 
 	sc.x = geo_get_screen_x0();
 	sc.y = geo_get_screen_y0();
@@ -41,41 +38,41 @@ static void workarea_init(void)
 	ret = ui_get_workarea(&wa);
 	if (ret < 0)
 		return;
-	if (verbose) {
+	if (config.verbose) {
 		info("screen:        (%d,%d,%d,%d)", sc.x, sc.y, sc.w, sc.h);
 		info("_NET_WORKAREA: (%d,%d,%d,%d)", wa.x, wa.y, wa.w, wa.h);
 	}
 
 	if (wa.y && sc.h != wa.y + wa.h) {
-		if (!verbose)
+		if (!config.verbose)
 			return;
 		info("_NET_WORKAREA: panel @ 'top' and 'bottom' - do nothing");
 	} else if (sc.y != wa.y) {
 		panel_pos = TOP;
 		margin_y = wa.y;
-		if (!verbose)
+		if (!config.verbose)
 			return;
 		info("_NET_WORKAREA: panel @ 'top'; margin=%d", margin_y);
 	} else if (!wa.y && sc.h != wa.h) {
 		panel_pos = BOTTOM;
 		margin_y = sc.h - wa.h;
-		if (!verbose)
+		if (!config.verbose)
 			return;
 		info("_NET_WORKAREA: panel @ 'bottom'; margin=%d", margin_y);
 	} else if (wa.x && sc.w != wa.x + wa.w) {
-		if (!verbose)
+		if (!config.verbose)
 			return;
 		info("_NET_WORKAREA: panel @ 'right' and 'left' - do nothing");
 	} else if (sc.x != wa.x) {
 		panel_pos = LEFT;
 		margin_x = wa.x;
-		if (!verbose)
+		if (!config.verbose)
 			return;
 		info("_NET_WORKAREA: panel @ 'left'; margin=%d", margin_x);
 	} else if (!wa.x && sc.w != wa.w) {
 		panel_pos = RIGHT;
 		margin_x = sc.w - wa.w;
-		if (!verbose)
+		if (!config.verbose)
 			return;
 		info("_NET_WORKAREA: panel @ 'right'; margin=%d", margin_x);
 	}
@@ -86,12 +83,12 @@ void workarea_set_margin(void)
 	workarea_init();
 	if (margin_y) {
 		config.menu_margin_y = margin_y;
-		if (verbose)
+		if (config.verbose)
 			info("margin_y = %d", margin_y);
 	}
 	if (margin_x) {
 		config.menu_margin_x = margin_x;
-		if (verbose)
+		if (config.verbose)
 			info("margin_x = %d", margin_x);
 	}
 }
@@ -103,12 +100,12 @@ void workarea_set_panel_pos(void)
 		return;
 	if (panel_pos == TOP || panel_pos == BOTTOM) {
 		config.menu_valign = panel_pos;
-		if (verbose)
+		if (config.verbose)
 			info("valign has been set");
 	}
 	if (panel_pos == LEFT || panel_pos == RIGHT) {
 		config.menu_halign = panel_pos;
-		if (verbose)
+		if (config.verbose)
 			info("halign has been set");
 	}
 }
