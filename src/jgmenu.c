@@ -2601,7 +2601,7 @@ int main(int argc, char *argv[])
 	set_theme();
 	init_geo_variables_from_config();
 
-	if (config.tint2_look) {
+	if (config.position_mode == POSITION_MODE_IPC) {
 		tint2env_init_socket();
 		tint2_align();
 	}
