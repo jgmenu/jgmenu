@@ -262,6 +262,7 @@ void ui_create_window(int x, int y, int w, int h)
 	 * http://tronche.com/gui/x/xlib/appendix/b/
 	 */
 	XDefineCursor(ui->dpy, ui->w[ui->cur].win, XCreateFontCursor(ui->dpy, 68));
+	XSync(ui->dpy, False);
 }
 
 /*
