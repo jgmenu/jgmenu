@@ -1,6 +1,6 @@
 See [roadmap](https://jgmenu.github.io/roadmap.html) for further details
 
-- Set valign in IPC mode.
+- Rename `tint2_align()` and refactor
 - Sort out neon theme ^root() items
 - Refactor code in `key_event()`
 - move code from init to themes (currently only lithium in jgmenu-themes.sh)

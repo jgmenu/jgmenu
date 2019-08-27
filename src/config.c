@@ -472,6 +472,13 @@ void config_post_process(void)
 	    config.menu_height_min > config.menu_height_max)
 		warn("menu_height_min cannot be greater than menu_height_max");
 
+	if (config.verbose) {
+		char buf[8];
+
+		snprintf(buf, sizeof(buf), "%d", config.verbose);
+		setenv("JGMENU_VERBOSE", buf, 1);
+	}
+
 	if (config.csv_name_format)
 		setenv("JGMENU_NAME_FORMAT", config.csv_name_format, 1);
 	if (config.csv_single_window)
