@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=2039,2086
 
 : ${JGMENU_EXEC_DIR="$HOME/src/jgmenu"}
 
@@ -30,7 +31,7 @@ print_exec_path () {
 # Pipe to UNIX socket if tint2 button was used.
 send_tint2_env_vars_to_jgmenu () {
 	# Check set/unset with ${parameter+word}
-	test -z ${TINT2_BUTTON_ALIGNED_X1+x} && return
+	test -z "${TINT2_BUTTON_ALIGNED_X1+x}" && return
 	printf "%b" \
 		"TINT2_BUTTON_ALIGNED_X1=${TINT2_BUTTON_ALIGNED_X1}\n" \
 		"TINT2_BUTTON_ALIGNED_X2=${TINT2_BUTTON_ALIGNED_X2}\n" \
@@ -39,8 +40,8 @@ send_tint2_env_vars_to_jgmenu () {
 		"TINT2_BUTTON_PANEL_X1=${TINT2_BUTTON_PANEL_X1}\n" \
 		"TINT2_BUTTON_PANEL_X2=${TINT2_BUTTON_PANEL_X2}\n" \
 		"TINT2_BUTTON_PANEL_Y1=${TINT2_BUTTON_PANEL_Y1}\n" \
-		"TINT2_BUTTON_PANEL_Y2=${TINT2_BUTTON_PANEL_Y2}" \
-		| ${JGMENU_EXEC_DIR}/jgmenu-socket
+		"TINT2_BUTTON_PANEL_Y2=${TINT2_BUTTON_PANEL_Y2}\n" \
+		| "${JGMENU_EXEC_DIR}/jgmenu-socket"
 }
 
 remove_lockfile () {
@@ -83,9 +84,9 @@ shift
 
 for c in ${cmds}
 do
-	if type ${c} >/dev/null 2>&1
+	if type "${c}" >/dev/null 2>&1
 	then
-		exec ${c} "$@"
+		exec "${c}" "$@"
 		exit 0
 	fi
 done
