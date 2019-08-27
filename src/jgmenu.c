@@ -1020,10 +1020,14 @@ void tint2_align(void)
 			geo_set_menu_margin_x(geo_get_screen_width() - px2);
 			geo_set_menu_halign(RIGHT);
 		}
-		if (config.menu_valign == BOTTOM)
-			geo_set_menu_margin_y(geo_get_screen_height() - py1);
-		else
+		if ((by1 >= geo_get_screen_y0()) &&
+		    (by2 < geo_get_screen_y0() + 100)) {
+			geo_set_menu_valign(TOP);
 			geo_set_menu_margin_y(py2);
+		} else {
+			geo_set_menu_valign(BOTTOM);
+			geo_set_menu_margin_y(geo_get_screen_height() - py1);
+		}
 	} else {
 		/* align to vertical panel */
 		if (by1 >= geo_get_screen_y0() + geo_get_screen_height() ||
