@@ -1,8 +1,8 @@
 #!/bin/sh
 
-: ${JGMENU_EXEC_DIR=~/src/jgmenu}
+: ${JGMENU_EXEC_DIR="$HOME/src/jgmenu"}
 
-export PATH=$JGMENU_EXEC_DIR:$PATH
+export PATH="$JGMENU_EXEC_DIR:$PATH"
 JGMENU_LOCKFILE=~/.jgmenu-lockfile
 
 die () {
