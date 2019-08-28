@@ -15,6 +15,7 @@
 #include "sbuf.h"
 #include "compat.h"
 #include "set.h"
+#include "spawn.h"
 
 struct option {
 	const char *key;
@@ -125,8 +126,14 @@ static void check_file(struct sbuf *f, const char *filename)
 		die("no filename specified");
 	sbuf_cpy(f, filename);
 	sbuf_expand_tilde(f);
-	if (stat(f->buf, &sb))
-		die("cannot stat file (%s)", f->buf);
+
+	/* if file does not exist, we create it */
+	if (stat(f->buf, &sb)) {
+		static const char * const command[] = { "jgmenu_run", "init",
+							NULL };
+
+		spawn_sync(command);
+	}
 }
 
 static void amend(const char *filename)

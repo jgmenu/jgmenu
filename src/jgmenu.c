@@ -47,6 +47,7 @@
 #include "workarea.h"
 #include "charset.h"
 #include "watch.h"
+#include "spawn.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 

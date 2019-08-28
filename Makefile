@@ -96,7 +96,7 @@ jgmenu-greeneye: jgmenu-greeneye.o compat.o util.o sbuf.o
 jgmenu-apps: jgmenu-apps.o compat.o util.o sbuf.o desktop.o charset.o \
              xdgdirs.o argv-buf.o
 jgmenu-obtheme: jgmenu-obtheme.o util.o sbuf.o compat.o set.o
-jgmenu-config: jgmenu-config.o util.o sbuf.o compat.o set.o
+jgmenu-config: jgmenu-config.o util.o sbuf.o compat.o set.o spawn.o
 
 $(PROGS):
 	$(QUIET_LINK)$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)

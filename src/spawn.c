@@ -1,4 +1,8 @@
 #include <signal.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
 
 #include "spawn.h"
 #include "util.h"
@@ -62,3 +66,27 @@ void spawn(const char *arg, const char *working_dir)
 	}
 }
 
+void spawn_sync(const char * const*command)
+{
+	pid_t cpid, w;
+	int wstatus;
+
+	cpid = fork();
+	switch (cpid) {
+	case -1:
+		perror("fork");
+		exit(EXIT_FAILURE);
+		break;
+	case 0: /* child */
+		execvp(command[0], (char * const*)command);
+		break;
+	default: /* parent */
+		do {
+			w = waitpid(cpid, &wstatus, WUNTRACED | WCONTINUED);
+			if (w == -1) {
+				perror("waitpid");
+				exit(EXIT_FAILURE);
+			}
+		} while (!WIFEXITED(wstatus) && !WIFSIGNALED(wstatus));
+	}
+}
