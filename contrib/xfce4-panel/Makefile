@@ -1,4 +1,9 @@
+ifeq ($(shell uname -m),i686)
+LIBDIR     = /usr/lib/i386-linux-gnu/xfce4/panel/plugins
+else
 LIBDIR     = /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins
+endif
+
 PLUGIN_DIR = /usr/share/xfce4/panel/plugins
 
 CFLAGS  += -s -Wall -shared -std=c99 -fPIC
