@@ -12,7 +12,7 @@ enum position_mode {POSITION_MODE_FIXED, POSITION_MODE_IPC, POSITION_MODE_PTR,
 
 struct config {
 	int spawn;		/* 1:execute commands  0:print to stdout */
-	int verbose;
+	int verbosity;
 	int stay_alive;
 	int hide_on_startup;
 	char *csv_cmd;

@@ -1,6 +1,6 @@
 % JGMENU(1)
 % Johan Malm
-% 20 August, 2019
+% 29 August, 2019
 
 # NAME
 
@@ -191,6 +191,14 @@ environment variable $HOME just as a shell would expand it.
 
 ## Variables
 
+`verbosity` = __integer__ (default 0)
+:   General verbosity: (0) warnings only; (1) basic info; (2) more info;
+    (3) max info
+
+    Additional specific topics: (4) IPC
+
+    Note: Some IPC messages need environment variable `JGMENU_VERBOSE=4` too
+
 `stay_alive` = __boolean__ (default 1)
 :   If set to 1, the menu will "hide" rather than "exit" when the following
     events occur: clicking on menu item; clicking outside the menu; pressing
@@ -201,13 +209,11 @@ environment variable $HOME just as a shell would expand it.
     jgmenu during the boot process and then sending a `killall -SIGUSR1 jgmenu`
     to show the menu.
 
-`csv_cmd` = __string__ (default `pmenu`)  
-
-    Defines the command to produce the jgmenu flavoured CSV for  
-    `jgmenu`. Accpetable keyword include pmenu, lx and ob.  
-    If a value is given other than these keywords, it will be  
-    executed in a shell (so be careful!). If left blank, jgmenu  
-    will read from __stdin__. Examples:  
+`csv_cmd` = __string__ (default `pmenu`)
+:   Defines the command to produce the jgmenu flavoured CSV for `jgmenu`.
+    Accpetable keyword include pmenu, lx, apps and ob. If a value is given
+    other than these keywords, it will be executed in a shell (so be
+    careful!). If left blank, jgmenu will read from __stdin__. Examples:
 
     csv_cmd = lx
     csv_cmd = jgmenu_run lx --no-dirs  
@@ -228,11 +234,10 @@ environment variable $HOME just as a shell would expand it.
 
     center: Launch at center of screen. Ignore `_NET_WORKAREA`. Takess precedence over `menu_valign` and `menu_halign`
 
-`edge_snap_x` = __integer__ (default 30)  
-
-    Specify the distance (in pixles) from the left hand edge, within  
-    which the menu will snap to the edge.  
-    Note that this only applies in `at_pointer` mode.  
+`edge_snap_x` = __integer__ (default 30)
+:   Specify the distance (in pixles) from the left hand edge, within which the
+    menu will snap to the edge. Note that this only applies in `at_pointer`
+    mode.
 
 `terminal_exec` = __string__ (default x-terminal-emulator)  
 `terminal_args` = __string__ (default -e)

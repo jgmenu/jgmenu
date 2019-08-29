@@ -17,7 +17,7 @@ static struct sbuf jgmenurc_file;
 void config_set_defaults(void)
 {
 	config.spawn		   = 1;	/* not in jgmenurc */
-	config.verbose		   = 0;
+	config.verbosity	   = 0;
 	config.stay_alive	   = 1;
 	config.hide_on_startup	   = 0;
 	config.csv_cmd		   = xstrdup("pmenu");
@@ -117,8 +117,8 @@ static void process_line(char *line)
 	if (!parse_config_line(line, &option, &value))
 		return;
 
-	if (!strcmp(option, "verbose")) {
-		xatoi(&config.verbose, value, XATOI_NONNEG, "config.verbose");
+	if (!strcmp(option, "verbosity")) {
+		xatoi(&config.verbosity, value, XATOI_NONNEG, "config.verbosity");
 	} else if (!strcmp(option, "stay_alive")) {
 		xatoi(&config.stay_alive, value, XATOI_NONNEG, "config.stay_alive");
 	} else if (!strcmp(option, "hide_on_startup")) {
@@ -472,11 +472,11 @@ void config_post_process(void)
 	    config.menu_height_min > config.menu_height_max)
 		warn("menu_height_min cannot be greater than menu_height_max");
 
-	if (config.verbose) {
+	if (config.verbosity) {
 		char buf[8];
 
-		snprintf(buf, sizeof(buf), "%d", config.verbose);
-		setenv("JGMENU_VERBOSE", buf, 1);
+		snprintf(buf, sizeof(buf), "%d", config.verbosity);
+		setenv("JGMENU_VERBOSITY", buf, 1);
 	}
 
 	if (config.csv_name_format)

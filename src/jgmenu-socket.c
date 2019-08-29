@@ -11,11 +11,11 @@ int main(int argc, char **argv)
 	ssize_t num_read;
 	char buf[SOCKET_BUF_SIZE];
 	int verbosity = 0;
-	char *jgmenu_verbose;
+	char *jgmenu_verbosity;
 
-	jgmenu_verbose = getenv("JGMENU_VERBOSE");
-	if (jgmenu_verbose)
-		verbosity = atoi(jgmenu_verbose);
+	jgmenu_verbosity = getenv("JGMENU_VERBOSITY");
+	if (jgmenu_verbosity)
+		verbosity = atoi(jgmenu_verbosity);
 
 	sfd = unix_connect(tint2_socket_path(), SOCK_STREAM);
 	if (sfd == -1)

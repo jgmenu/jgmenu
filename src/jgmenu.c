@@ -855,7 +855,7 @@ void checkout_tag(const char *tag)
 void checkout_submenu(char *tag)
 {
 	if (!menu.sel) {
-		info("checkout_submenu(): no menu.sel");
+		warn("checkout_submenu(): no menu.sel");
 		return;
 	}
 	if (geo_cur() >= MAX_NR_WINDOWS - 1) {
@@ -1012,8 +1012,8 @@ void tint2_align(void)
 			warn("pointer outside IPC varable range");
 			return;
 		}
-		if (config.verbose)
-			info("[jgmenu-ipc] aligning to horizontal panel");
+		if (config.verbosity == 4)
+			info("align to horizontal panel");
 		if (bx1 < px2 - geo_get_menu_width()) {
 			geo_set_menu_margin_x(bx1);
 			geo_set_menu_halign(LEFT);
@@ -1036,8 +1036,8 @@ void tint2_align(void)
 			warn("pointer outside IPC varable range");
 			return;
 		}
-		if (config.verbose)
-			info("[jgmenu-ipc] aligning to vertical panel");
+		if (config.verbosity == 4)
+			info("align to vertical panel");
 		if (by1 < py2 - geo_get_menu_height()) {
 			geo_set_menu_margin_y(by1);
 			geo_set_menu_valign(TOP);
@@ -1387,7 +1387,7 @@ static int check_pipe_tags_unique(struct item *from)
 		if (!p->tag)
 			continue;
 		if (node_exists(p->tag)) {
-			info("tag (%s) already exists", p->tag);
+			warn("tag (%s) already exists", p->tag);
 			return -1;
 		}
 	}
@@ -2430,8 +2430,7 @@ void init_geo_variables_from_config(void)
 void set_font(void)
 {
 	font_set();
-	if (config.verbose)
-		info("set font to '%s'", font_get());
+	info("set font to '%s'", font_get());
 }
 
 void set_theme(void)
@@ -2444,8 +2443,7 @@ void set_theme(void)
 	theme_set(&theme);
 	icon_init();
 	icon_set_size(config.icon_size);
-	if (config.verbose)
-		info("set icon theme to '%s'", theme.buf);
+	info("set icon theme to '%s'", theme.buf);
 	icon_set_theme(theme.buf);
 }
 
@@ -2565,6 +2563,8 @@ int main(int argc, char *argv[])
 	}
 	if (!arg_vsimple)
 		config_read_jgmenurc(arg_config_file);
+	if (!config.verbosity)
+		mute_info();
 	args_parse(argc, argv);
 	if (args_simple() || arg_vsimple)
 		set_simple_mode();

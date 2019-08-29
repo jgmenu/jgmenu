@@ -23,6 +23,7 @@
 	} \
 } while (0)
 
+void mute_info(void);
 void info(const char *err, ...);
 void warn(const char *err, ...);
 void die(const char *err, ...);

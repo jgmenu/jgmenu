@@ -17,6 +17,7 @@
 #include "sbuf.h"
 #include "util.h"
 #include "watch.h"
+#include "config.h"
 
 static const char * const files_to_watch[] = {
 	"~/.config/jgmenu/jgmenurc",
@@ -86,11 +87,15 @@ int watch_files_have_changed(void)
 			if (!f->tv.tv_sec) {
 				continue;
 			} else {
-				info("file/dir removed '%s'", f->filename);
+				if (config.verbosity >= 2)
+					info("file/dir removed '%s'",
+					     f->filename);
 				return 1;
 			}
 		}
 		if (f->tv.tv_sec != sb.st_mtime) {
+			if (config.verbosity < 2)
+				return 1;
 			if (!f->tv.tv_sec)
 				info("file/dir added '%s'", f->filename);
 			else

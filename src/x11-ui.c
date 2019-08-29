@@ -175,7 +175,7 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height, int monitor)
 	XRRScreenResources *sr;
 	XRRCrtcInfo *ci = NULL;
 
-	if (getenv("JGMENU_SCREEN_INFO"))
+	if (config.verbosity >= 3)
 		print_screen_info();
 	sr = XRRGetScreenResources(ui->dpy, DefaultRootWindow(ui->dpy));
 	BUG_ON(!sr);
@@ -191,7 +191,8 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height, int monitor)
 		ci = XRRGetCrtcInfo(ui->dpy, sr, sr->crtcs[monitor - 1]);
 		if (!ci->noutput)
 			die("cannot connect to monitor '%d'", monitor);
-		info("using user specified monitor '%d'", monitor);
+		if (config.verbosity >= 3)
+			info("using user specified monitor '%d'", monitor);
 		goto monitor_selected;
 	}
 
@@ -204,7 +205,7 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height, int monitor)
 		if (!ci->noutput)
 			continue;
 		if (intersect(x, y, 1, 1, ci)) {
-			if (config.verbose)
+			if (config.verbosity >= 3)
 				info("using monitor '%d'", i + 1);
 			break;
 		}

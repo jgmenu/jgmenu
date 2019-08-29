@@ -23,6 +23,7 @@ struct option {
 };
 
 static struct option options[] = {
+	{ "verbosity", "0" },
 	{ "stay_alive", "1" },
 	{ "hide_on_startup", "0" },
 	{ "csv_cmd", "pmenu" },
