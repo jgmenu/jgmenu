@@ -148,7 +148,7 @@ static void print_screen_info(void)
 		return;
 	info_has_been_shown = 1;
 
-	sr = XRRGetScreenResources(ui->dpy, DefaultRootWindow(ui->dpy));
+	sr = XRRGetScreenResourcesCurrent(ui->dpy, DefaultRootWindow(ui->dpy));
 	info("%d xrandr crt controller(s) found", sr->ncrtc);
 	for (i = 0; i < sr->ncrtc; i++) {
 		ci = XRRGetCrtcInfo(ui->dpy, sr, sr->crtcs[i]);
@@ -177,7 +177,7 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height, int monitor)
 
 	if (config.verbosity >= 3)
 		print_screen_info();
-	sr = XRRGetScreenResources(ui->dpy, DefaultRootWindow(ui->dpy));
+	sr = XRRGetScreenResourcesCurrent(ui->dpy, DefaultRootWindow(ui->dpy));
 	BUG_ON(!sr);
 	n = sr->ncrtc;
 
