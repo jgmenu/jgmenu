@@ -2488,11 +2488,11 @@ out:
 static void init_locale(void)
 {
 	if (!setlocale(LC_ALL, ""))
-		die("error setting locale");
+		warn("setlocale(): locale not supported by C library; using 'C' locale");
 	if (!XSupportsLocale())
-		die("error setting locale");
+		warn("XSupportsLocale(): error setting locale");
 	if (!XSetLocaleModifiers("@im=none"))
-		die("error setting locale");
+		warn("XSetLocaleModifiers(): error setting locale");
 }
 
 static void init_sigactions(void)
