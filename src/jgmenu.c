@@ -977,79 +977,102 @@ void launch_menu_at_pointer(void)
 	set_submenu_width();
 }
 
-int tint2_getenv(int *var, const char *key)
+//// copy from here ////
+
+struct rect {
+	int x1, x2, y1, y2;
+};
+
+int ishorizontal(struct rect rect)
+{
+	return (rect.x2 - rect.x1) > (rect.y2 - rect.y1) ? 1 : 0;
+}
+
+int ipc_getenv(int *var, const char *key)
 {
 	char *s;
 
 	s = getenv(key);
-	if (!s)
+	if (!s) {
+		warn("environment variable (%s) not set", key);
 		return -1;
+	}
 	xatoi(var, s, XATOI_NONNEG, key);
 	return 0;
 }
 
-void tint2_align(void)
+void ipc_align_to_horizontal_panel(struct rect panel, struct rect button)
 {
-	int bx1, bx2, by1, by2, px1, px2, py1, py2;
-	int panel_is_horizontal;
-
-	if (tint2_getenv(&bx1, "TINT2_BUTTON_ALIGNED_X1") == -1 ||
-	    tint2_getenv(&bx2, "TINT2_BUTTON_ALIGNED_X2") == -1 ||
-	    tint2_getenv(&by1, "TINT2_BUTTON_ALIGNED_Y1") == -1 ||
-	    tint2_getenv(&by2, "TINT2_BUTTON_ALIGNED_Y2") == -1 ||
-	    tint2_getenv(&px1, "TINT2_BUTTON_PANEL_X1") == -1 ||
-	    tint2_getenv(&px2, "TINT2_BUTTON_PANEL_X2") == -1 ||
-	    tint2_getenv(&py1, "TINT2_BUTTON_PANEL_Y1") == -1 ||
-	    tint2_getenv(&py2, "TINT2_BUTTON_PANEL_Y2") == -1)
+	if (button.x1 >= geo_get_screen_x0() + geo_get_screen_width() ||
+	    button.x1 < geo_get_screen_x0()) {
+		warn("pointer outside IPC varable range");
 		return;
-
-	panel_is_horizontal = (px2 - px1) > (py2 - py1) ? 1 : 0;
-
-	if (panel_is_horizontal) {
-		/* align to horizontal panel */
-		if (bx1 >= geo_get_screen_x0() + geo_get_screen_width() ||
-		    bx1 < geo_get_screen_x0()) {
-			warn("pointer outside IPC varable range");
-			return;
-		}
-		if (config.verbosity == 4)
-			info("align to horizontal panel");
-		if (bx1 < px2 - geo_get_menu_width()) {
-			geo_set_menu_margin_x(bx1);
-			geo_set_menu_halign(LEFT);
-		} else {
-			geo_set_menu_margin_x(geo_get_screen_width() - px2);
-			geo_set_menu_halign(RIGHT);
-		}
-		if ((by1 >= geo_get_screen_y0()) &&
-		    (by2 < geo_get_screen_y0() + 100)) {
-			geo_set_menu_valign(TOP);
-			geo_set_menu_margin_y(py2);
-		} else {
-			geo_set_menu_valign(BOTTOM);
-			geo_set_menu_margin_y(geo_get_screen_height() - py1);
-		}
-	} else {
-		/* align to vertical panel */
-		if (by1 >= geo_get_screen_y0() + geo_get_screen_height() ||
-		    by1 < geo_get_screen_y0()) {
-			warn("pointer outside IPC varable range");
-			return;
-		}
-		if (config.verbosity == 4)
-			info("align to vertical panel");
-		if (by1 < py2 - geo_get_menu_height()) {
-			geo_set_menu_margin_y(by1);
-			geo_set_menu_valign(TOP);
-		} else {
-			geo_set_menu_margin_y(geo_get_screen_height() - by2);
-			geo_set_menu_valign(BOTTOM);
-		}
-		if (config.menu_halign == LEFT)
-			geo_set_menu_margin_x(px2);
-		else
-			geo_set_menu_margin_x(geo_get_screen_width() - px1);
 	}
+	if (config.verbosity == 4)
+		info("align to horizontal panel");
+	if (button.x1 < panel.x2 - geo_get_menu_width()) {
+		geo_set_menu_margin_x(button.x1);
+		geo_set_menu_halign(LEFT);
+	} else {
+		geo_set_menu_margin_x(geo_get_screen_width() - panel.x2);
+		geo_set_menu_halign(RIGHT);
+	}
+	if ((button.y1 >= geo_get_screen_y0()) &&
+	    (button.y2 < geo_get_screen_y0() + 100)) {
+		geo_set_menu_valign(TOP);
+		geo_set_menu_margin_y(panel.y2);
+	} else {
+		geo_set_menu_valign(BOTTOM);
+		geo_set_menu_margin_y(geo_get_screen_height() - panel.y1);
+	}
+}
+
+void ipc_align_to_vertical_panel(struct rect panel, struct rect button)
+{
+	if (button.y1 >= geo_get_screen_y0() + geo_get_screen_height() ||
+	    button.y1 < geo_get_screen_y0()) {
+		warn("pointer outside IPC varable range");
+		return;
+	}
+	if (config.verbosity == 4)
+		info("align to vertical panel");
+	if (button.y1 < panel.y2 - geo_get_menu_height()) {
+		geo_set_menu_margin_y(button.y1);
+		geo_set_menu_valign(TOP);
+	} else {
+		geo_set_menu_margin_y(geo_get_screen_height() - button.y2);
+		geo_set_menu_valign(BOTTOM);
+	}
+	if (config.menu_halign == LEFT)
+		geo_set_menu_margin_x(panel.x2);
+	else
+		geo_set_menu_margin_x(geo_get_screen_width() - panel.x1);
+}
+
+/*
+ * With a horizontal panel, button.y1 == button.y2 (because they're aligned
+ * to the edge of the panel.
+ */
+void ipc_align_based_on_env_vars(void)
+{
+	struct rect button, panel;
+
+	if (ipc_getenv(&button.x1, "TINT2_BUTTON_ALIGNED_X1") < 0 ||
+	    ipc_getenv(&button.x2, "TINT2_BUTTON_ALIGNED_X2") < 0 ||
+	    ipc_getenv(&button.y1, "TINT2_BUTTON_ALIGNED_Y1") < 0 ||
+	    ipc_getenv(&button.y2, "TINT2_BUTTON_ALIGNED_Y2") < 0 ||
+	    ipc_getenv(&panel.x1, "TINT2_BUTTON_PANEL_X1") < 0 ||
+	    ipc_getenv(&panel.x2, "TINT2_BUTTON_PANEL_X2") < 0 ||
+	    ipc_getenv(&panel.y1, "TINT2_BUTTON_PANEL_Y1") < 0 ||
+	    ipc_getenv(&panel.y2, "TINT2_BUTTON_PANEL_Y2") < 0) {
+		warn("cannot align based on environment variables");
+		return;
+	}
+
+	if (ishorizontal(panel))
+		ipc_align_to_horizontal_panel(panel, button);
+	else
+		ipc_align_to_vertical_panel(panel, button);
 }
 
 static void if_unity_run_hack(void)
@@ -1080,7 +1103,7 @@ static void awake_menu(void)
 	}
 	tint2env_read_socket();
 	if (config.position_mode == POSITION_MODE_IPC) {
-		tint2_align();
+		ipc_align_based_on_env_vars();
 		update(1);
 	}
 	XMapWindow(ui->dpy, ui->w[ui->cur].win);
@@ -2608,7 +2631,7 @@ int main(int argc, char *argv[])
 
 	if (config.position_mode == POSITION_MODE_IPC) {
 		tint2env_init_socket();
-		tint2_align();
+		ipc_align_based_on_env_vars();
 	}
 
 	if (args_csv_file())
