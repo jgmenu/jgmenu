@@ -215,7 +215,7 @@ environment variable $HOME just as a shell would expand it.
     other than these keywords, it will be executed in a shell (so be
     careful!). If left blank, jgmenu will read from __stdin__. Examples:
 
-    csv_cmd = lx
+    csv_cmd = lx  
     csv_cmd = jgmenu_run lx --no-dirs  
     csv_cmd = cat ~/mymenu.csv  
 
@@ -241,50 +241,43 @@ environment variable $HOME just as a shell would expand it.
 
 `terminal_exec` = __string__ (default x-terminal-emulator)  
 `terminal_args` = __string__ (default -e)
+:   The values of these two variables are used to build a string to launch
+    programs requiring a terminal to run. With the default values, the string
+    would become:
 
-    The values of these two variables are used to build a string to  
-    launch programs requiring a terminal to run.  
-    With the default values, the string would become:  
+    `x-terminal-emulator -e 'some_command with arguments'`
 
-    x-terminal-emulator -e 'some_command with arguments'  
+    `terminal_args` must finish with '-e' or equivalent (where '-e' refers to
+    the meaning of '-e' in 'xterm -e'.
 
-    terminal_args must finish with '-e' or equivalent (where '-e'  
-    refers to the meaning of '-e' in 'xterm -e'.  
+`monitor` = __integer__ (default 0)
+:   Specify a particular monitor as an index starting from 1. If 0, the menu
+    will be launched on the monitor where the mouse is.
 
-`monitor` = __integer__ (default 0)  
+`hover_delay` = __integer__ (default 100)
+:   The amount of time (in milliseconds) from hovering over an item until a
+    submenu is opened.
 
-    Specify a particular monitor as an index starting from 1.  
-    If 0, the menu will be launched on the monitor where the mouse  
-    is.  
+`hide_back_items` = __boolean__ (default 1)
+:   If enabled, all ^back() items will be suppressed. As a general rule, it
+    should be set to 1 for a multi-window menu, and 0 when in single-window
+    mode.
 
-`hover_delay` = __integer__ (default 100)  
+`columns` = __integer__ (default 1)
 
-    The amount of time (in milliseconds) from hovering over an item  
-    until a submenu is opened.  
+:   Specify the number of columns in which to show menu items
 
-`hide_back_items` = __boolean__ (default 1)  
+`tabs` = __integer__ (default 120)
 
-    If enabled, all ^back() items will be suppressed. As a general  
-    rule, it should be set to 1 for a multi-window menu, and 0 when  
-    in single-window mode.  
-
-`columns` = __integer__ (default 1)  
-
-    Specify the number of columns in which to show menu items  
-
-`tabs` = __integer__ (default 120)  
-
-    Specify the position is pixels of the first tab  
+:   Specify the position is pixels of the first tab
 
 `menu_margin_x` = __integer__ (default 0)  
-`menu_margin_y` = __integer__ (default 0)  
+`menu_margin_y` = __integer__ (default 0)
+:   "margin" refers to space outside an object The `menu_margin_*` variables
+    refer to the distance between the menu (=X11 window) and the edge of the
+    screen. See note on `_NET_WORKAREA` under `menu_{v,h}align` variables.
 
-    "margin" refers to space outside an object  
-    The `menu_margin_*` variables refer to the distance between the  
-    menu (=X11 window) and the edge of the screen.  
-    See note on `_NET_WORKAREA` under `menu_{v,h}align` variables  
-
-`menu_width` = __integer__ (default 200)  
+`menu_width` = __integer__ (default 200)
 
     Set the *minimum* menu width. The menu width will adjust to the  
     longest item in the current (sub)menu. If a filter is applied  

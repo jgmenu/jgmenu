@@ -311,7 +311,11 @@ If left blank, jgmenu will read from \f[B]stdin\f[].
 Examples:
 .RS
 .PP
-csv_cmd = lx csv_cmd = jgmenu_run lx \-\-no\-dirs
+csv_cmd = lx
+.PD 0
+.P
+.PD
+csv_cmd = jgmenu_run lx \-\-no\-dirs
 .PD 0
 .P
 .PD
@@ -352,89 +356,58 @@ Note that this only applies in \f[C]at_pointer\f[] mode.
 .PD 0
 .P
 .PD
-\f[C]terminal_args\f[] = \f[B]string\f[] (default \-e)
-.PP
-\ \ \ \ The values of these two variables are used to build a string to
-.PD 0
-.P
-.PD
-\ \ \ \ launch programs requiring a terminal to run.
-.PD 0
-.P
-.PD
-\ \ \ \ With the default values, the string would become:
-.PP
-\ \ \ \ x\-terminal\-emulator \-e \[aq]some_command with arguments\[aq]
-.PP
-\ \ \ \ terminal_args must finish with \[aq]\-e\[aq] or equivalent
-(where \[aq]\-e\[aq]
-.PD 0
-.P
-.PD
-\ \ \ \ refers to the meaning of \[aq]\-e\[aq] in \[aq]xterm \-e\[aq].
-.PP
-\f[C]monitor\f[] = \f[B]integer\f[] (default 0)
-.PP
-\ \ \ \ Specify a particular monitor as an index starting from 1.
-.PD 0
-.P
-.PD
-\ \ \ \ If 0, the menu will be launched on the monitor where the mouse
-.PD 0
-.P
-.PD
-\ \ \ \ is.
-.PP
-\f[C]hover_delay\f[] = \f[B]integer\f[] (default 100)
-.PP
-\ \ \ \ The amount of time (in milliseconds) from hovering over an item
-.PD 0
-.P
-.PD
-\ \ \ \ until a submenu is opened.
-.PP
-\f[C]hide_back_items\f[] = \f[B]boolean\f[] (default 1)
-.PP
-\ \ \ \ If enabled, all ^back() items will be suppressed.
-As a general
-.PD 0
-.P
-.PD
-\ \ \ \ rule, it should be set to 1 for a multi\-window menu, and 0 when
-.PD 0
-.P
-.PD
-\ \ \ \ in single\-window mode.
-.PP
-\f[C]columns\f[] = \f[B]integer\f[] (default 1)
-.PP
-\ \ \ \ Specify the number of columns in which to show menu items
-.PP
-\f[C]tabs\f[] = \f[B]integer\f[] (default 120)
-.PP
-\ \ \ \ Specify the position is pixels of the first tab
+\f[C]terminal_args\f[] = \f[B]string\f[] (default \-e) : The values of
+these two variables are used to build a string to launch programs
+requiring a terminal to run.
+With the default values, the string would become:
+.IP
+.nf
+\f[C]
+`x\-terminal\-emulator\ \-e\ \[aq]some_command\ with\ arguments\[aq]`
+
+`terminal_args`\ must\ finish\ with\ \[aq]\-e\[aq]\ or\ equivalent\ (where\ \[aq]\-e\[aq]\ refers\ to
+the\ meaning\ of\ \[aq]\-e\[aq]\ in\ \[aq]xterm\ \-e\[aq].
+\f[]
+.fi
+.TP
+.B \f[C]monitor\f[] = \f[B]integer\f[] (default 0)
+Specify a particular monitor as an index starting from 1.
+If 0, the menu will be launched on the monitor where the mouse is.
+.RS
+.RE
+.TP
+.B \f[C]hover_delay\f[] = \f[B]integer\f[] (default 100)
+The amount of time (in milliseconds) from hovering over an item until a
+submenu is opened.
+.RS
+.RE
+.TP
+.B \f[C]hide_back_items\f[] = \f[B]boolean\f[] (default 1)
+If enabled, all ^back() items will be suppressed.
+As a general rule, it should be set to 1 for a multi\-window menu, and 0
+when in single\-window mode.
+.RS
+.RE
+.TP
+.B \f[C]columns\f[] = \f[B]integer\f[] (default 1)
+Specify the number of columns in which to show menu items
+.RS
+.RE
+.TP
+.B \f[C]tabs\f[] = \f[B]integer\f[] (default 120)
+Specify the position is pixels of the first tab
+.RS
+.RE
 .PP
 \f[C]menu_margin_x\f[] = \f[B]integer\f[] (default 0)
 .PD 0
 .P
 .PD
-\f[C]menu_margin_y\f[] = \f[B]integer\f[] (default 0)
-.PP
-\ \ \ \ "margin" refers to space outside an object
-.PD 0
-.P
-.PD
-\ \ \ \ The \f[C]menu_margin_*\f[] variables refer to the distance
-between the
-.PD 0
-.P
-.PD
-\ \ \ \ menu (=X11 window) and the edge of the screen.
-.PD 0
-.P
-.PD
-\ \ \ \ See note on \f[C]_NET_WORKAREA\f[] under
-\f[C]menu_{v,h}align\f[] variables
+\f[C]menu_margin_y\f[] = \f[B]integer\f[] (default 0) : "margin" refers
+to space outside an object The \f[C]menu_margin_*\f[] variables refer to
+the distance between the menu (=X11 window) and the edge of the screen.
+See note on \f[C]_NET_WORKAREA\f[] under \f[C]menu_{v,h}align\f[]
+variables.
 .PP
 \f[C]menu_width\f[] = \f[B]integer\f[] (default 200)
 .PP
