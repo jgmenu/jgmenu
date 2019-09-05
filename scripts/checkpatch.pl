@@ -5222,22 +5222,22 @@ sub process {
 		}
 
 # check for c99 types like uint8_t used outside of uapi/
-		if ($realfile !~ m@\binclude/uapi/@ &&
-		    $line =~ /\b($Declare)\s*$Ident\s*[=;,\[]/) {
-			my $type = $1;
-			if ($type =~ /\b($typeC99Typedefs)\b/) {
-				$type = $1;
-				my $kernel_type = 'u';
-				$kernel_type = 's' if ($type =~ /^_*[si]/);
-				$type =~ /(\d+)/;
-				$kernel_type .= $1;
-				if (CHK("PREFER_KERNEL_TYPES",
-					"Prefer kernel type '$kernel_type' over '$type'\n" . $herecurr) &&
-				    $fix) {
-					$fixed[$fixlinenr] =~ s/\b$type\b/$kernel_type/;
-				}
-			}
-		}
+#		if ($realfile !~ m@\binclude/uapi/@ &&
+#		    $line =~ /\b($Declare)\s*$Ident\s*[=;,\[]/) {
+#			my $type = $1;
+#			if ($type =~ /\b($typeC99Typedefs)\b/) {
+#				$type = $1;
+#				my $kernel_type = 'u';
+#				$kernel_type = 's' if ($type =~ /^_*[si]/);
+#				$type =~ /(\d+)/;
+#				$kernel_type .= $1;
+#				if (CHK("PREFER_KERNEL_TYPES",
+#					"Prefer kernel type '$kernel_type' over '$type'\n" . $herecurr) &&
+#				    $fix) {
+#					$fixed[$fixlinenr] =~ s/\b$type\b/$kernel_type/;
+#				}
+#			}
+#	}
 
 # check for sizeof(&)
 		if ($line =~ /\bsizeof\s*\(\s*\&/) {
