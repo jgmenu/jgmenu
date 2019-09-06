@@ -14,11 +14,11 @@ struct icon_path {
 	struct list_head list;
 };
 
-extern void icon_find_add_theme(const char *theme);
-extern void icon_find_print_themes(void);
-extern void icon_find_init(void);
-extern void icon_find_all(struct list_head *icons, int size);
-extern void icon_find(struct sbuf *name, int size);
-extern void icon_find_cleanup(void);
+void icon_find_add_theme(const char *theme);
+void icon_find_print_themes(void);
+void icon_find_init(void);
+void icon_find_all(struct list_head *icons, int size);
+void icon_find(struct sbuf *name, int size);
+void icon_find_cleanup(void);
 
 #endif /* ICON_FIND_H */

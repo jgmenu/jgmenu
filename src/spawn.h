@@ -11,12 +11,12 @@
 #include <limits.h>
 #include <errno.h>
 
-extern void spawn(const char *arg, const char *working_dir);
+void spawn(const char *arg, const char *working_dir);
 
 /**
  * spawn_sync - execute and wait for child to finish
  * @command: array of command+arguments to be executed
  */
-extern void spawn_sync(const char * const*command);
+void spawn_sync(const char * const*command);
 
 #endif /* SPAWN_H */

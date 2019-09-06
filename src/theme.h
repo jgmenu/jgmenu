@@ -3,6 +3,6 @@
 
 #include "sbuf.h"
 
-extern void theme_set(struct sbuf *theme);
+void theme_set(struct sbuf *theme);
 
 #endif /* THEME_H */

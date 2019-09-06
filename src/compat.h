@@ -8,9 +8,9 @@
 #include <ctype.h>
 
 #define strcasestr gitstrcasestr
-extern char *gitstrcasestr(const char *haystack, const char *needle);
+char *gitstrcasestr(const char *haystack, const char *needle);
 
 #define strlcpy gitstrlcpy
-extern size_t gitstrlcpy(char *, const char *, size_t);
+size_t gitstrlcpy(char *, const char *, size_t);
 
 #endif /* COMPAT_H */
