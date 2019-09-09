@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
@@ -1271,19 +1272,22 @@ void resolve_newline(char *s)
 /**
  * read_csv_file - read lines from FILE to "master" list
  * @fp: file to be read
+ * @ispipemenu: ensure first item is ^tag(...) for pipemenus
  *
  * Return number of lines read
  */
-int read_csv_file(FILE *fp)
+int read_csv_file(FILE *fp, bool ispipemenu)
 {
 	char buf[BUFSIZ], *p;
 	size_t i;
 	struct item *item = NULL;
 	struct argv_buf argv_buf;
-	int first_item = 1;
+	static bool first_item = true;
 
 	if (!fp)
 		die("no csv-file");
+	if (ispipemenu)
+		first_item = true;
 	argv_set_delim(&argv_buf, ',');
 	for (i = 0; fgets(buf, sizeof(buf), fp); i++) {
 		buf[BUFSIZ - 1] = '\0';
@@ -1304,9 +1308,23 @@ int read_csv_file(FILE *fp)
 		    (buf[0] == '\0')) {
 			i--;
 			continue;
-		}
-		if (buf[0] == '@') {
+		} else if (buf[0] == '@') {
 			widgets_add(buf);
+			continue;
+		} else if (buf[0] == '.') {
+			FILE *include_file;
+			struct sbuf filename;
+
+			sbuf_init(&filename);
+			sbuf_cpy(&filename, buf + 1);
+			sbuf_trim(&filename);
+			sbuf_expand_tilde(&filename);
+			include_file = fopen(filename.buf, "r");
+			if (include_file) {
+				read_csv_file(include_file, false);
+				fclose(include_file);
+			}
+			xfree(filename.buf);
 			continue;
 		}
 		argv_init(&argv_buf);
@@ -1327,7 +1345,7 @@ int read_csv_file(FILE *fp)
 		if (first_item) {
 			if (item->cmd && strncmp(item->cmd, "^tag(", 5))
 				insert_tag_item();
-			first_item = 0;
+			first_item = false;
 		}
 		item->icon = NULL;
 		if (!strncmp("^tag(", item->cmd, 5))
@@ -1444,7 +1462,7 @@ void pipemenu_add(const char *s)
 	}
 
 	pipe_head = list_last_entry(&menu.master, struct item, master);
-	nr_lines = read_csv_file(fp);
+	nr_lines = read_csv_file(fp, true);
 	if (fp && fp != stdin)
 		fclose(fp);
 	if (!nr_lines) {
@@ -2643,7 +2661,7 @@ int main(int argc, char *argv[])
 		fp = popen(config.csv_cmd, "r");
 	if (!fp)
 		fp = stdin;
-	read_csv_file(fp);
+	read_csv_file(fp, false);
 	if (fp && fp != stdin)
 		fclose(fp);
 	if (config.hide_back_items)
