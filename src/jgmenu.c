@@ -1602,6 +1602,8 @@ void action_cmd(char *cmd, const char *working_dir)
 		p = parse_caret_action(cmd, "^checkout(");
 		if (!p)
 			return;
+		if (!tag_exists(p))
+			return;
 		menu.current_node->last_sel = menu.sel;
 		menu.current_node->last_first = menu.first;
 		checkout_submenu(p);
@@ -1637,6 +1639,8 @@ void action_cmd(char *cmd, const char *working_dir)
 		update(1);
 	} else if (!strncmp(cmd, "^root(", 6)) {
 		/* Two nodes with the same wid breaks get_node_from_wid() */
+		if (!tag_exists(cmd + 6))
+			return;
 		del_beyond_root();
 		filter_reset();
 		menu.current_node->last_sel = menu.sel;
