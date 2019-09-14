@@ -1018,8 +1018,7 @@ void ipc_align_to_horizontal_panel(struct rect panel, struct rect button)
 		geo_set_menu_margin_x(geo_get_screen_width() - panel.x2);
 		geo_set_menu_halign(RIGHT);
 	}
-	if ((button.y1 >= geo_get_screen_y0()) &&
-	    (button.y2 < geo_get_screen_y0() + 100)) {
+	if (button.y1 <= (geo_get_screen_height() / 2)) {
 		geo_set_menu_valign(TOP);
 		geo_set_menu_margin_y(panel.y2);
 	} else {
@@ -1044,10 +1043,13 @@ void ipc_align_to_vertical_panel(struct rect panel, struct rect button)
 		geo_set_menu_margin_y(geo_get_screen_height() - button.y2);
 		geo_set_menu_valign(BOTTOM);
 	}
-	if (config.menu_halign == LEFT)
-		geo_set_menu_margin_x(panel.x2);
-	else
+	if (button.x1 <= (geo_get_screen_width() / 2)) {
+		geo_set_menu_margin_x(panel.x1);
+		geo_set_menu_halign(LEFT);
+	} else {
 		geo_set_menu_margin_x(geo_get_screen_width() - panel.x1);
+		geo_set_menu_halign(RIGHT);
+	}
 }
 
 /*
