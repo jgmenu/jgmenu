@@ -12,6 +12,7 @@ all: $(manpages)
 $(manpages): % : %.md
 	@echo "    PANDOC    " $^
 	@pandoc -s -t man $^ -o $@
+	@sed -i 's/\\\\\\\\/\\\\/' $@
 
 install:
 	@install -d -m 755 $(DESTDIR)$(man1dir)
