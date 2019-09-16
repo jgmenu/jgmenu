@@ -1018,7 +1018,7 @@ void ipc_align_to_horizontal_panel(struct rect panel, struct rect button)
 		geo_set_menu_margin_x(geo_get_screen_width() - panel.x2);
 		geo_set_menu_halign(RIGHT);
 	}
-	if (button.y1 <= (geo_get_screen_height() / 2)) {
+	if ((geo_get_screen_y0() + geo_get_screen_height() / 2) >= button.y1) {
 		geo_set_menu_valign(TOP);
 		geo_set_menu_margin_y(panel.y2);
 	} else {
@@ -1043,7 +1043,7 @@ void ipc_align_to_vertical_panel(struct rect panel, struct rect button)
 		geo_set_menu_margin_y(geo_get_screen_height() - button.y2);
 		geo_set_menu_valign(BOTTOM);
 	}
-	if (button.x1 <= (geo_get_screen_width() / 2)) {
+	if ((geo_get_menu_x0() + geo_get_screen_width() / 2) >= button.x1) {
 		geo_set_menu_margin_x(panel.x1);
 		geo_set_menu_halign(LEFT);
 	} else {
