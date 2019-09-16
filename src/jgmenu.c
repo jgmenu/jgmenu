@@ -794,6 +794,19 @@ int tag_exists(const char *tag)
 	return 0;
 }
 
+int tag_count(const char *tag)
+{
+	struct item *item;
+	int n = 0;
+
+	if (!tag)
+		return 0;
+	list_for_each_entry(item, &menu.master, master)
+		if (item->tag && !strcmp(tag, item->tag))
+			++n;
+	return n;
+}
+
 struct item *get_item_from_tag(const char *tag)
 {
 	struct item *item;
@@ -1149,10 +1162,9 @@ struct node *node_add_new(struct item *this, struct node *parent)
 	struct node *current_node;
 
 	BUG_ON(!this);
-	if (node_exists(this->tag)) {
-		warn("node not added as tag (%s) already exists");
-		return NULL;
-	}
+	BUG_ON(!this->tag);
+	if (tag_count(this->tag) > 1)
+		die("duplicate tag (%s)", this->tag);
 	create_node(this->tag, parent);
 	/* move to next item, as this points to a ^tag() item */
 	p = container_of((this)->master.next, struct item, master);
