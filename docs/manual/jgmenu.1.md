@@ -1,6 +1,6 @@
 % JGMENU(1)
 % Johan Malm
-% 29 August, 2019
+% 16 September, 2019
 
 # NAME
 
@@ -18,37 +18,50 @@ jgmenu init \[\--help | <*options*>]
 
 Use these commands to get started
 
-- `jgmenu_run` to launch menu
-- `jgmenu init` to create config file ~/.config/jgmenu/jgmenurc
-- `jgmenu init -i` to enter interactive setup
-- `man jgmenututorial` to read step-by-step guide
+- `jgmenu_run` to launch menu  
+- `jgmenu init` to create config file ~/.config/jgmenu/jgmenurc  
+- `jgmenu init -i` to enter interactive setup  
+- `man jgmenututorial` to read step-by-step guide  
 
 # DESCRIPTION
 
-`jgmenu` is a simple menu for Linux/BSD. It reads CSV menu data from
-a file and generates a graphical menu on an X11 window.
+`jgmenu` is a simple menu for Linux/BSD. It reads CSV menu data from a file and generates a graphical menu on an X11 window.
 
-Each line of CSV menu data is parsed into the following fields using
-comma as a field separator:
+## Fields
 
-  (1) description
-  (2) command
-  (3) icon
-  (4) working directory
-  (5) metadata
+Each line of CSV menu data is parsed into the following fields using comma as a field separator:
 
-Empty lines and lines beginning with `#` are ignored. When the user
-selects an item by left-clicking or pressing enter), the `command`
-of that selection is executed as a new process.
+  (1) description  
+  (2) command  
+  (3) icon  
+  (4) working directory  
+  (5) metadata  
 
 For example:
 
-    printf "Terminal,xterm\nWeb Browser,firefox" | jgmenu --vsimple
+    printf "Terminal,xterm\\nWeb Browser,firefox" | jgmenu --vsimple
 
-A field can be triple quotes in order to allow commas within that
-field. For example:
+## Special Characters at beginning of line
 
-    foo,"""^pipe(find . -printf '%f,display %p,%p\n')"""
+`#`
+:   Ignore line
+
+`.`
+:   Source file specified by string following the `.`
+
+`@`
+:   Treat as widget
+
+
+## Special Characters in fields
+
+`,`
+:   As commas are used as field separators, individual fields can only contain commas if they are triple quoted. For example:
+
+    foo,"""^pipe(find . -printf '%f,display %p,%p\\n')"""
+
+`<`, `>`, `'`, `&`
+:   The description field is parsed as pango markup, so `<`, `>`, `'` and `&` need to be escaped as `&lt;`, `&gt;`, `&39;` and `&38;` respectively.
 
 ## Markup
 
@@ -89,7 +102,7 @@ Icons will be displayed if the third field is populated, for example:
 :   Read config file.
 
 \--icon-size=<*size*>
-:   Specify icon size (22 by default).  If set to 0, icons will not be loaded.
+:   Specify icon size (22 by default). If set to 0, icons will not be loaded.
 
 \--at-pointer
 :   Launch menu at mouse pointer.
@@ -120,16 +133,16 @@ Icons will be displayed if the third field is populated, for example:
 
 # USER INTERFACE
 
-  - Up/Down - select previous/next item
-  - Left/Right - move to parent/sub menu
-  - PgUp/PgDn - scroll up/down by one menu's worth of items
-  - Home/End - select first/last item
-  - Enter - select an item or open a submenu
-  - F5 - restart
-  - F8 - print node tree to stderr
-  - F9 - exit(1)
-  - F10 - exit(0)
-  - Backspace - return to parent menu
+- Up/Down - select previous/next item  
+- Left/Right - move to parent/sub menu  
+- PgUp/PgDn - scroll up/down by one menu's worth of items  
+- Home/End - select first/last item  
+- Enter - select an item or open a submenu  
+- F5 - restart  
+- F8 - print node tree to stderr  
+- F9 - exit(1)  
+- F10 - exit(0)  
+- Backspace - return to parent menu  
 
 Type any string to invoke a search. Words separated by space will be searched
 for using OR logic (i.e. the match of either word is sufficient to display an
@@ -140,18 +153,18 @@ item).
 If no file is specified using the --config-file= option, the XDG Base Directory
 Specification is adhered to. I.e:
 
-- Global config in `${XDG_CONFIG_DIRS:-/etc/xdg}`
-- User config override in `${XDG_CONFIG_HOME:-$HOME/.config}`
+- Global config in `${XDG_CONFIG_DIRS:-/etc/xdg}`  
+- User config override in `${XDG_CONFIG_HOME:-$HOME/.config}`  
 
 For most users ~/.config/jgmenu/jgmenurc is appropriate.
 
 Global config variables are set in the following order (i.e. bottom
 of list has higher precedence):
 
-- built-in defaults (config.c)
-- tint2rc config file (can be specified by `TINT2_CONFIG` environment variable
-- jgmenurc config file (can be specified by --config-file=)
-- command line arguments
+- built-in defaults (config.c)  
+- tint2rc config file (can be specified by `TINT2_CONFIG` environment variable  
+- jgmenurc config file (can be specified by --config-file=)  
+- command line arguments  
 
 ## Syntax
 
@@ -159,7 +172,7 @@ Lines beginning with `#` are ignored.
 
 All other lines are recognised as setting variables in the format
 
-    *key* = *value*
+    key = value
 
 White spaces are mostly ignored.
 
@@ -240,6 +253,7 @@ environment variable $HOME just as a shell would expand it.
     mode.
 
 `terminal_exec` = __string__ (default x-terminal-emulator)  
+
 `terminal_args` = __string__ (default -e)
 :   The values of these two variables are used to build a string to launch
     programs requiring a terminal to run. With the default values, the string
@@ -264,47 +278,44 @@ environment variable $HOME just as a shell would expand it.
     mode.
 
 `columns` = __integer__ (default 1)
-
 :   Specify the number of columns in which to show menu items
 
 `tabs` = __integer__ (default 120)
-
 :   Specify the position is pixels of the first tab
 
 `menu_margin_x` = __integer__ (default 0)  
+
 `menu_margin_y` = __integer__ (default 0)
 :   "margin" refers to space outside an object The `menu_margin_*` variables
     refer to the distance between the menu (=X11 window) and the edge of the
     screen. See note on `_NET_WORKAREA` under `menu_{v,h}align` variables.
 
 `menu_width` = __integer__ (default 200)
+:   Set the *minimum* menu width. The menu width will adjust to the
+    longest item in the current (sub)menu. If a filter is applied
+    (e.g. by the user typing) the menu width will NOT adjust.
 
-    Set the *minimum* menu width. The menu width will adjust to the  
-    longest item in the current (sub)menu. If a filter is applied  
-    (e.g. by the user typing) the menu width will NOT adjust.  
+`menu_height_min` = __integer__ (default 0)
 
-`menu_height_min` = __integer__ (default 0)  
-menu_height_max = __integer__ (default 0)  
+`menu_height_max` = __integer__ (default 0)
+:   Set the min and max height of the root menu. If these are set to the same
+    value, the menu height will be fixed at that value. If set to zero, they
+    will be ignored.
 
-    Set the min and max height of the root menu. If these are set to  
-    the same value, the menu height will be fixed at that value. If  
-    set to zero, they will be ignored.  
+`menu_height_mode` = (static | dynamic) (default static)
+:   `static` means that the height of the initial root menu will be used for
+    any subsequent ^root() action, whereas `dynamic`means that the root menu
+    height will be re-calculated every time the root menu is redefined using
+    ^root().
 
-menu_height_mode = (static | dynamic) (default static)  
+`menu_padding_top` = __integer__ (default 5)
 
-    "static" means that the height of the initial root menu will be  
-    used for any subsequent ^root() action.  
+`menu_padding_right` = __integer__ (default 5)
 
-    "dynamic" means that the root menu height will be re-calculated  
-    every time the root menu is redefined using ^root().  
+`menu_padding_bottom` = __integer__ (default 5)
 
-menu_padding_top = __integer__ (default 5)  
-menu_padding_right = __integer__ (default 5)  
-menu_padding_bottom = __integer__ (default 5)  
-menu_padding_left = __integer__ (default 5)  
-
-    "padding" refers to space inside an object (between border and  
-    content)  
+`menu_padding_left` = __integer__ (default 5)
+:   `padding` refers to space inside an object (between border and content)
 
 menu_radius = __integer__ (default 1)  
 
@@ -436,8 +447,7 @@ icon_theme_fallback = __string__ (default xtg)
 arrow_string = __string__ (default ▸)  
 
     The "arrow" indicates that a menu item points a submenu.  
-    Suggested styles include:  
-    → ▶ ➔ ➙ ➛ ➜ ➝ ➞ ➟ ➠ ➡ ➢ ➣ ➤ ➥ ➦ ↦ ⇒ ⇝ ⇢ ⇥ ⇨ ⇾ ➭ ➮ ➯ ➱ ➲ ➺ ➼ ➽ ➾  
+    jgmenuunicode(7) contains arrow suggestions  
 
 arrow_width = __integer__ (default 15)  
 
