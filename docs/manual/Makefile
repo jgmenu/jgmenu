@@ -1,5 +1,5 @@
 man1pages  = jgmenu.1 jgmenu_run.1 jgmenu-pmenu.1 jgmenu-lx.1 jgmenu-ob.1
-man7pages  = jgmenututorial.7
+man7pages  = jgmenututorial.7 jgmenuunicode.7
 manpages   = $(man1pages) $(man7pages)
 
 prefix ?= /usr/local
