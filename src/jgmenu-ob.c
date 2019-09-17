@@ -66,6 +66,8 @@ dont_print_tag:
 		sbuf_init(&label_escaped);
 		sbuf_cpy(&label_escaped, t9n ? t9n : item->label);
 		sbuf_replace(&label_escaped, "&", "&amp;");
+		sbuf_replace(&label_escaped, "<", "&lt;");
+		sbuf_replace(&label_escaped, ">", "&gt;");
 		sbuf_replace_spaces_with_one_tab(&label_escaped);
 		if (strchr(label_escaped.buf, ',')) {
 			sbuf_prepend(&label_escaped, "\"\"\"");
