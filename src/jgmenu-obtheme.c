@@ -42,7 +42,7 @@ static const char obtheme_usage[] =
 "  * ~/.themes/\n"
 "  * /usr/share/themes/\n";
 
-void usage(void)
+static void usage(void)
 {
 	printf("%s", obtheme_usage);
 	exit(0);

@@ -11,6 +11,7 @@
 #include "util.h"
 #include "sbuf.h"
 #include "compat.h"
+#include "set.h"
 
 #define strsiz (1000)
 struct entry {

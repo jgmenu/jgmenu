@@ -105,7 +105,7 @@ static const char config_usage[] =
 "    -v <value>     specify value (needed for -s)\n"
 "    -h             display this message\n";
 
-void usage(void)
+static void usage(void)
 {
 	printf("%s", config_usage);
 	exit(0);

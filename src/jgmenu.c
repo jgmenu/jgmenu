@@ -105,7 +105,7 @@ struct menu {
 	struct node *current_node;
 };
 
-struct menu menu;
+static struct menu menu;
 
 static const char jgmenu_usage[] =
 "Usage: jgmenu [command] [options]\n\n"
@@ -133,7 +133,7 @@ static void tmr_mouseover_stop(void);
 static void del_beyond_current(void);
 static void del_beyond_root(void);
 
-void init_empty_item(void)
+static void init_empty_item(void)
 {
 	empty_item.name = xstrdup("&lt;empty&gt;");
 	empty_item.cmd = xstrdup(":");
@@ -146,25 +146,25 @@ void init_empty_item(void)
 	empty_item.area.h = config.item_height;
 }
 
-void delete_empty_item(void)
+static void delete_empty_item(void)
 {
 	xfree(empty_item.name);
 	xfree(empty_item.cmd);
 }
 
-void usage(void)
+static void usage(void)
 {
 	printf("%s", jgmenu_usage);
 	exit(0);
 }
 
-void version(void)
+static void version(void)
 {
 	printf("%s\n", VERSION);
 	exit(0);
 }
 
-void indent(int number_of_spaces)
+static void indent(int number_of_spaces)
 {
 	int i;
 
@@ -174,7 +174,7 @@ void indent(int number_of_spaces)
 		fprintf(stderr, " ");
 }
 
-int level(struct node *n)
+static int level(struct node *n)
 {
 	int i = 0;
 
@@ -185,7 +185,7 @@ int level(struct node *n)
 	return i;
 }
 
-void print_nodes(void)
+static void print_nodes(void)
 {
 	struct node *n;
 
@@ -201,17 +201,17 @@ void print_nodes(void)
 	}
 }
 
-struct item *filter_head(void)
+static struct item *filter_head(void)
 {
 	return list_first_entry_or_null(&menu.filter, struct item, filter);
 }
 
-struct item *filter_tail(void)
+static struct item *filter_tail(void)
 {
 	return list_last_entry(&menu.filter, struct item, filter);
 }
 
-void step_back(struct item **ptr, int nr)
+static void step_back(struct item **ptr, int nr)
 {
 	int i;
 
@@ -219,7 +219,7 @@ void step_back(struct item **ptr, int nr)
 		*ptr = container_of((*ptr)->filter.prev, struct item, filter);
 }
 
-void step_fwd(struct item **ptr, int nr)
+static void step_fwd(struct item **ptr, int nr)
 {
 	int i;
 
@@ -227,7 +227,7 @@ void step_fwd(struct item **ptr, int nr)
 		*ptr = container_of((*ptr)->filter.next, struct item, filter);
 }
 
-struct item *fill_from_top(struct item *first)
+static struct item *fill_from_top(struct item *first)
 {
 	struct item *p, *last;
 	int col, h;
@@ -250,7 +250,7 @@ struct item *fill_from_top(struct item *first)
 	return last;
 }
 
-struct item *fill_from_bottom(struct item *last)
+static struct item *fill_from_bottom(struct item *last)
 {
 	struct item *p, *first;
 	int col, h;
@@ -277,7 +277,7 @@ struct item *fill_from_bottom(struct item *last)
 	return first;
 }
 
-struct item *next_selectable(struct item *cur, int *isoutside)
+static struct item *next_selectable(struct item *cur, int *isoutside)
 {
 	struct item *p = cur;
 
@@ -294,7 +294,7 @@ struct item *next_selectable(struct item *cur, int *isoutside)
 	return p;
 }
 
-struct item *prev_selectable(struct item *cur, int *isoutside)
+static struct item *prev_selectable(struct item *cur, int *isoutside)
 {
 	struct item *p = cur;
 
@@ -311,7 +311,7 @@ struct item *prev_selectable(struct item *cur, int *isoutside)
 	return p;
 }
 
-struct item *first_selectable(void)
+static struct item *first_selectable(void)
 {
 	int isoutside;
 	struct item *item;
@@ -322,7 +322,7 @@ struct item *first_selectable(void)
 	return item;
 }
 
-struct item *last_selectable(void)
+static struct item *last_selectable(void)
 {
 	int isoutside;
 	struct item *item;
@@ -333,7 +333,7 @@ struct item *last_selectable(void)
 	return item;
 }
 
-void add_if_unique(struct item *item)
+static void add_if_unique(struct item *item)
 {
 	struct item *p;
 
@@ -348,7 +348,7 @@ void add_if_unique(struct item *item)
 	list_add_tail(&item->filter, &menu.filter);
 }
 
-int isvisible(struct item *item)
+static int isvisible(struct item *item)
 {
 	struct item *p;
 
@@ -364,7 +364,7 @@ int isvisible(struct item *item)
 	return 0;
 }
 
-void update_filtered_list(void)
+static void update_filtered_list(void)
 {
 	struct item *item;
 	int isoutside;
@@ -423,7 +423,7 @@ void update_filtered_list(void)
 	}
 }
 
-void init_menuitem_coordinates(void)
+static void init_menuitem_coordinates(void)
 {
 	struct item *p;
 
@@ -446,7 +446,7 @@ void init_menuitem_coordinates(void)
  *   s="^foo(bar)"
  *   token="^foo("
  */
-char *parse_caret_action(char *s, char *token)
+static char *parse_caret_action(char *s, char *token)
 {
 	char *p;
 
@@ -460,7 +460,7 @@ char *parse_caret_action(char *s, char *token)
 	return p;
 }
 
-void draw_item_sep_without_text(struct item *p)
+static void draw_item_sep_without_text(struct item *p)
 {
 	double y;
 
@@ -469,7 +469,7 @@ void draw_item_sep_without_text(struct item *p)
 		     1.0, config.color_sep_fg);
 }
 
-void draw_item_sep_with_text(struct item *p)
+static void draw_item_sep_with_text(struct item *p)
 {
 	struct sbuf s;
 	int text_x_coord;
@@ -500,7 +500,7 @@ void draw_item_sep_with_text(struct item *p)
 	xfree(s.buf);
 }
 
-void draw_item_sep(struct item *p)
+static void draw_item_sep(struct item *p)
 {
 	if (p->name[strlen("^sep(")] == '\0')
 		draw_item_sep_without_text(p);
@@ -508,7 +508,7 @@ void draw_item_sep(struct item *p)
 		draw_item_sep_with_text(p);
 }
 
-void draw_last_sel(struct item *p)
+static void draw_last_sel(struct item *p)
 {
 	if (p == menu.sel)
 		return;
@@ -517,14 +517,14 @@ void draw_last_sel(struct item *p)
 			  0, config.color_sel_bg);
 }
 
-void draw_item_bg_norm(struct item *p)
+static void draw_item_bg_norm(struct item *p)
 {
 	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
 			  p->area.h, config.item_radius, 0.0, 1,
 			  config.color_norm_bg);
 }
 
-void draw_item_bg_sel(struct item *p)
+static void draw_item_bg_sel(struct item *p)
 {
 	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
 			  p->area.h, config.item_radius, 0.0, 1,
@@ -536,7 +536,7 @@ void draw_item_bg_sel(struct item *p)
 				  config.color_sel_border);
 }
 
-void draw_item_text(struct item *p)
+static void draw_item_text(struct item *p)
 {
 	int text_x_coord, width;
 
@@ -562,7 +562,7 @@ void draw_item_text(struct item *p)
 			       config.item_halign);
 }
 
-void draw_submenu_arrow(struct item *p)
+static void draw_submenu_arrow(struct item *p)
 {
 	if (config.item_halign != RIGHT)
 		ui_insert_text(config.arrow_string, p->area.x + p->area.w -
@@ -575,7 +575,7 @@ void draw_submenu_arrow(struct item *p)
 			       config.color_norm_fg, config.item_halign);
 }
 
-void draw_icon(struct item *p)
+static void draw_icon(struct item *p)
 {
 	int icon_y_coord;
 	int offsety, offsetx;
@@ -595,7 +595,7 @@ void draw_icon(struct item *p)
 				config.item_padding_x + offsetx - 1, icon_y_coord, config.icon_size);
 }
 
-void draw_items_below_indicator(void)
+static void draw_items_below_indicator(void)
 {
 	int b, r, l;
 
@@ -614,7 +614,7 @@ void draw_items_below_indicator(void)
 		     geo_get_menu_height() - b - 0.5, 1.0, config.color_scroll_ind);
 }
 
-void draw_items_above_indicator(void)
+static void draw_items_above_indicator(void)
 {
 	int t, r, l;
 
@@ -633,7 +633,7 @@ void draw_items_above_indicator(void)
 		     config.color_scroll_ind);
 }
 
-void draw_menu(void)
+static void draw_menu(void)
 {
 	struct item *p;
 	int w;
@@ -692,7 +692,7 @@ void draw_menu(void)
 	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
 }
 
-struct node *get_node_from_tag(const char *tag)
+static struct node *get_node_from_tag(const char *tag)
 {
 	struct node *n;
 
@@ -705,7 +705,7 @@ struct node *get_node_from_tag(const char *tag)
 	return NULL;
 }
 
-int submenu_itemarea_width(void)
+static int submenu_itemarea_width(void)
 {
 	struct item *p;
 	struct sbuf s;
@@ -733,7 +733,7 @@ int submenu_itemarea_width(void)
 	return point.x;
 }
 
-void set_submenu_width(void)
+static void set_submenu_width(void)
 {
 	int mw;
 	int reqw = geo_get_menu_width_from_itemarea_width(submenu_itemarea_width());
@@ -757,7 +757,7 @@ set_width:
 	geo_set_menu_width(mw);
 }
 
-int submenu_itemarea_height(void)
+static int submenu_itemarea_height(void)
 {
 	struct item *p;
 	int h = 0;
@@ -772,7 +772,7 @@ int submenu_itemarea_height(void)
 	return h;
 }
 
-void set_submenu_height(void)
+static void set_submenu_height(void)
 {
 	int reqh = submenu_itemarea_height();
 	struct point maxarea = geo_get_max_itemarea_that_fits();
@@ -782,7 +782,7 @@ void set_submenu_height(void)
 	geo_set_menu_height_from_itemarea_height(h);
 }
 
-int tag_exists(const char *tag)
+static int tag_exists(const char *tag)
 {
 	struct item *item;
 
@@ -794,7 +794,7 @@ int tag_exists(const char *tag)
 	return 0;
 }
 
-int tag_count(const char *tag)
+static int tag_count(const char *tag)
 {
 	struct item *item;
 	int n = 0;
@@ -807,7 +807,7 @@ int tag_count(const char *tag)
 	return n;
 }
 
-struct item *get_item_from_tag(const char *tag)
+static struct item *get_item_from_tag(const char *tag)
 {
 	struct item *item;
 
@@ -830,7 +830,7 @@ static char *tag_of_first_item(void)
 	return item->tag;
 }
 
-void find_subhead(const char *tag)
+static void find_subhead(const char *tag)
 {
 	BUG_ON(!tag);
 	if (tag_exists(tag)) {
@@ -847,7 +847,7 @@ void find_subhead(const char *tag)
 		die("no menu.subhead");
 }
 
-void find_subtail(void)
+static void find_subtail(void)
 {
 	struct item *item;
 
@@ -860,13 +860,13 @@ void find_subtail(void)
 	}
 }
 
-void checkout_tag(const char *tag)
+static void checkout_tag(const char *tag)
 {
 	find_subhead(tag);
 	find_subtail();
 }
 
-void checkout_submenu(char *tag)
+static void checkout_submenu(char *tag)
 {
 	if (!menu.sel) {
 		warn("checkout_submenu(): no menu.sel");
@@ -887,7 +887,7 @@ void checkout_submenu(char *tag)
 	menu.current_node->wid = ui->w[ui->cur].win;
 }
 
-void checkout_parentmenu(char *tag)
+static void checkout_parentmenu(char *tag)
 {
 	checkout_tag(tag);
 	/* If we've used ^root(tag), we're alreday at top window */
@@ -897,14 +897,14 @@ void checkout_parentmenu(char *tag)
 	ui_win_del();
 }
 
-void checkout_rootmenu(char *tag)
+static void checkout_rootmenu(char *tag)
 {
 	checkout_tag(tag);
 	geo_set_cur(0);
 }
 
 /* This checks out the original root menu, regardless of any ^root() action */
-void checkout_rootnode(void)
+static void checkout_rootnode(void)
 {
 	BUG_ON(!menu.current_node);
 	if (!menu.current_node->parent)
@@ -914,14 +914,14 @@ void checkout_rootnode(void)
 	checkout_rootmenu(menu.current_node->item->tag);
 }
 
-void resize(void)
+static void resize(void)
 {
 	XMoveResizeWindow(ui->dpy, ui->w[ui->cur].win, geo_get_menu_x0(),
 			  geo_get_menu_y0(), geo_get_menu_width(),
 			  geo_get_menu_height());
 }
 
-void update(int resize_required)
+static void update(int resize_required)
 {
 	update_filtered_list();
 	init_menuitem_coordinates();
@@ -932,7 +932,7 @@ void update(int resize_required)
 	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
 }
 
-void launch_menu_at_pointer(void)
+static void launch_menu_at_pointer(void)
 {
 	Window dw;
 	int di;
@@ -997,12 +997,12 @@ struct rect {
 	int x1, x2, y1, y2;
 };
 
-int ishorizontal(struct rect rect)
+static int ishorizontal(struct rect rect)
 {
 	return (rect.x2 - rect.x1) > (rect.y2 - rect.y1) ? 1 : 0;
 }
 
-int ipc_getenv(int *var, const char *key)
+static int ipc_getenv(int *var, const char *key)
 {
 	char *s;
 
@@ -1015,7 +1015,7 @@ int ipc_getenv(int *var, const char *key)
 	return 0;
 }
 
-void ipc_align_to_horizontal_panel(struct rect panel, struct rect button)
+static void ipc_align_to_horizontal_panel(struct rect panel, struct rect button)
 {
 	if (button.x1 >= geo_get_screen_x0() + geo_get_screen_width() ||
 	    button.x1 < geo_get_screen_x0()) {
@@ -1040,7 +1040,7 @@ void ipc_align_to_horizontal_panel(struct rect panel, struct rect button)
 	}
 }
 
-void ipc_align_to_vertical_panel(struct rect panel, struct rect button)
+static void ipc_align_to_vertical_panel(struct rect panel, struct rect button)
 {
 	if (button.y1 >= geo_get_screen_y0() + geo_get_screen_height() ||
 	    button.y1 < geo_get_screen_y0()) {
@@ -1069,7 +1069,7 @@ void ipc_align_to_vertical_panel(struct rect panel, struct rect button)
  * With a horizontal panel, button.y1 == button.y2 (because they're aligned
  * to the edge of the panel.
  */
-void ipc_align_based_on_env_vars(void)
+static void ipc_align_based_on_env_vars(void)
 {
 	struct rect button, panel;
 
@@ -1129,7 +1129,7 @@ static void awake_menu(void)
 	grabpointer();
 }
 
-int node_exists(const char *name)
+static int node_exists(const char *name)
 {
 	struct node *n;
 
@@ -1140,7 +1140,7 @@ int node_exists(const char *name)
 	return 0;
 }
 
-void create_node(const char *name, struct node *parent)
+static void create_node(const char *name, struct node *parent)
 {
 	struct node *n;
 
@@ -1156,7 +1156,7 @@ void create_node(const char *name, struct node *parent)
 }
 
 /* Create nodal tree from tagged items */
-struct node *node_add_new(struct item *this, struct node *parent)
+static struct node *node_add_new(struct item *this, struct node *parent)
 {
 	struct item *child, *p;
 	struct node *current_node;
@@ -1188,7 +1188,7 @@ struct node *node_add_new(struct item *this, struct node *parent)
 	return current_node;
 }
 
-void destroy_node_tree(void)
+static void destroy_node_tree(void)
 {
 	struct node *n, *tmp_n;
 
@@ -1198,7 +1198,7 @@ void destroy_node_tree(void)
 	}
 }
 
-void build_tree(void)
+static void build_tree(void)
 {
 	struct item *item;
 	struct node *n, *root_node;
@@ -1270,7 +1270,7 @@ static void insert_tag_item(void)
 	list_add_tail(&item->master, &menu.master);
 }
 
-void resolve_newline(char *s)
+static void resolve_newline(char *s)
 {
 	char *p;
 
@@ -1290,7 +1290,7 @@ void resolve_newline(char *s)
  *
  * Return number of lines read
  */
-int read_csv_file(FILE *fp, bool ispipemenu)
+static int read_csv_file(FILE *fp, bool ispipemenu)
 {
 	char buf[BUFSIZ], *p;
 	size_t i;
@@ -1379,7 +1379,7 @@ int read_csv_file(FILE *fp, bool ispipemenu)
 	return i;
 }
 
-void rm_back_items(void)
+static void rm_back_items(void)
 {
 	struct item *i, *tmp;
 
@@ -1391,7 +1391,7 @@ void rm_back_items(void)
 		}
 }
 
-int is_ancestor_to_current_node(struct node *node)
+static int is_ancestor_to_current_node(struct node *node)
 {
 	struct node *n;
 
@@ -1406,7 +1406,7 @@ int is_ancestor_to_current_node(struct node *node)
 	return 0;
 }
 
-void recalc_expanded_nodes(void)
+static void recalc_expanded_nodes(void)
 {
 	struct node *n;
 
@@ -1417,14 +1417,14 @@ void recalc_expanded_nodes(void)
 }
 
 /* Delete windows and pipemenus beyond current node */
-void del_beyond_current(void)
+static void del_beyond_current(void)
 {
 	ui_win_del_beyond(ui->cur);
 	pipemenu_del_beyond(menu.current_node);
 	recalc_expanded_nodes();
 }
 
-void del_beyond_root(void)
+static void del_beyond_root(void)
 {
 	ui_win_del_beyond(0);
 	geo_set_cur(0);
@@ -1449,7 +1449,7 @@ static int check_pipe_tags_unique(struct item *from)
 	return 0;
 }
 
-void destroy_master_list_from(struct item *from)
+static void destroy_master_list_from(struct item *from)
 {
 	struct item *i, *i_tmp;
 
@@ -1461,7 +1461,7 @@ void destroy_master_list_from(struct item *from)
 	}
 }
 
-void pipemenu_add(const char *s)
+static void pipemenu_add(const char *s)
 {
 	FILE *fp = NULL;
 	struct item *pipe_head;
@@ -1505,7 +1505,7 @@ void pipemenu_add(const char *s)
  * @node: delete pipemenu from this point onwards
  * Note: 'node' needs to be within a pipemenu
  */
-void pipemenu_del_from(struct node *node)
+static void pipemenu_del_from(struct node *node)
 {
 	struct node *n_tmp;
 
@@ -1517,7 +1517,7 @@ void pipemenu_del_from(struct node *node)
 	}
 }
 
-void pipemenu_del_beyond(struct node *keep_me)
+static void pipemenu_del_beyond(struct node *keep_me)
 {
 	struct node *n, *n_tmp;
 
@@ -1530,7 +1530,7 @@ void pipemenu_del_beyond(struct node *keep_me)
 	}
 }
 
-void pipemenu_del_all(void)
+static void pipemenu_del_all(void)
 {
 	struct node *n;
 
@@ -1541,7 +1541,7 @@ void pipemenu_del_all(void)
 	pm_cleanup();
 }
 
-void checkout_parent(void)
+static void checkout_parent(void)
 {
 	struct node *parent;
 
@@ -1592,7 +1592,7 @@ static void hide_menu(void)
 	menu_is_hidden = 1;
 }
 
-void hide_or_exit(void)
+static void hide_or_exit(void)
 {
 	if (config.stay_alive)
 		hide_menu();
@@ -1600,7 +1600,7 @@ void hide_or_exit(void)
 		exit(0);
 }
 
-void action_cmd(char *cmd, const char *working_dir)
+static void action_cmd(char *cmd, const char *working_dir)
 {
 	char *p = NULL;
 
@@ -1682,7 +1682,7 @@ void action_cmd(char *cmd, const char *working_dir)
 	}
 }
 
-struct point mousexy(void)
+static struct point mousexy(void)
 {
 	Window dw;
 	int di;
@@ -1695,7 +1695,7 @@ struct point mousexy(void)
 	return coords;
 }
 
-void key_event(XKeyEvent *ev)
+static void key_event(XKeyEvent *ev)
 {
 	char buf[32];
 	int len;
@@ -1896,7 +1896,7 @@ static int is_outside_menu_windows(XMotionEvent **e)
 /* Pointer vertical offset (not sure why this is needed) */
 #define MOUSE_FUDGE 3
 
-void mouse_release(XEvent *e)
+static void mouse_release(XEvent *e)
 {
 	XButtonReleasedEvent *ev;
 	struct point mouse_coords;
@@ -1994,7 +1994,7 @@ static double timespec_to_sec(struct timespec *ts)
  * This function is loaded in the background under a new pthread
  * X11 is not thread-safe, so load_icons() must not call any X functions.
  */
-void *load_icons(void *arg)
+static void *load_icons(void *arg)
 {
 	struct timespec ts_start;
 	struct timespec ts_end;
@@ -2014,7 +2014,7 @@ void *load_icons(void *arg)
 	return NULL;
 }
 
-void destroy_master_list(void)
+static void destroy_master_list(void)
 {
 	struct item *item, *tmp_item;
 
@@ -2025,7 +2025,7 @@ void destroy_master_list(void)
 	}
 }
 
-void init_pipe_flags(void)
+static void init_pipe_flags(void)
 {
 	int flags;
 
@@ -2089,7 +2089,7 @@ static void tmr_mouseover_init(void)
 		die("SIGALRM action");
 }
 
-void tmr_mouseover_set(int msec)
+static void tmr_mouseover_set(int msec)
 {
 	struct itimerval it;
 	static int run_once;
@@ -2109,12 +2109,12 @@ void tmr_mouseover_set(int msec)
 		die("setitimer()");
 }
 
-void tmr_mouseover_start(void)
+static void tmr_mouseover_start(void)
 {
 	tmr_mouseover_set(config.hover_delay);
 }
 
-void tmr_mouseover_stop(void)
+static void tmr_mouseover_stop(void)
 {
 	tmr_mouseover_set(0);
 }
@@ -2131,7 +2131,7 @@ static struct node *get_node_from_wid(Window w)
 	return NULL;
 }
 
-void close_sub_window(void)
+static void close_sub_window(void)
 {
 	if (!ui_has_child_window_open(menu.current_node->wid))
 		return;
@@ -2139,7 +2139,7 @@ void close_sub_window(void)
 	tmr_mouseover_start();
 }
 
-void hover(void)
+static void hover(void)
 {
 	/*
 	 * Mouse is over an already "expanded" item (i.e. one that caused a
@@ -2168,7 +2168,7 @@ void hover(void)
 	}
 }
 
-void set_focus(Window w)
+static void set_focus(Window w)
 {
 	struct node *n;
 
@@ -2201,7 +2201,7 @@ static void adjust_selection_and_redraw(void)
 	draw_menu();
 }
 
-void process_pointer_position(XEvent *ev, int force)
+static void process_pointer_position(XEvent *ev, int force)
 {
 	struct point pw;
 	static int oldy;
@@ -2255,7 +2255,7 @@ static void signal_handler(int sig)
 	errno = saved_errno;
 }
 
-void run(void)
+static void run(void)
 {
 	XEvent ev;
 	struct item *item;
@@ -2465,7 +2465,7 @@ void run(void)
 	}
 }
 
-void init_geo_variables_from_config(void)
+static void init_geo_variables_from_config(void)
 {
 	geo_set_menu_halign(config.menu_halign);
 	geo_set_menu_valign(config.menu_valign);
@@ -2486,13 +2486,13 @@ void init_geo_variables_from_config(void)
 	geo_set_item_height(config.item_height);
 }
 
-void set_font(void)
+static void set_font(void)
 {
 	font_set();
 	info("set font to '%s'", font_get());
 }
 
-void set_theme(void)
+static void set_theme(void)
 {
 	struct sbuf theme;
 
