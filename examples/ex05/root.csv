@@ -1,2 +1,2 @@
-this is root,;,folder
+item1,:,folder
 goto pipe1,^pipe(cat ex05/pipe1.csv),folder
