@@ -1655,11 +1655,11 @@ void action_cmd(char *cmd, const char *working_dir)
 		/* Two nodes with the same wid breaks get_node_from_wid() */
 		if (!tag_exists(cmd + 6))
 			return;
-		del_beyond_root();
-		filter_reset();
 		menu.current_node->last_sel = menu.sel;
 		menu.current_node->last_first = menu.first;
 		menu.current_node->wid = 0;
+		del_beyond_root();
+		filter_reset();
 		checkout_tag(cmd + 6);
 		menu.current_node->wid = ui->w[ui->cur].win;
 		if (config.menu_height_mode == CONFIG_DYNAMIC) {
