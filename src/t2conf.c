@@ -391,7 +391,7 @@ static void set_alignment_and_position(void)
 	 * If "panel_shrink = 1" in tint2rc, one of menu_margin_{x,y} is not
 	 * accurately set (i.e. x for horizontal and y for vertical).
 	 * Also, the menu will always align to the edge of the panel.
-	 * For more accurate positioning use tint2 buttons (and t2env.c)
+	 * For more accurate positioning use IPC (ipc.c)
 	 */
 	if (orientation == HORIZONTAL) {
 		hpanel_set_margin_y();

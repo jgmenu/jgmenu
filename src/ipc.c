@@ -5,7 +5,7 @@
 #include "util.h"
 #include "config.h"
 #include "sbuf.h"
-#include "t2env.h"
+#include "ipc.h"
 #include "unix_sockets.h"
 #include "socket.h"
 #include "argv-buf.h"

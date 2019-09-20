@@ -1,5 +1,5 @@
-#ifndef T2ENV_H
-#define T2ENV_H
+#ifndef IPC_H
+#define IPC_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,4 +7,4 @@
 void tint2env_read_socket(void);
 void tint2env_init_socket(void);
 
-#endif /* T2ENV_H */
+#endif /* IPC_H */
