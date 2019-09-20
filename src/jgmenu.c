@@ -35,7 +35,7 @@
 #include "lockfile.h"
 #include "argv-buf.h"
 #include "t2conf.h"
-#include "t2env.h"
+#include "ipc.h"
 #include "bl.h"
 #include "xsettings-helper.h"
 #include "terminal.h"
@@ -1117,7 +1117,7 @@ static void awake_menu(void)
 		launch_menu_at_pointer();
 		resize();
 	}
-	tint2env_read_socket();
+	ipc_read_socket();
 	if (config.position_mode == POSITION_MODE_IPC) {
 		ipc_align_based_on_env_vars();
 		update(1);
@@ -2666,7 +2666,7 @@ int main(int argc, char *argv[])
 	init_geo_variables_from_config();
 
 	if (config.position_mode == POSITION_MODE_IPC) {
-		tint2env_init_socket();
+		ipc_init_socket();
 		ipc_align_based_on_env_vars();
 	}
 

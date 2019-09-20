@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void tint2env_read_socket(void);
-void tint2env_init_socket(void);
+void ipc_read_socket(void);
+void ipc_init_socket(void);
 
 #endif /* IPC_H */

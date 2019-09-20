@@ -49,7 +49,7 @@ static void process_buf(const char *buf)
 		process_line(a.argv[i]);
 }
 
-void tint2env_read_socket(void)
+void ipc_read_socket(void)
 {
 	int client_fd;
 	ssize_t num_read;
@@ -87,7 +87,7 @@ static void socketfile_unlink(void)
 	unlink(tint2_socket_path());
 }
 
-void tint2env_init_socket(void)
+void ipc_init_socket(void)
 {
 	socketfile_unlink();
 	sfd = unix_listen(tint2_socket_path(), 5);

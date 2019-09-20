@@ -83,7 +83,7 @@ all: checkdeps $(PROGS)
 jgmenu: jgmenu.o x11-ui.o config.o util.o geometry.o isprog.o sbuf.o \
 	icon-find.o icon.o xpm-loader.o xdgdirs.o xsettings.o \
 	xsettings-helper.o filter.o compat.o lockfile.o argv-buf.o t2conf.o \
-	t2env.o unix_sockets.o bl.o cache.o back.o terminal.o restart.o \
+	ipc.o unix_sockets.o bl.o cache.o back.o terminal.o restart.o \
 	theme.o gtkconf.o font.o args.o widgets.o pm.o socket.o workarea.o \
 	charset.o watch.o spawn.o
 jgmenu-ob: jgmenu-ob.o util.o sbuf.o i18n.o hashmap.o
