@@ -1,6 +1,6 @@
 % JGMENU(1)
 % Johan Malm
-% 16 September, 2019
+% 19 September, 2019
 
 # NAME
 
@@ -25,11 +25,13 @@ Use these commands to get started
 
 # DESCRIPTION
 
-`jgmenu` is a simple menu for Linux/BSD. It reads CSV menu data from a file and generates a graphical menu on an X11 window.
+`jgmenu` is a simple menu for Linux/BSD. It reads CSV menu data from a file and
+generates a graphical menu on an X11 window.
 
 ## Fields
 
-Each line of CSV menu data is parsed into the following fields using comma as a field separator:
+Each line of CSV menu data is parsed into the following fields using comma as a
+field separator:
 
   (1) description  
   (2) command  
@@ -56,32 +58,51 @@ For example:
 ## Special Characters in fields
 
 `,`
-:   As commas are used as field separators, individual fields can only contain commas if they are triple quoted. For example:
+:   As commas are used as field separators, individual fields can only contain
+    commas if they are triple quoted. For example:
 
     foo,"""^pipe(find . -printf '%f,display %p,%p\\n')"""
 
 `<`, `>`, `'`, `&`
-:   The description field is parsed as pango markup, so `<`, `>`, `'` and `&` need to be escaped as `&lt;`, `&gt;`, `&39;` and `&38;` respectively.
+:   The description field is parsed as pango markup, so `<`, `>`, `'` and `&`
+    need to be escaped as `&lt;`, `&gt;`, `&39;` and `&38;` respectively.
 
 ## Markup
 
-The syntax ^foo(bar) is used to carry out action `foo` with argument
-`bar`.
+The syntax ^foo(bar) is used to carry out action `foo` with argument `bar`. We
+sometimes refer to `bar` as the `inner value`.
 
-The following markup is supported in the *description* field:
+The following markup is supported in the *description* field
 
-- `sep()` define a separator (with or without text)
+`sep()`
+:   define a separator (with text if argument provided, otherwise without)
 
-The following markup is supported in the *command* field:
+The following markup is supported in the *command* field
 
-- `^tag()` define a submenu (can be in the *description* field if no other field is defined on that line)
-- `^checkout()` open a submenu in a new window
-- `^root()` open a submenu in the root window, replacing the current menu
-- `^sub()` draw a "submenu" arrow
-- `^back()` check-out parent menu
-- `^term()` run program in terminal
-- `^pipe()` execute sub-process and checkout a menu based on its stdout.
-- `^filter()` invoke search
+`^tag()`
+:   define a submenu (can be in the *description* field if no other field is
+    defined on that line)
+
+`^checkout()`
+:   open a submenu in a new window
+
+`^root()`
+:   open a submenu in the root window, replacing the current menu
+
+`^sub()`
+:   draw a "submenu" arrow
+
+`^back()`
+:   check-out parent menu
+
+`^term()`
+:   run program in terminal
+
+`^pipe()`
+:   execute sub-process and checkout a menu based on its stdout.
+
+`^filter()`
+:   invoke search
 
 ## Icons
 
@@ -182,25 +203,29 @@ Unless otherwise specified, values as treated as simple strings.
 
 Here follow some specific types:
 
-`boolean`: When a variable takes a boolean value, only 0 and 1 are accepted. 0
-means false; 1 means true.
+`boolean`
+:   When a variable takes a boolean value, only 0 and 1 are accepted. 0 means
+    false; 1 means true.
 
-`integer`: When a variable takes an integer value, only numerical values are
-accepted. The only valid characters are digits (0-9) and minus-sign. All
-integer variables relating to geometry and position are interpreted as pixel
-values unless otherwise specified.
+`integer`
+:   When a variable takes an integer value, only numerical values are accepted.
+    The only valid characters are digits (0-9) and minus-sign. All integer
+    variables relating to geometry and position are interpreted as pixel values
+    unless otherwise specified.
 
-`color`: When a variable takes a color value, only the syntax `#rrggbb aaa`
-is recognised, where `rr`, `gg` and `bb` represent hexadecimal values (00-ff)
-for the colours red, green and blue respectively; and `aaa` stands for the
-alpha channel value expressed as a percentage (0-100) (i.e. 100 means no
-transparency and 0 means fully transparent.) For example `#ff0000 100`
-represents red with no transparency, whereas `#000088 50` means dark blue
-with 50% transparency.
+`color`
+:   When a variable takes a color value, only the syntax `#rrggbb aaa` is
+    recognised, where `rr`, `gg` and `bb` represent hexadecimal values (00-ff)
+    for the colours red, green and blue respectively; and `aaa` stands for the
+    alpha channel value expressed as a percentage (0-100) (i.e. 100 means no
+    transparency and 0 means fully transparent.) For example `#ff0000 100`
+    represents red with no transparency, whereas `#000088 50` means dark blue
+    with 50% transparency.
 
-`pathname`: When a variable takes a pathname value, it is evaluated as a
-string. If the first character is tilde (~), it will be replaced by the the
-environment variable $HOME just as a shell would expand it.
+`pathname`
+:   When a variable takes a pathname value, it is evaluated as a string. If the
+    first character is tilde (~), it will be replaced by the the environment
+    variable $HOME just as a shell would expand it.
 
 ## Variables
 
@@ -237,32 +262,26 @@ environment variable $HOME just as a shell would expand it.
     and alignment.
 
 `position_mode` = (fixed | ipc | pointer | center) (default fixed)
-:   Define menu positioning mode
-
-    fixed: Align to margin_{x,y} in jgmenurc. Respect `_NET_WORKAREA`.
-
-    ipc: Use IPC to read environment variables set by panel.
-
-    pointer: Launch at pointer. Respect `_NET_WORKAREA` and `edge_snap_x`.
-
-    center: Launch at center of screen. Ignore `_NET_WORKAREA`. Takess precedence over `menu_valign` and `menu_halign`
+:   Define menu positioning mode. `fixed` aligns to `margin_{x,y}` and respect
+    `_NET_WORKAREA`. `ipc` use IPC to read environment variables set by panel.
+    `pointer` launches at pointer and respects both `_NET_WORKAREA` and
+    `edge_snap_x`. `center` launch at center of screen and ignore
+    `_NET_WORKAREA` (takes precedence over `menu_{v,h}align`).
 
 `edge_snap_x` = __integer__ (default 30)
 :   Specify the distance (in pixles) from the left hand edge, within which the
     menu will snap to the edge. Note that this only applies in `at_pointer`
     mode.
 
-`terminal_exec` = __string__ (default x-terminal-emulator)  
+`terminal_exec` = __string__ (default x-terminal-emulator)
+:   Define terminal to use for commands with ^term() markup
 
 `terminal_args` = __string__ (default -e)
 :   The values of these two variables are used to build a string to launch
     programs requiring a terminal to run. With the default values, the string
-    would become:
-
-    `x-terminal-emulator -e 'some_command with arguments'`
-
-    `terminal_args` must finish with '-e' or equivalent (where '-e' refers to
-    the meaning of '-e' in 'xterm -e'.
+    would become: `x-terminal-emulator -e 'some_command with arguments'`.
+    `terminal_args` must finish with `-e` or equivalent, where `-e` refers to
+    the meaning of `-e` in `xterm -e`.
 
 `monitor` = __integer__ (default 0)
 :   Specify a particular monitor as an index starting from 1. If 0, the menu
@@ -283,12 +302,12 @@ environment variable $HOME just as a shell would expand it.
 `tabs` = __integer__ (default 120)
 :   Specify the position is pixels of the first tab
 
-`menu_margin_x` = __integer__ (default 0)  
+`menu_margin_x` = __integer__ (default 0)
+:   Define the distance between the menu (=X11 window) and the edge of the
+    screen. See note on `_NET_WORKAREA` under `menu_{v,h}align` variables.
 
 `menu_margin_y` = __integer__ (default 0)
-:   "margin" refers to space outside an object The `menu_margin_*` variables
-    refer to the distance between the menu (=X11 window) and the edge of the
-    screen. See note on `_NET_WORKAREA` under `menu_{v,h}align` variables.
+:   Vertical equilvalent of `menu_margin_x`
 
 `menu_width` = __integer__ (default 200)
 :   Set the *minimum* menu width. The menu width will adjust to the
@@ -296,11 +315,12 @@ environment variable $HOME just as a shell would expand it.
     (e.g. by the user typing) the menu width will NOT adjust.
 
 `menu_height_min` = __integer__ (default 0)
+:   Set the minimum height of the root menu. If `menu_height_min` and
+    `menu_height_max` these are set to the same value, the menu height will be
+    fixed at that value. If set to zero, they will be ignored.
 
 `menu_height_max` = __integer__ (default 0)
-:   Set the min and max height of the root menu. If these are set to the same
-    value, the menu height will be fixed at that value. If set to zero, they
-    will be ignored.
+:   Set the minimum height of the root menu. See `menu_height_min`
 
 `menu_height_mode` = (static | dynamic) (default static)
 :   `static` means that the height of the initial root menu will be used for
@@ -309,88 +329,73 @@ environment variable $HOME just as a shell would expand it.
     ^root().
 
 `menu_padding_top` = __integer__ (default 5)
+:   Distance between top border and item/widget
 
 `menu_padding_right` = __integer__ (default 5)
+:   Distance between right border and item/widget
 
 `menu_padding_bottom` = __integer__ (default 5)
+:   Distance between bottom border and item/widget
 
 `menu_padding_left` = __integer__ (default 5)
-:   `padding` refers to space inside an object (between border and content)
+:   Distance between left border and item/widget
 
-menu_radius = __integer__ (default 1)  
+`menu_radius` = __integer__ (default 1)
+:   "radius" refers to the size of rounded corners
 
-    "radius" refers to the size of rounded corners  
+`menu_border` = __integer__ (default 0)
+:   "border" refers to the border-thickness
 
-menu_border = __integer__ (default 0)  
+`menu_halign` = (left | right | center) (default left)
+:   Horizontal alignment of menu. If not set, jgmenu will try to guess the
+    alignment reading `_NET_WORKAREA`, which is a freedesktop EWMH root window
+    property. Not all Window Managers and Panels respect `_NET_WORKAREA`. The
+    following do: openbox, xfwm4, tint2 and polybar. The following do NOT:
+    awesome, i3, bspwm and plank
 
-    "border" refers to the border-thickness  
+`menu_valign` = (top | bottom | center) (default bottom)
+:   Vertical alignment of menu. See `menu_halign`.
 
-menu_halign = (left | right | center) (default left)  
-menu_valign = (top | bottom | center) (default bottom)  
+`sub_spacing` = __integer__ (default 1)
+:   Horizontal space between windows. A negative value results in each submenu
+    window overlapping its parent window.
 
-    Horizontal and vertical alignment respectively.  
+`sub_padding_top` = __integer__ (default auto)
+`sub_padding_right` = __integer__ (default auto)
+`sub_padding_bottom` = __integer__ (default auto)
+`sub_padding_left` = __integer__ (default auto)
+:   The same as `menu_padding_*` but applies to submenu windows only. It
+    understands the keyword 'auto'. If set to 'auto', the smallest of the four
+    `menu_padding_*` will be used.
 
-    Note: If these variables are not set, jgmenu will try to guess  
-    the alignment and margin by reading `_NET_WORKAREA` and tint2's  
-    config file and environment variables.  
+`sub_hover_action` = __integer__ (default 1)
+: Open submenu when hovering over item (only works in multi-window mode).
 
-    `_NET_WORKAREA` is a freedesktop EWMH root window property. Not  
-    all Window Managers and Panels respect these.  
-    Here follow some example of those that do:  
-        openbox, xfwm4, tint2, polybar  
-    And some that do not:  
-        awesome, i3, bspwm, plank  
+`item_margin_x` = __integer__ (default 3)
+`item_margin_y` = __integer__ (default 3)
+`item_height` = __integer__ (default 25)
+`item_padding_x` = __integer__ (default 4)
+`item_radius` = __integer__ (default 1)
+`item_border` = __integer__ (default 0)
+:   See equivalent `menu_` variable definitions.
 
-sub_spacing = __integer__ (default 1)
+`item_halign` = (left | right) (default left)
+:   Horizontal alignment of actual menu items. Items are left-aligned by
+    default. If set to right, the option `arrow_string` should be changed too.
 
-    Horizontal space between windows. A negative value results in  
-    each submenu window overlapping its parent window.
+`sep_height` = __integer__ (default 5)
+:   Height of separator without text (defined by ^sep()). Separators with text
+    use `item_height`
 
-sub_padding_top = __integer__ (default auto)  
-sub_padding_right = __integer__ (default auto)  
-sub_padding_bottom = __integer__ (default auto)  
-sub_padding_left = __integer__ (default auto)  
+`sep_halign` = (left | center | right) (default left)
+:   Horizontal alignment of separator text
 
-    The same as `menu_padding_*` but applies to submenu windows  
-    only. It understands the keyword 'auto'. If set to 'auto', the  
-    smallest of the four `menu_padding_*` will be used.  
+`sep_markup` = __string__ (unset by default)
+:   If specified, `<span $sep_markup>foo</span>` will be passed to pango for
+    ^sep(foo). See the following link for pango <span> attributes:
+    https://developer.gnome.org/pango/stable/PangoMarkupFormat.html
 
-sub_hover_action = __integer__ (default 1)
-
-    Open submenu when hovering over item (only works in multi-window  
-    mode).  
-
-item_margin_x = __integer__ (default 3)  
-item_margin_y = __integer__ (default 3)  
-item_height = __integer__ (default 25)  
-item_padding_x = __integer__ (default 4)  
-item_radius = __integer__ (default 1)  
-item_border = __integer__ (default 0)  
-
-    See equivalent `menu_` variable definitions.  
-
-item_halign = (left | right) (default left)  
-
-    Horizontal alignment of actual menu items. Items are left-aligned  
-    by default. If set to right, the option `arrow_string` should be  
-    changed too.  
-
-sep_height = __integer__ (default 5)  
-
-    Height of separator without text (defined by ^sep())  
-    Note that separators with text use `item_height`  
-
-sep_halign = (left | center | right) (default left)  
-
-    Horizontal alignment of separator text  
-
-sep_markup = __string__ (unset by default)  
-
-    If specified, `<span $sep_markup>foo</span>` will be passed to pango  
-    for ^sep(foo). See the following link for pango <span> attributes:  
-    https://developer.gnome.org/pango/stable/PangoMarkupFormat.html  
-
-    Keywords include (but are not limited to):  
+    Keywords include (but are not limited to):
         font  
         size (x-small, small, medium, large, x-large)  
         style (normal, oblique, italic)  
@@ -401,7 +406,7 @@ sep_markup = __string__ (unset by default)
     Example:  
         `sep_markup = font="Sans Italic 12" foreground="blue"`  
 
-font = __string__ (unset by default)  
+`font` = __string__ (unset by default)  
 
     *font* accepts a string such as *Cantarell 10* or  
     *UbuntuCondensed 11*. The font description without a specified  
@@ -409,25 +414,25 @@ font = __string__ (unset by default)
     be read as pixels. Using "points" enables consistency with other  
     applications.
 
-font_fallback = __string__ (default xtg)  
+`font_fallback` = __string__ (default xtg)  
 
     The same as 'icon_theme_fallback' (see below), except that  
     the xsettings variable 'Gtk/FontName' is read.  
 
-icon_size = __integer__ (default 22)  
+`icon_size` = __integer__ (default 22)  
 
     If icon_size is set to 0, icons will not be searched for and  
     loaded.
 
-icon_text_spacing = __integer__ (default 10)  
+`icon_text_spacing` = __integer__ (default 10)  
 
     Distance between icon and text.  
 
-icon_theme = __string__ (unset by default)  
+`icon_theme` = __string__ (unset by default)  
 
     Specify icon theme.  
 
-icon_theme_fallback = __string__ (default xtg)  
+`icon_theme_fallback` = __string__ (default xtg)  
 
     Specifies the fallback sources of the icon theme in order of  
     precedence, where the left-most letter designates the source  
@@ -444,59 +449,59 @@ icon_theme_fallback = __string__ (default xtg)
     variables will only be read if the tint2rc variable  
     launcher_icon_theme_override is zero.  
 
-arrow_string = __string__ (default ▸)  
+`arrow_string` = __string__ (default ▸)  
 
     The "arrow" indicates that a menu item points a submenu.  
     jgmenuunicode(7) contains arrow suggestions  
 
-arrow_width = __integer__ (default 15)  
+`arrow_width` = __integer__ (default 15)  
 
     Width of area allocated for arrow. Set to 0 to hide arrow.  
 
-color_menu_bg = __color__ (default #000000 100)  
+`color_menu_bg` = __color__ (default #000000 100)  
 
     Background colour of menu window  
 
-color_menu_border = __color__ (default #eeeeee 8)  
+`color_menu_border` = __color__ (default #eeeeee 8)  
 
     Border colour of menu window  
 
-color_norm_bg = __color__ (default #000000 0)  
-color_norm_fg = __color__ (default #eeeeee 100)  
+`color_norm_bg` = __color__ (default #000000 0)  
+`color_norm_fg` = __color__ (default #eeeeee 100)  
 
     Background and foreground (=font) colors of all menu items,  
     except the one currently selected.  
 
-color_sel_bg = __color__ (default #ffffff 20)  
-color_sel_fg = __color__ (default #eeeeee 100)  
-color_sel_border = __color__ (default #eeeeee 8)  
+`color_sel_bg` = __color__ (default #ffffff 20)  
+`color_sel_fg` = __color__ (default #eeeeee 100)  
+`color_sel_border` = __color__ (default #eeeeee 8)  
 
     Background, foreground (=font) and border colors of the currently  
     selected menu item.  
 
-color_sep_fg = __color__ (default #ffffff 20)  
+`color_sep_fg` = __color__ (default #ffffff 20)  
 
     Colour of seperators without text  
 
-color_title_fg = __color__ (default #eeeeee 50)  
-color_title_bg = __color__ (default #000000 0)  
-color_title_border = __color__ (default #000000 0)  
+`color_title_fg` = __color__ (default #eeeeee 50)  
+`color_title_bg` = __color__ (default #000000 0)  
+`color_title_border` = __color__ (default #000000 0)  
 
     Foreground (=font), background and border colours of separators  
     with text (also known as 'title')  
     The font colour can be overriden by 'sep_markup'  
 
-color_scroll_ind = __color__ (default #eeeeee 40)  
+`color_scroll_ind` = __color__ (default #eeeeee 40)  
 
     Colour of scroll indicator lines (which show if there are menu  
     items above or below those which are visible).  
 
 ## CSV generator variables
 
-The following variables begin with "csv_" which denotes that they set  
+The following variables begin with `csv_` which denotes that they set  
 environment variables which are used by the CSV generators.  
 
-csv_name_format = __string__ (default `%n (%g)`)  
+`csv_name_format` = __string__ (default `%n (%g)`)  
 
     Defines the format of the *name* field for CSV generators  
     (currently only applicable to lx). It understands the following  
@@ -506,18 +511,19 @@ csv_name_format = __string__ (default `%n (%g)`)
     If a *generic name* does not exist or is the same as the *name*,  
     %n will be used without any formatting.  
 
-csv_single_window = __boolean__ (default 0)  
+`csv_single_window` = __boolean__ (default 0)  
 
     If set, ^root() will be used instead of ^checkout().  
     This results in a single window menu, where submenus appear in  
     the same window.  
     This is currently only supported by pmenu.  
 
-csv_no_dirs = __boolean__ (default 0)  
+`csv_no_dirs` = __boolean__ (default 0)  
 
     If set, applications will be listed without any directory  
     structure. This is currently only supported by pmenu and lx.  
-csv_i18n = __string__ (no default)  
+
+`csv_i18n` = __string__ (no default)  
 
     If set, the ob module will look for a translation file in the  
     specified file or directory. See `jgmenu_run i18n --help` for  
@@ -542,6 +548,14 @@ If thse variables are not set, jgmenurc config variables `margin_{x,y}`
 are reverted to.
 
 # DIAGRAMS {#diagrams}
+
+## General Notes
+
+`margin`
+:   Refers to space outside an object
+
+`padding`
+:   Refers to space inside an object (between border and content)
 
 ## Vertical Menu
 
@@ -597,8 +611,8 @@ are reverted to.
     screen
     ╔════════════════════════╗
     ║    2                   ║
-    ║ ╭──────┐               ║
-    ║ │ root │ ╭──────┐      ║
+    ║ ┌──────┐               ║
+    ║ │ root │ ┌──────┐      ║
     ║1│ menu │ │ sub  │      ║
     ║ │      │3│ menu │      ║
     ║ └──────┘ │      │      ║
