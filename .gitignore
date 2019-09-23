@@ -16,3 +16,4 @@ binsiz.log
 .d/
 checkdeps
 tags
+clang-format-tmpfile
