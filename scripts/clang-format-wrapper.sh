@@ -1,5 +1,7 @@
 #!/bin/bash
 
+tmpfile="clang-format-tmpfile"
+
 iterators=(
 	list_for_each_entry
 	list_for_each_entry_from
@@ -9,20 +11,27 @@ iterators=(
 	list_for_each_entry_safe_reverse
 )
 
+usage () {
+	printf '%b' "\
+Usage: clang-format-wrapper.sh [<file>]\n\
+Produces diff of changes.\n\
+"
+}
+
 strip_space_before_foreach_iterators () {
 	local s
 	for ((i=0;i<${#iterators[@]};i++)); do
 		s=${iterators[i]}
-		content=${content//$s (/$s(}
+		g_content=${g_content//$s (/$s(}
 	done
 }
 
 format_file () {
 	echo $1
-	content=$(clang-format $1)
+	g_content=$(clang-format $1)
 	strip_space_before_foreach_iterators
-	printf '%b\n' "${content}" >tmp
-	diff $1 tmp
+	printf '%s\n' "${g_content}" >$tmpfile
+	diff $1 $tmpfile
 }
 
 format_all_files () {
