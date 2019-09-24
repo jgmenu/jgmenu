@@ -59,13 +59,18 @@ static struct menu *menu_add(struct menu *parent)
 
 static void process_dir(MenuCacheApp *app)
 {
+	static char unique_number[8];
+	static int nr;
+
 	if (no_dirs) {
 		cur = menu_add(cur);
 		return;
 	}
+	snprintf(unique_number, sizeof(unique_number), "%d", nr);
 	sbuf_addstr(&cur->buf, menu_cache_item_get_name(MENU_CACHE_ITEM(app)));
 	sbuf_addstr(&cur->buf, ",^checkout(");
 	sbuf_addstr(&cur->buf, menu_cache_item_get_id(MENU_CACHE_ITEM(app)));
+	sbuf_addstr(&cur->buf, unique_number);
 	sbuf_addstr(&cur->buf, "),");
 	sbuf_addstr(&cur->buf, menu_cache_item_get_icon(MENU_CACHE_ITEM(app)));
 	sbuf_addstr(&cur->buf, "\n");
@@ -73,9 +78,11 @@ static void process_dir(MenuCacheApp *app)
 	sbuf_addstr(&cur->buf, menu_cache_item_get_name(MENU_CACHE_ITEM(app)));
 	sbuf_addstr(&cur->buf, ",^tag(");
 	sbuf_addstr(&cur->buf, menu_cache_item_get_id(MENU_CACHE_ITEM(app)));
+	sbuf_addstr(&cur->buf, unique_number);
 	sbuf_addstr(&cur->buf, ")\n");
 	sbuf_addstr(&cur->buf, back_string());
 	sbuf_addstr(&cur->buf, ",^back(),go-previous\n");
+	++nr;
 }
 
 static void add_metadata(const char * const *categories)
