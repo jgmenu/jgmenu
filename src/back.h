@@ -3,4 +3,4 @@
 
 char *back_string(void);
 
-#endif	/* BACK_H */
+#endif /* BACK_H */

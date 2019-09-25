@@ -3,8 +3,16 @@
 
 #include <stdio.h>
 
-enum alignment {UNKNOWN, TOP, CENTER, BOTTOM, LEFT, RIGHT, HORIZONTAL,
-		VERTICAL};
+enum alignment {
+	UNKNOWN,
+	TOP,
+	CENTER,
+	BOTTOM,
+	LEFT,
+	RIGHT,
+	HORIZONTAL,
+	VERTICAL
+};
 
 #define MAX_NR_WINDOWS (16)
 

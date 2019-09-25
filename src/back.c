@@ -13,6 +13,7 @@ struct back_lookup_table {
 	const char *back_string;
 };
 
+/* clang-format off */
 static struct back_lookup_table back_lookup_table[] = {
 	{ "am", "ወደ ኋላ"},
 	{ "ar", "إلى الخلف" },
@@ -68,6 +69,7 @@ static struct back_lookup_table back_lookup_table[] = {
 	{ "zh", "后退" },
 	{ NULL, NULL }
 };
+/* clang-format on */
 
 static int get_lang(char *b)
 {
