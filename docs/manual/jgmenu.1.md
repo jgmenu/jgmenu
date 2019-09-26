@@ -49,8 +49,8 @@ For example:
 :   Ignore line
 
 `. `
-:   I line beginning with a dot followed by a space, will source the file
-    specified by the string following the `.`
+:   A line beginning with a dot followed by a space, will source the file
+    specified by the string following the dot
 
 `@`
 :   Treat as widget
