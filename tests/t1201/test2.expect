@@ -1,8 +1,8 @@
 5-1,5-1,,,#5
-1,^checkout(1),
+1,^checkout(10),
 ^sep()
-2,^checkout(2),
-1,^tag(1)
+2,^checkout(21),
+1,^tag(10)
 Back,^back(),go-previous
 1-1,1-1,,,#1
 1-2,1-2,,,#1
@@ -13,10 +13,10 @@ Back,^back(),go-previous
 1-7,1-7,,,#1
 1-8,1-8,,,#1
 1-9,1-9,,,#1
-2,^tag(2)
+2,^tag(21)
 Back,^back(),go-previous
-3,^checkout(3),
-4,^checkout(4),
+3,^checkout(32),
+4,^checkout(43),
 2-1,2-1,,,#2
 2-2,2-2,,,#2
 2-3,2-3,,,#2
@@ -27,7 +27,7 @@ Back,^back(),go-previous
 2-8,2-8,,,#2
 2-9,2-9,,,#2
 6-1,6-1,,,#6
-3,^tag(3)
+3,^tag(32)
 Back,^back(),go-previous
 3-1,3-1,,,#3
 3-2,3-2,,,#3
@@ -38,7 +38,7 @@ Back,^back(),go-previous
 3-7,3-7,,,#3
 3-8,3-8,,,#3
 3-9,3-9,,,#3
-4,^tag(4)
+4,^tag(43)
 Back,^back(),go-previous
 4-1,4-1,,,#4
 4-2,4-2,,,#4
