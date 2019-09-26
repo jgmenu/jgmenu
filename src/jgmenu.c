@@ -1225,7 +1225,7 @@ static int read_csv_file(FILE *fp, bool ispipemenu)
 		} else if (buf[0] == '@') {
 			widgets_add(buf);
 			continue;
-		} else if (buf[0] == '.') {
+		} else if (buf[0] == '.' && buf[1] == ' ') {
 			FILE *include_file;
 			struct sbuf filename;
 

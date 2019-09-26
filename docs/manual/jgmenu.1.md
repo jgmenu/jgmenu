@@ -1,6 +1,6 @@
 % JGMENU(1)
 % Johan Malm
-% 19 September, 2019
+% 26 September, 2019
 
 # NAME
 
@@ -48,8 +48,9 @@ For example:
 `#`
 :   Ignore line
 
-`.`
-:   Source file specified by string following the `.`
+`. `
+:   I line beginning with a dot followed by a space, will source the file
+    specified by the string following the `.`
 
 `@`
 :   Treat as widget
