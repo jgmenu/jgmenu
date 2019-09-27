@@ -1,6 +1,6 @@
 % JGMENU(1)
 % Johan Malm
-% 26 September, 2019
+% 27 September, 2019
 
 # NAME
 
@@ -64,9 +64,9 @@ For example:
 
     foo,"""^pipe(find . -printf '%f,display %p,%p\\n')"""
 
-`<`, `>`, `'`, `&`
-:   The description field is parsed as pango markup, so `<`, `>`, `'` and `&`
-    need to be escaped as `&lt;`, `&gt;`, `&39;` and `&38;` respectively.
+`< > &`
+:   The description field is parsed as pango markup, so `<`, `>`, and `&`
+    need to be escaped as `&lt;`, `&gt;`, and `&amp;` respectively.
 
 ## Markup
 
