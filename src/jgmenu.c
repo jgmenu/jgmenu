@@ -1127,6 +1127,21 @@ already_exists:
 	}
 }
 
+void remove_checkouts_without_matching_tags(void)
+{
+	struct item *i, *tmp;
+
+	list_for_each_entry_safe(i, tmp, &menu.master, master) {
+		if (!strncmp(i->cmd, "^checkout(", 10) &&
+		    !tag_exists(i->cmd + 10)) {
+			info("remove (%s) as it has no matching tag", i->cmd);
+			xfree(i->buf);
+			list_del(&i->master);
+			xfree(i);
+		}
+	}
+}
+
 /*
  * The first item of a rootmenu or pipe must be a ^tag() item. If the user has not
  * provided it, we tag care of it here.
@@ -1283,12 +1298,13 @@ static void rm_back_items(void)
 {
 	struct item *i, *tmp;
 
-	list_for_each_entry_safe(i, tmp, &menu.master, master)
+	list_for_each_entry_safe(i, tmp, &menu.master, master) {
 		if (!strncmp(i->cmd, "^back(", 6)) {
 			xfree(i->buf);
 			list_del(&i->master);
 			xfree(i);
 		}
+	}
 }
 
 static int is_ancestor_to_current_node(struct node *node)
@@ -1395,6 +1411,7 @@ static void pipemenu_add(const char *s)
 	if (config.hide_back_items)
 		rm_back_items();
 	parent_node = menu.current_node;
+	remove_checkouts_without_matching_tags();
 	node_add_new(pipe_head, parent_node);
 	checkout_submenu(pipe_head->tag);
 	pm_push(menu.current_node, parent_node);
@@ -2593,6 +2610,7 @@ int main(int argc, char *argv[])
 	if (list_empty(&menu.master) || list_is_singular(&menu.master))
 		die("file did not contain any menu items");
 
+	remove_checkouts_without_matching_tags();
 	build_tree();
 
 	if (args_checkout())
