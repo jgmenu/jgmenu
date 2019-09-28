@@ -490,7 +490,7 @@ static void draw_item_sep_with_text(struct item *p)
 	else if (config.sep_halign == RIGHT)
 		text_x_coord -= config.item_padding_x;
 	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
-			  p->area.h, config.item_radius, 0.0, 1,
+			  p->area.h, config.item_radius, 1.0, 1,
 			  config.color_title_bg);
 	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
 			  p->area.h, config.item_radius, 1.0, 0,
@@ -513,27 +513,27 @@ static void draw_last_sel(struct item *p)
 	if (p == menu.sel)
 		return;
 	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
-			  p->area.h, config.item_radius, 1,
+			  p->area.h, config.item_radius, 1.0,
 			  0, config.color_sel_bg);
 }
 
 static void draw_item_bg_norm(struct item *p)
 {
-	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
-			  p->area.h, config.item_radius, 0.0, 1,
+	ui_draw_rectangle(p->area.x, p->area.y, p->area.w, p->area.h,
+			  config.item_radius, config.item_border, 1,
 			  config.color_norm_bg);
 }
 
 static void draw_item_bg_sel(struct item *p)
 {
-	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
-			  p->area.h, config.item_radius, 0.0, 1,
+	ui_draw_rectangle(p->area.x, p->area.y, p->area.w, p->area.h,
+			  config.item_radius, config.item_border, 1,
 			  config.color_sel_bg);
-	if (config.item_border)
-		ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
-				  p->area.h, config.item_radius,
-				  config.item_border, 0,
-				  config.color_sel_border);
+	if (!config.item_border)
+		return;
+	ui_draw_rectangle(p->area.x, p->area.y, p->area.w, p->area.h,
+			  config.item_radius, config.item_border, 0,
+			  config.color_sel_border);
 }
 
 static void draw_item_text(struct item *p)
@@ -643,7 +643,7 @@ static void draw_menu(void)
 	/* Draw background */
 	ui_clear_canvas();
 	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius,
-			  0.0, 1, config.color_menu_bg);
+			  config.menu_border, 1, config.color_menu_bg);
 
 	/* Draw menu border */
 	if (config.menu_border)
