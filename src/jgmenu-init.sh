@@ -16,13 +16,14 @@ interactive=f
 
 regression_items="max_items min_items ignore_icon_cache color_noprog_fg \
 color_title_bg show_title search_all_items ignore_xsettings arrow_show \
-read_tint2rc tint2_rules tint2_button multi_window color_menu_fg"
+read_tint2rc tint2_rules tint2_button multi_window color_menu_fg at_pointer"
 
 available_themes="\
 	archlabs_1803 \
 	bunsenlabs_hydrogen \
 	bunsenlabs_helium \
 	bunsenlabs_lithium_rc2 \
+	col3 \
 	neon \
 	greeneye"
 
@@ -542,6 +543,9 @@ set_theme () {
 		create_icon_greeneye
 		jgmenu_run greeneye --widgets >"${prepend_file}"
 		jgmenu_run greeneye --config >"${config_file}"
+		;;
+	col3)
+		jgmenu_run themes col3_config >"${config_file}"
 		;;
 	esac
 }

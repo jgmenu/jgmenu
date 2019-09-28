@@ -4,22 +4,23 @@ valid_args="\
 	bunsenlabs_lithium_rc1_config \
 	bunsenlabs_lithium_rc1_prepend \
 	bunsenlabs_lithium_rc2_config \
-	bunsenlabs_lithium_rc2_prepend"
+	bunsenlabs_lithium_rc2_prepend \
+	col3_config"
 
 say () {
 	printf '%b\n' "$@"
 }
 
 die () {
-	printf 'fatal: %b\n' "$@"
+	printf 'fatal: %b\n' "$@" >&2
 	exit 1
 }
 
 usage () {
-	say "\
+	printf '%b' "\
 usage: jgmenu_run themes <theme>_<mode>\n\
 Output config files for themes\n\
-<mode> is one of config, prepend and append\n"
+<mode> is one of config, prepend and append\n" >&2
 	exit 0
 }
 
@@ -321,6 +322,28 @@ Edit Debian Alternatives,galternatives
 About Bunsen Alternatives,yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="About Bunsen Alternatives" --filename="/usr/share/bunsen/docs/helpfile-bl-alternatives.txt" --width=900 --height=700 --fontname=Monospace
 
 ^tag(lx-apps)
+EOF
+}
+
+col3_config () {
+cat <<'EOF'
+csv_cmd = lx
+position_mode = center
+columns = 3
+menu_width = 650
+menu_height_min = 410
+menu_height_max = 410
+menu_padding_top = 15
+menu_padding_right = 15
+menu_padding_bottom = 15
+menu_padding_left = 15
+menu_radius = 15
+menu_border = 4
+#menu_halign = center
+#menu_valign = center
+color_menu_bg = #000000 65
+color_menu_border = #eeeeee 20
+csv_no_dirs = 1
 EOF
 }
 
