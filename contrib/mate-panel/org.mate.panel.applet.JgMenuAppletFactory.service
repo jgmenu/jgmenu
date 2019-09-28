@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.mate.panel.applet.JgMenuAppletFactory
+Exec=/home/johan/bin/mate-jgmenu.py
+

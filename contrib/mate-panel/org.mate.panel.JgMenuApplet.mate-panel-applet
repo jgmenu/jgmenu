@@ -1,0 +1,12 @@
+[Applet Factory]
+Id=JgMenuAppletFactory
+Location=/home/johan/bin/mate-jgmenu.py
+Name=JGmenu Applet Factory
+Description=A JGmenu Applet Factory
+
+[JgMenuApplet]
+Name=JGMENU
+Description=A JGMENU Launcher
+Icon=mate
+MateComponentId=OAFIID:MATE_JgMenuApplet;
+
