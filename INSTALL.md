@@ -85,6 +85,8 @@ sudo dpkg -i ../jgmenu_<whatever>.deb
 Dependencies
 ------------
 
+## Core Programs
+
 | program | dependencies                             |
 | :---    | :---                                     |
 | jgmenu  | libx11, libxrandr, cairo, pango, librsvg |
@@ -96,6 +98,18 @@ Dependencies
 -   python3 is required by "pmenu"
 -   A Composite Manager such as `compton` is required to enable transparency. Most Desktop Environments already have one installed.
 -   To build the man pages, you need to have `pandoc` installed. However, as many users do not have this package, the man pages are commited in the git repo (i.e. you only need pandoc if you want to contribute to or change the man pages.)
+
+## contrib/ packages
+
+| program    | dependencies         |
+| :---       | :---                 |
+| xfce-panel | libgtk3, xfce4-panel |
+
+The `-dev` packages are required to build the xfce-panel plugin library.
+
+For those who are not going to build, the dependencies are only required if
+you are actually going to use it with the xfce panel (in which case you'll have
+it installed anyway).
 
 Build Options
 -------------
