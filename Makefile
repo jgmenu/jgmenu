@@ -6,6 +6,8 @@
 # Define NO_LX=1 if you do not want to build jgmenu-lx (which requires
 # libmenu-cache >=v1.1)
 #
+# Define NO_XFCE_PLUGIN if you do not wish to build the xfce-panel plugin
+#
 
 VER      = $(shell ./scripts/version-gen.sh)
 
@@ -79,6 +81,10 @@ endif
 PROGS           = jgmenu $(PROGS_LIBEXEC)
 
 all: checkdeps $(PROGS)
+ifndef NO_XFCE_PLUGIN
+	@$(MAKE) --no-print-directory -C contrib/xfce4-panel/ prefix=$(prefix) DESTDIR=$(DESTDIR)
+endif
+
 
 jgmenu: jgmenu.o x11-ui.o config.o util.o geometry.o isprog.o sbuf.o \
 	icon-find.o icon.o xpm-loader.o xdgdirs.o xsettings.o \
@@ -120,6 +126,9 @@ install: checkdeps $(PROGS)
 	@install -d $(DESTDIR)$(datarootdir)/applications/
 	@install -m644 ./data/jgmenu.svg $(DESTDIR)$(datarootdir)/icons/hicolor/scalable/apps/
 	@install -m644 ./data/jgmenu.desktop $(DESTDIR)$(datarootdir)/applications/
+ifndef NO_XFCE_PLUGIN
+	@$(MAKE) --no-print-directory -C contrib/xfce4-panel/ install prefix=$(prefix) DESTDIR=$(DESTDIR)
+endif
 
 # We are not brave enough to uninstall in /usr/, /usr/local/ etc
 uninstall:
@@ -141,6 +150,9 @@ endif
 	@-rmdir ~/.local/share/icons/hicolor/scalable 2>/dev/null || true
 	@-rmdir ~/.local/share/icons/hicolor 2>/dev/null || true
 	@-rmdir ~/.local/share/icons 2>/dev/null || true
+ifndef NO_XFCE_PLUGIN
+	@$(MAKE) --no-print-directory -C contrib/xfce4-panel/ uninstall prefix=$(prefix) DESTDIR=$(DESTDIR)
+endif
 
 clean:
 	@$(RM) $(PROGS) *.o *.a $(DEPDIR)/*.d checkdeps

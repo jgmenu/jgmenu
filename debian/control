@@ -12,11 +12,21 @@ Build-Depends: debhelper (>= 10),
                libxml2-dev,
                libglib2.0-dev,
                libmenu-cache-dev,
+               libgtk-3-dev,
+               xfce4-panel-dev,
                pkg-config
 
 Package: jgmenu
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, python3
+Depends: libx11,
+         libxrandr,
+         libcairo2,
+         libpango1.0,
+         librsvg2,
+         libxml2,
+         libglib2.0,
+         libmenu-cache,
+         python3
 Description: Simple X11 menu
  A stand-alone, contemporary-looking menu application for Linux and BSD.
  Independent of window manager and panel.
