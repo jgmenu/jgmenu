@@ -1,11 +1,17 @@
 #!/bin/sh
 
 valid_args="\
+	archlabs_1803_config \
+	bunsenlabs_hydrogen_config \
+	bunsenlabs_helium_config \
 	bunsenlabs_lithium_rc1_config \
 	bunsenlabs_lithium_rc1_prepend \
 	bunsenlabs_lithium_rc2_config \
 	bunsenlabs_lithium_rc2_prepend \
-	col3_config"
+	col3_config \
+	neon_config \
+	neon_append \
+	neon_prepend"
 
 say () {
 	printf '%b\n' "$@"
@@ -22,6 +28,98 @@ usage: jgmenu_run themes <theme>_<mode>\n\
 Output config files for themes\n\
 <mode> is one of config, prepend and append\n" >&2
 	exit 0
+}
+
+archlabs_1803_config () {
+cat <<'EOF'
+stay_alive           = 1
+csv_cmd              = pmenu
+tint2_look           = 0
+position_mode        = fixed
+terminal_exec        = termite
+terminal_args        = -e
+menu_width           = 200
+menu_padding_top     = 10
+menu_padding_right   = 2
+menu_padding_bottom  = 5
+menu_padding_left    = 2
+menu_radius          = 0
+menu_border          = 1
+menu_halign          = left
+sub_hover_action     = 1
+item_margin_y        = 5
+item_height          = 30
+item_padding_x       = 8
+item_radius          = 0
+item_border          = 0
+sep_height           = 5
+font                 = Ubuntu 12px
+icon_size            = 24
+color_menu_bg        = #2b303b 100
+color_norm_bg        = #2b303b 0
+color_norm_fg        = #8fa1b3 100
+color_sel_bg         = #8fa1b3 60
+color_sel_fg         = #2b303b 100
+color_sep_fg         = #8fa1b3 40
+EOF
+}
+
+bunsenlabs_hydrogen_config () {
+cat <<'EOF'
+tint2_look          = 0
+position_mode       = pointer
+csv_cmd             = ob
+menu_width          = 120
+menu_padding_top    = 0
+menu_padding_right  = 0
+menu_padding_bottom = 0
+menu_padding_left   = 0
+menu_radius         = 1
+sub_spacing         = 3
+item_margin_x       = 1
+item_margin_y       = 1
+item_height         = 19
+sep_height          = 4
+sep_halign          = right
+icon_size           = 0
+arrow_width         = 8
+color_menu_bg       = #3a3a3a 100
+EOF
+}
+
+bunsenlabs_helium_config () {
+cat <<'EOF'
+tint2_look          = 0
+position_mode       = pointer
+csv_cmd             = ob
+menu_width          = 134
+menu_padding_top    = 0
+menu_padding_right  = 0
+menu_padding_bottom = 0
+menu_padding_left   = 0
+menu_radius         = 1
+sub_spacing         = 6
+item_margin_x       = 1
+item_margin_y       = 1
+item_height         = 21
+sep_height          = 4
+sep_halign          = right
+font                = Sans 10
+icon_size           = 0
+arrow_string        = ›
+arrow_width         = 8
+color_menu_bg       = #C8CFCB 100
+color_menu_border   = #C8CFCB 8
+color_norm_bg       = #C8CFCB 00
+color_norm_fg       = #13071B 100
+color_sel_bg        = #74998B 100
+color_sel_fg        = #101010 100
+color_sel_border    = #74998B 8
+color_title_fg      = #101010 100
+color_title_bg      = #74998B 100
+color_title_border  = #74998B 8
+color_sep_fg        = #101010 80
+EOF
 }
 
 bunsenlabs_lithium_rc1_config () {
@@ -327,7 +425,7 @@ EOF
 
 col3_config () {
 cat <<'EOF'
-csv_cmd = lx
+csv_cmd = apps
 position_mode = center
 columns = 3
 menu_width = 650
@@ -344,6 +442,76 @@ menu_border = 4
 color_menu_bg = #000000 65
 color_menu_border = #eeeeee 20
 csv_no_dirs = 1
+EOF
+}
+
+neon_config () {
+cat <<'EOF'
+tint2_look          = 0
+menu_margin_y       = 30
+menu_width          = 272
+menu_padding_top    = 100
+menu_padding_right  = 10
+menu_padding_bottom = 10
+menu_padding_left   = 10
+menu_valign         = bottom
+item_radius         = 2
+item_border         = 1
+font		    = Roboto Condensed 9
+color_menu_bg       = #cecece 90
+color_menu_border   = #888888 100
+color_norm_fg       = #444444 100
+color_sel_bg        = #e6e6e6 100
+color_sel_fg        = #444444 100
+color_sel_border    = #888888 100
+EOF
+}
+
+neon_prepend () {
+cat <<'EOF'
+# Search box
+@rect,,10,10,252,25,2,left,top,#666666 15,#000000 0,content
+@search,,10,10,252,25,2,left,top,#666666 90,#222222 3,Type to search...
+
+# Icon 1
+@rect,^root(fav),25,40,42,42,2,left,top,#000000 0,#000000 0,
+@icon,,30,45,32,32,2,left,top,#e6e6e6 100,#444444 90,/usr/share/icons/breeze/actions/32/bookmark-new.svg
+
+# Icon 2
+@rect,^root(pmenu),85,40,42,42,2,left,top,#000000 0,#000000 0,
+@icon,,90,45,32,32,2,left,top,#e6e6e6 100,#444444 90,/usr/share/icons/breeze/actions/32/view-list-icons.svg
+
+# Icon 3
+@rect,^root(history),145,40,42,42,2,left,top,#000000 0,#000000 0,
+@icon,,150,45,32,32,2,left,top,#e6e6e6 100,#444444 90,/usr/share/icons/breeze/actions/32/appointment-new.svg
+
+# Icon 4
+@rect,^root(exit),205,40,42,42,2,left,top,#000000 0,#000000 0,
+@icon,,210,45,32,32,2,left,top,#e6e6e6 100,#444444 90,/usr/share/icons/breeze/actions/32/system-log-out.svg
+
+^tag(pmenu)
+EOF
+}
+
+neon_append () {
+cat <<'EOF'
+
+^tag(fav)
+Terminal,uxterm,utilities-terminal
+Browser,firefox,firefox
+File manager,pcmanfm,system-file-manager
+
+^tag(history)
+foo
+bar
+
+^tag(exit)
+Lock,i3lock -c 000000,system-lock-screen
+Exit to prompt,openbox --exit,system-log-out
+Suspend,systemctl -i suspend,system-log-out
+Reboot,systemctl -i reboot,system-reboot
+Poweroff,systemctl -i poweroff,system-shutdown
+
 EOF
 }
 
