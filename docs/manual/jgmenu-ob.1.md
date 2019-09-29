@@ -1,45 +1,38 @@
-% JGMENU-OB(1)  
-% Johan Malm  
-% 18 Feb, 2019  
+% JGMENU-OB(1)
+% Johan Malm
+% 29 September, 2019
 
 # NAME
 
-jgmenu-ob - convert openbox menu data to jgmenu flavoured CSV  
+jgmenu-ob - convert openbox menu data to jgmenu flavoured CSV
 
 # SYNOPSIS
 
-`jgmenu_run ob` \[\-\-tag=<*tag*>] \[\-\-cmd=<*cmd*> | <*file*>]  
+`jgmenu_run ob` \[\-\-tag=<tag>] \[\-\-cmd=<cmd> | <file>]
 
 # DESCRIPTION
 
-`jgmenu_run ob` coverts openbox XML menu data to jgmenu flavoured  
-CSV. If no <*file*> or --cmd=<*cmd*> is specified,  
-~/.config/openbox/menu.xml or /etc/xdg/openbox/menu.xml will be used  
-if they exist (giving higher precedence to the former).  
+`jgmenu_run ob` coverts openbox XML menu data to jgmenu flavoured CSV. If no
+`<file>` or `--cmd=<cmd>` is specified, `~/.config/openbox/menu.xml` or
+`/etc/xdg/openbox/menu.xml` will be used if they exist, giving higher
+precedence to the former.
 
-If environment variable `JGMENU_I18N` or config variable `csv_i18n`  
-are set, a translation file will be searched for in the specified  
-file or directory. See `jgmenu_run i18n --help` for further details.  
+If environment variable `JGMENU_I18N` or config variable `csv_i18n` are set, a
+translation file will be searched for in the specified file or directory. See
+`jgmenu_run i18n --help` for further details.
 
 # OPTIONS
 
-<*file*>
-:   Specify openbox XML file.  
+`<file>`
 
-\--cmd=<*cmd*>
-:   Specify command to produce openbox XML menu data.  
+:   Specify openbox XML file.
 
-\--tag=<*tag*>
-:   Specify value of root ^tag(). This can be useful for pipemenus  
-       to avoid clashing tag-names  
+`--cmd=<cmd>`
 
-# EXAMPLES
+:   Specify command to produce openbox XML menu data.
 
-This program is designed to be run from jgmenu by settings  
-`csv_cmd = ob` in the configuration file (jgmenurc).  
+`--tag=<tag>`
 
-It can also be run directly from the command line like this:  
+:   Specify value of root `^tag()`. This can be useful for pipemenus to avoid
+    clashing tag-names
 
-    jgmenu_run ob | jgmenu --simple
-
-    jgmenu --csv-cmd="jgmenu_run ob"

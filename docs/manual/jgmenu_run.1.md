@@ -1,6 +1,6 @@
-% JGMENU_RUN(1)  
-% Johan Malm  
-% 29 July, 2019
+% `JGMENU_RUN(1)`
+% Johan Malm
+% 29 September, 2019
 
 # NAME
 
@@ -9,8 +9,8 @@
 # SYNOPSIS
 
 `jgmenu_run`  
-`jgmenu_run` <*command*> \[<*args*>]  
-`jgmenu_run` <*options*>  
+`jgmenu_run` <command> \[<args>]  
+`jgmenu_run` <options>  
 
 # DESCRIPTION
 
@@ -22,14 +22,14 @@ Use with `command` to call any programe in $libexecdir/jgmenu which containis
 executable programs designed to be run by jgmenu rather than directly by
 users.
 
-
-
 # OPTIONS
 
-\--help
+`--help`
+
 :   Print help message
 
-\--exec-path
+`--exec-path`
+
 :   Print path to $libexecdir/jgmenu which is where jgmenu commands are
     installed.
 
@@ -46,5 +46,5 @@ Run the following to see all `jgmenu_run` commands:
 
 # SEE ALSO
 
-`jgmenu(1)`  
-`jgmenututorial(7)`  
+- `jgmenu(1)`
+- `jgmenututorial(7)`
