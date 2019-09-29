@@ -9,6 +9,7 @@ struct app {
 	char *icon;
 	char *categories;
 	int nodisplay;
+	char *filename;
 };
 
 struct app *desktop_read_files(void);

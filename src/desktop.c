@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
+#include <stdbool.h>
 
 #include "desktop.h"
 #include "xdgdirs.h"
@@ -62,7 +63,39 @@ static void parse_line(char *line, struct app *app, int *is_desktop_entry)
 			app->nodisplay = 1;
 }
 
-static int add_app(FILE *fp)
+bool is_duplicate_desktop_file(char *filename)
+{
+	int i;
+
+	if (!filename)
+		return false;
+	for (i = 0; i < nr_apps; i++) {
+		if (!apps[i].filename)
+			continue;
+		if (!strcmp(apps[i].filename, filename))
+			return true;
+	}
+	return false;
+}
+
+/**
+ * This makes the code a bit simpler in jgmenu-apps.c
+ */
+static void strdup_null_variables(struct app *app)
+{
+	if (!app->name)
+		app->name = strdup("");
+	if (!app->exec)
+		app->exec = strdup("");
+	if (!app->icon)
+		app->icon = strdup("");
+	if (!app->categories)
+		app->categories = strdup("");
+	if (!app->filename)
+		app->filename = strdup("");
+}
+
+static int add_app(FILE *fp, char *filename)
 {
 	char line[4096];
 	char *p;
@@ -90,8 +123,8 @@ static int add_app(FILE *fp)
 		parse_line(line, app, &is_desktop_entry);
 	}
 	format_exec(app->exec);
-	if (app->nodisplay || !app->name)
-		--nr_apps;
+	app->filename = strdup(filename);
+	strdup_null_variables(app);
 	return 0;
 }
 
@@ -99,9 +132,11 @@ static void process_file(char *filename, const char *path)
 {
 	FILE *fp;
 	char fullname[4096];
-	int ret;
+	int ret = 0;
 	size_t len;
 
+	if (!strcasestr(filename, ".desktop"))
+		return;
 	len = strlen(path);
 	strlcpy(fullname, path, sizeof(fullname));
 	strlcpy(fullname + len, filename, sizeof(fullname) - len);
@@ -110,10 +145,13 @@ static void process_file(char *filename, const char *path)
 		warn("could not open file %s", filename);
 		return;
 	}
-	ret = add_app(fp);
-	fclose(fp);
+	if (is_duplicate_desktop_file(filename))
+		goto out;
+	ret = add_app(fp, filename);
 	if (ret < 0)
 		warn("file '%s' is not utf-8 compatible", filename);
+out:
+	fclose(fp);
 }
 
 static void traverse_directory(const char *path)

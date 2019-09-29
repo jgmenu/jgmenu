@@ -28,16 +28,18 @@ static void replace_semicolons_with_hashes(char *s)
 static void print_desktop_files(struct app *apps, int nr_apps)
 {
 	int i;
+	struct app *app;
 
 	cat("~/.config/jgmenu/prepend.csv");
 	for (i = 0; i < nr_apps; i++) {
-		if (!apps[i].name)
+		app = apps + i;
+		if (app->nodisplay)
 			continue;
-		printf("%s,%s,%s,,", apps[i].name, apps[i].exec, apps[i].icon);
-		if (!apps[i].categories)
+		printf("%s,%s,%s,,", app->name, app->exec, app->icon);
+		if (app->categories[0] == '\0')
 			continue;
-		replace_semicolons_with_hashes(apps[i].categories);
-		printf("#%s\n", apps[i].categories);
+		replace_semicolons_with_hashes(app->categories);
+		printf("#%s\n", app->categories);
 	}
 	cat("~/.config/jgmenu/append.csv");
 }
