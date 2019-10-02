@@ -1,3 +1,5 @@
+-include ../../config.mk
+
 ifeq ($(shell uname -m),i686)
 LIBDIR     = $(DESTDIR)$(prefix)/lib/i386-linux-gnu/xfce4/panel/plugins
 else
@@ -10,16 +12,21 @@ endif
 
 PLUGIN_DIR = $(DESTDIR)$(prefix)/share/xfce4/panel/plugins
 
-CFLAGS  ?= -s -Wall -shared -std=c99 -fPIC \
+CFLAGS  ?= -Wall -std=c99 \
            -Wextra -Wno-format-zero-length \
 	   -Wold-style-definition -Woverflow -Wpointer-arith \
 	   -Wunused -Wvla -Wunused-result \
            -Wno-unused-parameter
 
+CFLAGS  += -s -shared -fPIC
+CFLAGS  += `pkg-config --cflags libxfce4panel-1.0 gtk+-3.0`
+LDFLAGS += `pkg-config --libs   libxfce4panel-1.0 gtk+-3.0`
+
 all: libjgmenu.so
 
 libjgmenu.so: jgmenu-applet.c jgmenu-applet.h
-	$(QUIET_CC)$(CC) $(CFLAGS) -o libjgmenu.so jgmenu-applet.c `pkg-config --cflags --libs libxfce4panel-1.0 gtk+-3.0`
+	@echo xfce4-panel plugin requires libxfce4panel-1.0 and gtk+-3.0
+	$(QUIET_CC)$(CC) $(CFLAGS) -o libjgmenu.so jgmenu-applet.c $(LDFLAGS)
 
 install:
 	@install -d $(LIBDIR)
