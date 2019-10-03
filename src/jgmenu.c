@@ -564,15 +564,18 @@ static void draw_item_text(struct item *p)
 
 static void draw_submenu_arrow(struct item *p)
 {
+	double *color;
+
+	color = (p == menu.sel) ? config.color_sel_fg : config.color_norm_fg;
 	if (config.item_halign != RIGHT)
 		ui_insert_text(config.arrow_string, p->area.x + p->area.w -
 			       config.item_padding_x - (config.arrow_width * 0.7), p->area.y,
-			       p->area.h, p->area.w, config.color_norm_fg,
+			       p->area.h, p->area.w, color,
 			       config.item_halign);
 	else
 		ui_insert_text(config.arrow_string, p->area.x + config.item_padding_x,
 			       p->area.y, p->area.h, config.arrow_width * 0.7,
-			       config.color_norm_fg, config.item_halign);
+			       color, config.item_halign);
 }
 
 static void draw_icon(struct item *p)
