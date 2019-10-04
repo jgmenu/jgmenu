@@ -29,7 +29,7 @@ static void jgmenu_about(XfcePanelPlugin *plugin)
 	gtk_show_about_dialog(NULL,
 			      "logo", icon,
 			      "license", xfce_get_license_text(XFCE_LICENSE_TEXT_GPL),
-			      "version", VERSION,
+			      "version", XFCE_PLUGIN_VERSION,
 			      "program-name", "jgmenu-applet",
 			      "comments", _("Starts Jgmenu"),
 			      "website", "https://github.com/johanmalm/jgmenu",

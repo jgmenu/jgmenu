@@ -14,7 +14,7 @@ G_BEGIN_DECLS
 #define DEFAULT_TITLE "jgmenu"
 #define DEFAULT_RUN_COMMAND "jgmenu_run"
 #define DEFAULT_RUN_COMMAND_AT_POINTER "jgmenu --at-pointer"
-#define VERSION "0.1"
+#define XFCE_PLUGIN_VERSION "0.1"
 
 typedef struct _JgmenuPlugin {
     XfcePanelPlugin *plugin;
