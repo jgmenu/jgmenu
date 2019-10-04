@@ -200,3 +200,5 @@ print-%:
 
 SRCS = $(patsubst ./%,%,$(shell find ./src -maxdepth 1 -name '*.c' -print))
 include $(wildcard $(patsubst %,$(DEPDIR)/%.d,$(basename $(SRCS))))
+
+.PHONY: all install uninstall clean test prove ex check checkdeps
