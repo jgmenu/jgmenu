@@ -27,7 +27,7 @@ else
 datarootdir= $(prefix)/share
 endif
 
-CFLAGS  += -g -Wall -Os -std=gnu89
+CFLAGS  += -g -Wall -Os -std=gnu99
 CFLAGS  += -Wextra -Wdeclaration-after-statement -Wno-format-zero-length \
 	   -Wold-style-definition -Woverflow -Wpointer-arith \
 	   -Wstrict-prototypes -Wunused -Wvla -Wunused-result
