@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Copyright (C) @Misko_2083 2019
+
 import gi
 gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
