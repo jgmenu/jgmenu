@@ -9,7 +9,7 @@
 # SYNOPSIS
 
 `jgmenu_run`  
-`jgmenu_run` <command> \[<args>]  
+`jgmenu_run` <command> \[<*args*>]  
 `jgmenu_run` <options>  
 
 # DESCRIPTION

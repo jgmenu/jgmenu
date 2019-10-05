@@ -8,8 +8,8 @@ jgmenu-pmenu - generate jgmenu flavoured CSV menu data
 
 # SYNOPSIS
 
-`jgmenu_run pmenu` \[-h | --help] \[--append-file <FILE>]  
-                 \[--prepend-file <FILE>] \[--locale <LOCALE>]  
+`jgmenu_run pmenu` \[-h | --help] \[--append-file <*FILE*>]  
+                 \[--prepend-file <*FILE*>] \[--locale <*LOCALE*>]  
 
 # DESCRIPTION
 
