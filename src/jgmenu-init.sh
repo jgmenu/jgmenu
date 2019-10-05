@@ -386,6 +386,16 @@ apply_obtheme () {
 	jgmenu_run obtheme "${config_file}"
 }
 
+apply_gtktheme () {
+	backup_config_files
+	if ! test -e "${JGMENU_EXEC_DIR}"/jgmenu-gtktheme.py
+	then
+		warn "The gtktheme module is not installed on your system"
+		return
+	fi
+	jgmenu_run gtktheme 2>/dev/null
+}
+
 check_nr_backups () {
 	nr=$(ls -1 ~/.config/jgmenu/backup/ 2>/dev/null | wc -l)
 	test "$nr" -gt 100 && warn "\
@@ -438,6 +448,7 @@ print_commands () {
 *** commands ***\n\
 a, append    = add items at bottom of root-menu (e.g. lock and exit)\n\
 c, check     = run a number of jgmenu related checks on system\n\
+g, gtktheme  = apply gtk theme (optional package)
 h, help      = show this message
 m, missing   = add any missing config options to config file\n\
 o, obtheme   = apply openbox theme
@@ -468,6 +479,9 @@ prompt () {
 		;;
 	obtheme|o)
 		apply_obtheme
+		;;
+	gtktheme|g)
+		apply_gtktheme
 		;;
 	prepend|p)
 		prepend_items
@@ -513,6 +527,10 @@ do
 		theme="${1#--theme=}" ;;
 	--apply-obtheme)
 		apply_obtheme
+		exit 0
+		;;
+	--apply-gtktheme)
+		apply_gtktheme
 		exit 0
 		;;
 	--list-themes)
