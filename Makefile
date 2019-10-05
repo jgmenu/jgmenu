@@ -7,7 +7,7 @@
 # libmenu-cache >=v1.1)
 #
 # Define CONTRIB_DIRS to include any contrib/ packages you wish to include
-# e.g. CONTRIB_DIRS=xfce4-panel
+# The following are supported: CONTRIB_DIRS="xfce4-panel gtktheme"
 #
 
 VER      = $(shell ./scripts/version-gen.sh)
