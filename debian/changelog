@@ -1,4 +1,4 @@
-jgmenu (3.4-1) lithium; urgency=medium
+jgmenu (3.4+bl10-1) lithium; urgency=medium
 
   * New upstream release
   * Add CONTRIB_DIRS packages
