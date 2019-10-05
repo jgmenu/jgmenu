@@ -1,6 +1,6 @@
 % JGMENU(1)
 % Johan Malm
-% 28 September, 2019
+% 5 October, 2019
 
 # NAME
 
@@ -258,6 +258,62 @@ Icons will be displayed if the third field is populated, for example:
 Type any string to invoke a search. Words separated by space will be searched
 for using `OR` logic (i.e. the match of either word is sufficient to display an
 item).
+
+# WIDGETS {#widgets}
+
+Lines beginning with '@' in jgmenu flavoured CSV files are parsed in
+accordance with the following syntax:
+
+    @type,action,x,y,w,h,r,halign,valign,fgcol,bgcol,content
+
+`type`
+
+:   The widget type, which can be one of the following:
+
+    `rect`
+
+    :   Rectangle with a 1px thick border drawn using `fgcol`
+
+    `search`
+
+    :   Search box showing the current filter (what the user has typed)
+        or the specifed `text` if no filter has been invoked. 
+
+    `icon`
+
+    :   Icon
+
+`action`
+
+:   The action to take when selected. This can either be a shell command or
+    a menu action such `^root()`.
+
+`x`, `y`
+
+:   Horizontal and vertical margin of widget
+
+`w`, `h`
+
+:   Width and height of widget
+
+`r`
+
+:   Corner radius
+
+`fgcol`, `bgcol`
+
+:   Foreground and background colours using syntax `rrggbb #aa`
+    `fgcol` accepts `auto` to use the jgmenurc's `color_norm_fg`
+
+`content`
+
+:   `icon_path` for `icon` widgets
+    `text` for all other widget types
+
+`halign`, `valign`
+
+:    Horizontal and vertical alignment of widget.
+     This has not yet been implemented, but defaults to `top` and `left`
 
 # CONFIGURATION FILE
 
