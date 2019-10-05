@@ -6,8 +6,8 @@ libexecdir = $(prefix)/lib/jgmenu
 all:
 
 install:
-	@install -d $(libexecdir)
-	@install -m775 jgmenu-gtktheme.py $(libexecdir)
+	@install -d $(DESTDIR)$(libexecdir)
+	@install -m775 jgmenu-gtktheme.py $(DESTDIR)$(libexecdir)
 
 uninstall:
 	@rm -f $(libexecdir)/gtktheme.py
