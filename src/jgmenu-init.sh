@@ -22,7 +22,7 @@ available_themes="\
 	archlabs_1803 \
 	bunsenlabs_hydrogen \
 	bunsenlabs_helium \
-	bunsenlabs_lithium_rc2 \
+	bunsenlabs_lithium \
 	col3 \
 	neon \
 	greeneye"
@@ -359,9 +359,9 @@ set_theme () {
 		jgmenu_run themes bunsenlabs_helium_config >"${config_file}"
 		fallback_if_no_openbox
 		;;
-	bunsenlabs_lithium*)
-		jgmenu_run themes bunsenlabs_lithium_rc2_config >"${config_file}"
-		jgmenu_run themes bunsenlabs_lithium_rc2_prepend >"${prepend_file}"
+	bunsenlabs_lithium)
+		jgmenu_run themes bunsenlabs_lithium_config >"${config_file}"
+		jgmenu_run themes bunsenlabs_lithium_prepend >"${prepend_file}"
 		fallback_if_no_openbox
 		;;
 	neon)
