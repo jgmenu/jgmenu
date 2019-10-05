@@ -1,0 +1,112 @@
+jgmenu v3.4 release notes
+=========================
+
+Note to package maintainers:
+
+  * To include the latest contrib/ packages, run the following:
+
+        make CONTRIB_DIRS="xfce4-panel gtktheme"
+        make CONTRIB_DIRS="xfce4-panel gtktheme" install
+
+  * The xfce4-panel plugin requires libgtk-3-dev and xfce4-panel-dev to build.
+    Run-time dependencies are only needed if the packages are run. They do not
+    affect jgmenu and its core modules in any way.
+
+Updates since v3.3
+------------------
+
+  * Add xfce4-panel plugin. Written-by: @Misko_2083
+
+  * Add mate-panel plugin. This contrib/ package is still in early development.
+    Written-by: @Misko_2083
+
+  * Add the following themes: col3 and the latest bunsenlabs_lithium
+
+  * Man pages have seen the following improvements:
+
+      - Better html support and available at https://jgmenu.github.io/
+
+      - A new jgmenuunicode(7) guide
+
+      - jgmenu(1) details on IPC variables, widgets and special pango markup
+        characters (thanks @johnraff)
+
+  * Support sourcing of CSV files. Suggested-by: @johnraff
+    Use the following syntax to include other files from CSV files
+
+    . <file>
+
+    Tilde (~) is expanded, but not environment variables.
+
+  * In jgmenu, improve handling of tags.
+
+      - Remove ^checkout() items without matching tags. This permits the
+        default prepend.csv and append.csv files to include ^checkout()
+        items which only appear if an optional package providing a sourced
+        csv file is installed. Suggested-by: @johnraff
+
+      - Die on duplicate tags
+
+      - Survive missing tags when actioning ^checkout() and ^pipe().
+        Reported-by: @johnraff
+
+  * Improve apps module by filtering out duplicate .desktop files. For
+    example if foo.desktop exists in ~/.local/share/applications/, then
+    ignore foo.desktopp in /usr/share/applications/
+
+  * Improve lx modules by ensuring tag names are unique
+
+  * Improve ob module by
+
+      - Escaping < and > to support pango markup
+
+      - Fixing pipemenu inline menu bug. Reported-by: @johnraff
+
+  * Add .clang-format and a wrapper to cope with foreach iterators
+
+  * Minor fixes:
+
+      - Survive unsupported locale (issue #96). If setlocale(LC_ALL, "")
+        fails, use fallback 'C' locale
+
+      - x11-ui.c: don't pull for XRandR hardware changes. Calling
+        XRRGetScreenResources() pulls for hardware changes which on some
+        systems freezes the screen for a few hundred milliseconds, so use
+        XRRGetScreenResourcesCurrent() instead to avoid that.
+        Written-by: @Roliga
+
+      - Set arrow colour of selected item to color_sel_fg to match font
+        colour (issue #99)
+
+      - Fix border misalignment to ensure rounded corners are pixel
+        perfect
+
+  * Add config option `verbosity`. See jgmenu(1) for details.
+
+  * Add config option `position_mode` and remove `at_pointer`
+    `position_mode` can be one of pointer, ipc, fixed or center.
+    See jgmenu(1) for full details.
+    Backward compatibility is maintained by repecting at_pointer=1
+
+  * Improve `jgmenu_run config` command by:
+
+      - Creating config file if missing. Avoid failure of
+        `jgmenu_run config -s <file> -k <key> -v <value>` if config file
+        does not exist (by creating one).
+
+      - Only setting key/value pair if new value is different. This
+        avoids writing to jgmenurc file unnecessarily.
+
+      - Amending missing items more intelligently by commenting out new
+        key/value pairs
+
+  * Add contrib/jgmenu-gtktheme.py. Written by @Misko-2083
+    This is still a basic implementation which only sets color_menu_bg,
+    color_norm_fg, color_sel_bg and color_sel_fg
+    If your package maintainer has included this contrib/ package, try it out
+    with:
+
+        jgmenu init --apply-gtktheme
+
+  * debian/control: install xfce4-panel and gtktheme plugins by default
+

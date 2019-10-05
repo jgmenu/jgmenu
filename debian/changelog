@@ -1,5 +1,6 @@
-jgmenu (3.3-1) lithium; urgency=medium
+jgmenu (3.4-1) lithium; urgency=medium
 
   * New upstream release
+  * Add CONTRIB_DIRS packages
 
- -- Johan Malm <jgm323@gmail.com>  Mon, 22 Jul 2019 21:19:12 +0100
+ -- Johan Malm <jgm323@gmail.com>  Mon, 05 Oct 2019 11:59:11 +0100
