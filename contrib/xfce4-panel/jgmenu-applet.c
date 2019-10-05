@@ -51,12 +51,14 @@ static char **extend_env(int coordinate, char *variable, char **envp)
 static void button_clicked(GtkWidget *button, XfcePanelPlugin *plugin)
 {
 	gint  x, y, panel_w, panel_h, button_width, button_height;
-	gint panel_x1, panel_x2, panel_y1, panel_y2, button_x1, button_x2, button_y1, button_y2;
+	gint panel_x1 = 0, panel_x2 = 0, panel_y1 = 0, panel_y2 = 0,
+	     button_x1 = 0, button_x2 = 0, button_y1 = 0, button_y2 = 0;
 	GdkRectangle    extents;
 	GdkWindow       *window;
 	GtkAllocation allocation;
 	GdkScreen *screen;
 	gint screen_width, screen_height;
+	gchar **envp;
 
 	screen = gdk_screen_get_default();
 	if (!screen) {
@@ -195,7 +197,7 @@ static void button_clicked(GtkWidget *button, XfcePanelPlugin *plugin)
 		}
 	}
 
-	gchar **envp = g_get_environ();
+	envp = g_get_environ();
 
 	envp = g_environ_unsetenv(envp, "TINT2_BUTTON_ALIGNED_X1");
 	envp = g_environ_unsetenv(envp, "TINT2_BUTTON_ALIGNED_X2");

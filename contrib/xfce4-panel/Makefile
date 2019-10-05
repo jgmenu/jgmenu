@@ -18,6 +18,8 @@ CFLAGS  ?= -Wall -std=c99 \
 	   -Wunused -Wvla -Wunused-result \
            -Wno-unused-parameter
 
+CFLAGS  += -Wno-strict-prototypes -Wno-declaration-after-statement
+
 CFLAGS  += -s -shared -fPIC
 CFLAGS  += `pkg-config --cflags libxfce4panel-1.0 gtk+-3.0`
 LDFLAGS += `pkg-config --libs   libxfce4panel-1.0 gtk+-3.0`
