@@ -9,11 +9,8 @@ href="https://repology.org/metapackage/jgmenu/versions"><img src="https://repolo
 
 <h3 align="center">[<a
 href="INSTALL.md">Install</a>] [<a
-href="https://github.com/johanmalm/jgmenu/tree/master/docs/relnotes">Release&nbsp;Notes</a>] [<a
-href="https://github.com/johanmalm/jgmenu/wiki/Timeline">Timeline</a>] [<a
-href="https://github.com/johanmalm/jgmenu/wiki/Roadmap">Roadmap</a>] [<a
-href="docs/manual/jgmenututorial.7.md">Tutorial</a>] [<a
-href="https://github.com/johanmalm/jgmenu/wiki">Wiki</a>] [<a
+href="NEWS.md">Release&nbsp;Notes</a>] [<a
+href="https://jgmenu.github.io/">Website</a>] [<a
 href="https://github.com/johanmalm/jgmenu/wiki/Screenshots">Screenshots</a>]</h3>
 
 <img src="https://i.imgur.com/O3E84L3.png" alt="jgmenu" align="right" height="610px" width="512px">
