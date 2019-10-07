@@ -340,6 +340,14 @@ fallback_if_no_openbox () {
 	fi
 }
 
+fallback_if_no_lx () {
+	# not all systems support the lx module
+	if ! lx_installed
+	then
+		jgmenu_run config -s "${config_file}" -k csv_cmd -v pmenu
+	fi
+}
+
 set_theme () {
 	test $# -eq 0 && die "set_theme(): no theme specified"
 	backup_config_files
@@ -362,7 +370,7 @@ set_theme () {
 	bunsenlabs_lithium)
 		jgmenu_run themes bunsenlabs_lithium_config >"${config_file}"
 		jgmenu_run themes bunsenlabs_lithium_prepend >"${prepend_file}"
-		fallback_if_no_openbox
+		fallback_if_no_lx
 		;;
 	neon)
 		jgmenu_run themes neon_config >"${config_file}"
