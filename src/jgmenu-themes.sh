@@ -6,6 +6,8 @@ valid_args="\
 	bunsenlabs_helium_config \
 	bunsenlabs_lithium_config \
 	bunsenlabs_lithium_prepend \
+	col2_config \
+	col2_prepend \
 	col3_config \
 	neon_config \
 	neon_append \
@@ -288,6 +290,49 @@ About Bunsen Alternatives,yad --button="OK":0 --center --window-icon=distributor
 
 
 ^tag(lx-apps)
+EOF
+}
+
+col2_config () {
+cat <<'EOF'
+tint2_look           = 0
+columns              = 2
+menu_width           = 500
+menu_height_min      = 480
+menu_height_max      = 480
+menu_padding_top     = 50
+menu_padding_right   = 40
+menu_padding_bottom  = 40
+menu_padding_left    = 40
+menu_radius          = 0
+menu_border          = 0
+menu_halign          = center
+menu_valign          = center
+item_margin_y        = 5
+item_height          = 30
+item_padding_x       = 8
+item_radius          = 0
+item_border          = 2
+sep_height           = 5
+font                 = UbuntuMono 12
+icon_size            = 18
+icon_text_spacing    = 3
+color_menu_bg        = #2B303B 100
+color_norm_bg        = #1C2023 0
+color_norm_fg        = #ffffff 100
+color_sel_bg         = #8fa1b3 0
+color_sel_fg         = #ffffff 100
+color_sel_border     = #111111 100
+color_sep_fg         = #919BA0 40
+csv_no_dirs         = 1
+EOF
+}
+
+col2_prepend () {
+cat <<'EOF'
+# Search box
+@rect,,23,10,454,35,3,left,top,#111111 90,#000000 0,
+@search,,30,15,454,25,3,left,top,#ffffff 100,#222222 3,Type to search
 EOF
 }
 

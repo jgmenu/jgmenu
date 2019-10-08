@@ -23,6 +23,7 @@ available_themes="\
 	bunsenlabs_hydrogen \
 	bunsenlabs_helium \
 	bunsenlabs_lithium \
+	col2 \
 	col3 \
 	neon \
 	greeneye"
@@ -382,6 +383,10 @@ set_theme () {
 		create_icon_greeneye
 		jgmenu_run greeneye --widgets >"${prepend_file}"
 		jgmenu_run greeneye --config >"${config_file}"
+		;;
+	col2)
+		jgmenu_run themes col2_config >"${config_file}"
+		jgmenu_run themes col2_prepend >"${prepend_file}"
 		;;
 	col3)
 		jgmenu_run themes col3_config >"${config_file}"
