@@ -39,6 +39,8 @@ void lockfile_init(void)
 	fl.l_whence = SEEK_SET;
 	if (fcntl(fd, F_SETLK, &fl) < 0)
 		die("an instance of 'jgmenu' is already running");
+	if (close(fd) < 0)
+		warn("[%s] error closing file descriptor", __FILE__);
 
 	atexit(lockfile_unlink);
 }

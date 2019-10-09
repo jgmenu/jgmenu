@@ -220,7 +220,7 @@ void xatoi(int *var, const char *value, int flags, const char *key)
 	char *endptr;
 
 	if (!value || *value == '\0') {
-		xatoi_warn("null or empty string", value, key);
+		xatoi_warn("null or empty string", "", key);
 		return;
 	}
 

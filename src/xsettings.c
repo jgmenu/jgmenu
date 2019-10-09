@@ -28,6 +28,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "util.h"
+
 struct xsettings_buffer {
 	char byte_order;
 	size_t len;
@@ -264,7 +266,7 @@ static unsigned char *read_xsettings(Display *display, Window manager,
 				if (buffer_size > 0) {
 					unsigned long offset = *total_size;
 					*total_size += buffer_size;
-					result = realloc(result, *total_size);
+					result = xrealloc(result, *total_size);
 					memcpy(result + offset, buffer, buffer_size);
 					if (bytes_after == 0)
 						done = True;

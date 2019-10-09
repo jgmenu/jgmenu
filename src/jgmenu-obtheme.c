@@ -206,15 +206,21 @@ static void find_rcxml(struct sbuf *filename)
 	die("cannot find rc.xml");
 }
 
+/* Separate function to avoid cppcheck and check-patch.pl warnings */
+void libxml_test_version(void)
+{
+	LIBXML_TEST_VERSION
+}
+
 int main(int argc, char **argv)
 {
 	struct sbuf filename;
 	char *p;
 
+	libxml_test_version();
 	if (argc != 2)
 		usage();
 	sbuf_init(&filename);
-	LIBXML_TEST_VERSION
 
 	p = getenv("JGMENU_RCXML");
 	if (p)
