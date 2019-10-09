@@ -100,12 +100,3 @@ int unix_listen(const char *path, int backlog)
 {
 	return unix_passive_socket(path, SOCK_STREAM, 1, backlog);
 }
-
-/*
- * Create socket of type 'type' bound to 'path'.
- * Return socket descriptor on success, or -1 on error.
- */
-int unix_bind(const char *path, int type)
-{
-	return unix_passive_socket(path, type, 0, 0);
-}

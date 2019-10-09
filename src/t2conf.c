@@ -452,12 +452,6 @@ cleanup:
 	t2conf_cleanup();
 }
 
-int t2conf_is_horizontal_panel(void)
-{
-	return (orientation == VERTICAL) ? 0 :
-	       (orientation == HORIZONTAL) ? 1 : -1;
-}
-
 void t2conf_get_font(char **f)
 {
 	*f = font;

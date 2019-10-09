@@ -314,11 +314,6 @@ void ui_win_add(int x, int y, int w, int h, int max_w, int max_h, const char *fo
 	XMapWindow(ui->dpy, ui->w[ui->cur].win);
 }
 
-void ui_win_goto_parent(void)
-{
-	ui->cur--;
-}
-
 void ui_win_activate(Window w)
 {
 	int i;
@@ -341,18 +336,6 @@ int ui_has_child_window_open(Window w)
 	if (ui->w[i + 1].c)
 		return 1;
 	return 0;
-}
-
-Window ui_win_child_wid(Window w)
-{
-	int i;
-
-	for (i = 0; ui->w[i].c; i++)
-		if (w == ui->w[i].win)
-			break;
-	if (!ui->w[i + 1].c)
-		return 0;
-	return ui->w[i + 1].win;
 }
 
 static void del_win(int win_index)
@@ -550,22 +533,6 @@ void ui_cleanup(void)
 	pango_font_description_free(ui->w[ui->cur].pangofont);
 	g_object_unref(ui->w[ui->cur].pangolayout);
 	xfree(ui);
-}
-
-/*
- * ui_insert_svg() is not currently used as it's quite slow
- * I've kept the code here am I might use it later
- */
-void ui_insert_svg(RsvgHandle *svg, double x, double y, double size)
-{
-	RsvgDimensionData dimensions;
-
-	rsvg_handle_get_dimensions(svg, &dimensions);
-	cairo_save(ui->w[ui->cur].c);
-	cairo_translate(ui->w[ui->cur].c, x, y);
-	cairo_scale(ui->w[ui->cur].c, size / dimensions.width, size / dimensions.width);
-	rsvg_handle_render_cairo(svg, ui->w[ui->cur].c);
-	cairo_restore(ui->w[ui->cur].c);
 }
 
 void ui_insert_image(cairo_surface_t *image, double x, double y, double size)

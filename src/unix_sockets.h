@@ -17,6 +17,5 @@
 int unix_build_address(const char *path, struct sockaddr_un *addr);
 int unix_connect(const char *path, int type);
 int unix_listen(const char *path, int backlog);
-int unix_bind(const char *path, int type);
 
 #endif

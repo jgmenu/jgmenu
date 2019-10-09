@@ -55,10 +55,8 @@ void ui_init_canvas(int max_width, int max_height);
 void ui_init_cairo(int canvas_width, int canvas_height, const char *font);
 void ui_win_init(int x, int y, int w, int h, int max_w, int max_h, const char *font);
 void ui_win_add(int x, int y, int w, int h, int max_w, int max_h, const char *font);
-void ui_win_goto_parent(void);
 void ui_win_activate(Window w);
 int ui_has_child_window_open(Window w);
-Window ui_win_child_wid(Window w);
 void ui_win_del(void);
 void ui_win_del_beyond(int w);
 void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h, double radius,
@@ -72,7 +70,6 @@ struct point ui_get_text_size(const char *str, const char *fontdesc);
 int ui_is_point_in_area(struct point p, struct area a);
 void ui_map_window(unsigned int w, unsigned int h);
 void ui_cleanup(void);
-void ui_insert_svg(RsvgHandle *svg, double x, double y, double size);
 void ui_insert_image(cairo_surface_t *image, double x, double y, double size);
 
 #endif /* X11_UI_H */

@@ -379,29 +379,6 @@ out:
 	free(path.buf);
 }
 
-void icon_find(struct sbuf *name, int size)
-{
-	struct icon_path *path;
-	struct list_head icon_paths;
-
-	if (strchr(name->buf, '/'))
-		return;
-
-	INIT_LIST_HEAD(&icon_paths);
-	path = xcalloc(1, sizeof(struct icon_path));
-	sbuf_init(&path->name);
-	sbuf_init(&path->path);
-	sbuf_cpy(&path->name, name->buf);
-	list_add(&path->list, &icon_paths);
-	icon_find_all(&icon_paths, size);
-	sbuf_cpy(name, path->path.buf);
-
-	free(path->name.buf);
-	free(path->path.buf);
-	list_del(&path->list);
-	free(path);
-}
-
 void icon_find_cleanup(void)
 {
 	struct sbuf *theme, *tmp_theme;

@@ -16,6 +16,10 @@ suppressions="${suppressions} --suppress=variableScope"
 # vsnprintf() is used in accordance with the man page
 suppressions="${suppressions} --suppress=nullPointer:src/jgmenu-obtheme.c:58"
 
+# This library is copied from git, so it's easier to keep it complete.
+# It also makes the unit test work properly
+suppressions="${suppressions} --suppress=unusedFunction:src/hashmap.c"
+
 #suppressions="${suppressions} --suppress="
 
 cppcheck \

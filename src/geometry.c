@@ -291,14 +291,6 @@ void geo_set_menu_width(int width)
 	geo_update();
 }
 
-void geo_set_menu_width_from_itemarea_width(int width)
-{
-	win[cur].menu_width = !cur ? width + menu_padding_left +
-			      menu_padding_right :
-			      width + sub_padding_left + sub_padding_right;
-	geo_update();
-}
-
 void geo_set_menu_height(int h)
 {
 	win[cur].menu_height = h;
@@ -429,11 +421,6 @@ int geo_get_menu_width_from_itemarea_width(int width)
 {
 	return !cur ? width + menu_padding_right + menu_padding_left :
 	       width + sub_padding_right + sub_padding_left;
-}
-
-int geo_get_item_height(void)
-{
-	return item_height;
 }
 
 int geo_get_screen_x0(void)
