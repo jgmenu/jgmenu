@@ -2495,6 +2495,7 @@ static void cleanup(void)
 		icon_cleanup();
 	widgets_cleanup();
 	watch_cleanup();
+	t2conf_atexit();
 	delete_empty_item();
 	destroy_node_tree();
 	destroy_master_list();

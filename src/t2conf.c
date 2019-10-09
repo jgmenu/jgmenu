@@ -160,9 +160,8 @@ static void process_line(char *line)
 
 	} else if (!strcmp(option, "task_font")) {
 		say("font             = %s", value);
-		if (font)
-			free(font);
-		font = strdup(value);
+		xfree(font);
+		font = xstrdup(value);
 	} else if (!strcmp(option, "task_font_color")) {
 		say("color_norm_fg    = %s", value);
 		parse_hexstr(value, config.color_norm_fg);
@@ -171,9 +170,8 @@ static void process_line(char *line)
 		parse_hexstr(value, config.color_sel_fg);
 	} else if (!strcmp(option, "launcher_icon_theme")) {
 		say("icon_theme       = %s", value);
-		if (icon_theme)
-			free(icon_theme);
-		icon_theme = strdup(value);
+		xfree(icon_theme);
+		icon_theme = xstrdup(value);
 	} else if (!strcmp(option, "launcher_icon_theme_override")) {
 		say("override_xsetti. = %s", value);
 		override_xsettings = atoi(value);
@@ -426,10 +424,8 @@ static void t2conf_cleanup(void)
 
 void t2conf_atexit(void)
 {
-	if (font)
-		free(font);
-	if (icon_theme)
-		free(icon_theme);
+	xfree(font);
+	xfree(icon_theme);
 }
 
 void t2conf_parse(const char *filename, int screen_width, int screen_height)
