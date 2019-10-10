@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+die () {
+	printf '\033[31mfatal:\033[m %b\n' "$@" >&2
+	exit 1
+}
+
+say () {
+	printf '\033[32m%s\033[m\n' "$@"
+}
+
+isinstalled () {
+	type "$1" >/dev/null 2>&1 || die "depend on $1"
+}
+
+usage () {
+	say "Usage: check [<options>]"
+	say "Options:"
+	say "-h   show help"
+	exit 0
+}
+
+args() {
+	case $1 in
+		-h)	usage ;;
+	esac
+}
+
+main() {
+	test -e src/jgmenu.c || die "must be run from top-level directory"
+	test $# -gt 0 && args "$@"
+	say "     CHECK shellcheck"; shellcheck src/*.sh
+	say "     CHECK cppcheck"; ./scripts/cppcheck-wrapper.sh
+}
+
+main "$@"
