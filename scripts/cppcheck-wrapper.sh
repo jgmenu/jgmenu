@@ -29,6 +29,7 @@ cppcheck \
 	-I src/ \
 	--std=c99 \
 	--std=posix \
+	--library=/usr/share/cppcheck/cfg/gnu.cfg \
 	--quiet \
 	${suppressions} \
 	$@ \
