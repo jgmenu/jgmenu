@@ -18,7 +18,8 @@ Build-Depends: debhelper (>= 10),
 
 Package: jgmenu
 Architecture: any
-Depends: libx11-6,
+Depends: libc6,
+         libx11-6,
          libxrandr2,
          libcairo2,
          libpango-1.0-0,
