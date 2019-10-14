@@ -4,7 +4,7 @@
 
 # NAME
 
-An overview of jgmenu unicode usage.
+jgmenuunicode - An overview of jgmenu unicode usage
 
 # INTRODUCTION
 

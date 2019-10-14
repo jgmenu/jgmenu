@@ -4,7 +4,7 @@
 
 # NAME
 
-The jgmenu tutorial
+jgmenututorial - A step-by-step tutorial to jgmenu
 
 # INTRODUCTION
 
