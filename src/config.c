@@ -129,8 +129,9 @@ static void process_line(char *line)
 	} else if (!strcmp(option, "tint2_look")) {
 		xatoi(&config.tint2_look, value, XATOI_NONNEG, "config.tint2_look");
 	} else if (!strcmp(option, "at_pointer")) {
-		config.position_mode = POSITION_MODE_PTR;
-		warn("'at_pointer' is depreciated; use 'position_mode = pointer'");
+		if (atoi(value) == 1)
+			config.position_mode = POSITION_MODE_PTR;
+		warn("'at_pointer' is depreciated; use 'position_mode'");
 
 	} else if (!strcmp(option, "position_mode")) {
 		if (!value)
