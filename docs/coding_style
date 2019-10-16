@@ -4,7 +4,8 @@ Coding Style
 C programs
 ----------
 
-  - Use ANSI C (C89)
+  - Use C99 without GNU extensions. We compile with -std=gnu99 to support
+    list.h, but otherwise stay clear of GNU tricks.
 
   - Kernel coding style (https://www.kernel.org/doc/Documentation/CodingStyle)
     applies with the following exceptions:
