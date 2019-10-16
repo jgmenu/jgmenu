@@ -1,0 +1,74 @@
+#!/bin/bash
+
+: ${dist=buster}
+: ${arch=amd64}
+
+basetgz="/var/cache/pbuilder/base-${dist}-${arch}.tgz"
+#signarg='--auto-debsign'
+
+die  () {
+	printf '%b\n' "fatal: $@" >&2
+	exit 1
+}
+
+usage () {
+	printf '%b\n' "Usage: $0 [--login]"
+}
+
+login_to_basetgz () {
+	sudo pbuilder login --basetgz "${basetgz}"
+}
+
+check_present_working_directory () {
+	[[ -f debian/changelog ]] || die 'not in right directory'
+	pkg_name=$(dpkg-parsechangelog --show-field Source)
+	[[ "${PWD##*/}" = ${pkg_name}* ]] || die "top level directory (${PWD##*/}) wrong name"
+}
+
+run_pbuilder_create () {
+	[[ -e $basetgz ]] && return
+	sudo pbuilder create --distribution "$dist" --architecture "$arch" --basetgz "$basetgz" --debootstrapopts --variant=buildd
+}
+
+create_orig_file () {
+	pkg_ver=$(dpkg-parsechangelog --show-field Version)
+	origname="${pkg_name}_${pkg_ver%-*}.orig.tar.gz"
+	if [[ -f ../$origname ]]; then
+		printf '%b\n' "../$origname exists. Overwrite? [yN]"
+		read -srn1
+		[[ $REPLY = [yY] ]] || exit
+	fi
+	tar -caf ../"${origname}" --exclude=debian --exclude-vcs --exclude-vcs-ignores .
+}
+
+run_pdebuild () {
+	create_orig_file
+	pdebuild "${signarg}" --architecture "${arch}" --buildresult ".." --debbuildopts -b -- --basetgz "${basetgz}" || die "pdebuild failed"
+}
+
+run_lintian () {
+	lintian --pedantic --info
+}
+
+main() {
+	while test $# != 0
+	do
+		case "$1" in
+		--login)
+			login_to_basetgz
+			exit 0
+			;;
+		-h|--help)
+			usage
+			exit 0
+			;;
+		esac
+		shift
+	done
+	check_present_working_directory
+	run_pbuilder_create
+	run_pdebuild
+	run_lintian
+}
+
+main "$@"
