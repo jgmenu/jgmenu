@@ -5,10 +5,16 @@
 
 """ Parse gtk theme and set some key/value pairs in jgmenurc """
 
-import gi
+import os
+import sys
+try:
+    import gi
+except ImportError:
+    print("[gtktheme] fatal: require python3-gi")
+    sys.exit(1)
+
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk
-import os
 import shlex
 import subprocess
 
