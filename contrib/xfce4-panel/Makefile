@@ -1,6 +1,6 @@
 -include ../../config.mk
 
-ifeq ($(shell dpkg --print-architecture 2>/dev/null),i386)
+ifeq ($(shell dpkg-architecture -q DEB_HOST_ARCH 2>/dev/null),i386)
 LIBDIR     = $(DESTDIR)$(prefix)/lib/i386-linux-gnu/xfce4/panel/plugins
 else ifeq ($(shell uname -m),i686)
 LIBDIR     = $(DESTDIR)$(prefix)/lib/i386-linux-gnu/xfce4/panel/plugins
