@@ -6,9 +6,6 @@ pool:
 
 steps:
 - script: |
-    sudo apt-get install -yy docker.io && sudo systemctl start docker
-  displayName: 'InstallDocker'
-- script: |
     ./docker-build.sh
   displayName: 'BuildAmd64'
 - script: |
