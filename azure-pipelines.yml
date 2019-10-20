@@ -11,10 +11,6 @@ steps:
   inputs:
     Contents: 'build/amd64/**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'debian-amd64'
 - script: |
     env USE_I386=1 ./docker-build.sh
   displayName: 'BuildI386'
@@ -25,4 +21,4 @@ steps:
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'debian-i386'
+    ArtifactName: 'debian'
