@@ -1,0 +1,19 @@
+trigger:
+  - lithium
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: |
+    apt-get install -y docker.io && systemctl start docker
+    ./docker-build.sh
+  displayName: 'Building the package...'
+- task: CopyFiles@2
+  inputs:
+    Contents: 'build/**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'bunsen-os-release'
