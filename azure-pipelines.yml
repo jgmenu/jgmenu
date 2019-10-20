@@ -7,8 +7,13 @@ pool:
 steps:
 - script: |
     apt-get install -y docker.io && systemctl start docker
+  displayName: 'InstallDocker'
+- script: |
     ./docker-build.sh
-  displayName: 'Building the package...'
+  displayName: 'BuildAmd64'
+- script: |
+    env USE_I386=1 ./docker-build.sh
+  displayName: 'BuildI386'
 - task: CopyFiles@2
   inputs:
     Contents: 'build/**'
@@ -16,4 +21,4 @@ steps:
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'bunsen-os-release'
+    ArtifactName: 'debian'
