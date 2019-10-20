@@ -9,7 +9,7 @@ if [[ -z "$DOCKER_IMAGE" ]]; then
 		*helium*|*stretch*) 	DOCKER_IMAGE=debian:stretch ;;
 		*hydrogen*|*jessie*)	DOCKER_IMAGE=debian:jessie ;;
 	esac
-	if (( $USE_I386 == 1 )); then
+	if [[ -n "$USE_I386" ]]; then
 		DOCKER_IMAGE="i386/$DOCKER_IMAGE"
 	fi
 fi
