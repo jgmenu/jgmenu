@@ -17,7 +17,7 @@ fi
 echo "DOCKER IMAGE: $DOCKER_IMAGE"
 
 sudo rm -rf -- "$PWD"/build
-sudo docker run -v "$PWD:/mnt" "${DOCKER_IMAGE}" /bin/bash -c '
+sudo docker run --rm -v "$PWD:/mnt" "${DOCKER_IMAGE}" /bin/bash -c '
   set -e;
 
   echo -ne "\e[0;34m";
