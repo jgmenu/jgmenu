@@ -6,7 +6,7 @@ pool:
 
 steps:
 - script: |
-    apt-get install -y docker.io && systemctl start docker
+    sudo apt-get install -yy docker.io && sudo systemctl start docker
   displayName: 'InstallDocker'
 - script: |
     ./docker-build.sh
