@@ -2,15 +2,11 @@
 
 export DEB_BUILD_MAINT_OPTIONS   = hardening=+all
 export DPKG_EXPORT_BUILDFLAGS    = 1
-#export DH_VERBOSE                = 1
 
 include /usr/share/dpkg/buildflags.mk
 
 %:
 	dh $@
-
-override_dh_auto_clean:
-	dh_auto_clean
 
 override_dh_auto_configure:
 	@true

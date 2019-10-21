@@ -22,6 +22,7 @@ Package: jgmenu-xfce4-panel-applet
 Section: x11
 Architecture: any
 Multi-Arch: same
-Depends: ${shlibs:Depends}, ${misc:Depends}, jgmenu
+Depends: ${shlibs:Depends}, ${misc:Depends}, jgmenu (>= 3.5)
 Description: xfce4-panel applet for jgmenu
  An xfce4-panel applet for jgmenu
+

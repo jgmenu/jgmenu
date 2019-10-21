@@ -6,6 +6,7 @@
 
 ## Recent releases
 
+[v3.5](docs/relnotes/3.5.txt)  
 [v3.4](docs/relnotes/3.4.txt)  
 [v3.3](docs/relnotes/3.3.txt)  
 [v3.2](docs/relnotes/3.2.txt)  

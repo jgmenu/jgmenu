@@ -1,0 +1,11 @@
+jgmenu v3.5 release notes
+=========================
+
+Updates since v3.4
+------------------
+
+  * debian/: split into two packages - jgmenu and jgmenu-xfce4-panel-applet
+
+  * Add col2 theme
+
+  * Some minor fixes - see git commit log for full details.
