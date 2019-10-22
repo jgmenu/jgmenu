@@ -23,13 +23,13 @@ CFLAGS  ?= -Wall -std=c99 \
 CFLAGS  += -Wno-strict-prototypes -Wno-declaration-after-statement
 
 CFLAGS  += -s -shared -fPIC
-CFLAGS  += `pkg-config --cflags libxfce4panel-1.0 gtk+-3.0`
-LDFLAGS += `pkg-config --libs   libxfce4panel-1.0 gtk+-3.0`
+CFLAGS  += `pkg-config --cflags libxfce4panel-1.0`
+LDFLAGS += `pkg-config --libs   libxfce4panel-1.0`
 
 all: libjgmenu.so
 
 libjgmenu.so: jgmenu-applet.c jgmenu-applet.h
-	@echo xfce4-panel plugin requires libxfce4panel-1.0 and gtk+-3.0
+	@echo xfce4-panel plugin requires libxfce4panel-1.0
 	$(QUIET_CC)$(CC) $(CFLAGS) -o libjgmenu.so jgmenu-applet.c $(LDFLAGS)
 
 install:
