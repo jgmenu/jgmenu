@@ -1,40 +1,50 @@
-Contributing
-============
+# Contributing
 
-First of all, thanks for contributing or considering to contribute.  
+[Introduction](#introduction)
+[Reporting issues and bugs](#reporting)
+[Upversion](#upversion)
+[Add new config variables](#config)
+[Testing](#testing)
+[APIs](#apis)
+[Architecture](#arch)
+[Grammar and Language](#lang)
+[Git](#git)
 
-We have two high level development rules:  
+## Introduction {#introduction}
 
--   Friendship, ideas and code are valued in said order  
--   There are no deadlines  
+First of all, thanks for contributing or considering to contribute.
 
-Issues and bugs
----------------
+We have two high level development rules:
 
-Reporting issues and bugs is a very helpful contribution. The preferred
-route for reporting these is to raise github issues, but we are happy
-with any method including forums threads and e-mails. If you are able
-to help resolve them, that is also greatly appreciated.
+- Friendship, ideas and code are valued in said order
+- There are no deadlines
+
+## Reporting issues and bugs {#reporting}
+
+Reporting issues and bugs is a very helpful contribution. The preferred route
+for reporting these is to raise github issues, but we are happy with any method
+including forums threads and e-mails. If you are able to help resolve them,
+that is also greatly appreciated.
 
 ### The basics of reporting issues
 
-It would be useful if you could simply start by describing what you did
-and what happened. It may help if you could also do the following:
+It would be useful if you could simply start by describing what you did and
+what happened. It may help if you could also do the following:
 
-1.  Run jgmenu from the terminal and copy/paste any output
+1. Run jgmenu from the terminal and copy/paste any output
 
-2.  Provide the output of `jgmenu --version`
+2. Provide the output of `jgmenu --version`
 
-3.  Provide the output of `type jgmenu` (i.e. the location of the binary)
+3. Provide the output of `type jgmenu` (i.e. the location of the binary)
 
-4.  Provide the command you used to run jgmenu
+4. Provide the command you used to run jgmenu
 
-5.  Provide the config file
+5. Provide the config file
 
-6.  Provide some basic information about your system (e.g. distribution, window
-    manager, composite manager)
+6. Provide some basic information about your system (e.g. distribution, window
+   manager, composite manager)
 
-7.  Run `jgmenu init -i` then choose 'check' and report any warnings
+7. Run `jgmenu init -i` then choose 'check' and report any warnings
 
 ### Debugging
 
@@ -72,11 +82,11 @@ things to try.
 
 ### Stack traces
 
-If jgmenu crashes with the message 'Segmentation fault' or 'Abort', a
-stack trace (also known as backtrace) is often the most useful starting
-point.  A stack trace tells us where the program stopped and how that
-point was reached through all the functions up to main(). A useful stack
-trace provides filenames and line numbers.
+If jgmenu crashes with the message 'Segmentation fault' or 'Abort', a stack
+trace (also known as backtrace) is often the most useful starting point.  A
+stack trace tells us where the program stopped and how that point was reached
+through all the functions up to main(). A useful stack trace provides filenames
+and line numbers.
 
 You can provide a stack trace using one of the methods listed below.
 
@@ -165,79 +175,78 @@ you can run the following and include the output in your bug report.
 
    sudo coredumpctl info jgmenu
 
-Upversion
----------
+## Upversion {#upversion}
 
--   update `default_version` in scripts/version-gen.sh  
--   update debian/changelog  
--   create docs/relnotes/X.Y.txt  
--   update NEWS.md  
--   add and commit the above files  
--   git tag -a 'vX.Y' (using the release notes as the commit message)  
+- update `default_version` in scripts/version-gen.sh
+- run `dch` and update debian/changelog
+- create docs/relnotes/X.Y.txt
+- update NEWS.md
+- add and commit the above files
+- git tag -a 'vX.Y' (using the release notes as the commit message)
 
-Add new config variables
-------------------------
+## Add new config variables {#config}
 
-Any new config variables need to be added to the following:  
+Any new config variables need to be added to the following:
 
--   config.c  
--   config.h  
--   src/jgmenu-config.c  
--   docs/manual/jgmenu.1.md  
+-   config.c
+-   config.h
+-   src/jgmenu-config.c
+-   docs/manual/jgmenu.1.md
 
-Run ./scripts/jgmenurc-checker.sh
+## Testing {#testing}
 
-Testing
--------
+`make ex`
 
-`make ex` runs a few menus specifically designed to test the code.  
+:   Run a few menus specifically designed to test features
 
-`make check` checks coding style.  
-To just check a specific .c or .h file, do  
-`./scripts/checkpatch-wrapper foo.c`  
+`make check`
 
-`make test` runs unit tests  
+:   Checks coding style. To just check a specific .c or .h file, run
+    `./scripts/checkpatch-wrapper foo.c`
 
-APIs
-----
+`make test`
 
-list.h  
-https://kernelnewbies.org/FAQ/LinkedLists  
+:   Runs unit tests
 
-hashmap.c  
-https://www.kernel.org/pub/software/scm/git/docs/technical/api-hashmap.html  
+## APIs {#apis}
 
-Architecture
-------------
+list.h
+
+:   https://kernelnewbies.org/FAQ/LinkedLists
+
+hashmap.c
+
+:   https://www.kernel.org/pub/software/scm/git/docs/technical/api-hashmap.html
+
+## Architecture {#arch}
 
 `jgmenu_run` is a wrapper which call jgmenu-\<*command*> where `command`
-is the first argument provided to `jgmenu_run`.  
+is the first argument provided to `jgmenu_run`.
 
-`jgmenu_run` makes jgmenu easier to use by  
+`jgmenu_run` makes jgmenu easier to use by:
 
--   creating a simple interface for common commands  
--   saving the user having to remember script file extensions  
+-   creating a simple interface for common commands
+-   saving the user having to remember script file extensions
 -   ensures the correct modules are called if multiple version of jgmenu are
-    installed on the system.  
+    installed on the system.
 
 It also helps keep $prefix/bin tidier by putting all the other scripts in
 $libexecdir.
 
 Although it is recommended to do a `make install`, it is possible to run
-`./jgmenu_run` from the source directory by setting `JGMENU_EXEC_PATH`.  
+`./jgmenu_run` from the source directory by setting `JGMENU_EXEC_PATH`.
 
-Grammar and Language
---------------------
+## Grammar and Language {#lang}
 
 jgmenu is always written with a lowercase "j". It should be obvious from
 the context if we refer to the entire application or just the binary
-file.  
+file.
 
 The language used in documentation shall follow British English rules.
 Although, for variable names and configuration options, US spelling is
-used (e.g. color and center)  
+used (e.g. color and center)
 
-Git
----
+## Git {#git}
 
-Keep commit messages lines to 74 characters.  
+Keep commit messages lines to 74 characters.
+
