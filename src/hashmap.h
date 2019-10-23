@@ -17,8 +17,8 @@
 
 /* FNV-1 functions */
 
-unsigned int strhash(const char *buf);
-unsigned int strihash(const char *buf);
+unsigned int strhash(const char *str);
+unsigned int strihash(const char *str);
 unsigned int memhash(const void *buf, size_t len);
 unsigned int memihash(const void *buf, size_t len);
 

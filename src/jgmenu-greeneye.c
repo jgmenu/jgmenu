@@ -62,8 +62,9 @@ static void print_categories(void)
 		strlcpy(buf, categories[i], sizeof(buf));
 		buf[1023] = '\0';
 		p = strchr(buf, ':');
-		if (p)
-			*p = '\0';
+		if (!p)
+			continue;
+		*p = '\0';
 		++p;
 		printf("@rect,^filter(%s),%d,%d,%d,%d,2,left,top,#000000 0,#000000 0,\n",
 		       p, pad, y, bw - pad * 2, item_height);

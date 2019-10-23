@@ -127,7 +127,7 @@ static const char jgmenu_usage[] =
 
 static void checkout_rootnode(void);
 static void pipemenu_del_all(void);
-static void pipemenu_del_beyond(struct node *node);
+static void pipemenu_del_beyond(struct node *keep_me);
 static void tmr_mouseover_stop(void);
 static void del_beyond_current(void);
 static void del_beyond_root(void);

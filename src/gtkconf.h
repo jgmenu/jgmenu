@@ -3,6 +3,6 @@
 
 #include "sbuf.h"
 
-void gtkconf_get(struct sbuf *theme, const char *key);
+void gtkconf_get(struct sbuf *buf, const char *key);
 
 #endif /* GTKCONF_H */
