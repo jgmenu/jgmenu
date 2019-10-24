@@ -23,10 +23,9 @@ die () {
 }
 
 usage () {
-	printf '%b' "\
-usage: jgmenu_run themes <theme>_<mode>\n\
-Output config files for themes\n\
-<mode> is one of config, prepend and append\n" >&2
+	printf '%b' "Usage: jgmenu_run themes <theme>_<mode>
+Output config files for themes
+<mode> is one of config, prepend and append" >&2
 	exit 0
 }
 

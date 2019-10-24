@@ -16,6 +16,6 @@ test "$#" != 1 && _exit "usage: jgmenu_run hide-app <.desktop file>"
 test -e "${desktop_file}" && _exit "info: file already exists"
 
 mkdir -p "${applications_dir}"
-say "[Desktop Entry]\nType=Application\nNoDisplay=true" >"${desktop_file}"
+say '[Desktop Entry]\nType=Application\nNoDisplay=true' >"${desktop_file}"
 
 rm -rf "${HOME}/.cache/menus/"
