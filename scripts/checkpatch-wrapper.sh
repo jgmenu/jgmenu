@@ -14,7 +14,6 @@ do
 	if test ${i} != "src/list.h" && test ${i} != "src/xpm-color-table.h" &&
 	   test ${i} != "src/flex-array.h"
 	then
-		printf "Checking ${i}\n"
 		perl scripts/checkpatch.pl ${cmd_args} "${i}"
 	fi
 done
