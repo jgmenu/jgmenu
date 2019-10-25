@@ -17,7 +17,7 @@ static char *categories[] = {
 	"All:*",
 	"Accessories:#Accessories #Util #Archiving #Compression #TextEditor ",
 	"Development:#Development #Build #Debug #IDE #Profiling #RevisionControl ",
-	"Games:#Games ",
+	"Games:#Game ",
 	"Graphics:#Graphics #Scanning #Photography ",
 	"Internet:#Internet #Network #Email #FileTransfer #WebBrowser ",
 	"Multimedia:#Multimedia #Player #Audio #Video #Recorder ",
