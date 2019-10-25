@@ -87,11 +87,11 @@ Dependencies
 
 ## Core Programs
 
-| program | dependencies                             |
-| :---    | :---                                     |
-| jgmenu  | libx11, libxrandr, cairo, pango, librsvg |
-| ob      | libxml2                                  |
-| lx      | glib-2.0, libmenu-cache (>=1.1.0)        |
+| program | dependencies                                       |
+| :---    | :---                                               |
+| jgmenu  | libx11, libxrandr, cairo, pango, librsvg, glib-2.0 |
+| ob      | libxml2                                            |
+| lx      | glib-2.0, libmenu-cache (>=1.1.0)                  |
 
 -   A *menu* package  is required for "lx". Recommended *menu* packages include: lxmenu-data and gnome-menus. Xfce's libgarcon-common does not yet work with lx.
 -   "pmenu" uses any installed *menu* packages if they exist, but also works without these by showing applications in the menu's root directory.

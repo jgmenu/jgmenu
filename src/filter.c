@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib.h>
 
 #include "filter.h"
 #include "sbuf.h"
@@ -110,7 +111,8 @@ int filter_ismatch(const char *haystack)
 			continue;
 		if (!strcmp(a.argv[i], "*"))
 			goto out;
-		if (strcasestr(haystack, a.argv[i]))
+		if (strstr(g_utf8_casefold(haystack, -1),
+			   g_utf8_casefold(a.argv[i], -1)))
 			goto out;
 	}
 	ret = 0;
