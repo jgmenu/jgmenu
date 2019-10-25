@@ -12,7 +12,6 @@
 
 VER      = $(shell ./scripts/version-gen.sh)
 
-# Allow user to override build settings without making tree dirty
 -include config.mk
 
 RM       = rm -f
@@ -81,10 +80,17 @@ endif
 
 PROGS           = jgmenu $(PROGS_LIBEXEC)
 
-all: checkdeps $(PROGS)
-	@for dir in $(CONTRIB_DIRS); do			\
-		$(MAKE) -C contrib/$$dir || exit 1;	\
+all: config_mk checkdeps $(PROGS)
+	@for dir in $(CONTRIB_DIRS); do \
+		$(MAKE) -C contrib/$$dir || exit 1; \
 	done
+
+config_mk:
+	@if test ! -e config.mk; then \
+		echo "fatal: you have not run ./configure"; \
+		exit 1; \
+	fi
+	@:
 
 jgmenu: jgmenu.o x11-ui.o config.o util.o geometry.o isprog.o sbuf.o \
 	icon-find.o icon.o xpm-loader.o xdgdirs.o xsettings.o \
@@ -163,6 +169,9 @@ clean:
 		$(MAKE) -C contrib/$$dir clean || exit 1;	\
 	done
 
+distclean: clean
+	@$(RM) config.mk
+
 test:
 	@$(MAKE) --no-print-directory -C tests/helper/ all
 	@$(MAKE) --no-print-directory -C tests/ all
@@ -201,4 +210,4 @@ print-%:
 SRCS = $(patsubst ./%,%,$(shell find ./src -maxdepth 1 -name '*.c' -print))
 include $(wildcard $(patsubst %,$(DEPDIR)/%.d,$(basename $(SRCS))))
 
-.PHONY: all install uninstall clean test prove ex check checkdeps
+.PHONY: all install uninstall clean distclean test prove ex check checkdeps

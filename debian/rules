@@ -9,10 +9,8 @@ include /usr/share/dpkg/buildflags.mk
 	dh $@
 
 override_dh_auto_configure:
-	@true
+	./configure \
+		--prefix=/usr \
+		--with-xfce4-panel-applet \
+		--with-gtktheme
 
-override_dh_auto_build:
-	dh_auto_build -- CONTRIB_DIRS="xfce4-panel gtktheme"
-
-override_dh_auto_install:
-	dh_auto_install -- prefix=/usr CONTRIB_DIRS="xfce4-panel gtktheme"
