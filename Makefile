@@ -38,7 +38,7 @@ PROGS_LIBEXEC   = jgmenu-ob jgmenu-socket jgmenu-i18n jgmenu-greeneye \
 
 PROGS           = jgmenu $(PROGS_LIBEXEC)
 
-all: config_mk checkdeps $(PROGS)
+all: config_mk $(PROGS)
 	@for dir in $(CONTRIB_DIRS); do \
 		$(MAKE) -C contrib/$$dir || exit 1; \
 	done
@@ -76,7 +76,7 @@ $(PROGS):
 $(DEPDIR)/%.d: ;
 .PRECIOUS: $(DEPDIR)/%.d
 
-install: checkdeps $(PROGS)
+install: $(PROGS)
 	@install -d $(DESTDIR)$(bindir)
 	@install -m755 jgmenu src/jgmenu_run $(DESTDIR)$(bindir)
 	@install -d $(DESTDIR)$(libexecdir)
@@ -116,7 +116,7 @@ endif
 	done
 
 clean:
-	@$(RM) $(PROGS) *.o *.a $(DEPDIR)/*.d checkdeps
+	@$(RM) $(PROGS) *.o *.a $(DEPDIR)/*.d
 	@$(RM) -r .d/
 	@$(MAKE) --no-print-directory -C tests/ clean
 	@$(MAKE) --no-print-directory -C tests/helper/ clean
@@ -142,22 +142,10 @@ check:
 	@./scripts/checkpatch-wrapper.sh src/*.c
 	@./scripts/checkpatch-wrapper.sh src/*.h
 
-REQUIRED_BINS := pkg-config xml2-config
-REQUIRED_LIBS := x11 xrandr cairo pango pangocairo librsvg-2.0
-checkdeps:
-	@echo '     CHECK build dependencies'
-	@for b in $(REQUIRED_BINS); do \
-                type $${b} >/dev/null 2>&1 || echo "warn: require ($${b})"; \
-        done
-	@for l in $(REQUIRED_LIBS); do \
-                pkg-config $${l} || echo "fatal: require ($${l})"; \
-        done
-	@touch checkdeps
-
 print-%:
 	@echo '$*=$($*)'
 
 SRCS = $(patsubst ./%,%,$(shell find ./src -maxdepth 1 -name '*.c' -print))
 include $(wildcard $(patsubst %,$(DEPDIR)/%.d,$(basename $(SRCS))))
 
-.PHONY: all install uninstall clean distclean test prove ex check checkdeps
+.PHONY: all install uninstall clean distclean test prove ex check
