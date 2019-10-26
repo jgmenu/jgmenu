@@ -1,11 +1,11 @@
-jgmenu (3.5-1) lithium; urgency=medium
+jgmenu (3.5-1) unstable; urgency=medium
 
   * New upstream release
   * Split into packages jgmenu and jgmenu-xfce4-panel-applet
 
  -- Johan Malm <jgm323@gmail.com>  Mon, 21 Oct 2019 21:30:56 +0100
 
-jgmenu (3.4-1) lithium; urgency=medium
+jgmenu (3.4-1) unstable; urgency=medium
 
   * New upstream release
   * Add CONTRIB_DIRS packages
