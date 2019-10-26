@@ -21,7 +21,11 @@ addons:
       - clang
       - gcc
 
-script: make && make test && sudo checkinstall --install=no -y
+script:
+  - ./configure --prefix=/usr --with-lx
+  - make
+  - make test
+  - sudo checkinstall --install=no -y
 
 env:
   global:
