@@ -1,74 +1,203 @@
 #!/bin/bash
 
-: ${dist=buster}
-: ${arch=amd64}
+# Copyright (C) @johnraff
 
-basetgz="/var/cache/pbuilder/base-${dist}-${arch}.tgz"
-#signarg='--auto-debsign'
+set -o nounset # do not accept unset variables
 
-die  () {
-	printf '%b\n' "fatal: $@" >&2
-	exit 1
+HELP="Script to build a Debian package from the directory tree,
+in a clean chroot using pbuilder.
+
+SUMMARY:    pbuild [options]
+
+Architecture is amd64 by default, can be changed by option.
+
+Distribution is determined from package changelog,
+or set manually via option. (supported: stretch|buster)
+
+Package is signed by default, disabled by option.
+
+OPTIONS:
+            -a, --arch <arch>
+Where <arch> is amd64 or i386
+            -d, --dist <dist>
+Where <dist> is stretch or buster
+            -u, --unsigned
+Do not sign the package.
+            -h, --help
+Output this message.
+
+---
+You might consider creating ~/.pbuilderrc for some customization.
+Example:
+
+MIRRORSITE=https://deb.debian.org/debian
+COMPONENTS='main contrib non-free'
+HOOKDIR='/var/cache/pbuilder/hooks'
+export EDITOR='nano'
+export DH_VERBOSE=1
+
+"
+dist=buster
+arch=amd64
+
+# pbuilder base file
+# -${dist}-${arch}.tgz will be appended
+# Make sure such files exist!
+# e.g. sudo pbuilder create --distribution stretch --architecture amd64 --basetgz /var/cache/pbuilder/base-stretch-amd64.tgz --debootstrapopts --variant=buildd
+base_stem='/var/cache/pbuilder/base'
+
+# where to put built files
+# See lines 161~166 to set other dir based on package name, architecture, etc.
+# Set logfile there too.
+results_dir=..
+
+########################################################################
+required_commands='pdebuild'
+
+error_exit() {
+    echo "$0 ERROR: $1" >&2
+    [[ -n "$logfile" ]] && echo "ERROR: $1" >> "$logfile"
+    exit 1
+}
+warning() {
+    echo "$0 WARNING: $1"$'\n' >&2
+    [[ -n "$logfile" ]] && echo "WARNING: $1" >> "$logfile"
 }
 
-usage () {
-	printf '%b\n' "Usage: $0 [--login]"
+log() {
+    echo "$1"
+    [[ -n "$logfile" ]] && echo "$1" >> "$logfile"
 }
 
-login_to_basetgz () {
-	sudo pbuilder login --basetgz "${basetgz}"
+confirm() {
+    echo "$*"
+    echo '(Enter to agree, any other key to decline.)'
+    read -srn1
+    [[ -n $REPLY ]] && {
+        [[ -n "$logfile" ]] && echo "$*"$'\nUser declined.' >> "$logfile"
+        return 1
+    }
+    [[ -n "$logfile" ]] && echo "$*"$'\nUser agreed.' >> "$logfile"
+    return 0
 }
 
-check_present_working_directory () {
-	[[ -f debian/changelog ]] || die 'not in right directory'
-	pkg_name=$(dpkg-parsechangelog --show-field Source)
-	[[ "${PWD##*/}" = ${pkg_name}* ]] || die "top level directory (${PWD##*/}) wrong name"
-}
+missing_commands=
+for i in $required_commands
+do
+    hash "$i" || missing_commands+=" $i"
+done
+[[ $missing_commands ]] && error_exit "This script requires the following commands: $missing_commands
+Please install the packages containing the missing commands
+and rerun the script."
 
-run_pbuilder_create () {
-	[[ -e $basetgz ]] && return
-	sudo pbuilder create --distribution "$dist" --architecture "$arch" --basetgz "$basetgz" --debootstrapopts --variant=buildd
-}
+dist_warning=false
+pkg_dist=$(dpkg-parsechangelog --show-field Distribution)
+case $pkg_dist in
+helium|stretch)
+    dist=stretch
+    ;;
+lithium|buster)
+    dist=buster
+    ;;
+*)
+    dist_warning=true
+    # but dist might be declared in command line option
+    ;;
+esac
 
-create_orig_file () {
-	pkg_ver=$(dpkg-parsechangelog --show-field Version)
-	origname="${pkg_name}_${pkg_ver%-*}.orig.tar.gz"
-	if [[ -f ../$origname ]]; then
-		printf '%b\n' "../$origname exists. Overwrite? [yN]"
-		read -srn1
-		[[ $REPLY = [yY] ]] || exit
-	fi
-	tar -caf ../"${origname}" --exclude=debian --exclude-vcs --exclude-vcs-ignores .
-}
+sign_pkg=true
 
-run_pdebuild () {
-	create_orig_file
-	pdebuild "${signarg}" --architecture "${arch}" --buildresult ".." --debbuildopts -b -- --basetgz "${basetgz}" || die "pdebuild failed"
-}
+while [[ -n ${1-} ]]
+do
+    case ${1-} in
+    --dist|-d)
+        dist=$2
+        shift 2
+        ;;
+    --arch|-a)
+        arch=$2
+        shift 2
+        ;;
+    ---unsigned|-u)
+        sign_pkg=false
+        shift
+        ;;
+    --help|-h)
+        echo "$HELP"
+        exit
+        ;;
+    *)
+        error_exit "${1}: no such option"$'\n'"$HELP"
+        ;;
+    esac
+done
 
-run_lintian () {
-	lintian --pedantic --info
-}
+case $dist in
+stretch|buster)
+    :;;
+*)
+    error_exit "Distribution $dist not supported"
+    ;;
+esac
 
-main() {
-	while test $# != 0
-	do
-		case "$1" in
-		--login)
-			login_to_basetgz
-			exit 0
-			;;
-		-h|--help)
-			usage
-			exit 0
-			;;
-		esac
-		shift
-	done
-	check_present_working_directory
-	run_pbuilder_create
-	run_pdebuild
-	run_lintian
-}
+case $arch in
+amd64|i386)
+    :;;
+*)
+    error_exit "Architecture $arch not supported"
+    ;;
+esac
 
-main "$@"
+[[ -f "${base_stem}-${dist}-${arch}.tgz" ]] || error_exit "basefile ${base_stem}-${dist}-${arch}.tgz not found"
+
+# in Debian source directory?
+[[ -f debian/changelog ]] || error_exit 'No file debian/changelog (wrong directory?)'
+
+pkg_name=$(dpkg-parsechangelog --show-field Source)
+[[ "${PWD##*/}" = ${pkg_name}* ]] || error_exit "The parent directory (${PWD##*/})
+is not named after the package (${pkg_name}).
+Most Debian packaging tools expect this."
+
+pkg_ver=$(dpkg-parsechangelog --show-field Version)
+
+# SET RESULTS DIR
+# alternative destination
+#results_dir=../"result-${arch}"
+mkdir -p "$results_dir"
+
+logfile="$results_dir/${pkg_name}_${pkg_ver}_${arch}.build"
+
+[[ $dist_warning = true ]] && warning "Package declares unsupported distribution: $pkg_dist"
+
+make_orig=true
+log "creating orig.tar.gz..."$'\n'
+origname="${pkg_name}_${pkg_ver%-*}.orig.tar.gz"
+if [[ -f ../$origname ]]
+then
+    confirm "../$origname exists. Overwrite?" || make_orig=false
+fi
+[[ $make_orig = true ]] && tar -caf ../"${origname}" --exclude=debian --exclude-vcs --exclude-vcs-ignores .
+
+sign_arg='--auto-debsign'
+log "Building ${pkg_name} ${pkg_ver} on ${dist} for architecture ${arch}."
+if [[ $sign_pkg != true ]]
+then
+    sign_arg=
+    warning 'Package will not be signed.'
+fi
+log "
+Using pdebuild with ${base_stem}-${dist}-${arch}.tgz...
+"
+
+pdebuild $sign_arg --architecture "${arch}" --buildresult "$results_dir" --logfile "${logfile}.pbuild" --debbuildopts -b -- --basetgz "${base_stem}-${dist}-${arch}.tgz" || error_exit "pdebuild failed"
+
+cat "${logfile}.pbuild" >> "${logfile}" || error_exit "failed to merge ${logfile}.pbuild with ${logfile}"
+rm "${logfile}.pbuild"
+
+#log 'running debc'
+#debc | tee -a "$logfile"
+
+log '
+running Lintian...'
+lintian --pedantic --info "$results_dir/${pkg_name}_${pkg_ver}_${arch}.changes" | tee -a "$logfile"
+
