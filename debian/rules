@@ -11,6 +11,7 @@ include /usr/share/dpkg/buildflags.mk
 override_dh_auto_configure:
 	./configure \
 		--prefix=/usr \
+		--with-lx \
 		--with-xfce4-panel-applet \
 		--with-gtktheme
 
