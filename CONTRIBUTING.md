@@ -1,16 +1,16 @@
 # Contributing
 
-[Introduction](#introduction)
-[Reporting issues and bugs](#reporting)
-[Upversion](#upversion)
-[Add new config variables](#config)
-[Testing](#testing)
-[APIs](#apis)
-[Architecture](#arch)
-[Grammar and Language](#lang)
-[Git](#git)
+- [Introduction](#introduction)
+- [Reporting issues and bugs](#reporting-issues-and-bugs)
+- [Upversion](#upversion)
+- [Add new config variables](#add-new-config-variables)
+- [Testing](#testing)
+- [APIs](#apis)
+- [Architecture](#architecture)
+- [Grammar and Language](#grammar-and-language)
+- [Git](#git)
 
-## Introduction {#introduction}
+## Introduction
 
 First of all, thanks for contributing or considering to contribute.
 
@@ -19,7 +19,7 @@ We have two high level development rules:
 - Friendship, ideas and code are valued in said order
 - There are no deadlines
 
-## Reporting issues and bugs {#reporting}
+## Reporting issues and bugs
 
 Reporting issues and bugs is a very helpful contribution. The preferred route
 for reporting these is to raise github issues, but we are happy with any method
@@ -175,7 +175,7 @@ you can run the following and include the output in your bug report.
 
    sudo coredumpctl info jgmenu
 
-## Upversion {#upversion}
+## Upversion
 
 - update `default_version` in scripts/version-gen.sh
 - run `dch` and update debian/changelog
@@ -184,7 +184,7 @@ you can run the following and include the output in your bug report.
 - add and commit the above files
 - git tag -a 'vX.Y' (using the release notes as the commit message)
 
-## Add new config variables {#config}
+## Add new config variables
 
 Any new config variables need to be added to the following:
 
@@ -193,7 +193,7 @@ Any new config variables need to be added to the following:
 -   src/jgmenu-config.c
 -   docs/manual/jgmenu.1.md
 
-## Testing {#testing}
+## Testing
 
 `make ex`
 
@@ -208,7 +208,7 @@ Any new config variables need to be added to the following:
 
 :   Runs unit tests
 
-## APIs {#apis}
+## APIs
 
 list.h
 
@@ -218,7 +218,7 @@ hashmap.c
 
 :   https://www.kernel.org/pub/software/scm/git/docs/technical/api-hashmap.html
 
-## Architecture {#arch}
+## Architecture
 
 `jgmenu_run` is a wrapper which call jgmenu-\<*command*> where `command`
 is the first argument provided to `jgmenu_run`.
@@ -236,7 +236,7 @@ $libexecdir.
 Although it is recommended to do a `make install`, it is possible to run
 `./jgmenu_run` from the source directory by setting `JGMENU_EXEC_PATH`.
 
-## Grammar and Language {#lang}
+## Grammar and Language
 
 jgmenu is always written with a lowercase "j". It should be obvious from
 the context if we refer to the entire application or just the binary
@@ -246,7 +246,7 @@ The language used in documentation shall follow British English rules.
 Although, for variable names and configuration options, US spelling is
 used (e.g. color and center)
 
-## Git {#git}
+## Git
 
 Keep commit messages lines to 74 characters.
 
