@@ -125,7 +125,7 @@ clean:
 	done
 
 distclean: clean
-	@$(RM) config.mk
+	@$(RM) config.mk clang-format-tmpfile
 
 test:
 	@$(MAKE) --no-print-directory -C tests/helper/ all
