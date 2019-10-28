@@ -15,7 +15,6 @@
 #include <librsvg/rsvg.h>
 #include <png.h>
 
-#include "banned.h"
 #include "icon.h"
 #include "icon-find.h"
 #include "list.h"
@@ -25,6 +24,7 @@
 #include "cache.h"
 #include "config.h"
 #include "icon.h"
+#include "banned.h"
 
 #define DEBUG_THEMES 0
 

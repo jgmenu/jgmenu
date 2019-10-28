@@ -3,7 +3,6 @@
 #include <unistd.h>
 #include <stdbool.h>
 
-#include "banned.h"
 #include "util.h"
 #include "config.h"
 #include "sbuf.h"
@@ -12,6 +11,7 @@
 #include "socket.h"
 #include "argv-buf.h"
 #include "geometry.h"
+#include "banned.h"
 
 struct rect {
 	int x1, x2, y1, y2;

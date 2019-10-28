@@ -2,8 +2,8 @@
  * Copied from https://github.com/git/git.git
  * Generic implementation of hash-based key value mappings.
  */
-#include "banned.h"
 #include "hashmap.h"
+#include "banned.h"
 
 #define FNV32_BASE ((unsigned int)0x811c9dc5)
 #define FNV32_PRIME ((unsigned int)0x01000193)

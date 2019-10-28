@@ -5,12 +5,12 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include "banned.h"
 #include "util.h"
 #include "config.h"
 #include "list.h"
 #include "sbuf.h"
 #include "xdgdirs.h"
+#include "banned.h"
 
 struct config config;
 static struct sbuf jgmenurc_file;

@@ -24,7 +24,6 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 
-#include "banned.h"
 #include "x11-ui.h"
 #include "config.h"
 #include "util.h"
@@ -50,6 +49,7 @@
 #include "charset.h"
 #include "watch.h"
 #include "spawn.h"
+#include "banned.h"
 
 #define DEBUG_ICONS_LOADED_NOTIFICATION 0
 

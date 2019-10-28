@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "banned.h"
 #include "workarea.h"
 #include "x11-ui.h"
 #include "util.h"
 #include "geometry.h"
 #include "config.h"
 #include "align.h"
+#include "banned.h"
 
 static enum alignment panel_pos = UNKNOWN;
 static int margin_x;

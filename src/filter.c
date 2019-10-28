@@ -3,11 +3,11 @@
 #include <string.h>
 #include <glib.h>
 
-#include "banned.h"
 #include "filter.h"
 #include "sbuf.h"
 #include "util.h"
 #include "argv-buf.h"
+#include "banned.h"
 
 static struct sbuf needle;
 static int has_been_inited;

@@ -4,9 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "banned.h"
 #include "bl.h"
 #include "util.h"
+#include "banned.h"
 
 #define TINT2SESSIONFILE "~/.config/tint2/tint2-sessionfile"
 

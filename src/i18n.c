@@ -7,10 +7,10 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#include "banned.h"
 #include "i18n.h"
 #include "util.h"
 #include "hashmap.h"
+#include "banned.h"
 
 static struct hashmap map;
 static char *translation_file;

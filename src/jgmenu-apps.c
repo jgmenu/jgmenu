@@ -8,10 +8,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "banned.h"
 #include "desktop.h"
 #include "util.h"
 #include "sbuf.h"
+#include "banned.h"
 
 static void replace_semicolons_with_hashes(char *s)
 {

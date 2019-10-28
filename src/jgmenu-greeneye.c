@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "banned.h"
 #include "compat.h"
 #include "sbuf.h"
 #include "util.h"
+#include "banned.h"
 
 static int ah = 40;
 static int bw = 150;

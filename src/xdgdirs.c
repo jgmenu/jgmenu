@@ -12,11 +12,11 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
-#include "banned.h"
 #include "xdgdirs.h"
 #include "list.h"
 #include "util.h"
 #include "argv-buf.h"
+#include "banned.h"
 
 static char *xdg_base_dirs[] = {
 	"$XDG_DATA_HOME", "$HOME/.local/share", "$XDG_DATA_DIRS",

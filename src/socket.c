@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "banned.h"
 #include "socket.h"
+#include "banned.h"
 
 /*
  * Add UID to path to support multi-user system

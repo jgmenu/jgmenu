@@ -1,11 +1,11 @@
 /* theme.c - a helper to find the icon theme */
 
-#include "banned.h"
 #include "theme.h"
 #include "xsettings-helper.h"
 #include "t2conf.h"
 #include "config.h"
 #include "gtkconf.h"
+#include "banned.h"
 
 void theme_set(struct sbuf *theme)
 {

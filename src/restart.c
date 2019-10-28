@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "restart.h"
+#include "banned.h"
 
 #define JGMENU_MAX_ARGS (32)
 

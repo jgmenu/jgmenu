@@ -10,10 +10,10 @@
 
 #include <unistd.h>
 
-#include "banned.h"
 #include "unix_sockets.h"
 #include "util.h"
 #include "compat.h"
+#include "banned.h"
 
 /*
  * Build a UNIX domain socket address structure for 'path', returning

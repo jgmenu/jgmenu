@@ -3,10 +3,10 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "banned.h"
 #include "args.h"
 #include "config.h"
 #include "util.h"
+#include "banned.h"
 
 static char *checkout;
 static char *csv_file;

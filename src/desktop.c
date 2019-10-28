@@ -10,7 +10,6 @@
 #include <dirent.h>
 #include <stdbool.h>
 
-#include "banned.h"
 #include "desktop.h"
 #include "xdgdirs.h"
 #include "util.h"
@@ -18,6 +17,7 @@
 #include "list.h"
 #include "charset.h"
 #include "compat.h"
+#include "banned.h"
 
 static struct app *apps;
 static int nr_apps, alloc_apps;

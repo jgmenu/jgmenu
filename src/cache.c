@@ -6,9 +6,9 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include "banned.h"
 #include "cache.h"
 #include "util.h"
+#include "banned.h"
 
 #define CACHE_LOCATION "~/.cache/jgmenu/icons"
 static struct sbuf *cache_location;

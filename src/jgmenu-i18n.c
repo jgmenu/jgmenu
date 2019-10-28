@@ -11,10 +11,10 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#include "banned.h"
 #include "util.h"
 #include "sbuf.h"
 #include "i18n.h"
+#include "banned.h"
 
 static const char jgmenu_i18n_usage[] =
 "Usage: jgmenu_run i18n <translation file>\n"

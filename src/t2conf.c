@@ -3,12 +3,12 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#include "banned.h"
 #include "util.h"
 #include "config.h"
 #include "sbuf.h"
 #include "t2conf.h"
 #include "align.h"
+#include "banned.h"
 
 #define DEBUG_PRINT_VARIABLES 0
 #define DEFAULT_TINT2RC "~/.config/tint2/tint2rc"

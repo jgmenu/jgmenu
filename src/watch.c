@@ -13,12 +13,12 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 
-#include "banned.h"
 #include "list.h"
 #include "sbuf.h"
 #include "util.h"
 #include "watch.h"
 #include "config.h"
+#include "banned.h"
 
 static const char * const files_to_watch[] = {
 	"~/.config/jgmenu/jgmenurc",

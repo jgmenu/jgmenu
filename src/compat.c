@@ -4,8 +4,8 @@
  * https://github.com/git/git/blob/master/compat/strlcpy.c
  */
 
-#include "banned.h"
 #include "compat.h"
+#include "banned.h"
 
 char *gitstrcasestr(const char *haystack, const char *needle)
 {

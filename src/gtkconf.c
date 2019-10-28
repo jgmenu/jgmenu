@@ -9,12 +9,11 @@
 
 #include <stdlib.h>
 
-#include "banned.h"
+#include "gtkconf.h"
 #include "theme.h"
 #include "config.h"
 #include "util.h"
-
-#include "gtkconf.h"
+#include "banned.h"
 
 static int parse_gtk_file(struct sbuf *settingsini, struct sbuf *buf,
 			  const char *key)

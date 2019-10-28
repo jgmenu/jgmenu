@@ -3,9 +3,9 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include "banned.h"
 #include "lockfile.h"
 #include "sbuf.h"
+#include "banned.h"
 
 #define LOCKFILE ".jgmenu-lockfile"
 static struct sbuf lockfile;

@@ -9,10 +9,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "banned.h"
 #include "util.h"
 #include "list.h"
 #include "pm.h"
+#include "banned.h"
 
 static LIST_HEAD(pipe_stack);
 static int level;

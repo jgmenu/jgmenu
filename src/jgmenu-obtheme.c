@@ -13,11 +13,11 @@
 #include <sys/stat.h>
 #include <stdarg.h>
 
-#include "banned.h"
 #include "util.h"
 #include "sbuf.h"
 #include "compat.h"
 #include "set.h"
+#include "banned.h"
 
 static char obtheme[80];
 

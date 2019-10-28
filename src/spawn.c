@@ -4,10 +4,10 @@
 #include <unistd.h>
 #include <stdio.h>
 
-#include "banned.h"
 #include "spawn.h"
 #include "util.h"
 #include "sbuf.h"
+#include "banned.h"
 
 /* voids zombie processes */
 static void set_no_child_wait(void)

@@ -29,6 +29,7 @@
 #include "xpm-loader.h"
 #include "xsettings.h"
 #include "util.h"
+#include "banned.h"
 
 struct xsettings_buffer {
 	char byte_order;

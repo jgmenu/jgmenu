@@ -24,10 +24,10 @@
 #include <X11/Xutil.h>
 #include <X11/extensions/Xrandr.h>
 
-#include "banned.h"
 #include "x11-ui.h"
 #include "util.h"
 #include "config.h"
+#include "banned.h"
 
 struct UI *ui;
 

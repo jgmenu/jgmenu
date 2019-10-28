@@ -1,6 +1,5 @@
 /* font.c - a helper to find 'the' font */
 
-#include "banned.h"
 #include "font.h"
 #include "xsettings-helper.h"
 #include "t2conf.h"
@@ -8,6 +7,7 @@
 #include "gtkconf.h"
 #include "sbuf.h"
 #include "util.h"
+#include "banned.h"
 
 static struct sbuf font;
 static int font_has_been_set;

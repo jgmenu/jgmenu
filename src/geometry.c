@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "banned.h"
 #include "geometry.h"
 #include "util.h"
 #include "config.h"
+#include "banned.h"
 
 struct win {
 	int menu_x0;			/*  g */
