@@ -13,16 +13,14 @@ sudo: true
 addons:
   apt:
     packages:
-      - python3
       - libxrandr-dev
       - libpango1.0-dev
-      - libmenu-cache-dev
       - checkinstall
       - clang
       - gcc
 
 script:
-  - ./configure --prefix=/usr --with-lx
+  - ./configure --prefix=/usr
   - make
   - make test
   - sudo checkinstall --install=no -y
