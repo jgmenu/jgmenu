@@ -29,9 +29,9 @@ This is for users who:
 ```bash
 git clone https://github.com/johanmalm/jgmenu.git
 cd jgmenu
-./scripts/install-debian-dependencies.sh  # or equivalent
+./configure --prefix=$HOME --with-lx
 make
-make prefix=$HOME install
+make install
 ```
 
 Make sure you have `$HOME/bin` in your `$PATH`.
@@ -43,17 +43,17 @@ The Makefile contains an uninstall target. As I am not brave enough to write 'su
 To uninstall jgmenu, run
 
 ```bash
-make prefix=$HOME uninstall
+make uninstall
 ```
 
 For subsequent updates, do:
 
 ```bash
-make prefix=$HOME uninstall
+make uninstall
 make clean
 git pull
 make
-make prefix=$HOME install
+make install
 ```
 
 System wide installation
@@ -61,10 +61,11 @@ System wide installation
 
 By default, `make install` installs jgmenu to /usr/local/{bin,lib/jgmenu,share/man}
 
-Use `prefix` to specify a different target location. For example:
+Use `./configure --prefix` to specify a different target location. For example:
 
 ```bash
-sudo make prefix=/usr install
+./configure --prefix=/usr
+sudo make install
 ```
 
 Build a Debian package
@@ -85,33 +86,39 @@ sudo dpkg -i ../jgmenu_<whatever>.deb
 Dependencies
 ------------
 
-## Core Programs
+## Core (top-level directory) programs
 
-| program | dependencies                                       |
-| :---    | :---                                               |
-| jgmenu  | libx11, libxrandr, cairo, pango, librsvg, glib-2.0 |
-| ob      | libxml2                                            |
-| lx      | glib-2.0, libmenu-cache (>=1.1.0)                  |
+- jgmenu
 
--   A *menu* package  is required for "lx". Recommended *menu* packages include: lxmenu-data and gnome-menus. Xfce's libgarcon-common does not yet work with lx.
--   "pmenu" uses any installed *menu* packages if they exist, but also works without these by showing applications in the menu's root directory.
--   python3 is required by "pmenu"
--   A Composite Manager such as `compton` is required to enable transparency. Most Desktop Environments already have one installed.
--   To build the man pages, you need to have `pandoc` installed. However, as many users do not have this package, the man pages are commited in the git repo (i.e. you only need pandoc if you want to contribute to or change the man pages.)
+  * libx11, libxrandr, cairo, pango, librsvg, glib-2.0
 
-## contrib/ packages
+- ob
 
-| program    | dependencies         |
-| :---       | :---                 |
-| xfce-panel | libgtk3, xfce4-panel |
+  * libxml2
 
-The `-dev` packages are required to build the xfce-panel plugin library.
+## contrib/ programs
 
-For those who are not going to build, the dependencies are only required if
-you are actually going to use it with the xfce panel (in which case you'll have
-it installed anyway).
+- lx
+
+  * glib-2.0, libmenu-cache (>=1.1.0)
+  * A `menu package` such as lxmenu-data or gnome-menus. Xfce's libgarcon-common does not yet work with lx.
+
+- pmenu
+
+  * python3
+  * A `menu package` is optional. If none is installed, all applications will be shown in the menu's root directory.
+
+- xfce-panel
+
+  * xfce4-panel
+
+## Other
+
+- A Composite Manager such as `compton` is required to enable transparency. Most Desktop Environments already have one installed.
+
+- To build the man pages, you need to have `pandoc` installed. However, as many users do not have this package, the man pages are commited in the git repo (i.e. you only need pandoc if you want to contribute to or change the man pages.)
 
 Build Options
 -------------
 
-In addition to `prefix`, there are a number of build variables which can be defined. These are described in the Makefile. Create a config.mk to override build settings without making your tree dirty or having to re-type them every time.
+In addition to `prefix`, there are a number of build variables which can be defined. Run `./configure --help` for further details.
