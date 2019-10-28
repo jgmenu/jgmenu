@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 
+#include "banned.h"
 #include "isprog.h"
 #include "list.h"
 #include "compat.h"

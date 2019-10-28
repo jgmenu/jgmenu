@@ -7,6 +7,7 @@
 #include <ftw.h>
 #include <dirent.h>
 
+#include "banned.h"
 #include "icon-find.h"
 #include "xdgdirs.h"
 #include "list.h"

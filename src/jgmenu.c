@@ -24,6 +24,7 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 
+#include "banned.h"
 #include "x11-ui.h"
 #include "config.h"
 #include "util.h"

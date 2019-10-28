@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "banned.h"
 #include "socket.h"
 
 /*

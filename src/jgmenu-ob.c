@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#include "banned.h"
 #include "util.h"
 #include "sbuf.h"
 #include "list.h"

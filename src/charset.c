@@ -26,8 +26,10 @@
  * THE SOFTWARE.
  */
 
-#include "charset.h"
 #include <assert.h>
+
+#include "banned.h"
+#include "charset.h"
 
 bool utf8_validate(const char *str, size_t length)
 {

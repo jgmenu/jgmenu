@@ -11,6 +11,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
+#include "banned.h"
 #include "util.h"
 #include "sbuf.h"
 #include "i18n.h"

@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "banned.h"
 #include "util.h"
 #include "sbuf.h"
 #include "compat.h"

@@ -19,7 +19,6 @@
  * License along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "xpm-loader.h"
 #include <assert.h>
 #include <limits.h>
 #include <stdio.h>
@@ -28,6 +27,7 @@
 #include <sys/types.h>
 #include <errno.h>
 
+#include "xpm-loader.h"
 #include "util.h"
 
 #ifndef MIN

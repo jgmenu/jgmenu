@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 
+#include "banned.h"
 #include "theme.h"
 #include "config.h"
 #include "util.h"

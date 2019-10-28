@@ -3,6 +3,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
+#include "banned.h"
 #include "util.h"
 #include "config.h"
 #include "sbuf.h"
@@ -88,6 +89,7 @@ static void process_line(char *line)
 {
 	char *option, *value, *field;
 	int id;
+	char *saveptr;
 
 	if (!parse_config_line(line, &option, &value))
 		return;
@@ -176,7 +178,7 @@ static void process_line(char *line)
 		say("override_xsetti. = %s", value);
 		override_xsettings = atoi(value);
 	} else if (!strcmp(option, "panel_position")) {
-		field = strtok(value, DELIM);
+		field = strtok_r(value, DELIM, &saveptr);
 		if (!field)
 			return;
 		if (!strcmp(field, "bottom"))
@@ -186,7 +188,7 @@ static void process_line(char *line)
 		else if (!strcmp(field, "center"))
 			valign = CENTER;
 
-		field = strtok(NULL, DELIM);
+		field = strtok_r(NULL, DELIM, &saveptr);
 		if (!field)
 			return;
 		if (!strcmp(field, "left"))
@@ -196,7 +198,7 @@ static void process_line(char *line)
 		else if (!strcmp(field, "center"))
 			halign = CENTER;
 
-		field = strtok(NULL, DELIM);
+		field = strtok_r(NULL, DELIM, &saveptr);
 		if (!field)
 			return;
 		if (!strcmp(field, "horizontal"))
@@ -210,48 +212,48 @@ static void process_line(char *line)
 		 * We cannot calculate width/height at this point as we have
 		 * to be able to resolve '%' and might not know alignment yet.
 		 */
-		field = strtok(value, DELIM);
+		field = strtok_r(value, DELIM, &saveptr);
 		if (!field)
 			return;
 		panel_width = strdup(field);
 
-		field = strtok(NULL, DELIM);
+		field = strtok_r(NULL, DELIM, &saveptr);
 		if (!field)
 			return;
 		panel_height = strdup(field);
 
 	} else if (!strcmp(option, "panel_margin")) {
-		field = strtok(value, DELIM);
+		field = strtok_r(value, DELIM, &saveptr);
 		if (!field)
 			return;
 		panel_margin_h = atoi(field);
-		field = strtok(NULL, DELIM);
+		field = strtok_r(NULL, DELIM, &saveptr);
 		if (!field)
 			return;
 		panel_margin_v = atoi(field);
 	} else if (!strcmp(option, "taskbar_padding")) {
-		field = strtok(value, DELIM);
+		field = strtok_r(value, DELIM, &saveptr);
 		if (!field)
 			return;
 		taskbar_hpadding = atoi(field);
-		field = strtok(NULL, DELIM);
+		field = strtok_r(NULL, DELIM, &saveptr);
 		if (!field)
 			return;
 		taskbar_vpadding = atoi(field);
-		field = strtok(NULL, DELIM);
+		field = strtok_r(NULL, DELIM, &saveptr);
 		if (!field)
 			return;
 		taskbar_spacing = atoi(field);
 	} else if (!strcmp(option, "panel_padding")) {
-		field = strtok(value, DELIM);
+		field = strtok_r(value, DELIM, &saveptr);
 		if (!field)
 			return;
 		panel_hpadding = atoi(field);
-		field = strtok(NULL, DELIM);
+		field = strtok_r(NULL, DELIM, &saveptr);
 		if (!field)
 			return;
 		panel_vpadding = atoi(field);
-		field = strtok(NULL, DELIM);
+		field = strtok_r(NULL, DELIM, &saveptr);
 		if (!field)
 			return;
 		panel_spacing = atoi(field);

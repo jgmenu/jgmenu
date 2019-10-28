@@ -1,3 +1,4 @@
+#include "banned.h"
 #include "argv-buf.h"
 #include "util.h"
 

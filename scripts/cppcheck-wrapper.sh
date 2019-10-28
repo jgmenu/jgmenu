@@ -13,7 +13,6 @@
 suppressions="\
 	--suppress=readdirCalled:src/desktop.c \
 	--suppress=readdirCalled:src/icon-find.c \
-	--suppress=strtokCalled:src/t2conf.c \
 	--suppress=missingIncludeSystem \
 	--suppress=variableScope \
 	--suppress=nullPointer:src/jgmenu-obtheme.c:58 \

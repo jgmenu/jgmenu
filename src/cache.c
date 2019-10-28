@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include "banned.h"
 #include "cache.h"
 #include "util.h"
 

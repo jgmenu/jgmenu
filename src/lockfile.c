@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include "banned.h"
 #include "lockfile.h"
 #include "sbuf.h"
 

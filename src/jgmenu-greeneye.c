@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "banned.h"
 #include "compat.h"
 #include "sbuf.h"
 #include "util.h"

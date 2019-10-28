@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "banned.h"
 #include "util.h"
 #include "list.h"
 #include "argv-buf.h"

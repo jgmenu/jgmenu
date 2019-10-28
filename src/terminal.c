@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "banned.h"
 #include "isprog.h"
 #include "terminal.h"
 

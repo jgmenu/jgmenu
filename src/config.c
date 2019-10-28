@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include "banned.h"
 #include "util.h"
 #include "config.h"
 #include "list.h"

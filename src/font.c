@@ -1,5 +1,6 @@
 /* font.c - a helper to find 'the' font */
 
+#include "banned.h"
 #include "font.h"
 #include "xsettings-helper.h"
 #include "t2conf.h"

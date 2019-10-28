@@ -2,6 +2,7 @@
 #include <time.h>
 #include <sys/time.h>
 
+#include "banned.h"
 #include "util.h"
 #include "sbuf.h"
 

@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 
+#include "banned.h"
 #include "util.h"
 #include "config.h"
 #include "sbuf.h"

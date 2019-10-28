@@ -57,7 +57,7 @@ jgmenu: jgmenu.o x11-ui.o config.o util.o geometry.o isprog.o sbuf.o \
 	theme.o gtkconf.o font.o args.o widgets.o pm.o socket.o workarea.o \
 	charset.o watch.o spawn.o
 jgmenu-ob: jgmenu-ob.o util.o sbuf.o i18n.o hashmap.o
-jgmenu-socket: jgmenu-socket.o util.o sbuf.o unix_sockets.o socket.o
+jgmenu-socket: jgmenu-socket.o util.o sbuf.o unix_sockets.o socket.o compat.o
 jgmenu-i18n: jgmenu-i18n.o i18n.o hashmap.o util.o sbuf.o
 jgmenu-greeneye: jgmenu-greeneye.o compat.o util.o sbuf.o
 jgmenu-apps: jgmenu-apps.o compat.o util.o sbuf.o desktop.o charset.o \

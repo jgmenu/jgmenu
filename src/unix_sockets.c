@@ -10,8 +10,10 @@
 
 #include <unistd.h>
 
+#include "banned.h"
 #include "unix_sockets.h"
 #include "util.h"
+#include "compat.h"
 
 /*
  * Build a UNIX domain socket address structure for 'path', returning
@@ -26,7 +28,7 @@ int unix_build_address(const char *path, struct sockaddr_un *addr)
 	memset(addr, 0, sizeof(struct sockaddr_un));
 	addr->sun_family = AF_UNIX;
 	if (strlen(path) < sizeof(addr->sun_path)) {
-		strncpy(addr->sun_path, path, sizeof(addr->sun_path) - 1);
+		strlcpy(addr->sun_path, path, sizeof(addr->sun_path));
 		return 0;
 	}
 	errno = ENAMETOOLONG;

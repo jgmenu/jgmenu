@@ -13,6 +13,7 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 
+#include "banned.h"
 #include "list.h"
 #include "sbuf.h"
 #include "util.h"

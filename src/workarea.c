@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "banned.h"
 #include "workarea.h"
 #include "x11-ui.h"
 #include "util.h"

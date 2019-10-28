@@ -1,3 +1,4 @@
+#include "banned.h"
 #include "sbuf.h"
 
 void sbuf_init(struct sbuf *s)

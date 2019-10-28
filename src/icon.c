@@ -15,6 +15,7 @@
 #include <librsvg/rsvg.h>
 #include <png.h>
 
+#include "banned.h"
 #include "icon.h"
 #include "icon-find.h"
 #include "list.h"

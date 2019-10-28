@@ -10,6 +10,7 @@
 #include <dirent.h>
 #include <stdbool.h>
 
+#include "banned.h"
 #include "desktop.h"
 #include "xdgdirs.h"
 #include "util.h"

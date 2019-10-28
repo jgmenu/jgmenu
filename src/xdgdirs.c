@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
+#include "banned.h"
 #include "xdgdirs.h"
 #include "list.h"
 #include "util.h"

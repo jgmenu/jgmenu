@@ -3,6 +3,7 @@
 #include <string.h>
 #include <glib.h>
 
+#include "banned.h"
 #include "filter.h"
 #include "sbuf.h"
 #include "util.h"

@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "banned.h"
 #include "bl.h"
 #include "util.h"
 

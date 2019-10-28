@@ -3,6 +3,7 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include "banned.h"
 #include "util.h"
 #include "back.h"
 
