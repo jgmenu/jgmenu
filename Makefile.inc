@@ -27,3 +27,5 @@ ifndef VERBOSE
 QUIET_CC   = @echo '     CC    '$@;
 QUIET_LINK = @echo '     LINK  '$@;
 endif
+
+MAKEFLAGS += --no-print-directory
