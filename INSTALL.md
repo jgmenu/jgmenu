@@ -86,7 +86,7 @@ sudo dpkg -i ../jgmenu_<whatever>.deb
 Dependencies
 ------------
 
-## Core (top-level directory) programs
+## src/ programs
 
 - jgmenu
 

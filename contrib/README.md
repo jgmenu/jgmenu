@@ -1,19 +1,22 @@
 contrib/ software
 =================
 
-The tools / helpers in this directory:
+The tools and helpers in this directory:
 
--   are stand-alone, hopefully interesting and sometimes experimental;
+- are stand-alone, hopefully interesting and sometimes experimental;
 
--   have sometimes been entirely contributed by others;
+- are included in the git-repo to give users easier access to them;
 
--   are not installed by `make install`;
+- have sometimes been entirely contributed by others;
 
--   may have completely different dependencies to the core jgmenu application (e.g. ff-bookmarks depends on sqlite3 and arguably also firefox/iceweasel);
+- are not installed by default, but can optionally be added to
+  `make && make install` (those that are considered mature enough, can be
+  given as options to the configure script - e.g. --with-lx)
 
--   do not always adhere to the jgmenu coding guidelines.
+- may have completely different dependencies to the core jgmenu application
+  (e.g. ff-bookmarks depends on sqlite3 and arguably also firefox/iceweasel);
 
-The tools in this directory are included in the git-repo to give users easier access to them.
+- do not always adhere to the jgmenu coding guidelines.
 
 Although I will try to maintain this code, my main focus will remain on
-the jgmenu app itself (top level directory code).
+the jgmenu app itself (the code in the src/ directory).

@@ -33,7 +33,7 @@ It has UTF-8 search support.
 Authors
 -------
 
-Authors who have contributed more than a few of lines of code to at least two files in the top-level directory include:
+Authors who have contributed more than a few of lines of code to at least two files in the src/ directory include:
 
 [@johanmalm](https://github.com/johanmalm)
 -   main author
@@ -47,7 +47,8 @@ Authors who have contributed more than a few of lines of code to at least two fi
 There many who have contributed in other ways including, but not limited to:
 
 [@Vladimir-csp](https://github.com/Vladimir-csp)
--   has contributed a great deal with bug reports and general helpful suggestions (including the `lx` module)
+-   has contributed a great deal with bug reports and general helpful
+    suggestions (including the `lx` module)
 -   advice on XDG compliance
 
 [@johnraff](https://github.com/johnraff)
@@ -57,10 +58,13 @@ There many who have contributed in other ways including, but not limited to:
 [@Misko-2083](https://github.com/Misko-2083)
 -   various contrib/ packages
 
-Members of the BunsenLabs and ArchLabs communities have also helped with testing, documentation, ideas and inspiration to keep this project going.
+Members of the Arch, ArchLabs, BunsenLabs, FreeBSD communities have also
+helped with testing, documentation, ideas and inspiration to keep this project
+going.
 
 Versioning
 ----------
 
-We use [semver 2.0.0](http://www.semver.org), except that at patch-level zero, the ".0" is omitted. For example, 1.0.0 becomes 1.0.
+We use [semver 2.0.0](http://www.semver.org), except that at patch-level zero,
+the ".0" is omitted. For example, 1.0.0 becomes 1.0.
 
