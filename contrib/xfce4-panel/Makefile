@@ -16,9 +16,9 @@ CFLAGS  += -s -shared -fPIC
 CFLAGS  += `pkg-config --cflags libxfce4panel-1.0`
 LDFLAGS += `pkg-config --libs   libxfce4panel-1.0`
 
-all: libjgmenu.so
+xfce4-panel: libjgmenu.so
 
-libjgmenu.so: jgmenu-applet.c jgmenu-applet.h
+libjgmenu.so: jgmenu-applet.c
 	$(QUIET_CC)$(CC) $(CFLAGS) -o libjgmenu.so jgmenu-applet.c $(LDFLAGS)
 
 install:

@@ -4,16 +4,22 @@
 * Distributed under terms of the GPL2 license.
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-#ifdef HAVE_STRING_H
-#include <string.h>
-#endif
-
 #include <libxfce4util/libxfce4util.h>
 #include <libxfce4panel/xfce-panel-plugin.h>
-#include "jgmenu-applet.h"
+
+#define DEFAULT_ICON_NAME "jgmenu"
+#define DEFAULT_TOOLTIP_MESSAGE "Applications Menu"
+#define DEFAULT_TITLE "jgmenu"
+#define DEFAULT_RUN_COMMAND "jgmenu_run"
+#define DEFAULT_RUN_COMMAND_AT_POINTER "jgmenu --at-pointer"
+#define XFCE_PLUGIN_VERSION "0.1"
+
+typedef struct _JgmenuPlugin {
+	XfcePanelPlugin *plugin;
+	GtkWidget *button;
+	GtkWidget *icon;
+	gchar *icon_name;
+} JgmenuPlugin;
 
 static const char jgmenu_plugin_copyright[] =
 "Copyright \xc2\xa9 2019 Miloš Pavlović (plugin)\n"
@@ -21,7 +27,7 @@ static const char jgmenu_plugin_copyright[] =
 
 static void jgmenu_about(XfcePanelPlugin *plugin)
 {
-	const gchar * auth[] = { "Miloš Pavlović", NULL };
+	const gchar *auth[] = { "Miloš Pavlović", NULL };
 	GdkPixbuf *icon;
 
 	icon = xfce_panel_pixbuf_from_source("jgmenu", NULL, 32);
@@ -223,14 +229,14 @@ static void button_clicked(GtkWidget *button, XfcePanelPlugin *plugin)
 	 * The jgmenurc config file will only be updated if not already in IPC
 	 * mode
 	 */
-	gchar * command_setup[] = { "jgmenu_run", "config", "-s",
-				    "~/.config/jgmenu/jgmenurc", "-k",
-				    "position_mode", "-v", "ipc", NULL };
-	gchar * command[] = { DEFAULT_RUN_COMMAND, NULL };
+	gchar *command_setup[] = { "jgmenu_run", "config", "-s",
+				   "~/.config/jgmenu/jgmenurc", "-k",
+				   "position_mode", "-v", "ipc", NULL };
+	gchar *command[] = { DEFAULT_RUN_COMMAND, NULL };
 	GError *error = NULL;
 
 	g_spawn_sync(".", command_setup, envp, G_SPAWN_SEARCH_PATH,
-		      NULL, NULL, NULL, NULL, NULL, &error);
+		     NULL, NULL, NULL, NULL, NULL, &error);
 	if (error)
 		g_warning("unable to launch: %s", error->message);
 	g_spawn_async(".", command, envp, G_SPAWN_SEARCH_PATH,

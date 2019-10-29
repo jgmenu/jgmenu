@@ -1,8 +1,8 @@
 [Xfce Panel]
 Type=X-XFCE-PanelPlugin
 Encoding=UTF-8
-Name=JGMENU
-Comment=Start Applications
+Name=jgmenu
+Comment=Applications Menu
 Icon=jgmenu
 X-XFCE-Module=jgmenu
 X-XFCE-Internal=true
