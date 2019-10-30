@@ -1,9 +1,8 @@
 -include ../../config.mk
+include ../../Makefile.inc
 
-prefix    ?= /usr/local
-libexecdir = $(prefix)/lib/jgmenu
-
-all:
+gtktheme:
+	@:
 
 install:
 	@install -d $(DESTDIR)$(libexecdir)
