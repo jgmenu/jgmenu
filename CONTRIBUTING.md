@@ -9,6 +9,7 @@
 - [Architecture](#architecture)
 - [Grammar and Language](#grammar-and-language)
 - [Git](#git)
+- [Overview of src/ files](#overview-of-src-files)
 
 ## Introduction
 
@@ -249,4 +250,24 @@ used (e.g. color and center)
 ## Git
 
 Keep commit messages lines to 74 characters.
+
+## Overview of src/ files
+
+jgmenu.c
+- x11-ui.c - interface with X11
+- icon.c - load icons
+  * cache.c - manage icon cache on harddisk
+  * icon-find.c - find icons
+  * xpm-loader.c - load xpm icons (png/svg use cairo)
+- config.c - read config file
+- geometry.c - calculate positions and dimensions
+- filter.c - search support
+- theme.c + font.c - set icon theme and font from xsettings, tint2rc, etc
+  * xsettings-helper.c - read xsettings variables
+  * gtkconf.c - read gtk3.0 config file variables
+
+jgmenu-apps.c
+- desktop.c - parse desktopp files
+
+jgmenu-ob.c
 
