@@ -2,14 +2,15 @@
 
 - [Introduction](#introduction)
 - [Reporting issues and bugs](#reporting-issues-and-bugs)
+- [Debugging](#debugging)
 - [Upversion](#upversion)
 - [Add new config variables](#add-new-config-variables)
 - [Testing](#testing)
-- [APIs](#apis)
 - [Architecture](#architecture)
 - [Grammar and Language](#grammar-and-language)
 - [Git](#git)
 - [Overview of src/ files](#overview-of-src-files)
+- [Stack Traces](#stack-traces)
 
 ## Introduction
 
@@ -26,8 +27,6 @@ Reporting issues and bugs is a very helpful contribution. The preferred route
 for reporting these is to raise github issues, but we are happy with any method
 including forums threads and e-mails. If you are able to help resolve them,
 that is also greatly appreciated.
-
-### The basics of reporting issues
 
 It would be useful if you could simply start by describing what you did and
 what happened. It may help if you could also do the following:
@@ -47,7 +46,7 @@ what happened. It may help if you could also do the following:
 
 7. Run `jgmenu init -i` then choose 'check' and report any warnings
 
-### Debugging
+## Debugging
 
 This list is by no means exhaustive, but may provide some ideas for
 things to try.
@@ -81,7 +80,84 @@ things to try.
    environment variables which can be set for verbose output relating to
    specific topics.
 
-### Stack traces
+## Upversion
+
+- update `default_version` in scripts/version-gen.sh
+- run `dch` and update debian/changelog
+- create docs/relnotes/X.Y.txt
+- update NEWS.md
+- add and commit the above files
+- git tag -a 'vX.Y' (using the release notes as the commit message)
+
+## Add new config variables
+
+Any new config variables need to be added to the following:
+
+-   config.c
+-   config.h
+-   src/jgmenu-config.c
+-   docs/manual/jgmenu.1.md
+
+## Testing
+
+- `make ex` to launch a few menus specifically designed to test various
+  features.
+
+- `make check` to check coding style and perform some static analysis on all
+  files in `src/`. Files can be checked on an individual basis by running
+  `./scripts/check <file>`
+
+- `make test` to run unit tests
+
+## Architecture
+
+`jgmenu_run <command>` is a wrapper script which calls `jgmenu-<command>`.
+
+This architecture is inspired by git and has a number of advantages over
+putting all `jgmenu-<command>` in `$prefix/bin`:
+
+- It ensures that the correct module is called if multiple version of jgmenu
+  are installed on the system.
+- It avoids putting programs, that are not meant to be called by the user, in
+  `$prefix/bin`.
+- It saves the user having to remember script file extensions whilst making
+  it simple for the developer to know which are binary, shell, python, etc.
+
+## Grammar and Language
+
+jgmenu is always written with a lowercase "j". It should be obvious from
+the context if we refer to the entire application or just the binary
+file.
+
+The language used in documentation shall follow British English rules.
+Although, for variable names and configuration options, US spelling is
+used (e.g. color and center)
+
+## Git
+
+Keep commit messages lines to 74 characters.
+
+## Overview of src/ files
+
+jgmenu.c
+- x11-ui.c - interface with X11
+- icon.c - load icons
+  * cache.c - manage icon cache on harddisk
+  * icon-find.c - find icons
+  * xpm-loader.c - load xpm icons (png/svg use cairo)
+- config.c - read config file
+- geometry.c - calculate positions and dimensions
+- filter.c - search support
+- theme.c + font.c - set icon theme and font from xsettings, tint2rc, etc
+  * xsettings-helper.c - read xsettings variables
+  * gtkconf.c - read gtk3.0 config file variables
+
+jgmenu-apps.c
+- desktop.c - parse desktopp files
+
+jgmenu-ob.c
+
+## Stack traces
 
 If jgmenu crashes with the message 'Segmentation fault' or 'Abort', a stack
 trace (also known as backtrace) is often the most useful starting point.  A
@@ -175,99 +251,4 @@ If your system is set up to core dump and you have coredumpctl installed,
 you can run the following and include the output in your bug report.
 
    sudo coredumpctl info jgmenu
-
-## Upversion
-
-- update `default_version` in scripts/version-gen.sh
-- run `dch` and update debian/changelog
-- create docs/relnotes/X.Y.txt
-- update NEWS.md
-- add and commit the above files
-- git tag -a 'vX.Y' (using the release notes as the commit message)
-
-## Add new config variables
-
-Any new config variables need to be added to the following:
-
--   config.c
--   config.h
--   src/jgmenu-config.c
--   docs/manual/jgmenu.1.md
-
-## Testing
-
-`make ex`
-
-:   Run a few menus specifically designed to test features
-
-`make check`
-
-:   Checks coding style. To just check a specific .c or .h file, run
-    `./scripts/checkpatch-wrapper foo.c`
-
-`make test`
-
-:   Runs unit tests
-
-## APIs
-
-list.h
-
-:   https://kernelnewbies.org/FAQ/LinkedLists
-
-hashmap.c
-
-:   https://www.kernel.org/pub/software/scm/git/docs/technical/api-hashmap.html
-
-## Architecture
-
-`jgmenu_run` is a wrapper which call jgmenu-\<*command*> where `command`
-is the first argument provided to `jgmenu_run`.
-
-`jgmenu_run` makes jgmenu easier to use by:
-
--   creating a simple interface for common commands
--   saving the user having to remember script file extensions
--   ensures the correct modules are called if multiple version of jgmenu are
-    installed on the system.
-
-It also helps keep $prefix/bin tidier by putting all the other scripts in
-$libexecdir.
-
-Although it is recommended to do a `make install`, it is possible to run
-`./jgmenu_run` from the source directory by setting `JGMENU_EXEC_PATH`.
-
-## Grammar and Language
-
-jgmenu is always written with a lowercase "j". It should be obvious from
-the context if we refer to the entire application or just the binary
-file.
-
-The language used in documentation shall follow British English rules.
-Although, for variable names and configuration options, US spelling is
-used (e.g. color and center)
-
-## Git
-
-Keep commit messages lines to 74 characters.
-
-## Overview of src/ files
-
-jgmenu.c
-- x11-ui.c - interface with X11
-- icon.c - load icons
-  * cache.c - manage icon cache on harddisk
-  * icon-find.c - find icons
-  * xpm-loader.c - load xpm icons (png/svg use cairo)
-- config.c - read config file
-- geometry.c - calculate positions and dimensions
-- filter.c - search support
-- theme.c + font.c - set icon theme and font from xsettings, tint2rc, etc
-  * xsettings-helper.c - read xsettings variables
-  * gtkconf.c - read gtk3.0 config file variables
-
-jgmenu-apps.c
-- desktop.c - parse desktopp files
-
-jgmenu-ob.c
 
