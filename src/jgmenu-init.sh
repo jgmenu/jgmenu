@@ -65,6 +65,7 @@ Options include:
     --list-themes         Display all available themes
     --regression-check    Only check for config options no longer valid
     --apply-obtheme       Apply current openbox theme to menu
+    --apply-gtktheme      Apply gtk theme (optional package)
     --verbose             Be more verbose"
 }
 
