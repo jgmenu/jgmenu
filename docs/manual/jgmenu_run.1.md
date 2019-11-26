@@ -1,6 +1,6 @@
-% `JGMENU_RUN(1)`
+% JGMENU_RUN(1)
 % Johan Malm
-% 29 September, 2019
+% 26 November, 2019
 
 # NAME
 
@@ -9,8 +9,8 @@
 # SYNOPSIS
 
 `jgmenu_run`  
-`jgmenu_run` <command> \[<*args*>]  
-`jgmenu_run` <options>  
+`jgmenu_run` <*command*> \[<*args*>]  
+`jgmenu_run` <*options*>  
 
 # DESCRIPTION
 
