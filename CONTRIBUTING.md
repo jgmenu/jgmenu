@@ -44,7 +44,7 @@ what happened. It may help if you could also do the following:
 6. Provide some basic information about your system (e.g. distribution, window
    manager, composite manager)
 
-7. Run `jgmenu init -i` then choose 'check' and report any warnings
+7. Run `jgmenu_run init -i` then choose 'check' and report any warnings
 
 ## Debugging
 

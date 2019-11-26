@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# 'jgmenu init' creates/updates jgmenurc
+# 'jgmenu_run init' creates/updates jgmenurc
 #
 
 config_file=~/.config/jgmenu/jgmenurc
@@ -54,8 +54,8 @@ isinstalled () {
 }
 
 usage () {
-	say "Usage: jgmenu init [<options>]
-       jgmenu init [--config-file=<file>] --regression-check
+	say "Usage: jgmenu_run init [<options>]
+       jgmenu_run init [--config-file=<file>] --regression-check
 Create/amend/check config files
 Options include:
     -h|--help             Display this message
@@ -584,6 +584,6 @@ if test "${interactive}" = "t"
 then
 	await_user_command
 else
-	say "Run 'jgmenu init -h' for usage message"
-	say "Run 'jgmenu init -i' to enter interactive mode"
+	say "Run 'jgmenu_run init -h' for usage message"
+	say "Run 'jgmenu_run init -i' to enter interactive mode"
 fi

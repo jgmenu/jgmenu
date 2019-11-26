@@ -35,13 +35,13 @@ this menu "pmenu" (see [lesson 7](#lesson7) for further details).
 
 Create a config file (`~/.config/jgmenu/jgmenurc`) by running
 
-    jgmenu init
+    jgmenu_run init
 
 Full details of config options are covered in [jgmenu(1)](jgmenu.1.html)
 
 You can also try some templates using the interactive mode
 
-    jgmenu init -i
+    jgmenu_run init -i
 
 There are a small number of configuration options which may need manual
 intervention in order for jgmenu to display correctly on your system.

@@ -1,6 +1,6 @@
 % JGMENU(1)
 % Johan Malm
-% 5 October, 2019
+% 26 November, 2019
 
 # NAME
 
@@ -14,19 +14,17 @@ jgmenu \[\--no-spawn] \[\--checkout=<*tag*>] \[\--config-file=<*file*>]
        \[\--csv-cmd=<*command*>] \[\--die-when-loaded]  
        \[\--center]
 
-jgmenu init \[\--help | <*options*>]
-
 Use these commands to get started
 
 `jgmenu_run`
 
 :   Launch menu
 
-`jgmenu init`
+`jgmenu_run init`
 
 :   Create config file ~/.config/jgmenu/jgmenurc
 
-`jgmenu init -i`
+`jgmenu_run init -i`
 
 :   Interactive setup
 
