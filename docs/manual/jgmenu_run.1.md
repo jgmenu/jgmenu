@@ -1,6 +1,6 @@
 % JGMENU_RUN(1)
 % Johan Malm
-% 26 November, 2019
+% 3 December, 2019
 
 # NAME
 
@@ -9,12 +9,12 @@
 # SYNOPSIS
 
 `jgmenu_run`  
-`jgmenu_run` <*command*> \[<*args*>]  
-`jgmenu_run` <*options*>  
+`jgmenu_run` <*command*>  
+`jgmenu_run` <*option*>  
 
 # DESCRIPTION
 
-Use without `command` or `argument` to launch menu. If an instance of jgmenu
+Use without `command` or `option` to launch menu. If an instance of jgmenu
 is already running, this will be activated, otherwise a new instances will be
 started.
 
