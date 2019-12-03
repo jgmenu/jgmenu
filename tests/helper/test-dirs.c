@@ -5,11 +5,10 @@
 
 int main(int argc, char **argv)
 {
-	struct dir *dirs = dirs_read_schema();
-
-	for (int i = 0; i < dirs_nr(); i++) {
-		struct dir *dir = dirs + i;
+	struct dir *dir, *dirs;
+       
+	dirs_read_schema(&dirs);
+	for (dir = dirs; dir->name; dir += 1)
 		printf("%s,%s\n", dir->name, dir->icon);
-	}
 	return 0;
 }
