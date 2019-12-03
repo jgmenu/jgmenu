@@ -42,6 +42,8 @@ static void process_line(char *line)
 
 	if (!parse_config_line(line, &key, &value))
 		return;
+
+	/* The keyword 'Name' starts a new directory section */
 	if (!strcmp("Name", key)) {
 		dir = add_dir();
 		dir->name = strdup(value);
@@ -49,7 +51,9 @@ static void process_line(char *line)
 	if (!dir)
 		die("dir not set '%s'", line);
 
-	if (!strcmp("Icon", key))
+	if (!strcmp("Categories", key))
+		dir->categories = strdup(value);
+	else if (!strcmp("Icon", key))
 		dir->icon = strdup(value);
 }
 
@@ -77,12 +81,7 @@ static int process_file(char *filename)
 	return 0;
 }
 
-int dirs_nr(void)
-{
-	return nr_dirs;
-}
-
-struct dir *dirs_read_schema(void)
+void dirs_read_schema(struct dir **vector)
 {
 	struct list_head xdg_config_dirs;
 	struct sbuf *dir;
@@ -108,5 +107,8 @@ struct dir *dirs_read_schema(void)
 schema_read_success:
 	sbuf_expand_tilde(&schema_filename);
 	xfree(schema_filename.buf);
-	return dirs;
+
+	/* NULL terminate vector *dirs */
+	(void *)add_dir();
+	*vector = dirs;
 }

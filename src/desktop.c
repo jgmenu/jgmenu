@@ -96,12 +96,9 @@ static void strdup_null_variables(struct app *app)
 		app->filename = strdup("");
 }
 
-static int add_app(FILE *fp, char *filename)
+static struct app *grow_vector_by_one_app(void)
 {
-	char line[4096];
-	char *p;
 	struct app *app;
-	int is_desktop_entry;
 
 	if (nr_apps == alloc_apps) {
 		alloc_apps = (alloc_apps + 16) * 2;
@@ -110,7 +107,17 @@ static int add_app(FILE *fp, char *filename)
 	app = apps + nr_apps;
 	memset(app, 0, sizeof(*app));
 	nr_apps++;
+	return app;
+}
 
+static int add_app(FILE *fp, char *filename)
+{
+	char line[4096];
+	char *p;
+	struct app *app;
+	int is_desktop_entry;
+
+	app = grow_vector_by_one_app();
 	is_desktop_entry = 0;
 	while (fgets(line, sizeof(line), fp)) {
 		if (line[0] == '\0')
@@ -181,11 +188,6 @@ static int compare_app_name(const void *a, const void *b)
 	return strcasecmp(aa->name, bb->name);
 }
 
-int desktop_nr_apps(void)
-{
-	return nr_apps;
-}
-
 struct app *desktop_read_files(void)
 {
 	struct list_head xdg_data_dirs;
@@ -208,5 +210,8 @@ struct app *desktop_read_files(void)
 	}
 	qsort(apps, nr_apps, sizeof(struct app), compare_app_name);
 	xfree(s.buf);
+
+	/* NULL terminate vector */
+	(void *)grow_vector_by_one_app();
 	return apps;
 }

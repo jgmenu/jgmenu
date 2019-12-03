@@ -1,17 +1,18 @@
 #ifndef JGMENU_DIRS_H
 #define JGMENU_DIRS_H
 
+#include "argv-buf.h"
+
 struct dir {
 	char *name;
 	char *icon;
 	char *categories;
 };
 
-int dirs_nr(void);
-
 /**
- * Return a vector of directories
+ * dirs_read_schema - read and parse schema file to provide directory structure
+ * @vector: pointer to null terminated directory vector
  */
-struct dir *dirs_read_schema(void);
+void dirs_read_schema(struct dir **vector);
 
 #endif /* JGMENU_DIRS_H */
