@@ -508,15 +508,6 @@ static void draw_item_sep(struct item *p)
 		draw_item_sep_with_text(p);
 }
 
-static void draw_last_sel(struct item *p)
-{
-	if (p == menu.sel)
-		return;
-	ui_draw_rectangle(p->area.x, p->area.y, p->area.w,
-			  p->area.h, config.item_radius, 1.0,
-			  0, config.color_sel_bg);
-}
-
 static void draw_item_bg_norm(struct item *p)
 {
 	ui_draw_rectangle(p->area.x, p->area.y, p->area.w, p->area.h,
@@ -665,8 +656,6 @@ static void draw_menu(void)
 			draw_item_bg_sel(p);
 		else if (p->selectable)
 			draw_item_bg_norm(p);
-		if (p == menu.current_node->last_sel)
-			draw_last_sel(p);
 
 		/* Draw submenu arrow */
 		if (config.arrow_width && (!strncmp(p->cmd, "^checkout(", 10) ||
