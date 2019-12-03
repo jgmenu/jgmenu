@@ -1,6 +1,6 @@
 % JGMENU-OB(1)
 % Johan Malm
-% 29 September, 2019
+% 3 December, 2019
 
 # NAME
 
@@ -8,7 +8,7 @@ jgmenu-ob - convert openbox menu data to jgmenu flavoured CSV
 
 # SYNOPSIS
 
-`jgmenu_run ob` \[\-\-tag=<tag>] \[\-\-cmd=<cmd> | <file>]
+`jgmenu_run ob` \[\--tag=<*tag*>] \[\--cmd=<*cmd*> | <*file*>]
 
 # DESCRIPTION
 
