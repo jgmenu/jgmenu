@@ -13,5 +13,6 @@ override_dh_auto_configure:
 		--prefix=/usr \
 		--with-lx \
 		--with-xfce4-panel-applet \
-		--with-gtktheme
+		--with-gtktheme \
+		--with-pmenu
 
