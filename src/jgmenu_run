@@ -18,7 +18,7 @@ usage () {
 	printf "If no 'command' or argument is specified, jgmenu_run does one of the following:\n"
 	printf "  - Shows the menu if an instance of jgmenu is already running\n"
 	printf "  - Starts jgmenu in 'stay-alive' mode (i.e. as a long-running application)\n"
-	printf "    using pmenu unless otherwise specified by 'csv_cmd' in jgmenurc\n\n"
+	printf "    using apps unless otherwise specified by 'csv_cmd' in jgmenurc\n\n"
 	printf "Commands are only intended for developers when plugging together modules.\n\n"
 	exit 0
 }

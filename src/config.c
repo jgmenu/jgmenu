@@ -21,7 +21,7 @@ void config_set_defaults(void)
 	config.verbosity	   = 0;
 	config.stay_alive	   = 1;
 	config.hide_on_startup	   = 0;
-	config.csv_cmd		   = xstrdup("pmenu");
+	config.csv_cmd		   = xstrdup("apps");
 	config.tint2_look	   = 0;
 	config.position_mode	   = POSITION_MODE_FIXED;
 	config.respect_workarea	   = 1;	/* set in config_post_process() */

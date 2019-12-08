@@ -27,7 +27,7 @@ static struct option options[] = {
 	{ "verbosity", "0" },
 	{ "stay_alive", "1" },
 	{ "hide_on_startup", "0" },
-	{ "csv_cmd", "pmenu" },
+	{ "csv_cmd", "apps" },
 	{ "tint2_look", "0" },
 	{ "position_mode", "fixed" },
 	{ "edge_snap_x", "30" },

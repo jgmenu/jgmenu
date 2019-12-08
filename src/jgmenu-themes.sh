@@ -32,7 +32,7 @@ Output config files for themes
 archlabs_1803_config () {
 cat <<'EOF'
 stay_alive           = 1
-csv_cmd              = pmenu
+csv_cmd              = apps
 tint2_look           = 0
 position_mode        = fixed
 terminal_exec        = termite
@@ -390,7 +390,7 @@ cat <<'EOF'
 @icon,,30,45,32,32,2,left,top,#e6e6e6 100,#444444 90,/usr/share/icons/breeze/actions/32/bookmark-new.svg
 
 # Icon 2
-@rect,^root(pmenu),85,40,42,42,2,left,top,#000000 0,#000000 0,
+@rect,^root(apps),85,40,42,42,2,left,top,#000000 0,#000000 0,
 @icon,,90,45,32,32,2,left,top,#e6e6e6 100,#444444 90,/usr/share/icons/breeze/actions/32/view-list-icons.svg
 
 # Icon 3
@@ -401,7 +401,7 @@ cat <<'EOF'
 @rect,^root(exit),205,40,42,42,2,left,top,#000000 0,#000000 0,
 @icon,,210,45,32,32,2,left,top,#e6e6e6 100,#444444 90,/usr/share/icons/breeze/actions/32/system-log-out.svg
 
-^tag(pmenu)
+^tag(apps)
 EOF
 }
 

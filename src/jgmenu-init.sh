@@ -343,7 +343,7 @@ fallback_if_no_openbox () {
 	# not all systems support openbox menus
 	if ! test -e ~/.config/openbox/menu.xml
 	then
-		jgmenu_run config -s "${config_file}" -k csv_cmd -v pmenu
+		jgmenu_run config -s "${config_file}" -k csv_cmd -v apps
 	fi
 }
 
@@ -351,7 +351,7 @@ fallback_if_no_lx () {
 	# not all systems support the lx module
 	if ! lx_installed
 	then
-		jgmenu_run config -s "${config_file}" -k csv_cmd -v pmenu
+		jgmenu_run config -s "${config_file}" -k csv_cmd -v apps
 	fi
 }
 
