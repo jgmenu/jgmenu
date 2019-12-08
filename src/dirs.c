@@ -16,6 +16,7 @@
 #include "sbuf.h"
 #include "list.h"
 #include "compat.h"
+#include "schema.h"
 #include "banned.h"
 
 static struct dir *dirs;
@@ -35,13 +36,9 @@ static struct dir *add_dir(void)
 	return dir;
 }
 
-static void process_line(char *line)
+static void process_key_value_pair(char *key, char *value)
 {
-	char *key, *value;
 	static struct dir *dir;
-
-	if (!parse_config_line(line, &key, &value))
-		return;
 
 	/* The keyword 'Name' starts a new directory section */
 	if (!strcmp("Name", key)) {
@@ -49,12 +46,21 @@ static void process_line(char *line)
 		dir->name = strdup(value);
 	}
 	if (!dir)
-		die("dir not set '%s'", line);
+		die("dir not set '%s-%s'", key, value);
 
 	if (!strcmp("Categories", key))
 		dir->categories = strdup(value);
 	else if (!strcmp("Icon", key))
 		dir->icon = strdup(value);
+}
+
+static void process_line(char *line)
+{
+	char *key, *value;
+
+	if (!parse_config_line(line, &key, &value))
+		return;
+	process_key_value_pair(key, value);
 }
 
 static int process_file(char *filename)
@@ -81,6 +87,15 @@ static int process_file(char *filename)
 	return 0;
 }
 
+static void process_builtin_schema(void)
+{
+	int i;
+
+	for (i = 0; schema_builtin[i].key; i++)
+		process_key_value_pair(schema_builtin[i].key,
+				       schema_builtin[i].value);
+}
+
 void dirs_read_schema(struct dir **vector)
 {
 	struct list_head xdg_config_dirs;
@@ -103,7 +118,8 @@ void dirs_read_schema(struct dir **vector)
 		if (!process_file(schema_filename.buf))
 			goto schema_read_success;
 	}
-	info("not able to find schema file");
+	info("using built-in schema data");
+	process_builtin_schema();
 schema_read_success:
 	sbuf_expand_tilde(&schema_filename);
 	xfree(schema_filename.buf);
