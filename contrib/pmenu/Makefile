@@ -1,14 +1,14 @@
 -include ../../config.mk
 include ../../Makefile.inc
 
-gtktheme:
+pmenu:
 	@:
 
 install:
 	@install -d $(DESTDIR)$(libexecdir)
-	@install -m775 jgmenu-gtktheme.py $(DESTDIR)$(libexecdir)
+	@install -m775 jgmenu-pmenu.py $(DESTDIR)$(libexecdir)
 
 uninstall:
-	@rm -f $(libexecdir)/jgmenu-gtktheme.py
+	@rm -f $(libexecdir)/jgmenu-pmenu.py
 
 clean:

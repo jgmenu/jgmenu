@@ -28,7 +28,6 @@ $(shell mkdir -p $(DEPDIR) >/dev/null)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
 SCRIPTS_LIBEXEC = src/jgmenu-init.sh \
-                  src/jgmenu-pmenu.py \
                   src/jgmenu-unity-hack.py \
                   src/jgmenu-themes.sh \
                   src/jgmenu-hide-app.sh
