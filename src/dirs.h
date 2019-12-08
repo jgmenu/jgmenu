@@ -5,6 +5,7 @@
 
 struct dir {
 	char *name;
+	char *name_localized;
 	char *icon;
 	char *categories;
 };

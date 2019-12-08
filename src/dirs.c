@@ -17,6 +17,7 @@
 #include "list.h"
 #include "compat.h"
 #include "schema.h"
+#include "lang.h"
 #include "banned.h"
 
 static struct dir *dirs;
@@ -39,19 +40,32 @@ static struct dir *add_dir(void)
 static void process_key_value_pair(char *key, char *value)
 {
 	static struct dir *dir;
+	static char *name_ll, *name_ll_cc;
+
+	/* Set to "Name[<ll>]" and "Name[<ll_CC>]" */
+	if (!name_ll)
+		lang_localized_name_key(&name_ll, &name_ll_cc);
 
 	/* The keyword 'Name' starts a new directory section */
 	if (!strcmp("Name", key)) {
 		dir = add_dir();
-		dir->name = strdup(value);
+		dir->name = xstrdup(value);
 	}
 	if (!dir)
 		die("dir not set '%s-%s'", key, value);
 
 	if (!strcmp("Categories", key))
-		dir->categories = strdup(value);
+		dir->categories = xstrdup(value);
 	else if (!strcmp("Icon", key))
-		dir->icon = strdup(value);
+		dir->icon = xstrdup(value);
+
+
+	if (!strcmp(key, name_ll_cc))
+		dir->name_localized = xstrdup(value);
+	if (dir->name_localized)
+		return;
+	if (!strcmp(key, name_ll))
+		dir->name_localized = xstrdup(value);
 }
 
 static void process_line(char *line)

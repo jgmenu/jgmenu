@@ -116,8 +116,11 @@ static void print_menu_with_dirs(struct dir *dirs, struct app *apps)
 	/* Draw top level menu */
 	cat("~/.config/jgmenu/prepend.csv");
 	for (dir = dirs; dir->name; dir += 1) {
-		printf("%s,^checkout(apps-dir-%s),%s\n", dir->name, dir->name,
-		       dir->icon);
+		if (dir->name_localized)
+			printf("%s", dir->name_localized);
+		else
+			printf("%s", dir->name);
+		printf(",^checkout(apps-dir-%s),%s\n", dir->name, dir->icon);
 	}
 	cat("~/.config/jgmenu/append.csv");
 
