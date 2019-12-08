@@ -45,10 +45,16 @@ void print_app_to_buffer(struct app *app, struct sbuf *buf)
 {
 	sbuf_addstr(buf, app->name);
 	sbuf_addstr(buf, ",");
+
+	/* ^term() closing bracket is not needed */
+	if (app->terminal)
+		sbuf_addstr(buf, "^term(");
 	sbuf_addstr(buf, app->exec);
 	sbuf_addstr(buf, ",");
+
 	sbuf_addstr(buf, app->icon);
 	sbuf_addstr(buf, ",,");
+
 	replace_semicolons_with_hashes(app->categories);
 	sbuf_addstr(buf, "#");
 	sbuf_addstr(buf, app->categories);

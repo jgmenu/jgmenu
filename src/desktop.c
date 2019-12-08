@@ -51,17 +51,21 @@ static void parse_line(char *line, struct app *app, int *is_desktop_entry)
 
 	if (!parse_config_line(line, &key, &value))
 		return;
-	if (!strcmp("Name", key))
+	if (!strcmp("Name", key)) {
 		app->name = strdup(value);
-	else if (!strcmp("Exec", key))
+	} else if (!strcmp("Exec", key)) {
 		app->exec = strdup(value);
-	else if (!strcmp("Icon", key))
+	} else if (!strcmp("Icon", key)) {
 		app->icon = strdup(value);
-	else if (!strcmp("Categories", key))
+	} else if (!strcmp("Categories", key)) {
 		app->categories = strdup(value);
-	else if (!strcmp("NoDisplay", key))
+	} else if (!strcmp("NoDisplay", key)) {
 		if (!strcasecmp(value, "true"))
-			app->nodisplay = 1;
+			app->nodisplay = true;
+	} else if (!strcmp("Terminal", key)) {
+		if (!strcasecmp(value, "true"))
+			app->terminal = true;
+	}
 }
 
 bool is_duplicate_desktop_file(char *filename)

@@ -10,8 +10,9 @@ struct app {
 	char *exec;
 	char *icon;
 	char *categories;
-	int nodisplay;
+	bool nodisplay;
 	char *filename;
+	bool terminal;
 	bool has_been_mapped;
 };
 
