@@ -17,6 +17,7 @@
 #include "list.h"
 #include "charset.h"
 #include "compat.h"
+#include "lang.h"
 #include "banned.h"
 
 static struct app *apps;
@@ -38,6 +39,11 @@ static void format_exec(char *s)
 static void parse_line(char *line, struct app *app, int *is_desktop_entry)
 {
 	char *key, *value;
+	static char *name_ll, *name_ll_cc;
+
+	/* Set to "Name[<ll>]" and "Name[<ll_CC>]" */
+	if (!name_ll)
+		lang_localized_name_key(&name_ll, &name_ll_cc);
 
 	/* We only read the [Desktop Entry] section of a .desktop file */
 	if (line[0] == '[') {
@@ -66,6 +72,12 @@ static void parse_line(char *line, struct app *app, int *is_desktop_entry)
 		if (!strcasecmp(value, "true"))
 			app->terminal = true;
 	}
+	if (!strcmp(key, name_ll_cc))
+		app->name_localized = xstrdup(value);
+	if (app->name_localized)
+		return;
+	if (!strcmp(key, name_ll))
+		app->name_localized = xstrdup(value);
 }
 
 bool is_duplicate_desktop_file(char *filename)

@@ -43,7 +43,10 @@ bool ismatch(struct argv_buf dir_categories, const char *app_categories)
 
 void print_app_to_buffer(struct app *app, struct sbuf *buf)
 {
-	sbuf_addstr(buf, app->name);
+	if (app->name_localized)
+		sbuf_addstr(buf, app->name_localized);
+	else
+		sbuf_addstr(buf, app->name);
 	sbuf_addstr(buf, ",");
 
 	/* ^term() closing bracket is not needed */

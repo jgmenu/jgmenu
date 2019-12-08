@@ -7,6 +7,7 @@
 
 struct app {
 	char *name;
+	char *name_localized;
 	char *exec;
 	char *icon;
 	char *categories;

@@ -59,7 +59,6 @@ static void process_key_value_pair(char *key, char *value)
 	else if (!strcmp("Icon", key))
 		dir->icon = xstrdup(value);
 
-
 	if (!strcmp(key, name_ll_cc))
 		dir->name_localized = xstrdup(value);
 	if (dir->name_localized)
