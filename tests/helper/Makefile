@@ -29,7 +29,7 @@ test-sbuf: test-sbuf.c $(src)sbuf.c $(util)
 test-xpm: test-xpm.c $(src)xpm-loader.c $(util)
 	$(CC) $(CFLAGS) -o $@ $^ -I$(src) $(LDFLAGS) `pkg-config cairo --cflags --libs`
 
-test-dirs: test-dirs.c $(src)dirs.c $(src)xdgdirs.c $(src)argv-buf.c $(src)compat.c $(util)
+test-dirs: test-dirs.c $(src)dirs.c $(src)xdgdirs.c $(src)argv-buf.c $(src)compat.c $(src)lang.c $(util)
 	$(CC) $(CFLAGS) -o $@ $^ -I$(src) $(LDFLAGS)
 
 clean :
