@@ -150,6 +150,23 @@ static void print_menu_with_dirs(struct dir *dirs, struct app *apps)
 	xfree(submenu.buf);
 }
 
+static void print_menu_no_dirs(struct app *apps)
+{
+	struct app *app;
+	struct sbuf buf;
+
+	sbuf_init(&buf);
+	cat("~/.config/jgmenu/prepend.csv");
+	for (app = apps; app->name; app += 1) {
+		if (app->nodisplay)
+			continue;
+		print_app_to_buffer(app, &buf);
+	}
+	cat("~/.config/jgmenu/append.csv");
+	printf("\n%s\n", buf.buf);
+	xfree(buf.buf);
+}
+
 int main(int argc, char **argv)
 {
 	int i = 1;
@@ -163,8 +180,12 @@ int main(int argc, char **argv)
 			die("unknown option '%s'", argv[i]);
 		i++;
 	}
-	dirs_read_schema(&dirs);
 	apps = desktop_read_files();
-	print_menu_with_dirs(dirs, apps);
+	if (getenv("JGMENU_NO_DIRS")) {
+		print_menu_no_dirs(apps);
+	} else {
+		dirs_read_schema(&dirs);
+		print_menu_with_dirs(dirs, apps);
+	}
 	return 0;
 }
