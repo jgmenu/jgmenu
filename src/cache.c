@@ -242,6 +242,6 @@ int cache_create_symlink(char *path, char *name)
 
 void cache_atexit_cleanup(void)
 {
-	free(cache_location->buf);
-	free(cache_location);
+	xfree(cache_location->buf);
+	xfree(cache_location);
 }
