@@ -16,6 +16,8 @@
 #include "fmt.h"
 #include "banned.h"
 
+static bool no_pend;
+
 static void replace_semicolons_with_hashes(char *s)
 {
 	char *p;
@@ -136,7 +138,8 @@ static void print_menu_with_dirs(struct dir *dirs, struct app *apps)
 	sbuf_init(&submenu);
 
 	/* Draw top level menu */
-	cat("~/.config/jgmenu/prepend.csv");
+	if (!no_pend)
+		cat("~/.config/jgmenu/prepend.csv");
 	for (dir = dirs; dir->name; dir += 1) {
 		if (dir->name_localized)
 			printf("%s", dir->name_localized);
@@ -144,7 +147,8 @@ static void print_menu_with_dirs(struct dir *dirs, struct app *apps)
 			printf("%s", dir->name);
 		printf(",^checkout(apps-dir-%s),%s\n", dir->name, dir->icon);
 	}
-	cat("~/.config/jgmenu/append.csv");
+	if (!no_pend)
+		cat("~/.config/jgmenu/append.csv");
 
 	/* Draw submenus */
 	for (dir = dirs; dir->name; dir += 1) {
@@ -175,13 +179,15 @@ static void print_menu_no_dirs(struct app *apps)
 	struct sbuf buf;
 
 	sbuf_init(&buf);
-	cat("~/.config/jgmenu/prepend.csv");
+	if (!no_pend)
+		cat("~/.config/jgmenu/prepend.csv");
 	for (app = apps; app->name; app += 1) {
 		if (app->nodisplay)
 			continue;
 		print_app_to_buffer(app, &buf);
 	}
-	cat("~/.config/jgmenu/append.csv");
+	if (!no_pend)
+		cat("~/.config/jgmenu/append.csv");
 	printf("\n%s\n", buf.buf);
 	xfree(buf.buf);
 }
@@ -201,6 +207,8 @@ int main(int argc, char **argv)
 		}
 		i++;
 	}
+	if (getenv("JGMENU_NO_PEND"))
+		no_pend = true;
 	apps = desktop_read_files();
 	if (getenv("JGMENU_NO_DIRS")) {
 		print_menu_no_dirs(apps);
