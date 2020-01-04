@@ -17,5 +17,6 @@ int lang_code(char **ll, char **ll_cc);
  * @name_ll_cc - pointer to "Name[ll_CC]"
  */
 void lang_localized_name_key(char **name_ll, char **name_ll_cc);
+void lang_localized_gname_key(char **gname_ll, char **gname_ll_cc);
 
 #endif /* JGMENU_LANG_H */

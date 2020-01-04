@@ -39,11 +39,16 @@ static void format_exec(char *s)
 static void parse_line(char *line, struct app *app, int *is_desktop_entry)
 {
 	char *key, *value;
-	static char *name_ll, *name_ll_cc;
+	static char *name_ll, *name_ll_cc, *gname_ll, *gname_ll_cc;
 
-	/* Set to "Name[<ll>]" and "Name[<ll_CC>]" */
-	if (!name_ll)
+	/*
+	 * Set to "Name[<ll>]", "Name[<ll_CC>]" and the equivalent for
+	 * GenericName
+	 */
+	if (!name_ll) {
 		lang_localized_name_key(&name_ll, &name_ll_cc);
+		lang_localized_gname_key(&gname_ll, &gname_ll_cc);
+	}
 
 	/* We only read the [Desktop Entry] section of a .desktop file */
 	if (line[0] == '[') {
@@ -59,6 +64,8 @@ static void parse_line(char *line, struct app *app, int *is_desktop_entry)
 		return;
 	if (!strcmp("Name", key)) {
 		app->name = strdup(value);
+	} else if (!strcmp("GenericName", key)) {
+		app->generic_name = strdup(value);
 	} else if (!strcmp("Exec", key)) {
 		app->exec = strdup(value);
 	} else if (!strcmp("Icon", key)) {
@@ -72,12 +79,18 @@ static void parse_line(char *line, struct app *app, int *is_desktop_entry)
 		if (!strcasecmp(value, "true"))
 			app->terminal = true;
 	}
+
+	/* localized name */
 	if (!strcmp(key, name_ll_cc))
 		app->name_localized = xstrdup(value);
-	if (app->name_localized)
-		return;
-	if (!strcmp(key, name_ll))
+	if (!app->name_localized && !strcmp(key, name_ll))
 		app->name_localized = xstrdup(value);
+
+	/* localized generic name */
+	if (!strcmp(key, gname_ll_cc))
+		app->generic_name_localized = xstrdup(value);
+	if (!app->generic_name_localized && !strcmp(key, gname_ll))
+		app->generic_name_localized = xstrdup(value);
 }
 
 bool is_duplicate_desktop_file(char *filename)
@@ -102,6 +115,12 @@ static void strdup_null_variables(struct app *app)
 {
 	if (!app->name)
 		app->name = strdup("");
+	if (!app->name_localized)
+		app->name_localized = strdup("");
+	if (!app->generic_name)
+		app->generic_name = strdup("");
+	if (!app->generic_name_localized)
+		app->generic_name_localized = strdup("");
 	if (!app->exec)
 		app->exec = strdup("");
 	if (!app->icon)

@@ -13,6 +13,7 @@
 #include "dirs.h"
 #include "util.h"
 #include "sbuf.h"
+#include "fmt.h"
 #include "banned.h"
 
 static void replace_semicolons_with_hashes(char *s)
@@ -43,32 +44,43 @@ bool ismatch(struct argv_buf dir_categories, const char *app_categories)
 
 void print_app_to_buffer(struct app *app, struct sbuf *buf)
 {
-	struct sbuf escaped_name;
+	struct sbuf s;
+	char *name, *generic_name;
 
-	sbuf_init(&escaped_name);
-	if (app->name_localized)
-		sbuf_cpy(&escaped_name, app->name_localized);
-	else
-		sbuf_cpy(&escaped_name, app->name);
-	sbuf_replace(&escaped_name, "&", "&amp;");
-	sbuf_addstr(buf, escaped_name.buf);
+	sbuf_init(&s);
+	name = app->name_localized[0] != '\0' ? app->name_localized :
+	       app->name;
+	generic_name = app->generic_name_localized[0] != '\0' ?
+		       app->generic_name_localized : app->generic_name;
+
+	/* name */
+	sbuf_cpy(&s, name);
+	fmt_name(&s, name, generic_name);
+	sbuf_replace(&s, "&", "&amp;");
+	sbuf_addstr(buf, s.buf);
 	sbuf_addstr(buf, ",");
 
+	/* command */
 	/* ^term() closing bracket is not needed */
 	if (app->terminal)
 		sbuf_addstr(buf, "^term(");
 	sbuf_addstr(buf, app->exec);
 	sbuf_addstr(buf, ",");
 
+	/* icon */
 	sbuf_addstr(buf, app->icon);
 	sbuf_addstr(buf, ",,");
 
+	/* working directory */
+	/* TODO */
+
+	/* metadata */
 	replace_semicolons_with_hashes(app->categories);
 	sbuf_addstr(buf, "#");
 	sbuf_addstr(buf, app->categories);
 	sbuf_addstr(buf, "\n");
 
-	xfree(escaped_name.buf);
+	xfree(s.buf);
 }
 
 static void print_apps_in_other_directory(struct app *apps, struct sbuf *buf)
