@@ -17,6 +17,7 @@
 #include "banned.h"
 
 static bool no_pend;
+static bool single_window;
 
 static void replace_semicolons_with_hashes(char *s)
 {
@@ -145,7 +146,12 @@ static void print_menu_with_dirs(struct dir *dirs, struct app *apps)
 			printf("%s", dir->name_localized);
 		else
 			printf("%s", dir->name);
-		printf(",^checkout(apps-dir-%s),%s\n", dir->name, dir->icon);
+		if (!single_window)
+			printf(",^checkout(apps-dir-%s),%s\n", dir->name,
+			       dir->icon);
+		else
+			printf(",^root(apps-dir-%s),%s\n", dir->name,
+			       dir->icon);
 	}
 	if (!no_pend)
 		cat("~/.config/jgmenu/append.csv");
@@ -207,8 +213,12 @@ int main(int argc, char **argv)
 		}
 		i++;
 	}
+
 	if (getenv("JGMENU_NO_PEND"))
 		no_pend = true;
+	if (getenv("JGMENU_SINGLE_WINDOW"))
+		single_window = true;
+
 	apps = desktop_read_files();
 	if (getenv("JGMENU_NO_DIRS")) {
 		print_menu_no_dirs(apps);
