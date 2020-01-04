@@ -1,6 +1,6 @@
 % JGMENU(1)
 % Johan Malm
-% 26 November, 2019
+% 4 January, 2019
 
 # NAME
 
@@ -740,8 +740,8 @@ environment variables which are used by the CSV generators.
 
 `csv_name_format` = __string__ (default `%n (%g)`)
 
-:   Defines the format of the `name` field for CSV generators (currently only
-    supported by lx). It understands the following two fields:
+:   Defines the format of the `name` field for CSV generators. Supported by
+    apps and lx. It understands the following two fields:
 
     `%n`
 
@@ -756,12 +756,12 @@ environment variables which are used by the CSV generators.
 
 :   If set, csv-generators will output ^root() instead of ^checkout().
     This results in a single window menu, where submenus appear in the same
-    window. This is currently only supported by pmenu.
+    window. This is supported by apps and pmenu.
 
 `csv_no_dirs` = __boolean__ (default 0)
 
 :   If set, csv-generators will output applications without any director
-    structure. This is currently only supported by pmenu and lx.
+    structure. This is supported by apps, pmenu and lx.
 
 `csv_i18n` = __string__ (no default)
 
