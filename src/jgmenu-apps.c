@@ -43,10 +43,15 @@ bool ismatch(struct argv_buf dir_categories, const char *app_categories)
 
 void print_app_to_buffer(struct app *app, struct sbuf *buf)
 {
+	struct sbuf escaped_name;
+
+	sbuf_init(&escaped_name);
 	if (app->name_localized)
-		sbuf_addstr(buf, app->name_localized);
+		sbuf_cpy(&escaped_name, app->name_localized);
 	else
-		sbuf_addstr(buf, app->name);
+		sbuf_cpy(&escaped_name, app->name);
+	sbuf_replace(&escaped_name, "&", "&amp;");
+	sbuf_addstr(buf, escaped_name.buf);
 	sbuf_addstr(buf, ",");
 
 	/* ^term() closing bracket is not needed */
@@ -62,6 +67,8 @@ void print_app_to_buffer(struct app *app, struct sbuf *buf)
 	sbuf_addstr(buf, "#");
 	sbuf_addstr(buf, app->categories);
 	sbuf_addstr(buf, "\n");
+
+	xfree(escaped_name.buf);
 }
 
 static void print_apps_in_other_directory(struct app *apps, struct sbuf *buf)
@@ -174,10 +181,12 @@ int main(int argc, char **argv)
 	struct dir *dirs;
 
 	while (i < argc) {
-		if (!strncmp(argv[i], "--help", 6))
-			printf("usage: jgmenu_run apps [--help]");
-		else
+		if (!strncmp(argv[i], "--help", 6)) {
+			printf("usage: jgmenu_run apps [--help]\n");
+			exit(EXIT_SUCCESS);
+		} else {
 			die("unknown option '%s'", argv[i]);
+		}
 		i++;
 	}
 	apps = desktop_read_files();
