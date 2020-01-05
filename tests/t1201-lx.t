@@ -4,7 +4,7 @@ test_description='lx module'
 
 . ./sharness.sh
 
-if ! test -e ../../jgmenu-lx >/dev/null 2>&1
+if ! test -e ../../contrib/lx/jgmenu-lx >/dev/null 2>&1
 then
      skip_all='lx module is required'
      test_done
@@ -64,7 +64,7 @@ test_menu () {
 
 	rm -rf ~/.cache/menus &&
 	cp "../t1201/${1}.expect" expect &&
-	LANG=C LC_ALL=C ../../jgmenu-lx >actual &&
+	LANG=C LC_ALL=C ../../contrib/lx/jgmenu-lx >actual &&
 	cp "../t1201/${1}.expect" expect &&
 	test_cmp expect actual
 }
