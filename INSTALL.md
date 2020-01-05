@@ -1,6 +1,13 @@
 Install
 =======
 
+- [Install from repos](#install-from-repos)
+- [Build and install in $HOME directory](#build-and-install-in-home-directory)
+- [System wide installation](#system-wide-installation)
+- [Build a Debian package](#build-a-debian-package)
+- [Dependencies](#dependencies)
+- [Build Options](#build-options)
+
 Install from repos
 ------------------
 
@@ -9,7 +16,7 @@ Install from repos
 | Repo                                                                                              | command                 | Version                                                                                      |
 | :------------------------------------------------------------------------------------------------ | :---------------------- | :------------------------------------------------------------------------------------------- |
 | [Arch](https://www.archlinux.org/packages/community/x86_64/jgmenu/)                               | pacman -S jgmenu        | ![](https://repology.org/badge/version-only-for-repo/arch/jgmenu.svg)                        |
-| [BunsenLabs](http://eu.pkg.bunsenlabs.org/debian/pool/main/j/jgmenu/)                             | apt-get install jgmenu  | ![](https://repology.org/badge/version-only-for-repo/bunsenlabs_jessie_backports/jgmenu.svg) |
+| [BunsenLabs](http://eu.pkg.bunsenlabs.org/debian/pool/main/j/jgmenu/)                             | apt-get install jgmenu  | ![](https://repology.org/badge/version-only-for-repo/bunsenlabs_stretch_backports/jgmenu.svg) |
 | [Mageia Cauldron](http://madb.mageia.org/package/show/application/0/release/cauldron/name/jgmenu) | urpmi jgmenu            | ![](https://repology.org/badge/version-only-for-repo/mageia_cauldron/jgmenu.svg)             |
 | [Manjaro]()                                                                                       | pacman -S jgmenu        | ![](https://repology.org/badge/version-only-for-repo/manjaro_stable/jgmenu.svg)              |
 | [OpenSUSE](https://build.opensuse.org/package/show/openSUSE:Factory/jgmenu)                       |                         | ![](https://repology.org/badge/version-only-for-repo/opensuse_tumbleweed/jgmenu.svg)         |
@@ -29,7 +36,7 @@ This is for users who:
 ```bash
 git clone https://github.com/johanmalm/jgmenu.git
 cd jgmenu
-./configure --prefix=$HOME --with-lx
+./configure --prefix=$HOME --with-lx --with-pmenu
 make
 make install
 ```
@@ -91,6 +98,10 @@ Dependencies
 - jgmenu
 
   * libx11, libxrandr, cairo, pango, librsvg, glib-2.0
+
+- apps
+
+  * Nothing - not even a menu package :)
 
 - ob
 
