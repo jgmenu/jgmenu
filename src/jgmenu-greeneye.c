@@ -12,7 +12,7 @@ static int bw = 150;
 static int cw = 300;
 static int ch = 470;
 static int pad = 4;
-static int item_height = 30;
+static int item_height = 35;
 
 static char *categories[] = {
 	"All:*",
