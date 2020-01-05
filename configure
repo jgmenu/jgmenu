@@ -10,16 +10,16 @@ with_pmenu=f
 
 usage_message="Usage: ./configure
 Produce a config.mk file to be sourced by Makefile
---prefix=<dir>
-    Install architecture-independent files in \$prefix (e.g. --prefix=\$HOME')
---with-xfce4-panel-applet
---with-gtktheme
---with-lx
-    Include contrib/ packages
---enable-asan
-    Enable address sanitizer. Only use during development.
--a, --all
-    Include all contrib/ packages above
+--with-xfce4-panel-applet  Include xfce4-panel-applet. This has quite different
+                           runtime dependencies, so consider building
+			   separately.
+--with-gtktheme            Include gtktheme module
+--with-lx                  Include lx module
+--with-pmenu               Include pmenu module
+--all, -a                  Include all contrib/ packages above
+--enable-asan              Enable address sanitizer (only during development)
+--prefix=<dir>             Install architecture-independent files in \$prefix
+                           (e.g. --prefix=\$HOME')
 "
 
 add () {
@@ -99,6 +99,7 @@ main () {
 			with_xfce4_panel_applet=t
 			with_gtktheme=t
 			with_lx=t
+			with_pmenu=t
 			;;
 		-h|--help)
 			printf '%b' "$usage_message"; exit 1 ;;
