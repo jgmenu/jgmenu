@@ -1,0 +1,81 @@
+jgmenu v4.0 release notes
+=========================
+
+Note to package maintainers:
+
+  * A configure script has been added, and pmenu+lx have been moved to
+    contrib/. For backward compatibility run the command below before
+    `make`, changing prefix to suit your system:
+
+	./configure --prefix=/usr --with-lx --with-pmenu
+
+    Run `./configure -h` for further help
+
+Updates since v3.5
+------------------
+
+  * Add apps module - a replacement for pmenu and the default menu
+    generator from v4.0 (hence major bump). It has the following features
+    and advantages:
+
+      * It uses built-in schema data or a specified schema file (for user
+        override) to map categories to directories.
+
+      * It provides a directory structure without the requirement for a
+        menu package such as lxmenu-data or libgarcon-common, thus making
+        it more likely to work out-of-the-box on many systems.
+
+      * It is written in C and is faster than both pmenu and lx.
+
+      * It is easier to extend and maintain compared with pmenu
+
+      * It supports localized directory and application names
+
+      * It avoids the mind-boggling (in my opinion) mapping relationships
+        betweeen /etc/xdg/menus/* and /usr/share/desktop-directories/*
+        files. For those who want a fully XDG compliant menu, the lx
+        module is still supported.
+
+      * It avoids a number of pmenu and lx issues which are difficult to
+        solve. For example:
+
+          (a) lx cache refresh sometimes does not happen until the second
+              read. Whilst I feel that I ought to try to fix this bug,
+              any changes to libmenu-cache would take a long time to
+              appear in some repositories.
+
+          (b) Both pmenu and lx are affected by having more than one menu
+              package installed, which appears to be common on systems
+              which use applications from different Desktop Environments.
+
+          (c) libmenu-cache does not like the xfce menu package.
+
+      * Support csv_no_dirs, csv_single_window and csv_name_format,
+        making it on par with other CSV generators
+
+  * Move pmenu and lx modules to contrib/ to make maintenance and
+    packaging easier.
+
+  * jgmenu.c: hide 'last selection border' (issue #103). Thanks @Roliga
+    for pointing this out.
+
+  * Update man pages and usage() to prefer `jgmenu_run init` over
+    `jgmenu init`
+
+  * Add banned.h to make audits easier
+
+  * Add scripts/pbuild to simplify building deb packages with pbuilder.
+    Thanks @johnraff for supplying this.
+
+  * Add configure script in order to (a) make contrib/ packages easier
+    to manange; and (b) remove dependency checking from Makefile
+
+  * greeneye: change category 'Games' to 'Game' in order to comply with
+    freedesktop.org XDG menu-spec. Thanks @jkinney23 for providing this
+    fix.
+
+  * filter.c: support case-insensitive non-ASCII search (issue #91)
+    Thanks to @Vladimir-csp
+
+  * xfce4-panel: remove gtk+-3.0 dependency
+

@@ -1,3 +1,11 @@
+jgmenu (4.0-1) unstable; urgency=medium
+
+  * New upstream release
+  * Add configure script
+  * Move pmenu and lx to contrib/
+
+ -- Johan Malm <jgm323@gmail.com>  Sun, 05 Jan 2020 15:10:51 +0000
+
 jgmenu (3.5-1) unstable; urgency=medium
 
   * New upstream release
