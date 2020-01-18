@@ -1,61 +1,71 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "compat.h"
+#include "util.h"
 
-static char short_lang_code[32];	/* e.g. "sv" */
-static char long_lang_code[32];		/* e.g. "sv_SE */
-static char name_key_ll[32];		/* e.g. "Name[sv]" */
-static char name_key_ll_cc[32];		/* e.g. "Name[sv_SE]" */
-static char generic_name_key_ll[32];	/* e.g. "Name[sv]" */
-static char generic_name_key_ll_cc[32];	/* e.g. "Name[sv_SE]" */
+static char _ll[32] = { 0 };
+static char _llcc[32] = { 0 };
+static char _name_ll[32] = { 0 }; /* Name[ll] */
+static char _name_llcc[32] = { 0 }; /* Name[ll_CC] */
+static char _gname_ll[32] = { 0 }; /* GenericName[ll] */
+static char _gname_llcc[32] = { 0 }; /* GenericName[ll_CC] */
 
-int lang_code(char **ll, char **ll_cc)
+static void lang_init(void)
 {
+	static bool has_been_initialized;
 	char *p;
 
+	if (has_been_initialized)
+		return;
+	has_been_initialized = true;
+
 	p = getenv("LANG");
-	if (!p)
-		return -1;
+	if (!p) {
+		warn("$LANG not set");
+		return;
+	}
 
 	/* ll_CC */
-	strlcpy(long_lang_code, p, sizeof(long_lang_code));
-	p = strrchr(long_lang_code, '.');
+	strlcpy(_llcc, p, sizeof(_llcc));
+	p = strrchr(_llcc, '.');
 	if (p)
 		*p = '\0';
 
 	/* ll */
-	strlcpy(short_lang_code, long_lang_code, sizeof(short_lang_code));
-	p = strrchr(short_lang_code, '_');
+	strlcpy(_ll, _llcc, sizeof(_ll));
+	p = strrchr(_ll, '_');
 	if (p)
 		*p = '\0';
 
-	*ll = short_lang_code;
-	*ll_cc = long_lang_code;
-	return 0;
+	snprintf(_name_ll, sizeof(_name_ll), "Name[%s]", _ll);
+	snprintf(_name_llcc, sizeof(_name_llcc), "Name[%s]", _llcc);
+	snprintf(_gname_ll, sizeof(_gname_ll), "GenericName[%s]", _ll);
+	snprintf(_gname_llcc, sizeof(_gname_llcc), "GenericName[%s]", _llcc);
 }
 
-void lang_localized_name_key(char **name_ll, char **name_ll_cc)
+char *lang_name_ll(void)
 {
-	char *ll, *ll_cc;
-
-	lang_code(&ll, &ll_cc);
-	snprintf(name_key_ll, sizeof(name_key_ll), "Name[%s]", ll);
-	snprintf(name_key_ll_cc, sizeof(name_key_ll_cc), "Name[%s]", ll_cc);
-	*name_ll = name_key_ll;
-	*name_ll_cc = name_key_ll_cc;
+	lang_init();
+	return _name_ll;
 }
 
-void lang_localized_gname_key(char **gname_ll, char **gname_ll_cc)
+char *lang_name_llcc(void)
 {
-	char *ll, *ll_cc;
+	lang_init();
+	return _name_llcc;
+}
 
-	lang_code(&ll, &ll_cc);
-	snprintf(generic_name_key_ll, sizeof(generic_name_key_ll),
-		 "GenericName[%s]", ll);
-	snprintf(generic_name_key_ll_cc, sizeof(generic_name_key_ll_cc),
-		 "GenericName[%s]", ll_cc);
-	*gname_ll = generic_name_key_ll;
-	*gname_ll_cc = generic_name_key_ll_cc;
+char *lang_gname_ll(void)
+{
+	lang_init();
+	return _gname_ll;
+}
+
+char *lang_gname_llcc(void)
+{
+	lang_init();
+	return _gname_llcc;
 }

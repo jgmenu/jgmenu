@@ -39,16 +39,6 @@ static void format_exec(char *s)
 static void parse_line(char *line, struct app *app, int *is_desktop_entry)
 {
 	char *key, *value;
-	static char *name_ll, *name_ll_cc, *gname_ll, *gname_ll_cc;
-
-	/*
-	 * Set to "Name[<ll>]", "Name[<ll_CC>]" and the equivalent for
-	 * GenericName
-	 */
-	if (!name_ll) {
-		lang_localized_name_key(&name_ll, &name_ll_cc);
-		lang_localized_gname_key(&gname_ll, &gname_ll_cc);
-	}
 
 	/* We only read the [Desktop Entry] section of a .desktop file */
 	if (line[0] == '[') {
@@ -81,15 +71,15 @@ static void parse_line(char *line, struct app *app, int *is_desktop_entry)
 	}
 
 	/* localized name */
-	if (!strcmp(key, name_ll_cc))
+	if (!strcmp(key, lang_name_llcc()))
 		app->name_localized = xstrdup(value);
-	if (!app->name_localized && !strcmp(key, name_ll))
+	if (!app->name_localized && !strcmp(key, lang_name_ll()))
 		app->name_localized = xstrdup(value);
 
 	/* localized generic name */
-	if (!strcmp(key, gname_ll_cc))
+	if (!strcmp(key, lang_gname_llcc()))
 		app->generic_name_localized = xstrdup(value);
-	if (!app->generic_name_localized && !strcmp(key, gname_ll))
+	if (!app->generic_name_localized && !strcmp(key, lang_gname_ll()))
 		app->generic_name_localized = xstrdup(value);
 }
 
@@ -247,6 +237,6 @@ struct app *desktop_read_files(void)
 	xfree(s.buf);
 
 	/* NULL terminate vector */
-	(void *)grow_vector_by_one_app();
+	grow_vector_by_one_app();
 	return apps;
 }
