@@ -1,0 +1,15 @@
+jgmenu v4.0.1 release notes
+===========================
+
+Updates since v4.0
+------------------
+
+  * Issue #108. Show menu on correct monitor in IPC mode (position_mode=ipc)
+    Before this fix, the menu would always appear on the monitor from which
+    it was first launched. Thanks @atmenta for identifying the bug and
+    providing a solution.
+
+  * Fix segfault bug in jgmenu-apps on OpenBSD. Thanks Scott H for helping
+    resolve this.
+
+  * Update lithium theme to reflect introduction of apps module
