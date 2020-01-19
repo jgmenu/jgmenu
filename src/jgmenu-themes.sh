@@ -123,7 +123,8 @@ EOF
 bunsenlabs_lithium_config () {
 cat <<'EOF'
 tint2_look          = 0
-at_pointer          = 1
+csv_cmd             = apps
+position_mode       = pointer
 menu_width          = 134
 menu_padding_top    = 24
 menu_padding_right  = 0
@@ -151,7 +152,9 @@ color_title_fg      = #d3dae3 100
 color_title_bg      = #22373f 100
 color_title_border  = #74998B 8
 color_sep_fg        = #535353 100
-sep_markup = 
+sep_markup =
+hover_delay         = 30
+csv_name_format     = %n
 EOF
 }
 
@@ -165,27 +168,27 @@ cat <<'EOF'
 ^sep()
 Run Program,gmrun
 ^sep()
-Terminal,x-terminal-emulator
-Web Browser,x-www-browser
-File Manager,bl-file-manager
-Text Editor,bl-text-editor
-Media Player,bl-media-player
+Terminal,x-terminal-emulator,utilities-terminal
+Web Browser,x-www-browser,web-browser
+File Manager,bl-file-manager,system-file-manager
+Text Editor,bl-text-editor,text-editor
+Media Player,bl-media-player,multimedia-player
 ^sep()
 Applications,^checkout(apps)
 ^sep()
-BL Utilities,^checkout(bl-utilities)
-Places,^pipe(jgmenu_run ob --cmd="bl-places-pipemenu" --tag="bl-places-pipemenu")
+BL Utilities,^checkout(bl-utilities),applications-utilities
+Places,^pipe(jgmenu_run ob --cmd="bl-places-pipemenu" --tag="bl-places-pipemenu"),folder
 Recent Files,^pipe(jgmenu_run ob --cmd="bl-recent-files-pipemenu -rl15" --tag="bl-recent-files-pipemenu")
 ^sep()
-Preferences,^checkout(bl-preferences)
-System,^checkout(bl-system)
+Preferences,^checkout(bl-preferences),preferences-system
+System,^checkout(bl-system),applications-system
 ^sep()
 #Help &amp; Resources,^pipe(jgmenu_run ob --cmd="bl-help-pipemenu" --tag="bl-help-pipemenu")
-Help &amp; Resources,^checkout(bl-help-menu)
+Help &amp; Resources,^checkout(bl-help-menu),help-contents
 Display Keybinds,^pipe(jgmenu_run ob --cmd="bl-kb-pipemenu" --tag="bl-kb-pipemenu")
 ^sep()
-Lock Screen,bl-lock
-Exit,bl-exit
+Lock Screen,bl-lock,system-lock-screen
+Exit,bl-exit,system-shutdown
 
 . /usr/share/bunsen/configs/menu-includes/help-menu
 
@@ -194,8 +197,12 @@ Back,^back()
 Take Screenshot,^pipe(bl-scrot-pipemenu)
 SSH,^pipe(jgmenu_run ob --cmd="bl-sshconfig-pipemenu" --tag="bl-sshconfig-pipemenu")
 Remote Desktop,^pipe(jgmenu_run ob --cmd="bl-remote-desktop-pipemenu" --tag="bl-remote-desktop-pipemenu")
-#Dropbox,^pipe(jgmenu_run ob --cmd="bl-dropbox-pipemenu" --tag="bl-dropbox-pipemenu")
 BLOB Themes Manager,bl-obthemes
+# These two utilities are available if you uncomment the line.
+# Pipe menu to install and use Dropbox:
+#Dropbox,^pipe(jgmenu_run ob --cmd="bl-dropbox-pipemenu" --tag="bl-dropbox-pipemenu")
+# Utility to set language if login greeter does not offer that option:
+#Choose Language,bl-setlocale
 
 ^tag(bl-preferences)
 Back,^back()
@@ -204,13 +211,13 @@ Openbox,^checkout(bl-obConfig)
 jgmenu,^checkout(bl-jgmenuConfig)
 Keybinds,^checkout(bl-xbindkeysConfig)
 Compositor,^pipe(jgmenu_run ob --cmd="bl-compositor" --tag="bl-compositor")
-Conky,^pipe(jgmenu_run ob --cmd="bl-conky-pipemenu" --tag="bl-conky-pipemenu")
-Tint2,^pipe(jgmenu_run ob --cmd="bl-tint2-pipemenu" --tag="bl-tint2-pipemenu")
-Appearance,lxappearance
-Font configuration,bl-text-editor ~/.config/fontconfig/fonts.conf
-Wallpaper,nitrogen
-Notifications,xfce4-notifyd-config
-Power Management,xfce4-power-manager-settings
+Conky,^pipe(jgmenu_run ob --cmd="bl-conky-pipemenu" --tag="bl-conky-pipemenu"),conky-manager
+Tint2,^pipe(jgmenu_run ob --cmd="bl-tint2-pipemenu" --tag="bl-tint2-pipemenu"),tint2
+Appearance,lxappearance,preferences-desktop-theme
+Font configuration,bl-text-editor ~/.config/fontconfig/fonts.conf,preferences-desktop-font
+Wallpaper,nitrogen,preferences-desktop-wallpaper,wallpaper
+Notifications,xfce4-notifyd-config,notifyconf
+Power Management,xfce4-power-manager-settings,xfce4-power-manager-settings
 dmenu,^checkout(bl-dmenuconfig)
 gmrun,^checkout(bl-gmrunconfig)
 Display,^checkout(bl-DisplaySettings)
@@ -223,7 +230,7 @@ Edit environment,bl-text-editor ~/.config/bunsen/environment
 bunsenlabs-session,x-terminal-emulator -T 'man bunsenlabs-session' -e man bunsenlabs-session
 xdg-autostart,x-terminal-emulator -T 'man bl-xdg-autostart' -e man bl-xdg-autostart
 
-Openbox,^tag(bl-obConfig)
+Openbox,^tag(bl-obConfig),openbox
 Back,^back()
 Edit bl-rc.xml,bl-text-editor ~/.config/openbox/bl-rc.xml
 ^sep()
@@ -249,7 +256,6 @@ Restart,sh -c 'pkill -x xbindkeys; xbindkeys_autostart'
 ^sep()
 # Next entry requires tk
 #Show Keybinds,xbindkeys_show
-GUI Keybinds editor,xbindkeys-config
 ^sep(Help)
 man page,x-terminal-emulator -T 'man xbindkeys' -e man xbindkeys
 
@@ -273,18 +279,17 @@ man xrandr,x-terminal-emulator -T 'man xrandr' -e man xrandr
 
 System,^tag(bl-system)
 Back,^back()
-Printers,^pipe(jgmenu_run ob --cmd="bl-printing-pipemenu" --tag="bl-printing-pipemenu")
-Task Manager (htop),x-terminal-emulator -T 'htop task manager' -e htop
+Printers,^pipe(jgmenu_run ob --cmd="bl-printing-pipemenu" --tag="bl-printing-pipemenu"),printer
+Task Manager (htop),x-terminal-emulator -T 'htop task manager' -e htop,htop
 Install Selected Packages,^pipe(bl-install-pipemenu)
-Synaptic Package Manager,pkexec synaptic
-Login Settings,pkexec bl-text-editor /etc/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm.conf
-Login Interface,lightdm-gtk-greeter-settings-pkexec
-GParted,pkexec gparted
-Set Default Browser,"""x-terminal-emulator -T 'Select Default Browser' -e sh -c 'sudo update-alternatives --config x-www-browser; sleep 5'"""
-Edit Debian Alternatives,galternatives
+Synaptic Package Manager,pkexec synaptic,synaptic
+Login Settings,pkexec bl-text-editor /etc/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm.conf,lightdm-settings
+Login Interface,lightdm-gtk-greeter-settings-pkexec,lightdm-settings
+GParted,pkexec gparted,gparted
+Set Default Browser,"""x-terminal-emulator -T 'Select Default Browser' -e sh -c 'sudo update-alternatives --config x-www-browser; sleep 5'""",web-browser
+Edit Debian Alternatives,galternatives,galternatives
 ^sep()
-About Bunsen Alternatives,yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="About Bunsen Alternatives" --filename="/usr/share/bunsen/docs/helpfile-bl-alternatives.txt" --width=900 --height=700 --fontname=Monospace
-
+About Bunsen Alternatives,yad --button="OK":0 --center --window-icon=distributor-logo-bunsenlabs --text-info --title="About Bunsen Alternatives" --filename="/usr/share/bunsen/docs/helpfile-bl-alternatives.txt" --width=900 --height=700 --fontname=Monospace,distributor-logo-bunsenlabs
 
 ^tag(apps)
 EOF
