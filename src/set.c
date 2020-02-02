@@ -78,7 +78,7 @@ int set_key_exists(const char *key)
 	int i;
 
 	for (i = 0; i < nr_entries; i++) {
-		if (!entries[i].key)
+		if (!entries[i].key[0])
 			continue;
 		if (!strcmp(entries[i].key, key))
 			return 1;
@@ -95,7 +95,7 @@ void set_set(const char *key, const char *value, int is_commented_out)
 		die("NULL passed to function %s()", __func__);
 	/* look for existing entry */
 	for (i = 0; i < nr_entries; i++) {
-		if (!entries[i].key)
+		if (!entries[i].key[0])
 			continue;
 		if (!strcmp(entries[i].key, key)) {
 			e = entries + i;
@@ -118,11 +118,11 @@ int set_is_already_set_correctly(const char *key, const char *value)
 	int i;
 
 	for (i = 0; i < nr_entries; i++) {
-		if (!entries[i].key)
+		if (!entries[i].key[0])
 			continue;
-		if (strcmp(entries[i].key, key) != 0)
+		if (strcmp(entries[i].key, key))
 			continue;
-		if (!strcmp(entries[i].value, value) != 0)
+		if (!strcmp(entries[i].value, value))
 			return 1;
 	}
 	return 0;
