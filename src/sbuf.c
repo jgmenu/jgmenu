@@ -4,7 +4,7 @@
 void sbuf_init(struct sbuf *s)
 {
 	s->buf = xmalloc(1);
-	s->buf[0] = 0;
+	s->buf[0] = '\0';
 	s->bufsiz = 1;
 	s->len = 0;
 }
@@ -16,14 +16,14 @@ void sbuf_addch(struct sbuf *s, char ch)
 		s->buf = xrealloc(s->buf, s->bufsiz);
 	}
 	s->buf[s->len++] = ch;
-	s->buf[s->len] = 0;
+	s->buf[s->len] = '\0';
 }
 
 void sbuf_addstr(struct sbuf *s, const char *data)
 {
 	int len;
 
-	if (!data)
+	if (!data || data[0] == '\0')
 		return;
 	len = strlen(data);
 	if (s->bufsiz <= s->len + len + 1) {
@@ -63,7 +63,7 @@ void sbuf_shift_left(struct sbuf *s, int n_bytes)
 
 	memcpy(s->buf, data + n_bytes, s->len - n_bytes);
 	s->len -= n_bytes;
-	s->buf[s->len] = 0;
+	s->buf[s->len] = '\0';
 
 	free(data);
 }
