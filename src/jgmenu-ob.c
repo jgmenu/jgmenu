@@ -46,7 +46,7 @@ static struct list_head tags;
 static struct tag *curtag;
 static struct item *curitem;
 
-static void print_it(struct tag *tag)
+static void print_one_node(struct tag *tag)
 {
 	struct item *item;
 	struct sbuf label_escaped;
@@ -106,12 +106,12 @@ static void print_menu(void)
 	/* print root menu first */
 	list_for_each_entry(tag, &tags, list)
 		if (tag->id && !strcmp(tag->id, root_menu))
-			print_it(tag);
+			print_one_node(tag);
 
 	/* then print all other nodes */
 	list_for_each_entry(tag, &tags, list)
 		if (tag->id && strcmp(tag->id, root_menu))
-			print_it(tag);
+			print_one_node(tag);
 }
 
 static char *get_tag_label(const char *id)
