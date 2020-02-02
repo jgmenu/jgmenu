@@ -1,0 +1,11 @@
+jgmenu v4.0.2 release notes
+===========================
+
+Updates since v4.0.1
+--------------------
+
+  * sbuf.c: fix bug which could result in segfault.
+
+  * x11-ui.c: support unusual color-depths required by applications such
+    as x2go (issue #111). Thanks to s-rod for reporting this.
+

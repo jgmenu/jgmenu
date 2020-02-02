@@ -8,6 +8,7 @@
 
 ### 2020
 
+[v4.0.2](docs/relnotes/4.0.2.txt)  
 [v4.0.1](docs/relnotes/4.0.1.txt)  
 [v4.0](docs/relnotes/4.0.txt)  
 
