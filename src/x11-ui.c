@@ -115,6 +115,19 @@ void grabpointer(void)
 	die("cannot grab pointer");
 }
 
+static void get_visual_info(void)
+{
+	int i, depths[] = { 32, 24, 8, 4, 2, 1, 0 };
+
+	for (i = 0; depths[i]; i++) {
+		XMatchVisualInfo(ui->dpy, ui->screen, depths[i], TrueColor,
+				 &ui->vinfo);
+		if (ui->vinfo.visual)
+			break;
+	}
+	info("color depth=%d", ui->vinfo.depth);
+}
+
 void ui_init(void)
 {
 	/*
@@ -132,9 +145,8 @@ void ui_init(void)
 		die("cannot open display");
 
 	ui->xim = XOpenIM(ui->dpy, NULL, NULL, NULL);
-	XMatchVisualInfo(ui->dpy, DefaultScreen(ui->dpy), 32, TrueColor, &ui->vinfo);
-
 	ui->screen = DefaultScreen(ui->dpy);
+	get_visual_info();
 	ui->root = RootWindow(ui->dpy, ui->screen);
 }
 
@@ -273,7 +285,7 @@ void ui_create_window(int x, int y, int w, int h)
 void ui_init_canvas(int max_width, int max_height)
 {
 	ui->w[ui->cur].canvas = XCreatePixmap(ui->dpy, ui->root, max_width,
-					      max_height, 32);
+					      max_height, ui->vinfo.depth);
 }
 
 void ui_init_cairo(int canvas_width, int canvas_height, const char *font)
