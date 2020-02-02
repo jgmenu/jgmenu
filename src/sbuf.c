@@ -159,8 +159,8 @@ void sbuf_replace(struct sbuf *s, const char *before, const char *after)
 		src = p;
 	}
 	sbuf_addstr(&new, src);
-	xfree(s->buf);
-	s->buf = new.buf;
+	sbuf_cpy(s, new.buf);
+	xfree(new.buf);
 }
 
 void sbuf_replace_spaces_with_one_tab(struct sbuf *s)
@@ -175,13 +175,13 @@ void sbuf_replace_spaces_with_one_tab(struct sbuf *s)
 		return;
 	*p++ = '\0';
 	sbuf_init(&new);
-	sbuf_addstr(&new, s->buf);
+	sbuf_cpy(&new, s->buf);
 	sbuf_addch(&new, '\t');
 	while (*p == ' ')
 		++p;
 	sbuf_addstr(&new, p);
-	xfree(s->buf);
-	s->buf = new.buf;
+	sbuf_cpy(s, new.buf);
+	xfree(new.buf);
 }
 
 void sbuf_split(struct list_head *sl, const char *data, char field_separator)
