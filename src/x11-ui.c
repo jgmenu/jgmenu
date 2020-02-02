@@ -80,7 +80,7 @@ void grabkeyboard(void)
 	int i;
 
 	for (i = 0; i < 50; i++) {
-		if (XGrabKeyboard(ui->dpy, DefaultRootWindow(ui->dpy), True,
+		if (XGrabKeyboard(ui->dpy, ui->root, True,
 				  GrabModeAsync, GrabModeAsync,
 				  CurrentTime) == GrabSuccess)
 			return;
@@ -102,7 +102,7 @@ void grabpointer(void)
 	 * gives (x,y) wrt root window.
 	 */
 	for (i = 0; i < 50; i++) {
-		if (XGrabPointer(ui->dpy, DefaultRootWindow(ui->dpy),
+		if (XGrabPointer(ui->dpy, ui->root,
 				 False,
 				 ButtonPressMask | ButtonReleaseMask |
 				 PointerMotionMask | FocusChangeMask |
@@ -161,7 +161,7 @@ static void print_screen_info(void)
 		return;
 	info_has_been_shown = 1;
 
-	sr = XRRGetScreenResourcesCurrent(ui->dpy, DefaultRootWindow(ui->dpy));
+	sr = XRRGetScreenResourcesCurrent(ui->dpy, ui->root);
 	info("%d xrandr crt controller(s) found", sr->ncrtc);
 	for (i = 0; i < sr->ncrtc; i++) {
 		ci = XRRGetCrtcInfo(ui->dpy, sr, sr->crtcs[i]);
@@ -190,7 +190,7 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height, int monitor)
 
 	if (config.verbosity >= 3)
 		print_screen_info();
-	sr = XRRGetScreenResourcesCurrent(ui->dpy, DefaultRootWindow(ui->dpy));
+	sr = XRRGetScreenResourcesCurrent(ui->dpy, ui->root);
 	BUG_ON(!sr);
 	n = sr->ncrtc;
 
@@ -249,10 +249,9 @@ void ui_create_window(int x, int y, int w, int h)
 {
 	ui->w[ui->cur].swa.override_redirect = True;
 	ui->w[ui->cur].swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask | ButtonPressMask;
-	ui->w[ui->cur].swa.colormap = XCreateColormap(ui->dpy, DefaultRootWindow(ui->dpy), ui->vinfo.visual, AllocNone);
+	ui->w[ui->cur].swa.colormap = XCreateColormap(ui->dpy, ui->root, ui->vinfo.visual, AllocNone);
 	ui->w[ui->cur].swa.background_pixel = 0;
 	ui->w[ui->cur].swa.border_pixel = 0;
-
 	ui->w[ui->cur].win = XCreateWindow(ui->dpy, ui->root, x, y, w, h, 0,
 					   ui->vinfo.depth, CopyFromParent,
 					   ui->vinfo.visual,
@@ -262,9 +261,7 @@ void ui_create_window(int x, int y, int w, int h)
 					   &ui->w[ui->cur].swa);
 	ui->w[ui->cur].xic = XCreateIC(ui->xim, XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
 			    XNClientWindow, ui->w[ui->cur].win, XNFocusWindow, ui->w[ui->cur].win, NULL);
-
 	ui->w[ui->cur].gc = XCreateGC(ui->dpy, ui->w[ui->cur].win, 0, NULL);
-
 	XStoreName(ui->dpy, ui->w[ui->cur].win, "jgmenu");
 	XSetIconName(ui->dpy, ui->w[ui->cur].win, "jgmenu");
 	set_wm_class();
@@ -387,6 +384,12 @@ void ui_win_del_beyond(int w)
 	ui->cur = w;
 }
 
+static void set_rgba(double *rgba)
+{
+	cairo_set_source_rgba(ui->w[ui->cur].c, rgba[0], rgba[1], rgba[2],
+			      rgba[3]);
+}
+
 void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h,
 				      double radius, double line_width, int fill, double *rgba)
 {
@@ -398,7 +401,7 @@ void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h,
 	cairo_arc(ui->w[ui->cur].c, x, y + h, 0, 90 * deg, 180 * deg);			   /* SW */
 	cairo_arc(ui->w[ui->cur].c, x + radius, y + radius, radius, 180 * deg, 270 * deg);    /* NE */
 	cairo_close_path(ui->w[ui->cur].c);
-	cairo_set_source_rgba(ui->w[ui->cur].c, rgba[0], rgba[1], rgba[2], rgba[3]);
+	set_rgba(rgba);
 	if (fill) {
 		cairo_set_line_width(ui->w[ui->cur].c, 0.0);
 		cairo_fill_preserve(ui->w[ui->cur].c);
@@ -425,7 +428,7 @@ void ui_draw_rectangle(double x, double y, double w, double h, double radius, do
 		cairo_arc(ui->w[ui->cur].c, x + radius, y + h - radius, radius, 90 * deg, 180 * deg);
 		cairo_arc(ui->w[ui->cur].c, x + radius, y + radius, radius, 180 * deg, 270 * deg);
 		cairo_close_path(ui->w[ui->cur].c);
-		cairo_set_source_rgba(ui->w[ui->cur].c, rgba[0], rgba[1], rgba[2], rgba[3]);
+		set_rgba(rgba);
 		if (fill) {
 			cairo_set_line_width(ui->w[ui->cur].c, 0.0);
 			cairo_fill_preserve(ui->w[ui->cur].c);
@@ -434,7 +437,7 @@ void ui_draw_rectangle(double x, double y, double w, double h, double radius, do
 		}
 		cairo_stroke(ui->w[ui->cur].c);
 	} else {
-		cairo_set_source_rgba(ui->w[ui->cur].c, rgba[0], rgba[1], rgba[2], rgba[3]);
+		set_rgba(rgba);
 		cairo_set_line_width(ui->w[ui->cur].c, line_width);
 		cairo_rectangle(ui->w[ui->cur].c, x, y, w, h);
 		if (fill)
@@ -446,7 +449,7 @@ void ui_draw_rectangle(double x, double y, double w, double h, double radius, do
 
 void ui_draw_line(double x0, double y0, double x1, double y1, double line_width, double *rgba)
 {
-	cairo_set_source_rgba(ui->w[ui->cur].c, rgba[0], rgba[1], rgba[2], rgba[3]);
+	set_rgba(rgba);
 	cairo_set_line_width(ui->w[ui->cur].c, line_width);
 	cairo_move_to(ui->w[ui->cur].c, x0, y0);
 	cairo_line_to(ui->w[ui->cur].c, x1, y1);
@@ -476,7 +479,7 @@ void ui_insert_text(char *s, int x, int y, int h, int w, double *rgba,
 	pango_layout_set_font_description(ui->w[ui->cur].pangolayout, ui->w[ui->cur].pangofont);
 	pango_layout_set_tabs(ui->w[ui->cur].pangolayout, tabs);
 	pango_layout_set_markup(ui->w[ui->cur].pangolayout, s, -1);
-	cairo_set_source_rgba(ui->w[ui->cur].c, rgba[0], rgba[1], rgba[2], rgba[3]);
+	set_rgba(rgba);
 	pango_cairo_update_layout(ui->w[ui->cur].c, ui->w[ui->cur].pangolayout);
 	pango_layout_get_pixel_size(ui->w[ui->cur].pangolayout, NULL, &height);
 	/* use (h - height) / 2 to center-align vertically */
@@ -499,7 +502,6 @@ struct point ui_get_text_size(const char *str, const char *fontdesc)
 	font = pango_font_description_from_string(fontdesc);
 	pango_layout_set_font_description(layout, font);
 	pango_layout_set_markup(layout, str, -1);
-	cairo_set_source_rgba(c, 0, 0, 0, 1.0);
 	pango_cairo_update_layout(c, layout);
 	pango_layout_get_pixel_size(layout, &point.x, &point.y);
 	cairo_surface_destroy(cs);
