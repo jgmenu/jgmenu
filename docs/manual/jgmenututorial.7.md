@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)
 % Johan Malm
-% 16 October, 2019
+% 6 February, 2020
 
 # NAME
 
@@ -19,27 +19,28 @@ This tutorial aims to explain the usage of jgmenu through a set of lessons.
 - [Lesson 5 - Icons](#lesson5)  
 - [Lesson 6 - Submenus](#lesson6)  
 - [Lesson 7 - XDG Application Menus](#lesson7)  
-- [Lesson 8 - Disable directory structure](#lesson8)  
+- [Lesson 8 - Config Options](#lesson8)  
 - [Lesson 9 - Apprend/Prepend and Separators](#lesson9)  
 - [Lesson 10 - CSV generators](#lesson10)  
 - [Lesson 11 - Search](#lesson11)  
 
 # Lesson 1 - Get started {#lesson1}
 
-After installing jgmenu, you can get going quickly by running
+After installing jgmenu, start the menu by running the following command
 
     jgmenu_run
 
-You should see a Linux/BSD system menu showing installed applications. We call
-this menu "pmenu" (see [lesson 7](#lesson7) for further details).
+You should see a Linux/BSD system menu showing installed applications.
+See [lesson 7](#lesson7) for further details.
 
 Create a config file (`~/.config/jgmenu/jgmenurc`) by running
 
     jgmenu_run init
 
-Full details of config options are covered in [jgmenu(1)](jgmenu.1.html)
+Full details of config options are covered in [jgmenu(1)](jgmenu.1.html).
 
-You can also try some templates using the interactive mode
+By entering the interactive mode and then selecting 't', you can try some
+pre-defined templates/themes.
 
     jgmenu_run init -i
 
@@ -66,8 +67,8 @@ intervention in order for jgmenu to display correctly on your system.
 
 # Lesson 2 - Architecture {#lesson2}
 
-As you get started with jgmenu, there are two concepts worth mentioning early,
-the modular architecture or jgmenu and the `jgmenu_run` wrapper.
+The design of jgmenu is very modular, providing a lot of flexibility in how
+it is used.
 
 When jgmenu is started, two processes are run to produce the menu.
 
@@ -81,12 +82,17 @@ When jgmenu is started, two processes are run to produce the menu.
     └────────────────┘
 
 The first process (csv-generator) produces the menu content, whereas the
-second generates a graphical menu (what you see). This modular approach
-provides a lot of flexibility in how jgmenu is used.
+second generates the graphical menu.
 
-`jgmenu_run` is a wrapper script which will either show jgmenu if it is already
-running, or start a new instance. This makes it suitable for using with panels
-and keyboard shortcuts. See `jgmenu_run(1)` for full details.
+[jgmenu_run(1)](jgmenu_run.1.html) is a multi-purpose wrapper script which
+does the following is pseudo code:
+
+    if (jgmenu is already running)
+            show menu
+    else
+            start a new instance of jgmenu
+
+This makes it suitable for using with panels and keyboard shortcuts.
 
 # Lesson 3 - Scripting with jgmenu {#lesson3}
 
@@ -116,17 +122,17 @@ So let's get back to basics. Try the following:
 
 If you have not got used to the here-document syntax yet, it just means that
 you put the words "xterm" and "firefox" in a text file (which you can of course
-do using a text editor). Then either of the following
+do using a text editor). Then run either of the following
 
     cat foo.txt | jgmenu --simple --icon-size=0
 
     jgmenu --vsimple --csv-file="foo.txt"
 
-The option `--simple` make jgmenu short-lived, disables all syncing with tint2
-and reads menu items from `stdin`.
+The option `--simple` make jgmenu short-lived and reads menu items from
+`stdin`.
 
 The option `--icon-size=0`, disables icons (i.e. it does not just display them
-at zero size, it actually does not load them)
+at zero size, it simply does not load them)
 
 The command line argument `--vsimple` is the same as `--simple`, but also
 disables icons and ignores jgmenurc (if it exists).
@@ -209,91 +215,68 @@ the parent window.
 
 # Lesson 7 - XDG Application Menus {#lesson7}
 
-freedesktop.org have developed a menu standard which is adhered to by the big
-Desktop Environments. We will refer to this type of menu as XDG. jgmenu can run
-two types of XDG(ish) menus: pmenu and lx.
-
-To understand the subtleties between them, you need a basic appreciataion of
-the XDG menu-spec and desktop-entry-spec. See:
-http://standards.freedesktop.org/ for further information.
-
-To keep things simple, when discussing XDG paths, only one location will be
-referred to rather than XDG variables and every possible location. So for
-example, if "/usr/share" is quoted, it may refer to "/usr/local/share",
-"$HOME/.local/share", etc on your system.
-
-In brief, there are three types of files which define the Linux/BSD system
-menu:
+XDG (freedesktop.org) have defined a Linux/BSD Desktop Menu Specification
+which is followed by the big Desktop Environments. See
+[menu-spec](http://specifications.freedesktop.org/menu-spec/latest/)
+for further details. In brief, there are three types of files which define an
+XDG menu:
 
 `.menu`
 
-:   These files are generally located in `/etc/xdg/menus`. They are XML files
-    describing such things as the menu categories and directory structure.
+:   XML file describing menu categories and directory structure.
+    Located in `/etc/xdg/menus/`, or XDG_CONFIG_{HOME,DIRS} equivalent.
 
 `.directory`
 
-:   These are typically located in `/usr/share/desktop-directories` and
-    describe the menu directories
+:   Describe menu directories. Located in `/usr/share/desktop-directories/`,
+    or XDG_DATA_{HOME,DIRS} equivalent.
 
 `.desktop`
 
-:   On many systems, these will be found at`/usr/share/applications`. Each
-    application has a .desktop file associated with it. These files contain
-    most of the information needed to build a menu (e.g. `Name`,
-    `Exec command`, `Icon` and `Category`)
+:   Describe applications and contain most of the information needed to build
+    a menu (e.g. `Name`, `Exec command`, `Icon` and `Category`)
+    Located in `/usr/share/applications/`, or XDG_DATA_{HOME,DIRS}
+    equivalent.
 
-`pmenu` is written in python by @o9000. It uses .directory and .desktop files
-to build a menu, but ignores any .menu files.  Instead of the structure
-specified in the .menu file, it simply maps each ".desktop" application onto
-one of the ".directory" categories.  If a matching ".directory" category does
-not exist, it tries to cross-reference "additional categories" to "related
-categories" in accordance with the XDG menu-spec.  This is a generic approach
-which avoids Desktop Environment specific rules defined in the .menu file. It
-ensures that all .desktop files are included in the menu.
+Most desktop applications provided their own associated .desktop files,
+whereas .menu and .directory files are supplied by menu packages, such as
+libmenu-cache (LXDE) and libcargon (XFCE).
 
-`lx` uses LXDE's libmenu-cache to generate an XDG compliant menu including
-separators and internationalization. It requires a recent version of
-libmenu-cache, so may not be included in your build.
+The jgmenu core module [jgmenu-apps(1)](jgmenu-apps.1.html) provides a system
+menu based on .desktop files and built-in schema data or a specified schema
+file, rather than system .menu and .directory files. Whilst this deviates from
+XDG menu spec, it is much simpler to understand and tweak. It also avoids
+reliance on menu packages.
 
-Set `csv_cmd` in jgmenurc to specify which of these csv-commands you wish to
-run.
+For strict XDG compliance, the optional module
+[jgmenu-lx(1)](jgmenu-lx.1.html) can be used.
 
-## Comparison of application menu modules
+See [Lesson 10](#lesson10) for generic instructions on modules.
 
-This table summarise the key features of each module:
+# Lesson 8 - Config Options {#lesson8}
 
-    ╔═══════════════════════╤═════════════════╤═════════════════════╗
-    ║                       │ pmenu           │ lx                  ║
-    ║ ──────────────────────│─────────────────│─────────────────────║
-    ║ speed (my machine)    │ 400 ms          │ 99 ms               ║
-    ║ language              │ python          │ C                   ║
-    ║ dependencies          │ python3         │ glib, libmenu-cache ║
-    ║ XDG compliance        │ not intended    │ yes                 ║
-    ║ localisation support  │ yes             │ yes                 ║
-    ║ ──────────────────────│─────────────────│─────────────────────║
-    ║ {ap,pre}pend support  │ yes             │ yes                 ║
-    ║ 'no-dirs' support     │ yes             │ yes                 ║
-    ║ single window support │ yes             │ no                  ║
-    ║ formatting            │ no              │ yes                 ║
-    ║ generic name support  │ no              │ yes                 ║
-    ╚═══════════════════════╧═════════════════╧═════════════════════╝
+In lesson 1 we discussed config options `position_mode`, `menu_margin_x`,
+`menu_margin_y`, `menu_halign` and `menu_valign`.
 
-# Lesson 8 - Disable directory structure {#lesson8}
+Here follow a few more options you may wish to explore. For full details, see
+[jgmenu(1)](jgmenu.1.html).
 
-Many modern menus and launchers, ignore the XDG directory strcture.
+Rofi style:
 
-With jgmenu, an XDG menu without any directories can be created in a
-number of ways:
+    csv_no_dirs=1
+    csv_single_window=1
+    columns=2
+    menu_width=600
+    menu_valign=center
+    menu_halign=center
 
-The config options `csv_no_dirs = 1`
+Synchronize colours, font and icons with tint2 panel
 
-The CSV generators pmenu and lx understand the environment variable
-`JGMENU_NO_DIRS`. Set this variable (e.g. `JGMENU_NO_DIRS=1` to open
-a menu without a directory structure.
+    tint2_look=1
 
 # Lesson 9 - Apprend/Prepend and Separators {#lesson9}
 
-When running pmenu or lx, you can add menu items to the top and
+When using `apps`, `pmenu` or `lx`, you can add menu items to the top and
 bottom of the root menu by editing append.csv and/or prepend.csv in
 ~/.config/jgmenu. For example, try the following:
 
@@ -311,22 +294,19 @@ append.csv
     Reboot,systemctl -i reboot,system-reboot
     Poweroff,systemctl -i poweroff,system-shutdown
 
-In these example we have used the markup ^sep(), which inserts a
-horizontal separator line. Similarly, ^sep(foo) inserts a text
-separator displaying "foo"
+In these example we have used the markup ^sep(), which inserts a horizontal
+separator line. Similarly, ^sep(foo) inserts a text separator displaying "foo"
 
 # Lesson 10 - CSV generators {#lesson10}
 
-In lesson 7, we introduced pmenu and lx. These commands are
-referred to as "CSV generators" and are invoked as follows:
+In previous lessons, we introduced the `apps`, `lx` and `pmenu`. These modules
+are referred to as "CSV generators" and are invoked as follows:
 
     jgmenu_run <command>
 
-This is the full list of built-in "CSV generators":
+Built-in "CSV generators" include: `apps` and `ob`
 
-  - pmenu
-  - lx
-  - ob
+Optional "CSV generators" include: `lx` and `pmenu`
 
 They are documented by a man page or a simple --help message.
 
@@ -338,7 +318,7 @@ Here follow some examples of how they can be used.
 Specify CSV generator in the config file by setting `csv_cmd` in
 `~/.config/jgmenu/jgmenurc`
 
-    csv_cmd = jgmenu_run pmenu
+    csv_cmd = pmenu
 
 Specify CSV generator on the command line
 
@@ -359,5 +339,14 @@ Create a pipemenu using ^pipe() markup. Consider this example
 jgmenu has search support, which can be invoked by just typing when the menu
 is open.
 
-A search box can be inserted using widgets.
+A search box can be inserted using widgets. For example, add this to
+~/.config/jgmenu/prepend.csv:
+
+    @search,,3,3,150,20,2,left,top,auto,#000000 0,Type to Search
+
+Make sure you adjust menu padding accordingly, for example
+
+    menu_padding_top=24
+
+A search can also be invoked by associating a widget with a ^filter() command.
 
