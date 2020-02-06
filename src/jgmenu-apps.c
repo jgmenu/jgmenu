@@ -14,6 +14,7 @@
 #include "util.h"
 #include "sbuf.h"
 #include "fmt.h"
+#include "i18n.h"
 #include "banned.h"
 
 static bool no_pend;
@@ -140,7 +141,7 @@ static void print_menu_with_dirs(struct dir *dirs, struct app *apps)
 
 	/* Draw top level menu */
 	if (!no_pend)
-		cat("~/.config/jgmenu/prepend.csv");
+		i18n_cat("~/.config/jgmenu/prepend.csv");
 	for (dir = dirs; dir->name; dir += 1) {
 		if (dir->name_localized)
 			printf("%s", dir->name_localized);
@@ -154,7 +155,7 @@ static void print_menu_with_dirs(struct dir *dirs, struct app *apps)
 			       dir->icon);
 	}
 	if (!no_pend)
-		cat("~/.config/jgmenu/append.csv");
+		i18n_cat("~/.config/jgmenu/append.csv");
 
 	/* Draw submenus */
 	for (dir = dirs; dir->name; dir += 1) {
@@ -218,6 +219,7 @@ int main(int argc, char **argv)
 		no_pend = true;
 	if (getenv("JGMENU_SINGLE_WINDOW"))
 		single_window = true;
+	i18n_init(getenv("JGMENU_I18N"));
 
 	apps = desktop_read_files();
 	if (getenv("JGMENU_NO_DIRS")) {
@@ -227,4 +229,5 @@ int main(int argc, char **argv)
 		print_menu_with_dirs(dirs, apps);
 	}
 	return 0;
+	i18n_cleanup();
 }
