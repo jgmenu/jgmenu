@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <stdbool.h>
 
 #include "util.h"
 #include "sbuf.h"
@@ -34,7 +35,6 @@ static const char jgmenu_i18n_usage[] =
 " 3) Run `jgmenu_run ob | jgmenu_run i18n sv | jgmenu --simple`\n";
 
 static int arg_init;
-static char *i18nfile;
 
 static void usage(void)
 {
@@ -42,11 +42,11 @@ static void usage(void)
 	exit(0);
 }
 
-static int is_reserved_word(const char *buf)
+static bool should_ignore_line(const char *buf)
 {
-	if (buf[0] == '^')
-		return 1;
-	return 0;
+	if (buf[0] == '^' || buf[0] == '#' || buf[0] == '.' || buf[0] == '@')
+		return true;
+	return false;
 }
 
 static void create_msgid_if_missing(char *buf)
@@ -56,13 +56,12 @@ static void create_msgid_if_missing(char *buf)
 	BUG_ON(!buf);
 	if (buf[0] == '\0')
 		return;
-	if (is_reserved_word(buf))
+	if (should_ignore_line(buf))
 		return;
 	p = strchr(buf, ',');
 	if (p)
 		*p = '\0';
-	if (i18nfile)
-		translation = i18n_translate(buf);
+	translation = i18n_translate(buf);
 	if (translation)
 		return;
 	printf("msgid \"%s\"\nmsgstr \"\"\n\n", buf);
@@ -90,7 +89,7 @@ int main(int argc, char **argv)
 	i = 1;
 	while (i < argc) {
 		if (argv[i][0] != '-') {
-			i18nfile = argv[i];
+			i18n_init(argv[i]);
 			if (argc > i + 1)
 				die("<translation file> must be the last argument");
 			break;
@@ -101,9 +100,6 @@ int main(int argc, char **argv)
 		}
 		i++;
 	}
-
-	if (i18nfile)
-		i18nfile = i18n_set_translation_file(i18nfile);
 
 	for (i = 0; fgets(buf, BUFSIZ, stdin); i++) {
 		buf[BUFSIZ - 1] = '\0';

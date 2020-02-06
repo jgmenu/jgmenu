@@ -39,6 +39,7 @@ struct sbuf {
 };
 
 void sbuf_init(struct sbuf *s);
+void sbuf_init_with_size(struct sbuf *s, size_t size);
 void sbuf_addch(struct sbuf *s, char ch);
 void sbuf_addstr(struct sbuf *s, const char *data);
 void sbuf_cpy(struct sbuf *s, const char *data);

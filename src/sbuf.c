@@ -3,9 +3,16 @@
 
 void sbuf_init(struct sbuf *s)
 {
-	s->buf = xmalloc(1);
+	sbuf_init_with_size(s, 1);
+}
+
+void sbuf_init_with_size(struct sbuf *s, size_t size)
+{
+	if (size < 1)
+		size = 1;
+	s->buf = xmalloc(size);
 	s->buf[0] = '\0';
-	s->bufsiz = 1;
+	s->bufsiz = size;
 	s->len = 0;
 }
 

@@ -21,7 +21,6 @@ static const char reconfigure_command[] = "openbox --reconfigure";
 static const char restart_command[] = "openbox --restart";
 static const char root_menu_default[] = "root-menu";
 static char *root_menu = (char *)root_menu_default;
-static char *i18nfile;
 static int ispipemenu;
 
 struct tag {
@@ -62,8 +61,7 @@ dont_print_tag:
 		printf("Back,^back()\n");
 	list_for_each_entry(item, &tag->items, list) {
 		t9n = NULL;
-		if (i18nfile && item->label)
-			t9n = i18n_translate(item->label);
+		t9n = i18n_translate(item->label);
 		sbuf_init(&label_escaped);
 		sbuf_cpy(&label_escaped, t9n ? t9n : item->label);
 		sbuf_replace(&label_escaped, "&", "&amp;");
@@ -442,13 +440,6 @@ static void handle_argument_clash(void)
 	die("both --cmd=<cmd> and <file> provided");
 }
 
-static void init_i18n(void)
-{
-	i18nfile = getenv("JGMENU_I18N");
-	if (i18nfile)
-		i18nfile = i18n_set_translation_file(i18nfile);
-}
-
 int main(int argc, char **argv)
 {
 	int i;
@@ -502,11 +493,10 @@ out:
 			*p = '\0';
 		sbuf_addstr(&xmlbuf, buf);
 	}
-	init_i18n();
+	i18n_init(getenv("JGMENU_I18N"));
 	parse_xml(&xmlbuf);
 	xfree(xmlbuf.buf);
-	if (i18nfile)
-		i18n_cleanup();
+	i18n_cleanup();
 
 	return 0;
 }

@@ -14,6 +14,7 @@
 
 static struct hashmap map;
 static char *translation_file;
+static int verbosity;
 
 struct map_entry {
 	struct hashmap_entry ent;
@@ -171,17 +172,23 @@ static void find_translation_file_within_dir(struct sbuf *s)
 		sbuf_cpy(s, "");
 }
 
-char *i18n_set_translation_file(const char *filename)
+char *i18n_init(const char *filename)
 {
 	struct stat st;
 	struct sbuf s;
+	char *jgmenu_verbosity = getenv("JGMENU_VERBOSITY");
 
+	if (!filename)
+		return NULL;
+	if (jgmenu_verbosity)
+		verbosity = atoi(jgmenu_verbosity);
 	sbuf_init(&s);
 	sbuf_cpy(&s, filename);
 	sbuf_expand_tilde(&s);
 
 	if (stat(s.buf, &st) < 0) {
-		warn("i18n: file '%s' does not exist", s.buf);
+		if (verbosity)
+			info("i18n: file '%s' does not exist", s.buf);
 		translation_file = NULL;
 		xfree(s.buf);
 		return NULL;
@@ -189,15 +196,17 @@ char *i18n_set_translation_file(const char *filename)
 	if (S_ISDIR(st.st_mode)) {
 		find_translation_file_within_dir(&s);
 		if (!s.len) {
-			warn("i18n: could not find translation file in dir '%s'",
-			     filename);
+			if (verbosity)
+				info("i18n: no translation file in dir '%s'",
+				      filename);
 			translation_file = NULL;
 			xfree(s.buf);
 			return NULL;
 		}
 	}
 	translation_file = s.buf;
-	info("i18n: translation file '%s' loaded", translation_file);
+	if (verbosity)
+		info("i18n: translation file '%s' loaded", translation_file);
 	i18n_open();
 	return translation_file;
 }
@@ -207,6 +216,8 @@ char *i18n_translate(const char *s)
 	struct map_entry *entry;
 	int hash = 0;
 
+	if (!translation_file || !s)
+		return NULL;
 	hash = strihash(s);
 	entry = hashmap_get_from_hash(&map, hash, s);
 	return entry ? (char *)get_value(entry) : NULL;
@@ -216,6 +227,8 @@ void i18n_translate_first_field(struct sbuf *s)
 {
 	char *tmp, *remainder = NULL, *translation = NULL;
 
+	if (!translation_file)
+		return;
 	BUG_ON(!s || !s->buf);
 	if (s->buf[0] == '\0')
 		return;
@@ -238,7 +251,30 @@ void i18n_translate_first_field(struct sbuf *s)
 	xfree(tmp);
 }
 
+void i18n_cat(const char *filename)
+{
+	FILE *fp;
+	struct sbuf s;
+
+	sbuf_init_with_size(&s, 4096);
+	sbuf_cpy(&s, filename);
+	sbuf_expand_tilde(&s);
+	fp = fopen(s.buf, "r");
+	if (!fp)
+		goto cleanup;
+	while (fgets(s.buf, s.bufsiz, fp)) {
+		i18n_translate_first_field(&s);
+		printf("%s", s.buf);
+	}
+	printf("\n");
+	fclose(fp);
+cleanup:
+	xfree(s.buf);
+}
+
 void i18n_cleanup(void)
 {
+	if (!translation_file)
+		return;
 	hashmap_free(&map, 1);
 }
