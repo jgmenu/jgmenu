@@ -1,6 +1,4 @@
-# Translation file for BunsenLabs Helium openbox menu
-
-# Main Menu
+# Translation file based on BunsenLabs Lithium menu
 
 msgid "Run Program"
 msgstr "Kör program"
@@ -47,19 +45,20 @@ msgstr "Inställningar"
 msgid "System"
 msgstr "System"
 
-msgid "Help & Resources"
-msgstr "Hjälp och resurser"
+msgid "Help &amp; Resources"
+msgstr "Hjälp &amp; resurser"
 
 msgid "Display Keybinds"
 msgstr "Visa tangentbindningar"
+
+msgid "Keybinds"
+msgstr "Tangentbindningar"
 
 msgid "Lock Screen"
 msgstr "Lås skärmen"
 
 msgid "Exit"
 msgstr "Avsluta"
-
-# Accessories Menu
 
 msgid "Catfish File Search"
 msgstr "Catfish fil sökning"
@@ -72,8 +71,6 @@ msgstr "Program hanterare (htop)"
 
 msgid "System Information (hardinfo)"
 msgstr "System information (hardinfo)"
-
-# Graphics Menu (pipe-menu)
 
 msgid "Mirage Image Viewer"
 msgstr "Mirage bild visare"
@@ -90,15 +87,11 @@ msgstr "scrot skärmdump"
 msgid "Install"
 msgstr "Installera"
 
-# Multimedia Menu (pipe-menu)
-
 msgid "Vlc Media Player"
 msgstr "Vlc mediaspelare"
 
 msgid "utilities"
 msgstr "verktyg"
-
-# Network Menu
 
 msgid "WWW Browsers"
 msgstr "WWW utforskare"
@@ -124,8 +117,6 @@ msgstr "Avseläget skrivbord"
 msgid "SSH"
 msgstr "SSH"
 
-# Office Menu
-
 msgid "LibreOffice"
 msgstr "Libreoffice"
 
@@ -138,17 +129,11 @@ msgstr "Miniräknare"
 msgid "Evince PDF Viewer"
 msgstr "Evince PDF visare"
 
-# Places Menu
-
 msgid "Browse here..."
 msgstr "Bläddra här..."
 
-# Recent Files Menu
-
 msgid "Clear recent files"
 msgstr "Rensa nyligen använda filer"
-
-# Preferences Menu
 
 msgid "Openbox"
 msgstr "Openbox"
@@ -279,9 +264,69 @@ msgstr "Fildelning"
 msgid "Screenshot"
 msgstr "Skärmbild"
 
+msgid "Take Screenshot"
+msgstr "Ta skärmbild"
+
 msgid "Messaging"
 msgstr "Meddelande"
 
 msgid "Help"
 msgstr "Hjälp"
+
+
+# NEW
+
+msgid "Applications"
+msgstr "Program"
+
+msgid "BL Utilities"
+msgstr "BL Tillbehör"
+
+msgid "Back"
+msgstr "Tillbaka"
+
+msgid "BunsenLabs"
+msgstr "BunsenLabs"
+
+msgid "jgmenu"
+msgstr "jgmenu"
+
+msgid "Edit environment"
+msgstr "Redigera miljön"
+
+msgid "Edit bl-rc.xml"
+msgstr "Redigera bl-rc.xml"
+
+msgid "Edit Menu Content"
+msgstr "Redigera Meny Innehåll"
+
+msgid "Edit Menu Settings"
+msgstr "Redigera Meny Inställningar"
+
+msgid "Sync Theme w. Openbox"
+msgstr "Sync Tema med Openbox"
+
+msgid "tutorial"
+msgstr "lektion"
+
+msgid "Edit .xbindkeysrc"
+msgstr "Redigera .xbindkeysrc"
+
+msgid "Install Selected Packages"
+msgstr "Installera markderade paket"
+
+msgid "Login Interface"
+msgstr "Inloggningstvärsnitt"
+
+msgid "Set Default Browser"
+msgstr "Valj Default Webläsare"
+
+msgid "BunsenLabs Session"
+msgstr "BunsenLabs Session"
+
+msgid "bunsenlabs-session"
+msgstr "bunsenlabs-session"
+
+msgid "xdg-autostart"
+msgstr "xdg-autostart"
 
