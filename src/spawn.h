@@ -11,10 +11,15 @@
 #include <limits.h>
 #include <errno.h>
 
-void spawn(const char *arg, const char *working_dir);
+/**
+ * spawn_async - execute in shell wrapper; do not wait for child to finish
+ * @command: command to be executed
+ * @working_dir: working directory
+ */
+void spawn_async(const char *arg, const char *working_dir);
 
 /**
- * spawn_sync - execute and wait for child to finish
+ * spawn_sync - execute in shell wrapper; wait for child to finish
  * @command: command to be executed
  */
 void spawn_sync(const char * const*command);

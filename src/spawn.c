@@ -37,7 +37,7 @@ static void resolve_and_chdir(const char *working_dir)
 	xfree(s.buf);
 }
 
-void spawn(const char *arg, const char *working_dir)
+void spawn_async(const char *arg, const char *working_dir)
 {
 	const char default_shell[] = "/bin/sh";
 	const char *shell = NULL;

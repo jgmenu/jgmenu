@@ -996,7 +996,7 @@ static void if_unity_run_hack(void)
 		first_run = 0;
 	}
 	if (isunity)
-		spawn("jgmenu_run unity-hack", NULL);
+		spawn_async("jgmenu_run unity-hack", NULL);
 }
 
 static void awake_menu(void)
@@ -1535,7 +1535,7 @@ static void action_cmd(char *cmd, const char *working_dir)
 		p = parse_caret_action(cmd, "^sub(");
 		if (!p)
 			return;
-		spawn(p, working_dir);
+		spawn_async(p, working_dir);
 		hide_or_exit();
 	} else if (!strncmp(cmd, "^back(", 6)) {
 		checkout_parent();
@@ -1549,7 +1549,7 @@ static void action_cmd(char *cmd, const char *working_dir)
 		sbuf_init(&s);
 		term_build_terminal_cmd(&s, strstrip(p), config.terminal_exec,
 					config.terminal_args);
-		spawn(s.buf, working_dir);
+		spawn_async(s.buf, working_dir);
 		free(s.buf);
 		hide_or_exit();
 	} else if (!strncmp(cmd, "^pipe(", 6)) {
@@ -1586,7 +1586,7 @@ static void action_cmd(char *cmd, const char *working_dir)
 		filter_addstr(p, strlen(p));
 		update(1);
 	} else {
-		spawn(cmd, working_dir);
+		spawn_async(cmd, working_dir);
 		hide_or_exit();
 	}
 }
