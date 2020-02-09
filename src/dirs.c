@@ -126,7 +126,6 @@ void dirs_read_schema(struct dir **vector)
 		if (!process_file(schema_filename.buf))
 			goto schema_read_success;
 	}
-	info("using built-in schema data");
 	process_builtin_schema();
 schema_read_success:
 	sbuf_expand_tilde(&schema_filename);
