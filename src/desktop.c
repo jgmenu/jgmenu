@@ -23,19 +23,6 @@
 static struct app *apps;
 static int nr_apps, alloc_apps;
 
-/* TODO: parse this properly and share code with lx */
-static void format_exec(char *s)
-{
-	char *p;
-
-	if (!s)
-		return;
-	/* Remove %U, %f, etc at the end of Exec cmd */
-	p = strchr(s, '%');
-	if (p)
-		*p = '\0';
-}
-
 static void parse_line(char *line, struct app *app, int *is_desktop_entry)
 {
 	char *key, *value;
@@ -155,7 +142,7 @@ static int add_app(FILE *fp, char *filename)
 			return -1;
 		parse_line(line, app, &is_desktop_entry);
 	}
-	format_exec(app->exec);
+	strip_exec_field_codes(&app->exec);
 	app->filename = strdup(filename);
 	strdup_null_variables(app);
 	return 0;

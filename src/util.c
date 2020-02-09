@@ -97,23 +97,25 @@ void *xcalloc(size_t nb, size_t size)
 	return ret;
 }
 
-char *strstrip(char *s)
+static void rtrim(char **s)
 {
 	size_t len;
 	char *end;
 
-	len = strlen(s);
+	len = strlen(*s);
 	if (!len)
-		return s;
-
-	end = s + len - 1;
-	while (end >= s && isspace(*end))
+		return;
+	end = *s + len - 1;
+	while (end >= *s && isspace(*end))
 		end--;
 	*(end + 1) = '\0';
+}
 
+char *strstrip(char *s)
+{
+	rtrim(&s);
 	while (isspace(*s))
 		s++;
-
 	return s;
 }
 
@@ -309,4 +311,21 @@ void msleep(unsigned int duration)
 	ts.tv_sec  = sec;
 	ts.tv_nsec =  msec * 1000000;
 	nanosleep(&ts, NULL);
+}
+
+void strip_exec_field_codes(char **exec)
+{
+	char *p = *exec;
+
+	for (; *p; p++) {
+		if (*p == '%') {
+			*p = ' ';
+			++p;
+			if (*p == '\0')
+				break;
+			if (*p != '%')
+				*p = ' ';
+		}
+	}
+	rtrim(exec);
 }
