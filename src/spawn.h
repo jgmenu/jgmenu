@@ -24,4 +24,11 @@ void spawn_async(const char *arg, const char *working_dir);
  */
 void spawn_sync(const char * const*command);
 
+/**
+ * spawn_async_no_shell - execute asyncronously
+ * @command: command to be executed
+ * @working_dir: working directory
+ */
+void spawn_async_no_shell(char const *cmd, char const *workdir);
+
 #endif /* SPAWN_H */
