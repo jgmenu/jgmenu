@@ -15,7 +15,7 @@ void spawn(const char *arg, const char *working_dir);
 
 /**
  * spawn_sync - execute and wait for child to finish
- * @command: array of command+arguments to be executed
+ * @command: command to be executed
  */
 void spawn_sync(const char * const*command);
 
