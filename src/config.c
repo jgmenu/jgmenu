@@ -95,6 +95,7 @@ void config_set_defaults(void)
 	config.csv_single_window   = 0;
 	config.csv_no_dirs	   = 0;
 	config.csv_i18n		   = NULL;
+	config.csv_one_cat_per_app = 0;
 }
 
 void config_cleanup(void)
@@ -346,6 +347,8 @@ static void process_line(char *line)
 	} else if (!strcmp(option, "csv_i18n")) {
 		xfree(config.csv_i18n);
 		config.csv_i18n = xstrdup(value);
+	} else if (!strcmp(option, "csv_one_cat_per_app")) {
+		xatoi(&config.csv_one_cat_per_app, value, XATOI_NONNEG, "config.csv_one_cat_per_app");
 	}
 }
 
@@ -493,4 +496,8 @@ void config_post_process(void)
 		unsetenv("JGMENU_NO_DIRS");
 	if (config.csv_i18n)
 		setenv("JGMENU_I18N", config.csv_i18n, 1);
+	if (config.csv_one_cat_per_app)
+		setenv("JGMENU_ONE_CAT_PER_APP", "1", 1);
+	else
+		unsetenv("JGMENU_ONE_CAT_PER_APP");
 }

@@ -92,6 +92,7 @@ static struct option options[] = {
 	{ "csv_single_window", "0" },
 	{ "csv_no_dirs", "0" },
 	{ "csv_i18n", "" },
+	{ "csv_one_cat_per_app", "0" },
 	{ NULL, NULL },
 };
 

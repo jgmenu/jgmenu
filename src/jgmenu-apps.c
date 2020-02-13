@@ -19,6 +19,7 @@
 
 static bool no_pend;
 static bool single_window;
+static bool one_cat_per_app;
 
 static void replace_semicolons_with_hashes(char *s)
 {
@@ -127,6 +128,8 @@ static void print_apps_for_one_directory(struct app *apps, struct dir *dir,
 		if (!ismatch(categories, app->categories))
 			continue;
 
+		if (one_cat_per_app && app->has_been_mapped)
+			continue;
 		app->has_been_mapped = true;
 		print_app_to_buffer(app, submenu);
 	}
@@ -219,6 +222,8 @@ int main(int argc, char **argv)
 		no_pend = true;
 	if (getenv("JGMENU_SINGLE_WINDOW"))
 		single_window = true;
+	if (getenv("JGMENU_ONE_CAT_PER_APP"))
+		one_cat_per_app = true;
 	i18n_init(getenv("JGMENU_I18N"));
 
 	apps = desktop_read_files();
