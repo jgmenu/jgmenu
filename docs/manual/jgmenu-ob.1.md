@@ -17,10 +17,6 @@ jgmenu-ob - convert openbox menu data to jgmenu flavoured CSV
 `/etc/xdg/openbox/menu.xml` will be used if they exist, giving higher
 precedence to the former.
 
-If environment variable `JGMENU_I18N` or config variable `csv_i18n` are set, a
-translation file will be searched for in the specified file or directory. See
-`jgmenu_run i18n --help` for further details.
-
 # OPTIONS
 
 `<file>`
@@ -35,4 +31,10 @@ translation file will be searched for in the specified file or directory. See
 
 :   Specify value of root `^tag()`. This can be useful for pipemenus to avoid
     clashing tag-names
+
+# ENVIRONMENT VARIABLES
+
+`JGMENU_I18N`
+
+:   See `csv_i18n` in jgmenu(1) and jgmenu-i18n(1)
 

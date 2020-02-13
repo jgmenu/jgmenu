@@ -17,11 +17,6 @@ If no \f[C]<file>\f[] or \f[C]\-\-cmd=<cmd>\f[] is specified,
 \f[C]~/.config/openbox/menu.xml\f[] or
 \f[C]/etc/xdg/openbox/menu.xml\f[] will be used if they exist, giving
 higher precedence to the former.
-.PP
-If environment variable \f[C]JGMENU_I18N\f[] or config variable
-\f[C]csv_i18n\f[] are set, a translation file will be searched for in
-the specified file or directory.
-See \f[C]jgmenu_run\ i18n\ \-\-help\f[] for further details.
 .SH OPTIONS
 .TP
 .B \f[C]<file>\f[]
@@ -37,6 +32,12 @@ Specify command to produce openbox XML menu data.
 .B \f[C]\-\-tag=<tag>\f[]
 Specify value of root \f[C]^tag()\f[].
 This can be useful for pipemenus to avoid clashing tag\-names
+.RS
+.RE
+.SH ENVIRONMENT VARIABLES
+.TP
+.B \f[C]JGMENU_I18N\f[]
+See \f[C]csv_i18n\f[] in jgmenu(1) and jgmenu\-i18n(1)
 .RS
 .RE
 .SH AUTHORS

@@ -1010,10 +1010,16 @@ This is supported by apps, pmenu and lx.
 .RE
 .TP
 .B \f[C]csv_i18n\f[] = \f[B]string\f[] (no default)
-If set, the ob module will look for a translation file in the specified
-file or directory.
-See \f[C]jgmenu_run\ i18n\ \-\-help\f[] and \f[C]jgmenu\-ob(1)\f[] for
-further details.
+Look for a translation file in the specified file or directory.
+See `jgmenu\-i18n(1) for further details.
+Supported by apps and ob.
+.RS
+.RE
+.TP
+.B \f[C]csv_one_cat_per_app\f[] = \f[B]boolean\f[] (default 0)
+Map each application to one category only.
+This means that an application can only appear in one directory.
+Supported by apps.
 .RS
 .RE
 .SH Inter\-Process Communication (IPC)

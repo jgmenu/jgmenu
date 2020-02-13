@@ -20,19 +20,7 @@
 static const char jgmenu_i18n_usage[] =
 "Usage: jgmenu_run i18n <translation file>\n"
 "       jgmenu_run i18n --init [<translation file>]\n"
-"Options:\n"
-"    --init                print missing msgid entries for po file\n"
-"Notes:\n"
-"    - The <translation file> can be a file or directory. If it is the\n"
-"      latter, translation files will be searched for in this directory\n"
-"      based on the environment variable $LANG, which will be assumed to be\n"
-"      in the format ll_CC.UTF8 format where ‘ll’ is an ISO 639 two-letter\n"
-"      language code and ‘CC’ is an ISO 3166 two-letter country code.\n"
-"      Files named 'll_CC and 'll' will be used in said order\n"
-"Example:\n"
-" 1) Run `jgmenu_run ob | jgmenu_run i18n --init >sv`\n"
-" 2) Translate entries in file 'sv'\n"
-" 3) Run `jgmenu_run ob | jgmenu_run i18n sv | jgmenu --simple`\n";
+"See jgmenu-i18n(1) for further details\n";
 
 static int arg_init;
 

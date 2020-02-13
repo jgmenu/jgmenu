@@ -766,9 +766,13 @@ environment variables which are used by the CSV generators.
 
 `csv_i18n` = __string__ (no default)
 
-:   If set, the ob module will look for a translation file in the
-    specified file or directory. See `jgmenu_run i18n --help` and
-    `jgmenu-ob(1)` for further details.
+:   Look for a translation file in the specified file or directory.
+    See `jgmenu-i18n(1) for further details. Supported by apps and ob.
+
+`csv_one_cat_per_app` = __boolean__ (default 0)
+
+:   Map each application to one category only. This means that an
+    application can only appear in one directory. Supported by apps.
 
 # Inter-Process Communication (IPC) {#ipc}
 
