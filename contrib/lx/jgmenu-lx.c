@@ -99,7 +99,6 @@ static void add_metadata(const char * const *categories)
 static void process_app(MenuCacheApp *app)
 {
 	/* TODO: Check visibility flag here too */
-	char *p = NULL;
 	char *exec;
 	static struct sbuf s;
 	static int inited;
@@ -125,15 +124,10 @@ static void process_app(MenuCacheApp *app)
 	exec = (char *)menu_cache_app_get_exec(MENU_CACHE_APP(app));
 	if (strchr(exec, ','))
 		sbuf_addstr(&cur->buf, "\"\"\"");
+	strip_exec_field_codes(&exec);
 	sbuf_addstr(&cur->buf, exec);
 	if (strchr(exec, ','))
 		sbuf_addstr(&cur->buf, " \"\"\"");
-	/* TODO: be more sophisticated with handling '%'s */
-	p = strchr(cur->buf.buf, '%');
-	if (p) {
-		*p = '\0';
-		cur->buf.len = strlen(cur->buf.buf);
-	}
 	sbuf_rtrim(&cur->buf);
 	if (menu_cache_app_get_use_terminal(app))
 		sbuf_addstr(&cur->buf, ")");
