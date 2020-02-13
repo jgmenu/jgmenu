@@ -1,4 +1,4 @@
-% JGMENU-APPS(1)
+% JGMENU-I18N(1)
 % Johan Malm
 % 15 February, 2020
 
