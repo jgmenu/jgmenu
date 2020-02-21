@@ -2501,6 +2501,28 @@ static void keep_menu_height_between_min_and_max(void)
 		geo_set_menu_height(config.menu_height_max);
 }
 
+FILE *get_csv_source(bool arg_vsimple)
+{
+	if (args_csv_file()) {
+		struct sbuf s;
+		FILE *fp;
+
+		sbuf_init(&s);
+		sbuf_cpy(&s, args_csv_file());
+		sbuf_expand_tilde(&s);
+		fp = fopen(s.buf, "r");
+		xfree(s.buf);
+		return fp;
+	}
+	if (args_csv_cmd())
+		return popen(args_csv_cmd(), "r");
+	if (args_simple() || arg_vsimple)
+		return stdin;
+	if (config.csv_cmd && config.csv_cmd[0] != '\0')
+		return popen(config.csv_cmd, "r");
+	return stdin;
+}
+
 int main(int argc, char *argv[])
 {
 	int i;
@@ -2580,15 +2602,7 @@ int main(int argc, char *argv[])
 		ipc_align_based_on_env_vars();
 	}
 
-	if (args_csv_file())
-		fp = fopen(args_csv_file(), "r");
-	else if (args_csv_cmd())
-		fp = popen(args_csv_cmd(), "r");
-	else if (config.csv_cmd && config.csv_cmd[0] != '\0' &&
-		 !args_simple() && !arg_vsimple)
-		fp = popen(config.csv_cmd, "r");
-	if (!fp)
-		fp = stdin;
+	fp = get_csv_source(arg_vsimple);
 	read_csv_file(fp, false);
 	if (fp && fp != stdin)
 		fclose(fp);
