@@ -1,6 +1,6 @@
 % JGMENU-APPS(1)
 % Johan Malm
-% 13 February, 2020
+% 21 February, 2020
 
 # NAME
 
@@ -112,9 +112,9 @@ Categories=Emulator;System;
 
 :   See `csv_name_format` in jgmenu(1)
 
-`JGMENU_ONE_CAT_PER_APP`
+`JGMENU_NO_DUPLICATES`
 
-:   See `csv_one_cat_per_app` in jgmenu(1)
+:   See `csv_no_duplicates` in jgmenu(1)
 
 `JGMENU_I18N`
 

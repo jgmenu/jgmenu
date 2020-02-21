@@ -1,6 +1,6 @@
 % JGMENU(1)
 % Johan Malm
-% 6 February, 2020
+% 19 February, 2020
 
 # NAME
 
@@ -769,10 +769,9 @@ environment variables which are used by the CSV generators.
 :   Look for a translation file in the specified file or directory.
     See `jgmenu-i18n(1) for further details. Supported by apps and ob.
 
-`csv_one_cat_per_app` = __boolean__ (default 0)
+`csv_no_duplicates` = __boolean__ (default 0)
 
-:   Map each application to one category only. This means that an
-    application can only appear in one directory. Supported by apps.
+:   Restrict applications to appear in one directory only. Supported by apps.
 
 # Inter-Process Communication (IPC) {#ipc}
 
