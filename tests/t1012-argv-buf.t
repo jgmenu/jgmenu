@@ -24,7 +24,7 @@ test_expect_success 'complex parse' '
 test_argvbuf "strdup@a,b,,d d, e ,f-f
 parse
 print
-argc" "a@b@@d d@ e @f-f
+argc" "a@b@@d d@e@f-f
 6"
 
 '

@@ -32,6 +32,7 @@ char *xstrdup(const char *s);
 void *xmalloc(size_t size);
 void *xrealloc(void *ptr, size_t size);
 void *xcalloc(size_t nb, size_t size);
+void rtrim(char **s);
 char *strstrip(char *s);
 int parse_config_line(char *line, char **option, char **value);
 int hex_to_dec(char c);

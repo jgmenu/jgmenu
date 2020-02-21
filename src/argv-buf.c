@@ -67,6 +67,20 @@ static char *next(char *str, char delim)
 	return tmp;
 }
 
+static void trim_all_fields(struct argv_buf *buf)
+{
+	int i;
+	char *p;
+
+	for (i = 0; i < buf->argc; i++) {
+		p = buf->argv[i];
+		rtrim(&p);
+		while (isspace(*p))
+			p++;
+		buf->argv[i] = p;
+	}
+}
+
 void argv_parse(struct argv_buf *buf)
 {
 	char *q;
@@ -102,6 +116,7 @@ void argv_parse(struct argv_buf *buf)
 			q++;
 		}
 	}
+	trim_all_fields(buf);
 }
 
 void argv_free(struct argv_buf *buf)

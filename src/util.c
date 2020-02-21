@@ -97,7 +97,7 @@ void *xcalloc(size_t nb, size_t size)
 	return ret;
 }
 
-static void rtrim(char **s)
+void rtrim(char **s)
 {
 	size_t len;
 	char *end;
