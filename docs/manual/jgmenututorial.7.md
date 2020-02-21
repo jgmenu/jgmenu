@@ -1,6 +1,6 @@
 % JGMENUTUTORIAL(7)
 % Johan Malm
-% 6 February, 2020
+% 21 February, 2020
 
 # NAME
 
@@ -169,13 +169,13 @@ exists). When running with the --simple argument, make sure that `icon_theme`
 is set to something sensible in your $HOME/.config/jgmenu/jgmenurc.  Consider
 the following CSV menu data:
 
-    Browser,firefox,firefox
-    File manager,pcmanfm,system-file-manager
-    Terminal,xterm,utilities-terminal
-    Lock,i3lock -c 000000,system-lock-screen
-    Exit to prompt,openbox --exit,system-log-out
-    Reboot,systemctl -i reboot,system-reboot
-    Poweroff,systemctl -i poweroff,system-shutdown
+    Browser,        firefox,               firefox
+    File manager,   pcmanfm,               system-file-manager
+    Terminal,       xterm,                 utilities-terminal
+    Lock,           i3lock -c 000000,      system-lock-screen
+    Exit to prompt, openbox --exit,        system-log-out
+    Reboot,         systemctl -i reboot,   system-reboot
+    Poweroff,       systemctl -i poweroff, system-shutdown
 
 In the third field you can also specify the full path if you wish.
 
@@ -282,17 +282,17 @@ bottom of the root menu by editing append.csv and/or prepend.csv in
 
 prepend.csv
 
-    Browser,firefox,firefox
-    File manager,pcmanfm,system-file-manager
-    Terminal,xterm,utilities-terminal
+    Browser,      firefox,               firefox
+    File manager, pcmanfm,               system-file-manager
+    Terminal,     xterm,                 utilities-terminal
     ^sep()
 
 append.csv
 
     ^sep()
-    Suspend,systemctl -i suspend,system-log-out
-    Reboot,systemctl -i reboot,system-reboot
-    Poweroff,systemctl -i poweroff,system-shutdown
+    Suspend,      systemctl -i suspend,  system-log-out
+    Reboot,       systemctl -i reboot,   system-reboot
+    Poweroff,     systemctl -i poweroff, system-shutdown
 
 In these example we have used the markup ^sep(), which inserts a horizontal
 separator line. Similarly, ^sep(foo) inserts a text separator displaying "foo"
