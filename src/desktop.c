@@ -142,9 +142,9 @@ static int add_app(FILE *fp, char *filename)
 			return -1;
 		parse_line(line, app, &is_desktop_entry);
 	}
-	strip_exec_field_codes(&app->exec);
 	app->filename = strdup(filename);
 	strdup_null_variables(app);
+	strip_exec_field_codes(&app->exec);
 	return 0;
 }
 

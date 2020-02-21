@@ -315,9 +315,11 @@ void msleep(unsigned int duration)
 
 void strip_exec_field_codes(char **exec)
 {
-	char *p = *exec;
+	char *p;
 
-	for (; *p; p++) {
+	if (!**exec || !*exec)
+		return;
+	for (p = *exec; *p; p++) {
 		if (*p == '%') {
 			*p = ' ';
 			++p;
