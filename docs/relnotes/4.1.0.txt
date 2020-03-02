@@ -1,0 +1,28 @@
+jgmenu v4.1.0 release notes
+===========================
+
+Updates since v4.0.2
+--------------------
+
+  * Add i18n support for {pre,ap}pend.csv file in jgmenu-apps(1)
+
+  * Add man page jgmenu-i18n(1)
+
+  * Add options --no-append and --no-prepend to jgmenu-apps(1) module. Thanks
+    @capn-damo for this suggestions.
+
+  * Whitespace-trim all comma separated fields when using the argv-buf library,
+    which is used for parsing menu data and widgets. This allows CSV data to be
+    indented or aligned without affecting the content. Again, thanks to
+    @capn-damo
+
+  * Resolve tilde in --csv-file value (issue #113). Suggested-by: @capn-damo
+
+  * Add config option `csv_no_duplicates` to prevent applications from showing
+    in multiple directories. Only supported by jgmenu-apps(1) module.
+    Suggested-by: @johnraff
+
+  * Respect that % can be escaped using %%, when removing field codes
+    (e.g. %U and %f) from .desktop file Exec= strings (issue #68).
+    Supported by jgmenu-apps(1) and jgmenu-lx(1). Reported-by: @Vladimir-csp
+

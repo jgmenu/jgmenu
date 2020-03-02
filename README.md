@@ -30,9 +30,7 @@ It can display the following types of menu (or any combination of):
 
 It has UTF-8 search support.
 
-Versioning
-----------
+# Versioning
 
-We use [semver 2.0.0](http://www.semver.org), except that at patch-level zero,
-the ".0" is omitted. For example, 1.0.0 becomes 1.0.
+We use [semver 2.0.0](http://www.semver.org)
 
