@@ -17,7 +17,8 @@
 #include "i18n.h"
 #include "banned.h"
 
-static bool no_pend;
+static bool no_append;
+static bool no_prepend;
 static bool single_window;
 static bool no_duplicates;
 
@@ -143,7 +144,7 @@ static void print_menu_with_dirs(struct dir *dirs, struct app *apps)
 	sbuf_init(&submenu);
 
 	/* Draw top level menu */
-	if (!no_pend)
+	if (!no_prepend)
 		i18n_cat("~/.config/jgmenu/prepend.csv");
 	for (dir = dirs; dir->name; dir += 1) {
 		if (dir->name_localized)
@@ -157,7 +158,7 @@ static void print_menu_with_dirs(struct dir *dirs, struct app *apps)
 			printf(",^root(apps-dir-%s),%s\n", dir->name,
 			       dir->icon);
 	}
-	if (!no_pend)
+	if (!no_append)
 		i18n_cat("~/.config/jgmenu/append.csv");
 
 	/* Draw submenus */
@@ -189,14 +190,14 @@ static void print_menu_no_dirs(struct app *apps)
 	struct sbuf buf;
 
 	sbuf_init(&buf);
-	if (!no_pend)
+	if (!no_prepend)
 		cat("~/.config/jgmenu/prepend.csv");
 	for (app = apps; app->name; app += 1) {
 		if (app->nodisplay)
 			continue;
 		print_app_to_buffer(app, &buf);
 	}
-	if (!no_pend)
+	if (!no_append)
 		cat("~/.config/jgmenu/append.csv");
 	printf("\n%s\n", buf.buf);
 	xfree(buf.buf);
@@ -212,14 +213,20 @@ int main(int argc, char **argv)
 		if (!strncmp(argv[i], "--help", 6)) {
 			printf("usage: jgmenu_run apps [--help]\n");
 			exit(EXIT_SUCCESS);
+		} else if (!strcmp(argv[i], "--no-append")) {
+			no_append = true;
+		} else if (!strcmp(argv[i], "--no-prepend")) {
+			no_prepend = true;
 		} else {
 			die("unknown option '%s'", argv[i]);
 		}
 		i++;
 	}
 
-	if (getenv("JGMENU_NO_PEND"))
-		no_pend = true;
+	if (getenv("JGMENU_NO_PEND")) {
+		no_append = true;
+		no_prepend = true;
+	}
 	if (getenv("JGMENU_SINGLE_WINDOW"))
 		single_window = true;
 	if (getenv("JGMENU_NO_DUPLICATES"))
