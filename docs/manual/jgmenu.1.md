@@ -439,7 +439,7 @@ Here follow some specific types:
 
 `edge_snap_x` = __integer__ (default 30)
 
-:   Specify the distance (in pixles) from the left hand edge, within which the
+:   Specify the distance (in pixels) from the left hand edge, within which the
     menu will snap to the edge. Note that this only applies in `at_pointer`
     mode.
 
@@ -761,7 +761,7 @@ environment variables which are used by the CSV generators.
 
 `csv_no_dirs` = __boolean__ (default 0)
 
-:   If set, csv-generators will output applications without any director
+:   If set, csv-generators will output applications without any directory
     structure. This is supported by apps, pmenu and lx.
 
 `csv_i18n` = __string__ (no default)

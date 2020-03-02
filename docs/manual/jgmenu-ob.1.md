@@ -12,7 +12,7 @@ jgmenu-ob - convert openbox menu data to jgmenu flavoured CSV
 
 # DESCRIPTION
 
-`jgmenu_run ob` coverts openbox XML menu data to jgmenu flavoured CSV. If no
+`jgmenu_run ob` converts openbox XML menu data to jgmenu flavoured CSV. If no
 `<file>` or `--cmd=<cmd>` is specified, `~/.config/openbox/menu.xml` or
 `/etc/xdg/openbox/menu.xml` will be used if they exist, giving higher
 precedence to the former.
