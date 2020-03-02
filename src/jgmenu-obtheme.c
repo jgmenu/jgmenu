@@ -32,7 +32,7 @@ static char *theme_paths[] = {
 
 static const char obtheme_usage[] =
 "Usage: jgmenu_run obtheme <jgmenu-config-filename>\n"
-"Immitate look of current openbox menu by parsing current openbox theme and\n"
+"Imitate look of current openbox menu by parsing current openbox theme and\n"
 "setting variables in specified jgmenu config file. The theme name will be\n"
 "obtained from the following list (in order of precedence):\n"
 "  * ~/.config/openbox/bl-rc.xml\n"
