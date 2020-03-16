@@ -589,6 +589,16 @@ static void draw_icon(struct item *p, double alpha)
 				config.item_padding_x + offsetx - 1, icon_y_coord, config.icon_size, alpha);
 }
 
+static void draw_icon_norm(struct item *p)
+{
+	draw_icon(p, 0.5);
+}
+
+static void draw_icon_sel(struct item *p)
+{
+	draw_icon(p, 1.0);
+}
+
 static void draw_items_below_indicator(void)
 {
 	int b, r, l;
@@ -671,8 +681,12 @@ static void draw_menu(void)
 			draw_item_sep(p);
 
 		/* Draw Icons */
-		if (config.icon_size && p->icon)
-			draw_icon(p, 1.0);
+		if (config.icon_size && p->icon) {
+			if (p == menu.sel)
+				draw_icon_sel(p);
+			else
+				draw_icon_norm(p);
+		}
 
 		if (p == menu.last)
 			break;
