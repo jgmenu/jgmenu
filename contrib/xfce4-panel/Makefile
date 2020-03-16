@@ -13,8 +13,8 @@ PLUGIN_DIR = $(DESTDIR)$(prefix)/share/xfce4/panel/plugins
 
 CFLAGS  += -Wno-strict-prototypes -Wno-declaration-after-statement
 CFLAGS  += -s -shared -fPIC
-CFLAGS  += `pkg-config --cflags libxfce4panel-1.0`
-LDFLAGS += `pkg-config --libs   libxfce4panel-1.0`
+CFLAGS  += `pkg-config --cflags libxfce4panel-2.0`
+LDFLAGS += `pkg-config --libs   libxfce4panel-2.0`
 
 xfce4-panel: libjgmenu.so
 
