@@ -569,7 +569,7 @@ static void draw_submenu_arrow(struct item *p)
 			       color, config.item_halign);
 }
 
-static void draw_icon(struct item *p)
+static void draw_icon(struct item *p, double alpha)
 {
 	int icon_y_coord;
 	int offsety, offsetx;
@@ -583,10 +583,10 @@ static void draw_icon(struct item *p)
 		       offsety;
 	if (config.item_halign != RIGHT)
 		ui_insert_image(p->icon, p->area.x + config.item_padding_x +
-				offsetx, icon_y_coord, config.icon_size);
+				offsetx, icon_y_coord, config.icon_size, alpha);
 	else
 		ui_insert_image(p->icon, p->area.x + p->area.w - config.icon_size -
-				config.item_padding_x + offsetx - 1, icon_y_coord, config.icon_size);
+				config.item_padding_x + offsetx - 1, icon_y_coord, config.icon_size, alpha);
 }
 
 static void draw_items_below_indicator(void)
@@ -672,7 +672,7 @@ static void draw_menu(void)
 
 		/* Draw Icons */
 		if (config.icon_size && p->icon)
-			draw_icon(p);
+			draw_icon(p, 1.0);
 
 		if (p == menu.last)
 			break;

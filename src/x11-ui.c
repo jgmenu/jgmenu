@@ -550,7 +550,7 @@ void ui_cleanup(void)
 	xfree(ui);
 }
 
-void ui_insert_image(cairo_surface_t *image, double x, double y, double size)
+void ui_insert_image(cairo_surface_t *image, double x, double y, double size, double alpha)
 {
 	double w, h, max;
 
@@ -565,6 +565,6 @@ void ui_insert_image(cairo_surface_t *image, double x, double y, double size)
 		cairo_scale(ui->w[ui->cur].c, size / max, size / max);
 
 	cairo_set_source_surface(ui->w[ui->cur].c, image, 0, 0);
-	cairo_paint(ui->w[ui->cur].c);
+	cairo_paint_with_alpha(ui->w[ui->cur].c, alpha);
 	cairo_restore(ui->w[ui->cur].c);
 }
