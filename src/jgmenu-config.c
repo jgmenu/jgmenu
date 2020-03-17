@@ -72,6 +72,8 @@ static struct option options[] = {
 	{ "font_fallback", "xtg" },
 	{ "icon_size", "22" },
 	{ "icon_text_spacing", "10" },
+	{ "icon_norm_alpha", "100" },
+	{ "icon_sel_alpha", "100" },
 	{ "icon_theme", "" },
 	{ "icon_theme_fallback", "xtg" },
 	{ "arrow_string", "▸" },

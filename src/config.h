@@ -65,6 +65,8 @@ struct config {
 	char *font_fallback;
 	int icon_size;		/* if set to zero, icons won't show */
 	int icon_text_spacing;
+	int icon_norm_alpha;
+	int icon_sel_alpha;
 	char *icon_theme;
 	char *icon_theme_fallback;
 
