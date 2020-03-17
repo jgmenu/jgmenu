@@ -89,7 +89,7 @@ static void draw_icon(struct widget **w)
 		(*w)->surface = load_cairo_icon((*w)->content, (*w)->w);
 	if (!(*w)->surface)
 		return;
-	ui_insert_image((*w)->surface, (*w)->x, (*w)->y, (*w)->w);
+	ui_insert_image((*w)->surface, (*w)->x, (*w)->y, (*w)->w, 1.0);
 }
 
 static void draw_rect(struct widget **w)

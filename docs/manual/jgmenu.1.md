@@ -660,6 +660,15 @@ Here follow some specific types:
 
 :   Distance between icon and text within a menu item
 
+`icon_norm_alpha` = __integer__ (default 100)
+
+:   Opacity of menu item icons, expressed as a percentage (0-100).
+
+`icon_sel_alpha` = __integer__ (default 100)
+
+:   Opacity of the currently selected menu item's icon, expressed as a
+    percentage (0-100).
+
 `icon_theme` = __string__ (unset by default)
 
 :   Name of icon theme. E.g. `Adwaita`, `breeze`, `Paper`, `Papirus` and

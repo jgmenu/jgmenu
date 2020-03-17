@@ -70,6 +70,6 @@ struct point ui_get_text_size(const char *str, const char *fontdesc);
 int ui_is_point_in_area(struct point p, struct area a);
 void ui_map_window(unsigned int w, unsigned int h);
 void ui_cleanup(void);
-void ui_insert_image(cairo_surface_t *image, double x, double y, double size);
+void ui_insert_image(cairo_surface_t *image, double x, double y, double size, double alpha);
 
 #endif /* X11_UI_H */

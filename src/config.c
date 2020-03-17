@@ -72,6 +72,8 @@ void config_set_defaults(void)
 	config.font_fallback	   = xstrdup("xtg");
 	config.icon_size	   = 22;
 	config.icon_text_spacing   = 10;
+	config.icon_norm_alpha	   = 100;
+	config.icon_sel_alpha	   = 100;
 	config.icon_theme	   = NULL; /* Leave as NULL (see theme.c) */
 	config.icon_theme_fallback = xstrdup("xtg");
 
@@ -300,6 +302,10 @@ static void process_line(char *line)
 		xatoi(&config.icon_size, value, XATOI_NONNEG, "config.icon_size");
 	} else if (!strcmp(option, "icon_text_spacing")) {
 		xatoi(&config.icon_text_spacing, value, XATOI_NONNEG, "config.icon_text_spacing");
+	} else if (!strcmp(option, "icon_norm_alpha")) {
+		xatoi(&config.icon_norm_alpha, value, XATOI_NONNEG, "config.icon_norm_alpha");
+	} else if (!strcmp(option, "icon_sel_alpha")) {
+		xatoi(&config.icon_sel_alpha, value, XATOI_NONNEG, "config.icon_sel_alpha");
 	} else if (!strcmp(option, "icon_theme")) {
 		xfree(config.icon_theme);
 		config.icon_theme = xstrdup(value);
