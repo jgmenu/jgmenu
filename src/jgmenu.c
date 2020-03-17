@@ -591,12 +591,12 @@ static void draw_icon(struct item *p, double alpha)
 
 static void draw_icon_norm(struct item *p)
 {
-	draw_icon(p, 0.5);
+	draw_icon(p, config.icon_norm_alpha / 100.0);
 }
 
 static void draw_icon_sel(struct item *p)
 {
-	draw_icon(p, 1.0);
+	draw_icon(p, config.icon_sel_alpha / 100.0);
 }
 
 static void draw_items_below_indicator(void)
