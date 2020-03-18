@@ -50,7 +50,7 @@ add_modules () {
 		add "ASAN=1"
 	fi
 	if [ "$with_xfce4_panel_applet" = "t" ]; then
-		check_required_libs "libxfce4panel-1.0"
+		check_required_libs "libxfce4panel-2.0"
 		add "CONTRIB_DIRS += xfce4-panel"
 	fi
 	if [ "$with_gtktheme" = "t" ]; then
