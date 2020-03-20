@@ -11,8 +11,8 @@ jgmenu-lx: jgmenu-lx.c
 	$(QUIET_CC)$(CC) $(CFLAGS) -o $@ $^ $(addprefix $(path),$(src)) -I$(path) $(LDFLAGS)
 
 install:
-	@install -d $(DESTDIR)$(libexecdir)
-	@install -m755 jgmenu-lx $(DESTDIR)$(libexecdir)
+	@install -d $(DESTDIR)$(libexecdir)/jgmenu
+	@install -m755 jgmenu-lx $(DESTDIR)$(libexecdir)/jgmenu
 
 clean:
 	@rm -f jgmenu-lx

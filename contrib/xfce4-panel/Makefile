@@ -1,7 +1,8 @@
 -include ../../config.mk
 include ../../Makefile.inc
 
-LIBDIR    ?= $(DESTDIR)`pkg-config --variable=libdir libxfce4panel-2.0`/xfce4/panel/plugins
+libdir    ?= `pkg-config --variable=libdir libxfce4panel-2.0`
+LIBDIR     = $(DESTDIR)$(libdir)/xfce4/panel/plugins
 PLUGIN_DIR = $(DESTDIR)$(prefix)/share/xfce4/panel/plugins
 
 CFLAGS  += -Wno-strict-prototypes -Wno-declaration-after-statement

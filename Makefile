@@ -80,9 +80,9 @@ $(DEPDIR)/%.d: ;
 install: $(PROGS)
 	@install -d $(DESTDIR)$(bindir)
 	@install -m755 jgmenu src/jgmenu_run $(DESTDIR)$(bindir)
-	@install -d $(DESTDIR)$(libexecdir)
-	@install -m755 $(PROGS_LIBEXEC) $(SCRIPTS_LIBEXEC) $(DESTDIR)$(libexecdir)
-	@./scripts/set-exec-path.sh $(DESTDIR)$(bindir)/jgmenu_run $(libexecdir)
+	@install -d $(DESTDIR)$(libexecdir)/jgmenu
+	@install -m755 $(PROGS_LIBEXEC) $(SCRIPTS_LIBEXEC) $(DESTDIR)$(libexecdir)/jgmenu
+	@./scripts/set-exec-path.sh $(DESTDIR)$(bindir)/jgmenu_run $(libexecdir)/jgmenu
 	@$(MAKE) --no-print-directory -C docs/manual/ prefix=$(prefix) install
 	@install -d $(DESTDIR)$(datarootdir)/icons/hicolor/scalable/apps/
 	@install -d $(DESTDIR)$(datarootdir)/applications/

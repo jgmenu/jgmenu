@@ -20,6 +20,8 @@ Produce a config.mk file to be sourced by Makefile
 --enable-asan              Enable address sanitizer (only during development)
 --prefix=<dir>             Install architecture-independent files in \$prefix
                            (e.g. --prefix=\$HOME')
+--libdir=<dir>             Specify libdir (\$prefix/lib by default)
+--libexecdir=<dir>         Specify libexecdir (\$prefix/lib by default)
 "
 
 add () {
@@ -46,6 +48,8 @@ check_required_libs () {
 
 add_modules () {
 	add "prefix = $prefix"
+	test -z "$libdir" || add "libdir = $libdir"
+	test -z "$libexecdir" || add "libexecdir = $libexecdir"
 	if [ "$enable_asan" = "t" ]; then
 		add "ASAN=1"
 	fi
@@ -85,6 +89,10 @@ main () {
 		case "$opt" in
 		--prefix)
 			prefix="$var" ;;
+		--libdir)
+			libdir="$var" ;;
+		--libexecdir)
+			libexecdir="$var" ;;
 		--with-xfce4-panel-applet)
 			with_xfce4_panel_applet=t ;;
 		--with-gtktheme)

@@ -5,10 +5,10 @@ gtktheme:
 	@:
 
 install:
-	@install -d $(DESTDIR)$(libexecdir)
-	@install -m775 jgmenu-gtktheme.py $(DESTDIR)$(libexecdir)
+	@install -d $(DESTDIR)$(libexecdir)/jgmenu
+	@install -m775 jgmenu-gtktheme.py $(DESTDIR)$(libexecdir)/jgmenu
 
 uninstall:
-	@rm -f $(libexecdir)/jgmenu-gtktheme.py
+	@rm -f $(libexecdir)/jgmenu/jgmenu-gtktheme.py
 
 clean:
