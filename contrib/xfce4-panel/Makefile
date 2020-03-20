@@ -1,14 +1,7 @@
 -include ../../config.mk
 include ../../Makefile.inc
 
-ifeq ($(shell dpkg-architecture -q DEB_HOST_ARCH 2>/dev/null),i386)
-LIBDIR     = $(DESTDIR)$(prefix)/lib/i386-linux-gnu/xfce4/panel/plugins
-else ifeq ($(shell uname -m),i686)
-LIBDIR     = $(DESTDIR)$(prefix)/lib/i386-linux-gnu/xfce4/panel/plugins
-else
-LIBDIR     = $(DESTDIR)$(prefix)/lib/x86_64-linux-gnu/xfce4/panel/plugins
-endif
-
+LIBDIR    ?= $(DESTDIR)`pkg-config --variable=libdir libxfce4panel-2.0`/xfce4/panel/plugins
 PLUGIN_DIR = $(DESTDIR)$(prefix)/share/xfce4/panel/plugins
 
 CFLAGS  += -Wno-strict-prototypes -Wno-declaration-after-statement
@@ -23,7 +16,7 @@ libjgmenu.so: jgmenu-applet.c
 
 install:
 	@install -d $(LIBDIR)
-	@install -m775 libjgmenu.so $(LIBDIR)
+	@install -m644 libjgmenu.so $(LIBDIR)
 	@install -d $(PLUGIN_DIR)
 	@install -m644 jgmenu-applet.desktop $(PLUGIN_DIR)
 
