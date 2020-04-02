@@ -129,6 +129,7 @@ static void process_themerc(const char *filename)
 		warn("could not open file %s", filename);
 		return;
 	}
+
 	while (fgets(line, sizeof(line), fp)) {
 		if (line[0] == '\0')
 			continue;
@@ -207,6 +208,16 @@ static void find_rcxml(struct sbuf *filename)
 	die("cannot find rc.xml");
 }
 
+static void init_default_values(void)
+{
+	/*
+	 * Some themes do not have a "menu.border.width:" entry, so it's
+	 * safest to give menu_border a default to avoid inheriting some
+	 * unwanted value.
+	 */
+	set_set("menu_border", "0", 0);
+}
+
 /* Separate function to avoid cppcheck and check-patch.pl warnings */
 void libxml_test_version(void)
 {
@@ -235,6 +246,7 @@ int main(int argc, char **argv)
 		die("cannot find openbox theme file 'themerc'");
 	info("found '%s'", filename.buf);
 	set_read(argv[1]);
+	init_default_values();
 	process_themerc(filename.buf);
 	xfree(filename.buf);
 	set_write(argv[1]);
