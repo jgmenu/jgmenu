@@ -25,7 +25,7 @@ static char *xdg_base_dirs[] = {
 
 static char *xdg_config_dirs[] = {
 	"$XDG_CONFIG_HOME", "$HOME/.config", "$XDG_CONFIG_DIRS", "/etc/xdg",
-	NULL
+	"/usr/local/etc/xdg", NULL
 };
 
 static void get_dirs(struct list_head *dir_list, char **dirs)
