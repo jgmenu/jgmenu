@@ -10,7 +10,8 @@ RM         = rm -f
 src = ../../src/
 util = $(src)util.c $(src)sbuf.c
 
-TEST_PROGS = filter-out test-argv-buf test-hashmap test-sbuf test-xpm test-dirs
+TEST_PROGS = filter-out test-argv-buf test-hashmap test-sbuf test-xpm \
+	     test-dirs test-xdgdirs
 
 all: $(TEST_PROGS)
 
@@ -30,6 +31,9 @@ test-xpm: test-xpm.c $(src)xpm-loader.c $(util)
 	$(CC) $(CFLAGS) -o $@ $^ -I$(src) $(LDFLAGS) `pkg-config cairo --cflags --libs`
 
 test-dirs: test-dirs.c $(src)dirs.c $(src)xdgdirs.c $(src)argv-buf.c $(src)compat.c $(src)lang.c $(util)
+	$(CC) $(CFLAGS) -o $@ $^ -I$(src) $(LDFLAGS)
+
+test-xdgdirs: test-xdgdirs.c $(src)xdgdirs.c $(src)argv-buf.c $(util)
 	$(CC) $(CFLAGS) -o $@ $^ -I$(src) $(LDFLAGS)
 
 clean :
