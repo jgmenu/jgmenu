@@ -28,7 +28,6 @@ static char *xdg_config_dirs[] = { "$XDG_CONFIG_HOME",
 				   "$HOME/.config",
 				   "$XDG_CONFIG_DIRS",
 				   "/etc/xdg",
-				   "/usr/local/etc/xdg", /* for FreeBSD */
 				   NULL };
 /* clang-format on */
 
