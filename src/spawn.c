@@ -122,3 +122,13 @@ void spawn_async_no_shell(char const *cmd, char const *workdir)
 	g_strfreev(argv);
 }
 
+void spawn_command_line_sync(const char *command)
+{
+	GError *error = NULL;
+
+	if (!command)
+		return;
+	g_spawn_command_line_sync(command, NULL, NULL, NULL, &error);
+	if (error)
+		g_warning("unable to launch: %s", error->message);
+}

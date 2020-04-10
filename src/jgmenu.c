@@ -1017,8 +1017,7 @@ static void awake_menu(void)
 {
 	menu_is_hidden = 0;
 	if_unity_run_hack();
-	if (watch_files_have_changed())
-		restart();
+	watch_check();
 	if (config.position_mode == POSITION_MODE_PTR) {
 		launch_menu_at_pointer();
 		resize();
