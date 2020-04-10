@@ -5,3 +5,4 @@ filter-out
 test-sbuf
 test-xpm
 test-dirs
+test-xdgdirs
