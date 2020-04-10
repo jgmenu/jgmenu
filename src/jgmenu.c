@@ -47,7 +47,7 @@
 #include "pm.h"
 #include "workarea.h"
 #include "charset.h"
-#include "watch.h"
+#include "hooks.h"
 #include "spawn.h"
 #include "banned.h"
 
@@ -1017,7 +1017,7 @@ static void awake_menu(void)
 {
 	menu_is_hidden = 0;
 	if_unity_run_hack();
-	watch_check();
+	hooks_check();
 	if (config.position_mode == POSITION_MODE_PTR) {
 		launch_menu_at_pointer();
 		resize();
@@ -2497,7 +2497,7 @@ static void cleanup(void)
 	if (config.icon_size)
 		icon_cleanup();
 	widgets_cleanup();
-	watch_cleanup();
+	hooks_cleanup();
 	t2conf_atexit();
 	delete_empty_item();
 	destroy_node_tree();
@@ -2581,7 +2581,7 @@ int main(int argc, char *argv[])
 
 	if_unity_run_hack();
 
-	watch_init();
+	hooks_init();
 	ui_init();
 	geo_init();
 	filter_init();

@@ -1,5 +1,5 @@
 /*
- * watch.c
+ * hooks.c
  *
  * Copyright (C) Johan Malm 2018
  *
@@ -16,7 +16,7 @@
 #include "list.h"
 #include "sbuf.h"
 #include "util.h"
-#include "watch.h"
+#include "hooks.h"
 #include "config.h"
 #include "restart.h"
 #include "spawn.h"
@@ -63,7 +63,7 @@ static void print_hooks(void)
 	struct hook *f;
 
 	list_for_each_entry(f, &hooks, list) {
-		printf("[watch] %s", f->watched_file);
+		printf("[hooks] %s", f->watched_file);
 		if (f->action)
 			printf(" --> %s", f->action);
 		printf("\n");
@@ -152,7 +152,7 @@ static void add_built_in_hooks(void)
 		add_hook(files_to_watch[i], NULL);
 }
 
-void watch_init(void)
+void hooks_init(void)
 {
 	static bool done;
 
@@ -181,7 +181,7 @@ static void check_and_action_hooks(void)
 	struct hook *f;
 	struct stat sb;
 
-	watch_init();
+	hooks_init();
 	list_for_each_entry(f, &hooks, list) {
 		if (stat(f->watched_file, &sb) == -1) {
 			if (!f->tv.tv_sec) {
@@ -205,7 +205,7 @@ static void check_and_action_hooks(void)
 	}
 }
 
-void watch_check(void)
+void hooks_check(void)
 {
 	check_and_action_hooks();
 	if (need_restart) {
@@ -214,7 +214,7 @@ void watch_check(void)
 	}
 }
 
-void watch_cleanup(void)
+void hooks_cleanup(void)
 {
 	clear_list();
 }
