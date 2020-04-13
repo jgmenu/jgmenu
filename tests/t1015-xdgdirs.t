@@ -12,7 +12,7 @@ test_xdgdirs () {
 test_expect_success 'XDG_CONFIG_DIRS with colon separated directories' '
 
 test_xdgdirs "dirs /etc/xdg1:/etc/xdg2
-" "/etc/xdg1@/etc/xdg2@/etc/xdg@/usr/local/etc/xdg@"
+" "/etc/xdg1@/etc/xdg2@/etc/xdg@"
 
 '
 
