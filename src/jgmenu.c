@@ -2536,6 +2536,23 @@ FILE *get_csv_source(bool arg_vsimple)
 	return stdin;
 }
 
+static void exec_startup_script(const char *filename)
+{
+	struct sbuf s;
+	struct stat sb;
+
+	if (!filename)
+		return;
+	sbuf_init(&s);
+	sbuf_addstr(&s, filename);
+	sbuf_expand_tilde(&s);
+	if (stat(s.buf, &sb))
+		goto clean;
+	spawn_command_line_sync(s.buf);
+clean:
+	xfree(s.buf);
+}
+
 int main(int argc, char *argv[])
 {
 	int i;
@@ -2565,6 +2582,10 @@ int main(int argc, char *argv[])
 			 !strncmp(argv[i], "-h", 2))
 			usage();
 	}
+
+	if (!arg_vsimple)
+		exec_startup_script("~/.config/jgmenu/startup");
+
 	if (!arg_vsimple)
 		config_read_jgmenurc(arg_config_file);
 	if (!config.verbosity)
