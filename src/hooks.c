@@ -129,7 +129,7 @@ static void add_user_defined_hooks(const char *filename)
 	sbuf_expand_tilde(&f);
 	fp = fopen(f.buf, "r");
 	if (!fp) {
-		warn("could not open hooks file %s", filename);
+		info("could not open hooks file %s", filename);
 		return;
 	}
 	while (fgets(line, sizeof(line), fp)) {
