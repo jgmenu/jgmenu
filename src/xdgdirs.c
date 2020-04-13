@@ -15,7 +15,7 @@
 #include "argv-buf.h"
 #include "banned.h"
 
-static char *xdg_base_dirs[] = { "$XDG_DATA_HOME",
+static char *xdg_data_dirs[] = { "$XDG_DATA_HOME",
 				 "$HOME/.local/share",
 				 "$XDG_DATA_DIRS",
 				 "/usr/share",
@@ -55,9 +55,9 @@ static void get_dirs(struct list_head *dir_list, char **dirs)
 	}
 }
 
-void xdgdirs_get_basedirs(struct list_head *dir_list)
+void xdgdirs_get_datadirs(struct list_head *dir_list)
 {
-	get_dirs(dir_list, xdg_base_dirs);
+	get_dirs(dir_list, xdg_data_dirs);
 }
 
 void xdgdirs_get_configdirs(struct list_head *dir_list)

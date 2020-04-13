@@ -146,7 +146,7 @@ static void init_icon_dirs(void)
 	struct sbuf *path;
 
 	INIT_LIST_HEAD(&icon_dirs);
-	xdgdirs_get_basedirs(&icon_dirs);
+	xdgdirs_get_datadirs(&icon_dirs);
 	list_for_each_entry(path, &icon_dirs, list)
 		sbuf_addstr(path, "/icons");
 
@@ -160,7 +160,7 @@ static void init_pixmap_dirs(void)
 	struct sbuf *path;
 
 	INIT_LIST_HEAD(&pixmap_dirs);
-	xdgdirs_get_basedirs(&pixmap_dirs);
+	xdgdirs_get_datadirs(&pixmap_dirs);
 	list_for_each_entry(path, &pixmap_dirs, list)
 		sbuf_addstr(path, "/pixmaps");
 }

@@ -150,7 +150,7 @@ void xdgapps_init_lists(void)
 	INIT_LIST_HEAD(&directory_files);
 	INIT_LIST_HEAD(&xdg_data_dirs);
 
-	xdgdirs_get_basedirs(&xdg_data_dirs);
+	xdgdirs_get_datadirs(&xdg_data_dirs);
 
 	sbuf_init(&s);
 	list_for_each_entry(dir, &xdg_data_dirs, list) {
