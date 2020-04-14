@@ -140,7 +140,7 @@ ex:
 	@$(MAKE) --no-print-directory -C examples/ all
 
 check:
-	@./scripts/check
+	@./scripts/check src/*.sh src/*.c src/*.h
 
 print-%:
 	@echo '$*=$($*)'

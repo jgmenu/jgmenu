@@ -1,12 +1,24 @@
 #!/usr/bin/env bash
 
+g_analyse_all=f
+g_cppcheck=t
+g_clangformat=t
+g_shellcheck=t
+g_resume_mode=f
+
+logfile=.tmp-check-script
+
 die () {
 	printf '\033[31mfatal:\033[m %b\n' "$@" >&2
 	exit 1
 }
 
+warn () {
+	printf '\033[31mwarn:\033[m %b\n' "$@" >&2
+}
+
 say () {
-	printf '\033[32m%s\033[m\n' "$@"
+	printf '\033[32m%s\033[m' "$@"
 }
 
 isinstalled () {
@@ -14,52 +26,77 @@ isinstalled () {
 }
 
 usage () {
-	say "Usage: check [<options>]"
-	say "Options:"
-	say "-h   show help"
+	printf "%s\n" \
+"Usage: check [<options>] [<file>...]
+Options:
+-a, --all      run check on all .c .h and .sh files in src/
+-h, --help     show help
+-i, --in-situ  pass -i to clang-format
+--resume       same as --all, but carry on with last aborted"
 	exit 0
 }
 
 analyse () {
 	[[ -e $1 ]] || die "file ($1) does not exist"
-	say "     CHECK $1"
 	if [[ $(file $1) == *shell\ script* ]]; then
+		[[ $g_shellcheck = f ]] && return
+		say "     CHECK $1"
+		say " [shellcheck]"
 		shellcheck "$1"
 	fi
 	if [[ $(file $1) == *C\ source* ]]; then
-		./scripts/cppcheck-wrapper.sh "$1"
+		say "     CHECK $1"
+		if [[ $g_cppcheck = t ]]; then
+			say " [cppcheck]"
+			./scripts/cppcheck-wrapper.sh "$1"
+		fi
+		say " [checkpatch.pl]"
+		if [[ $g_clangformat = t ]]; then
+			say " [clang-format]"
+			./scripts/clang-format-wrapper.sh "$1"
+		fi
 		./scripts/checkpatch-wrapper.sh "$1"
 	fi
+	printf "\n"
 }
 
 analyse_all () {
-	for f in src/*.sh; do
+	[[ $g_resume_mode = f ]] && rm -f "${logfile}"
+	for f in src/*.sh src/*.c src/*.h; do
+		grep "${f}" "${logfile}" >/dev/null 2>&1 && continue
 		analyse "$f"
-	done
-	for f in src/*.c; do
-		analyse "$f"
-	done
-	for f in src/*.h; do
-		analyse "$f"
+		printf '%b\n' "${f}" >> "${logfile}"
 	done
 }
 
-args() {
+main () {
+	[[ -e src/jgmenu.c ]] || die "must be run from top-level directory"
+	[[ $# = 0 ]] && usage
+	isinstalled cppcheck || { warn "cppcheck not installed"; g_cppcheck=f; }
+	isinstalled clang-format || { warn "clang-format not installed"; g_clangformat=f; }
+	isinstalled shellcheck || { warn "shellcheck not installed"; g_shellcheck=f; }
+
 	for arg
 	do
-		case $arg in
-			-h)
-				usage ;;
-			*)
-				analyse "$arg"
+		opt=${arg%%=*}
+		var=${arg#*=}
+		case "$opt" in
+		-a|-all)
+			g_analyse_all=t ;;
+		-i)
+			g_insitu=t ;;
+		-h|--help)
+			usage ;;
+		--resume)
+			g_analyse_all=t
+			g_resume_mode=t
+			;;
+		*)
+			analyse "$var"
 		esac
 	done
-}
 
-main() {
-	[[ -e src/jgmenu.c ]] || die "must be run from top-level directory"
-	args "$@"
-	[[ $# -eq 0 ]] && analyse_all
+	[[ $g_analyse_all = t ]] && analyse_all
 }
 
 main "$@"
