@@ -37,7 +37,7 @@ void font_set(void)
 	}
 
 	/* Use fall back options */
-	for (i = 0; fb[i]; i++)
+	for (i = 0; fb[i]; i++) {
 		switch (fb[i]) {
 		case 'x':
 			if (t2conf_get_override_xsettings())
@@ -65,6 +65,7 @@ void font_set(void)
 				return;
 			}
 			break;
+		}
 	}
 
 	warn("set font to 'Sans 11' because all else failed");

@@ -7,6 +7,7 @@
 #include "compat.h"
 #include "banned.h"
 
+/* clang-format off */
 char *gitstrcasestr(const char *haystack, const char *needle)
 {
 	int nlen = strlen(needle);
@@ -29,6 +30,8 @@ next:
 	}
 	return NULL;
 }
+
+/* clang-format on */
 
 size_t gitstrlcpy(char *dest, const char *src, size_t size)
 {

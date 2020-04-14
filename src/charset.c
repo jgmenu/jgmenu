@@ -65,7 +65,7 @@ int utf8_validate_char(const char *s, const char *e)
 {
 	unsigned char c = *s++;
 
-	if (c <= 0x7F) {        /* 00..7F */
+	if (c <= 0x7F) { /* 00..7F */
 		return 1;
 	} else if (c <= 0xC1) { /* 80..C1 */
 		/* Disallow overlong 2-byte sequence. */
@@ -122,7 +122,7 @@ int utf8_validate_char(const char *s, const char *e)
 			return 0;
 
 		return 4;
-	} else {                /* F5..FF */
+	} else { /* F5..FF */
 		return 0;
 	}
 }

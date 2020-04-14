@@ -106,7 +106,7 @@ static int cache_check_index_theme(const char *theme, int size)
 	if (!theme_correct || !size_correct)
 		ret = -1;
 	if (ret < 0)
-		fprintf(stderr, "info: the icon theme and/or size has changed\n");
+		info("icon theme and/or size has changed");
 	return ret;
 }
 
