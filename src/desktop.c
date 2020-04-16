@@ -70,7 +70,7 @@ static void parse_line(char *line, struct app *app, int *is_desktop_entry)
 		app->generic_name_localized = xstrdup(value);
 }
 
-bool is_duplicate_desktop_file(char *filename)
+static bool is_duplicate_desktop_file(char *filename)
 {
 	int i;
 
@@ -222,6 +222,7 @@ struct app *desktop_read_files(void)
 	}
 	qsort(apps, nr_apps, sizeof(struct app), compare_app_name);
 	xfree(s.buf);
+	sbuf_list_free(&xdg_data_dirs);
 
 	/* NULL terminate vector */
 	grow_vector_by_one_app();

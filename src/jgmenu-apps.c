@@ -35,7 +35,7 @@ static void replace_semicolons_with_hashes(char *s)
 		*p = '\0';
 }
 
-bool ismatch(struct argv_buf dir_categories, const char *app_categories)
+static bool ismatch(struct argv_buf dir_categories, const char *app_categories)
 {
 	int i;
 
@@ -48,7 +48,7 @@ bool ismatch(struct argv_buf dir_categories, const char *app_categories)
 	return false;
 }
 
-void print_app_to_buffer(struct app *app, struct sbuf *buf)
+static void print_app_to_buffer(struct app *app, struct sbuf *buf)
 {
 	struct sbuf s;
 	char *name, *generic_name;
@@ -134,6 +134,7 @@ static void print_apps_for_one_directory(struct app *apps, struct dir *dir,
 		app->has_been_mapped = true;
 		print_app_to_buffer(app, submenu);
 	}
+	xfree(categories.buf);
 }
 
 static void print_menu_with_dirs(struct dir *dirs, struct app *apps)

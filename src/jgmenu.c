@@ -1132,7 +1132,7 @@ already_exists:
 	}
 }
 
-void remove_checkouts_without_matching_tags(void)
+static void remove_checkouts_without_matching_tags(void)
 {
 	struct item *i, *tmp;
 
@@ -2514,7 +2514,7 @@ static void keep_menu_height_between_min_and_max(void)
 		geo_set_menu_height(config.menu_height_max);
 }
 
-FILE *get_csv_source(bool arg_vsimple)
+static FILE *get_csv_source(bool arg_vsimple)
 {
 	if (args_csv_file()) {
 		struct sbuf s;

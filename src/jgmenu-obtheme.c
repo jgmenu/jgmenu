@@ -219,7 +219,7 @@ static void init_default_values(void)
 }
 
 /* Separate function to avoid cppcheck and check-patch.pl warnings */
-void libxml_test_version(void)
+static void libxml_test_version(void)
 {
 	LIBXML_TEST_VERSION
 }

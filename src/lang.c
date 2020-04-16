@@ -5,6 +5,8 @@
 
 #include "compat.h"
 #include "util.h"
+#include "lang.h"
+#include "banned.h"
 
 static char ll[24] = { 0 };
 static char llcc[24] = { 0 };

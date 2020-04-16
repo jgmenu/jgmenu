@@ -130,6 +130,7 @@ void dirs_read_schema(struct dir **vector)
 schema_read_success:
 	sbuf_expand_tilde(&schema_filename);
 	xfree(schema_filename.buf);
+	sbuf_list_free(&xdg_config_dirs);
 
 	/* NULL terminate vector *dirs */
 	add_dir();
