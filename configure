@@ -24,26 +24,40 @@ Produce a config.mk file to be sourced by Makefile
 --libexecdir=<dir>         Specify libexecdir (\$prefix/lib by default)
 "
 
+print_ok_fail () {
+	# Usage: print_ok_fail <status> <message>...
+	# <status> 0=ok; 1-127=fail
+	status=$1
+	shift
+	if [ "$status" = "0" ]; then
+		printf '%b\n' "[ OK ] $*"
+	else
+		printf '%b\n' "[FAIL] $*"
+		exit 1
+	fi
+}
+
+check_bin () {
+	type "$*" >/dev/null 2>&1
+	print_ok_fail $? $*
+}
+
+check_lib () {
+	pkg-config "$*" >/dev/null 2>&1
+	print_ok_fail $? $*
+}
+
+check_core_dependencies () {
+	for b in "pkg-config" "xml2-config"; do
+		check_bin "$b"
+	done
+	for l in "x11" "xrandr" "cairo" "pango" "pangocairo" "librsvg-2.0" "glib-2.0"; do
+		check_lib "$l"
+	done
+}
+
 add () {
 	printf '%b\n' "$*" >>"$config_mk"
-}
-
-check_required_bins () {
-	if ! type "$*" >/dev/null 2>&1; then
-		printf '%b\n' "[FAIL] cannot find $*"
-		exit 1
-	else
-		printf '%b\n' "[ OK ] $*"
-	fi
-}
-
-check_required_libs () {
-	if ! pkg-config "$*" >/dev/null 2>&1; then
-		printf '%b\n' "[FAIL] cannot find $*"
-		exit 1
-	else
-		printf '%b\n' "[ OK ] $*"
-	fi
 }
 
 add_modules () {
@@ -54,31 +68,19 @@ add_modules () {
 		add "ASAN=1"
 	fi
 	if [ "$with_xfce4_panel_applet" = "t" ]; then
-		check_required_libs "libxfce4panel-2.0"
+		check_lib "libxfce4panel-2.0"
 		add "CONTRIB_DIRS += xfce4-panel"
 	fi
 	if [ "$with_gtktheme" = "t" ]; then
 		add "CONTRIB_DIRS += gtktheme"
 	fi
 	if [ "$with_lx" = "t" ]; then
-		check_required_libs "libmenu-cache >= 1.1.0"
+		check_lib "libmenu-cache >= 1.1.0"
 		add "CONTRIB_DIRS += lx"
 	fi
 	if [ "$with_pmenu" = "t" ]; then
 		add "CONTRIB_DIRS += pmenu"
 	fi
-}
-
-check_core_dependencies () {
-	check_required_bins "pkg-config"
-	check_required_bins "xml2-config"
-	check_required_libs "x11"
-	check_required_libs "xrandr"
-	check_required_libs "cairo"
-	check_required_libs "pango"
-	check_required_libs "pangocairo"
-	check_required_libs "librsvg-2.0"
-	check_required_libs "glib-2.0"
 }
 
 main () {
