@@ -14,8 +14,11 @@ iterators=(
 
 usage () {
 	printf '%s\n' "\
-Usage: clang-format-wrapper.sh [<file>]
-Produces diff of changes"
+Usage: clang-format-wrapper.sh [<options>] <file>...
+Options:
+-h             show help
+-i             make clang-format changes in-situ"
+	exit 0
 }
 
 strip_space_before_foreach_iterators () {
@@ -35,6 +38,8 @@ format () {
 }
 
 main () {
+	[[ -e src/jgmenu.c ]] || die "must be run from top-level directory"
+	[[ $# = 0 ]] && usage
 	for arg
 	do
 		opt=${arg%%=*}
