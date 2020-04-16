@@ -1,8 +1,7 @@
-RM       = rm -f
-
-prefix     ?= /usr/local
-bindir      = $(prefix)/bin
-libdir     ?= $(prefix)/lib
+RM      ?= rm -f
+prefix  ?= /usr/local
+bindir  ?= $(prefix)/bin
+libdir  ?= $(prefix)/lib
 
 # www.gnu.org/prep/standards/html_node/Directory-Variables.html specifies that
 # libexecdir should point to $(exec_prefix)/libexec, but for backward
