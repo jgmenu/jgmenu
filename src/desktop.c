@@ -40,15 +40,15 @@ static void parse_line(char *line, struct app *app, int *is_desktop_entry)
 	if (!parse_config_line(line, &key, &value))
 		return;
 	if (!strcmp("Name", key)) {
-		app->name = strdup(value);
+		strlcpy(app->name, value, sizeof(app->name));
 	} else if (!strcmp("GenericName", key)) {
-		app->generic_name = strdup(value);
+		strlcpy(app->generic_name, value, sizeof(app->generic_name));
 	} else if (!strcmp("Exec", key)) {
-		app->exec = strdup(value);
+		strlcpy(app->exec, value, sizeof(app->exec));
 	} else if (!strcmp("Icon", key)) {
-		app->icon = strdup(value);
+		strlcpy(app->icon, value, sizeof(app->icon));
 	} else if (!strcmp("Categories", key)) {
-		app->categories = strdup(value);
+		strlcpy(app->categories, value, sizeof(app->categories));
 	} else if (!strcmp("NoDisplay", key)) {
 		if (!strcasecmp(value, "true"))
 			app->nodisplay = true;
@@ -59,15 +59,20 @@ static void parse_line(char *line, struct app *app, int *is_desktop_entry)
 
 	/* localized name */
 	if (!strcmp(key, lang_name_llcc()))
-		app->name_localized = xstrdup(value);
-	if (!app->name_localized && !strcmp(key, lang_name_ll()))
-		app->name_localized = xstrdup(value);
+		strlcpy(app->name_localized, value,
+			sizeof(app->name_localized));
+	if (app->name_localized[0] == '\0' && !strcmp(key, lang_name_ll()))
+		strlcpy(app->name_localized, value,
+			sizeof(app->name_localized));
 
 	/* localized generic name */
 	if (!strcmp(key, lang_gname_llcc()))
-		app->generic_name_localized = xstrdup(value);
-	if (!app->generic_name_localized && !strcmp(key, lang_gname_ll()))
-		app->generic_name_localized = xstrdup(value);
+		strlcpy(app->generic_name_localized, value,
+			sizeof(app->generic_name_localized));
+	if (app->generic_name_localized[0] == '\0' &&
+	    !strcmp(key, lang_gname_ll()))
+		strlcpy(app->generic_name_localized, value,
+			sizeof(app->generic_name_localized));
 }
 
 static bool is_duplicate_desktop_file(char *filename)
@@ -83,29 +88,6 @@ static bool is_duplicate_desktop_file(char *filename)
 			return true;
 	}
 	return false;
-}
-
-/**
- * This makes the code a bit simpler in jgmenu-apps.c
- */
-static void strdup_null_variables(struct app *app)
-{
-	if (!app->name)
-		app->name = strdup("");
-	if (!app->name_localized)
-		app->name_localized = strdup("");
-	if (!app->generic_name)
-		app->generic_name = strdup("");
-	if (!app->generic_name_localized)
-		app->generic_name_localized = strdup("");
-	if (!app->exec)
-		app->exec = strdup("");
-	if (!app->icon)
-		app->icon = strdup("");
-	if (!app->categories)
-		app->categories = strdup("");
-	if (!app->filename)
-		app->filename = strdup("");
 }
 
 static struct app *grow_vector_by_one_app(void)
@@ -142,9 +124,9 @@ static int add_app(FILE *fp, char *filename)
 			return -1;
 		parse_line(line, app, &is_desktop_entry);
 	}
-	app->filename = strdup(filename);
-	strdup_null_variables(app);
-	strip_exec_field_codes(&app->exec);
+	strlcpy(app->filename, filename, sizeof(app->filename));
+	p = &app->exec[0];
+	strip_exec_field_codes(&p);
 	return 0;
 }
 

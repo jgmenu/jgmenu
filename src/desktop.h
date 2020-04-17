@@ -6,15 +6,15 @@
 #include "list.h"
 
 struct app {
-	char *name;
-	char *name_localized;
-	char *generic_name;
-	char *generic_name_localized;
-	char *exec;
-	char *icon;
-	char *categories;
+	char name[128];
+	char name_localized[128];
+	char generic_name[128];
+	char generic_name_localized[128];
+	char exec[128];
+	char icon[128];
+	char categories[512];
 	bool nodisplay;
-	char *filename;
+	char filename[128];
 	bool terminal;
 	bool has_been_mapped;
 };

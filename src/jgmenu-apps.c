@@ -54,10 +54,10 @@ static void print_app_to_buffer(struct app *app, struct sbuf *buf)
 	char *name, *generic_name;
 
 	sbuf_init(&s);
-	name = app->name_localized[0] != '\0' ? app->name_localized :
-	       app->name;
+	name = app->name_localized[0] != '\0' ? app->name_localized : app->name;
 	generic_name = app->generic_name_localized[0] != '\0' ?
-		       app->generic_name_localized : app->generic_name;
+			       app->generic_name_localized :
+			       app->generic_name;
 
 	/* name */
 	sbuf_cpy(&s, name);
@@ -93,7 +93,7 @@ static void print_apps_in_other_directory(struct app *apps, struct sbuf *buf)
 {
 	struct app *app;
 
-	for (app = apps; app->name; app += 1) {
+	for (app = apps; app->name[0] != '\0'; app += 1) {
 		if (app->nodisplay)
 			continue;
 		if (app->has_been_mapped)
@@ -114,7 +114,7 @@ static void print_apps_for_one_directory(struct app *apps, struct dir *dir,
 	argv_strdup(&categories, dir->categories);
 	argv_parse(&categories);
 
-	for (app = apps; app->name; app += 1) {
+	for (app = apps; app->name[0] != '\0'; app += 1) {
 		if (app->nodisplay)
 			continue;
 
@@ -193,7 +193,7 @@ static void print_menu_no_dirs(struct app *apps)
 	sbuf_init(&buf);
 	if (!no_prepend)
 		cat("~/.config/jgmenu/prepend.csv");
-	for (app = apps; app->name; app += 1) {
+	for (app = apps; app->name[0] != '\0'; app += 1) {
 		if (app->nodisplay)
 			continue;
 		print_app_to_buffer(app, &buf);
@@ -241,6 +241,7 @@ int main(int argc, char **argv)
 		dirs_read_schema(&dirs);
 		print_menu_with_dirs(dirs, apps);
 	}
-	return 0;
 	i18n_cleanup();
+	xfree(apps);
+	return 0;
 }
