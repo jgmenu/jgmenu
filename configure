@@ -83,6 +83,13 @@ add_modules () {
 	fi
 }
 
+with_all () {
+	with_xfce4_panel_applet=t
+	with_gtktheme=t
+	with_lx=t
+	with_pmenu=t
+}
+
 main () {
 	for arg
 	do
@@ -106,10 +113,11 @@ main () {
 		--enable-asan)
 			enable_asan=t ;;
 		-a|--all)
-			with_xfce4_panel_applet=t
-			with_gtktheme=t
-			with_lx=t
-			with_pmenu=t
+			with_all ;;
+		-d|--dev)
+			with_all
+			enable_asan=t
+			prefix=${HOME}
 			;;
 		-h|--help)
 			printf '%b' "$usage_message"; exit 1 ;;
