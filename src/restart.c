@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "restart.h"
+#include "lockfile.h"
 #include "banned.h"
 
 #define JGMENU_MAX_ARGS (32)
@@ -25,6 +26,7 @@ void restart_init(int argc, char **argv)
 void restart(void)
 {
 	fprintf(stderr, "info: restarting jgmenu...\n");
+	lockfile_unlink();
 	if (execvp(args[0], args) < 0)
 		fprintf(stderr, "warn: restart failed\n");
 }

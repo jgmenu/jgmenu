@@ -11,7 +11,7 @@
 #define LOCKFILE "~/.jgmenu-lockfile"
 static struct sbuf lockfile;
 
-static void lockfile_unlink(void)
+void lockfile_unlink(void)
 {
 	unlink(lockfile.buf);
 }
