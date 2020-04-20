@@ -53,6 +53,7 @@ static void get_dirs(struct list_head *dir_list, char **dirs)
 			sbuf_list_append(dir_list, argv_buf.argv[j]);
 		xfree(argv_buf.buf);
 	}
+	xfree(tmp.buf);
 }
 
 void xdgdirs_get_datadirs(struct list_head *dir_list)

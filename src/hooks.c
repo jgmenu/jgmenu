@@ -130,7 +130,7 @@ static void add_user_defined_hooks(const char *filename)
 	fp = fopen(f.buf, "r");
 	if (!fp) {
 		info("could not open hooks file %s", filename);
-		return;
+		goto clean;
 	}
 	while (fgets(line, sizeof(line), fp)) {
 		if (line[0] == '\0')
@@ -141,6 +141,7 @@ static void add_user_defined_hooks(const char *filename)
 		*p = '\0';
 		process_one_line(line);
 	}
+clean:
 	xfree(f.buf);
 }
 

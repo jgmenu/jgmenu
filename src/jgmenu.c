@@ -2426,6 +2426,7 @@ static void set_theme(void)
 	icon_set_size(config.icon_size);
 	info("set icon theme to '%s'", theme.buf);
 	icon_set_theme(theme.buf);
+	xfree(theme.buf);
 }
 
 static void quit(int signum)

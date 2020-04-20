@@ -263,6 +263,8 @@ void icon_cleanup(void)
 
 	list_for_each_entry_safe(icon, tmp_icon, &icon_cache, list) {
 		cairo_surface_destroy(icon->surface);
+		xfree(icon->name);
+		xfree(icon->path);
 		list_del(&icon->list);
 		xfree(icon);
 	}
