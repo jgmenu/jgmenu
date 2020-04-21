@@ -52,10 +52,21 @@ def process_line(line):
     if "background-color" in line:
         setconfig("color_menu_bg", rgb2hex(line))
 
+def cache(themename):
+    """ save the theme-name to ~/.cache/jgmenu/.last-gtktheme """
+    print ("themename={}".format(themename))
+    dir = os.environ["HOME"] + "/.cache/jgmenu"
+    if not os.path.exists(dir):
+        os.mkdir(dir)
+    f = open(dir + "/.last-gtktheme", "w")
+    f.write(themename)
+    f.close()
+
 def main():
     """ main """
     gset = Gtk.Settings.get_default()
     themename = gset.get_property("gtk-theme-name")
+    cache(themename)
     prefdark = gset.get_property("gtk-application-prefer-dark-theme")
     css = Gtk.CssProvider.get_named(themename).to_string()
 #    print(css)
