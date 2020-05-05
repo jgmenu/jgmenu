@@ -17,6 +17,7 @@ Produce a config.mk file to be sourced by Makefile
 --with-lx                  Include lx module
 --with-pmenu               Include pmenu module
 --all, -a                  Include all contrib/ packages above
+--dev, -d                  Same as --all, but also with ASAN and prefix=\$HOME
 --enable-asan              Enable address sanitizer (only during development)
 --prefix=<dir>             Install architecture-independent files in \$prefix
                            (e.g. --prefix=\$HOME')
