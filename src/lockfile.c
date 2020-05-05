@@ -24,8 +24,12 @@ void lockfile_init(void)
 	sbuf_init(&lockfile);
 	sbuf_cpy(&lockfile, LOCKFILE);
 	sbuf_expand_tilde(&lockfile);
-	if (!stat(lockfile.buf, &st))
-		die("an instance of 'jgmenu' is already running");
+	if (!stat(lockfile.buf, &st)) {
+		die("Lockfile '%s' exists. This is probably because another\n"
+		    "       instance of jgmenu is running. If this is not"
+		    " the case, manually delete\n       the lockfile.",
+		     LOCKFILE);
+	}
 	fd = open(lockfile.buf, O_RDWR | O_CREAT, 0600);
 	if (fd < 0)
 		die("lockfile '%s'", lockfile.buf);
