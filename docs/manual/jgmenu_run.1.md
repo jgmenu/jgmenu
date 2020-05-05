@@ -15,8 +15,8 @@
 # DESCRIPTION
 
 Use without `command` or `option` to launch menu. If an instance of jgmenu
-is already running, this will be activated, otherwise a new instances will be
-started.
+is already running, this will be mapped (=made visible), otherwise a new
+instances will be started.
 
 Use with `command` to call any programe in $libexecdir/jgmenu which containis
 executable programs designed to be run by jgmenu rather than directly by
