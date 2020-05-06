@@ -1,0 +1,29 @@
+jgmenu v4.2.0 release notes
+===========================
+
+Updates since v4.1.0
+--------------------
+
+  * Add config options icon_norm_alpha and icon_sel_alpha.
+    Written-by: @wsdfhjxc
+
+  * Support hooks. See jgmenu(1) for full details.
+
+  * Support startup script. Run ~/.config/jgmenu/startup on initial launch.
+    This feature enables optional syncing with others settings such as GTK3.
+
+  * gtktheme: save last theme name in ~/.cache/jgmenu/.last-gtktheme
+    This supports scripts for syncing gtktheme on startup.
+
+  * obtheme: set menu_border=0 by default to avoid inheriting unwanted menu
+    border thickness if openbox theme does not contain an entry for it.
+    Suggested-by: @johnraff
+
+  * configure: support --libexecdir= and --libdir= (issue #109)
+    Thanks @tieugene
+
+  * configure: use the correct xfce4panel library. Suggested-by: @Misko-2083
+
+  * xfce4-panel: remove dpkg-architecture and hardcoded debian paths from
+    Makefile (issue #110). Thanks @tieugene
+
