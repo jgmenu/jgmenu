@@ -37,6 +37,8 @@ export EDITOR='nano'
 export DH_VERBOSE=1
 
 "
+
+# fallbacks
 dist=buster
 arch=amd64
 
@@ -189,6 +191,11 @@ log "
 Using pdebuild with ${base_stem}-${dist}-${arch}.tgz...
 "
 
+echo "Press Enter to continue, any other key to exit:"
+
+read -srn1
+[[ -n $REPLY ]] && exit
+
 pdebuild $sign_arg --architecture "${arch}" --buildresult "$results_dir" --logfile "${logfile}.pbuild" --debbuildopts -b -- --basetgz "${base_stem}-${dist}-${arch}.tgz" || error_exit "pdebuild failed"
 
 cat "${logfile}.pbuild" >> "${logfile}" || error_exit "failed to merge ${logfile}.pbuild with ${logfile}"
@@ -200,4 +207,3 @@ rm "${logfile}.pbuild"
 log '
 running Lintian...'
 lintian --pedantic --info "$results_dir/${pkg_name}_${pkg_ver}_${arch}.changes" | tee -a "$logfile"
-
