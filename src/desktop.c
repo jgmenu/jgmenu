@@ -188,6 +188,7 @@ struct app *desktop_read_files(void)
 	struct sbuf *dir;
 	struct sbuf s;
 	static int has_already_run;
+	struct app *app;
 
 	BUG_ON(has_already_run);
 	has_already_run = 1;
@@ -207,6 +208,7 @@ struct app *desktop_read_files(void)
 	sbuf_list_free(&xdg_data_dirs);
 
 	/* NULL terminate vector */
-	grow_vector_by_one_app();
+	app = grow_vector_by_one_app();
+	app->end = true;
 	return apps;
 }

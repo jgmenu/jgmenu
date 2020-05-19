@@ -17,6 +17,7 @@ struct app {
 	char filename[128];
 	bool terminal;
 	bool has_been_mapped;
+	bool end;
 };
 
 /**
