@@ -38,14 +38,15 @@ Options:
 
 analyse () {
 	[[ -e $1 ]] || die "file ($1) does not exist"
+	say "     CHECK $1"
 	if [[ $(file $1) == *shell\ script* ]]; then
+		say " [checkbashisms]"
+		perl ./scripts/checkbashisms.pl --force "$1"
 		[[ $g_shellcheck = f ]] && return
-		say "     CHECK $1"
 		say " [shellcheck]"
 		shellcheck "$1"
 	fi
 	if [[ $(file $1) == *C\ source* ]]; then
-		say "     CHECK $1"
 		if [[ $g_cppcheck = t ]]; then
 			say " [cppcheck]"
 			./scripts/cppcheck-wrapper.sh "$1"
