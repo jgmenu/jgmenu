@@ -1,0 +1,7 @@
+jgmenu v4.2.1 release notes
+===========================
+
+Updates since v4.2.0
+--------------------
+
+  * Fix apps module bug (issue #119) Helped-by: @geolaw
