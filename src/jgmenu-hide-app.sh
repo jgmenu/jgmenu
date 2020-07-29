@@ -18,4 +18,3 @@ test -e "${desktop_file}" && _exit "info: file already exists"
 mkdir -p "${applications_dir}"
 say '[Desktop Entry]\nType=Application\nNoDisplay=true' >"${desktop_file}"
 
-rm -rf "${HOME}/.cache/menus/"
