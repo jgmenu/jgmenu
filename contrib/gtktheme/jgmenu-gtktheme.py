@@ -7,6 +7,8 @@
 
 import os
 import sys
+import shlex
+import subprocess
 try:
     import gi
 except ImportError:
@@ -14,11 +16,10 @@ except ImportError:
     sys.exit(1)
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk
-import shlex
-import subprocess
+from gi.repository import Gtk
 
 def run(command):
+    """ run a command """
     subprocess.Popen(shlex.split(command))
 
 def fmt(s):
@@ -27,8 +28,7 @@ def fmt(s):
         return "00"
     elif len(s) == 1:
         return "0{}".format(s)
-    else:
-        return s
+    return s
 
 def rgb2hex(line):
     """ convert rgb values to a 6-digit hex string """
@@ -54,11 +54,11 @@ def process_line(line):
 
 def cache(themename):
     """ save the theme-name to ~/.cache/jgmenu/.last-gtktheme """
-    print ("themename={}".format(themename))
-    dir = os.environ["HOME"] + "/.cache/jgmenu"
-    if not os.path.exists(dir):
-        os.mkdir(dir)
-    f = open(dir + "/.last-gtktheme", "w")
+    print("themename={}".format(themename))
+    directory = os.environ["HOME"] + "/.cache/jgmenu"
+    if not os.path.exists(directory):
+        os.mkdir(directory)
+    f = open(directory + "/.last-gtktheme", "w")
     f.write(themename)
     f.close()
 
