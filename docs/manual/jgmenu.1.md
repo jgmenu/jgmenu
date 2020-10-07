@@ -1,6 +1,6 @@
 % JGMENU(1)
 % Johan Malm
-% 5 May, 2020
+% 7 October, 2020
 
 # NAME
 
@@ -276,7 +276,7 @@ accordance with the following syntax:
     `search`
 
     :   Search box showing the current filter (what the user has typed)
-        or the specifed `text` if no filter has been invoked. 
+        or the specified `text` if no filter has been invoked.
 
     `icon`
 
@@ -724,12 +724,12 @@ Here follow some specific types:
 
 `color_sep_fg` = __color__ (default #ffffff 20)
 
-:   Font (foreground) colour of seperators without text
+:   Font (foreground) colour of separators without text
 
 `color_title_fg` = __color__ (default #eeeeee 50)
 
 :   Font (foreground) colour of separators with text. The font colour can be
-    overriden by `sep_markup`
+    overridden by `sep_markup`
 
 `color_title_bg` = __color__ (default #000000 0)
 
@@ -915,7 +915,7 @@ Hooks are specified in the file $HOME/.config/jgmenu/hooks are take the format
 
     <file>,<command>
 
-For example, to syncronise with the GTK theme, use this hook:
+For example, to synchronise with the GTK theme, use this hook:
 
     ~/.config/gtk-3.0/settings.ini,jgmenu_run gtktheme
 

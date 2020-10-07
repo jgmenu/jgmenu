@@ -1,6 +1,6 @@
 % JGMENUUNICODE(7)  
 % Johan Malm  
-% 20 September, 2019  
+% 7 October, 2020  
 
 # NAME
 
@@ -15,7 +15,7 @@ Unicode characters can be displayed by jgmenu. They can be used in:
 - Config file  
 
 Throughout this document, unicode code points will be referred to by writing
-`u+` folled by their hexadecimal number. In examples, u+1234 will be used.
+`u+` followed by their hexadecimal number. In examples, u+1234 will be used.
 
 # UNICODE CHARACTERS IN TERMINAL
 
