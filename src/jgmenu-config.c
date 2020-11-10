@@ -26,6 +26,7 @@ struct option {
 static struct option options[] = {
 	{ "verbosity", "0" },
 	{ "stay_alive", "1" },
+	{ "persistent", "0" },
 	{ "hide_on_startup", "0" },
 	{ "csv_cmd", "apps" },
 	{ "tint2_look", "0" },

@@ -53,6 +53,8 @@ void args_parse(int argc, char **argv)
 			config.menu_halign = CENTER;
 			config.menu_valign = CENTER;
 			config.position_mode = POSITION_MODE_CENTER;
+		} else if (!strncmp(argv[i], "--persistent", 12)) {
+			config.persistent = 1;
 		}
 	}
 }

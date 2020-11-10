@@ -1516,6 +1516,8 @@ static void hide_menu(void)
 
 static void hide_or_exit(void)
 {
+	if (config.persistent > 0)
+		return;
 	if (config.stay_alive)
 		hide_menu();
 	else
@@ -1598,6 +1600,8 @@ static void action_cmd(char *cmd, const char *working_dir)
 		filter_set_clear_on_keyboard_input(1);
 		filter_addstr(p, strlen(p));
 		update(1);
+	} else if (!strncmp(cmd, "^quit(", 6)) {
+		exit(0);
 	} else {
 		spawn_async(cmd, working_dir);
 		hide_or_exit();
