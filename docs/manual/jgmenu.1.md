@@ -153,6 +153,10 @@ The following markup is supported in the `command` field
 
 :   Invoke search
 
+`^quit()`
+
+:   Quit
+
 ## Icons
 
 Icons will be displayed if the third field is populated, for example:
@@ -392,6 +396,12 @@ Here follow some specific types:
 :   If set to 1, the menu will "hide" rather than "exit" when the following
     events occur: clicking on menu item; clicking outside the menu; pressing
     escape. When in the hidden mode, a USR1 signal will "un-hide" the menu.
+
+`persistent` = __boolean__ (default 0)
+
+:   If set to 1, the menu will not exit nor hide when the following
+    events occur: clicking on menu item; clicking outside the menu; pressing
+    escape. 
 
 `hide_on_startup` = __boolean__ (default 0)
 
