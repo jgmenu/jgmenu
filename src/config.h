@@ -14,6 +14,7 @@ struct config {
 	int spawn;		/* 1:execute commands  0:print to stdout */
 	int verbosity;
 	int stay_alive;
+	int persistent;
 	int hide_on_startup;
 	char *csv_cmd;
 	int tint2_look;

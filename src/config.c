@@ -21,6 +21,7 @@ void config_set_defaults(void)
 	config.spawn		   = 1;	/* not in jgmenurc */
 	config.verbosity	   = 0;
 	config.stay_alive	   = 1;
+	config.persistent          = 0;
 	config.hide_on_startup	   = 0;
 	config.csv_cmd		   = xstrdup("apps");
 	config.tint2_look	   = 0;
@@ -130,6 +131,9 @@ static void process_line(char *line)
 	} else if (!strcmp(option, "stay_alive")) {
 		xatoi(&config.stay_alive, value, XATOI_NONNEG,
 		      "config.stay_alive");
+	} else if (!strcmp(option, "persistent")) {
+		xatoi(&config.persistent, value, XATOI_NONNEG,
+		      "config.persistent");
 	} else if (!strcmp(option, "hide_on_startup")) {
 		xatoi(&config.hide_on_startup, value, XATOI_NONNEG,
 		      "config.hide_on_startup");
