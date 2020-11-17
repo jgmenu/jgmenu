@@ -50,6 +50,7 @@ void config_set_defaults(void)
 	config.menu_border	   = 0;
 	config.menu_halign	   = LEFT;
 	config.menu_valign	   = BOTTOM;
+	config.menu_gradient_pos   = TOP;
 
 	config.sub_spacing	   = 1;
 	config.sub_padding_top	   = CONFIG_AUTO;
@@ -402,6 +403,18 @@ static void process_line(char *line)
 	} else if (!strcmp(option, "csv_no_duplicates")) {
 		xatoi(&config.csv_no_duplicates, value, XATOI_NONNEG,
 		      "config.csv_no_duplicates");
+	} else if (!strcmp(option, "menu_gradient_pos")) {
+		if (!value)
+			return;
+		if (!strcasecmp(value, "top"))
+			config.menu_gradient_pos = TOP;
+		else if (!strcasecmp(value, "right"))
+			config.menu_gradient_pos = RIGHT;
+		else if (!strcasecmp(value, "left"))
+			config.menu_gradient_pos = LEFT;
+		else if (!strcasecmp(value, "bottom"))
+			config.menu_gradient_pos = BOTTOM;
+
 	}
 }
 
