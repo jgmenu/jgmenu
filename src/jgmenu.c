@@ -646,8 +646,16 @@ static void draw_menu(void)
 
 	/* Draw background */
 	ui_clear_canvas();
-	ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius,
-			  config.menu_border, 1, config.color_menu_bg);
+	// ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius,
+	// 	config.menu_border, 1, config.color_menu_bg);
+	if(config.color_menu_bg_gradient) {
+		ui_draw_rectangle_gradient(0, 0, w, geo_get_menu_height(), config.menu_radius,
+				config.menu_border, 1, config.color_menu_bg, config.color_menu_bg_gradient);
+	} else {
+		ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius,
+				config.menu_border, 1, config.color_menu_bg);
+	}
+
 
 	/* Draw menu border */
 	if (config.menu_border)

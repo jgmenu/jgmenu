@@ -63,6 +63,8 @@ void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h, do
 				      double line_width, int fill, double *rgba);
 void ui_draw_rectangle(double x, double y, double w, double h, double radius, double line_width,
 		       int fill, double *rgba);
+void ui_draw_rectangle_gradient(double x, double y, double w, double h, double radius, double line_width,
+		       int fill, double *top_rgba, double *bot_rgba);
 void ui_draw_line(double x0, double y0, double x1, double y1, double line_width, double *rgba);
 void ui_insert_text(char *s, int x, int y, int h, int w, double *rgba,
 		    enum alignment align);
