@@ -414,7 +414,14 @@ static void process_line(char *line)
 			config.menu_gradient_pos = LEFT;
 		else if (!strcasecmp(value, "bottom"))
 			config.menu_gradient_pos = BOTTOM;
-
+		else if (!strcasecmp(value, "top_left"))
+			config.menu_gradient_pos = TOP_LEFT;
+		else if (!strcasecmp(value, "top_right"))
+			config.menu_gradient_pos = TOP_RIGHT;
+		else if (!strcasecmp(value, "bottom_left"))
+			config.menu_gradient_pos = BOTTOM_LEFT;
+		else if (!strcasecmp(value, "bottom_right"))
+			config.menu_gradient_pos = BOTTOM_RIGHT;
 	}
 }
 
