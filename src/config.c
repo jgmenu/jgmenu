@@ -363,6 +363,8 @@ static void process_line(char *line)
 
 	} else if (!strcmp(option, "color_menu_bg")) {
 		parse_hexstr(value, config.color_menu_bg);
+	} else if (!strcmp(option, "color_menu_bg_gradient")) {
+		parse_hexstr(value, config.color_menu_bg_gradient);
 	} else if (!strcmp(option, "color_menu_border")) {
 		parse_hexstr(value, config.color_menu_border);
 	} else if (!strcmp(option, "color_norm_bg")) {
