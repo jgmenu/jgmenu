@@ -43,6 +43,7 @@ struct config {
 	int menu_border;
 	enum alignment menu_halign;
 	enum alignment menu_valign;
+	enum alignment menu_gradient_pos;
 
 	int sub_spacing;
 	int sub_padding_top;

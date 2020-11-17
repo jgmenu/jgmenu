@@ -447,13 +447,36 @@ void ui_draw_rectangle(double x, double y, double w, double h, double radius, do
 	}
 }
 
-void ui_draw_rectangle_gradient(double x, double y, double w, double h, double radius, double line_width, int fill, double *top_rgba, double *bot_rgba) 
+void ui_draw_rectangle_gradient(double x, double y, double w, double h, double radius, double line_width, int fill, double *top_rgba, double *bot_rgba, enum alignment align) 
 {
 	cairo_pattern_t *pat1;
-	pat1 = cairo_pattern_create_linear(x, y, x, y + h);
-
-	cairo_pattern_add_color_stop_rgba(pat1, 0, top_rgba[0], top_rgba[1], top_rgba[2], top_rgba[3]);
-	cairo_pattern_add_color_stop_rgba(pat1, 50, bot_rgba[0], bot_rgba[1], bot_rgba[2], bot_rgba[3]);
+	switch(align) {
+		case LEFT:
+			pat1 = cairo_pattern_create_linear(x, y, x + w, y);
+			cairo_pattern_add_color_stop_rgba(pat1, 0, bot_rgba[0], bot_rgba[1], bot_rgba[2], bot_rgba[3]);
+			cairo_pattern_add_color_stop_rgba(pat1, 50, top_rgba[0], top_rgba[1], top_rgba[2], top_rgba[3]);
+			break;
+		case RIGHT:
+			pat1 = cairo_pattern_create_linear(x, y, x + w, y);
+			cairo_pattern_add_color_stop_rgba(pat1, 0, top_rgba[0], top_rgba[1], top_rgba[2], top_rgba[3]);
+			cairo_pattern_add_color_stop_rgba(pat1, 50, bot_rgba[0], bot_rgba[1], bot_rgba[2], bot_rgba[3]);
+			break;
+		case TOP:
+			pat1 = cairo_pattern_create_linear(x, y, x, y + h);
+			cairo_pattern_add_color_stop_rgba(pat1, 0, bot_rgba[0], bot_rgba[1], bot_rgba[2], bot_rgba[3]);
+			cairo_pattern_add_color_stop_rgba(pat1, 50, top_rgba[0], top_rgba[1], top_rgba[2], top_rgba[3]);
+			break;
+		case BOTTOM:
+			pat1 = cairo_pattern_create_linear(x, y, x, y + h);
+			cairo_pattern_add_color_stop_rgba(pat1, 0, top_rgba[0], top_rgba[1], top_rgba[2], top_rgba[3]);
+			cairo_pattern_add_color_stop_rgba(pat1, 50, bot_rgba[0], bot_rgba[1], bot_rgba[2], bot_rgba[3]);
+			break;
+		default:
+			pat1 = cairo_pattern_create_linear(x, y, x, y + h);
+			cairo_pattern_add_color_stop_rgba(pat1, 0, top_rgba[0], top_rgba[1], top_rgba[2], top_rgba[3]);
+			cairo_pattern_add_color_stop_rgba(pat1, 50, bot_rgba[0], bot_rgba[1], bot_rgba[2], bot_rgba[3]);
+			break;
+	}
 
 	x += line_width / 2;
 	y += line_width / 2;
