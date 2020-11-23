@@ -124,7 +124,7 @@ static const char jgmenu_usage[] =
 "    --vsimple             same as --simple, but also disables icons and\n"
 "                          ignores jgmenurc\n"
 "    --csv-file=<file>     specify menu file (in jgmenu flavoured CSV format)\n"
-"    --csv-cmd=<command>   specify command to producue menu data\n";
+"    --csv-cmd=<command>   specify command to produce menu data\n";
 
 static void checkout_rootnode(void);
 static void pipemenu_del_all(void);
