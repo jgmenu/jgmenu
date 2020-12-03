@@ -51,6 +51,8 @@ def process_line(line):
     """ process one line """
     if "background-color" in line:
         setconfig("color_menu_bg", rgb2hex(line))
+        setconfig("color_title_bg", rgb2hex(line))
+        setconfig("color_title_border", rgb2hex(line))
 
 def cache(themename):
     """ save the theme-name to ~/.cache/jgmenu/.last-gtktheme """
@@ -79,6 +81,7 @@ def main():
             break
         if "theme_text_color" in line:
             setconfig("color_norm_fg", rgb2hex(line))
+            setconfig("color_title_fg", rgb2hex(line))
         if "theme_selected_bg_color" in line:
             setconfig("color_sel_bg", rgb2hex(line))
         if "theme_selected_fg_color" in line:
@@ -98,3 +101,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
