@@ -2364,7 +2364,7 @@ static void run(void)
 				 * "ButtonRelease". We want to be able to use
 				 * these to both open and close the menu.
 				 * When passing mouse events through tint2 to
-				 * the WM, we want menu to be able to repsond
+				 * the WM, we want menu to be able to respond
 				 * to "ButtonPress" without immediately dying
 				 * on "ButtonRelease".
 				 */
