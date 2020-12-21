@@ -113,6 +113,8 @@ static void process_line(char *line)
 	/* general */
 	} else if (!strncmp(line, "*.text.justify:", 15)) {
 		set_set("sep_halign", strstrip(line + 15), 0);
+	} else if (!strncmp(line, "menu.overlap.x:", 15)) {
+		vset("sub_spacing", "%d", -1 * atoi(line + 15));
 	} else if (!strncmp(line, "menu.overlap:", 13)) {
 		vset("sub_spacing", "%d", -1 * atoi(line + 13));
 	}
