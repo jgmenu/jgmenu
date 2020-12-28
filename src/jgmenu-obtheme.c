@@ -100,8 +100,7 @@ static void process_line(char *line)
 	/* separators */
 	} else if (!strncmp(line, "menu.title.bg.color:", 20)) {
 		vset("color_title_bg", "%s 100", strstrip(line + 20));
-	} else if (!strncmp(line, "menu.title.bg.border.color:", 27)) {
-		vset("color_title_border", "%s 100", strstrip(line + 27));
+		vset("color_title_border", "%s 100", strstrip(line + 20));
 	} else if (!strncmp(line, "menu.title.text.color:", 22)) {
 		vset("color_title_fg", "%s 100", strstrip(line + 22));
 		set_set("sep_markup", "", 0);
