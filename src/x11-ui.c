@@ -324,16 +324,19 @@ void ui_win_add(int x, int y, int w, int h, int max_w, int max_h, const char *fo
 	XMapWindow(ui->dpy, ui->w[ui->cur].win);
 }
 
-void ui_win_activate(Window w)
+int ui_win_activate(Window w)
 {
 	int i;
 
-	for (i = 0; ui->w[i].c; i++)
-		if (w == ui->w[i].win)
-			goto out;
-	die("badness: %s", __func__);
-out:
-	ui->cur = i;
+	for (i = 0; ui->w[i].c; i++) {
+		if (w == ui->w[i].win) {
+			ui->cur = i;
+			return 0;
+		}
+	}
+
+	/* we shouldn't get here */
+	return -1;
 }
 
 int ui_has_child_window_open(Window w)

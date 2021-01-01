@@ -2103,10 +2103,13 @@ static void hover(void)
 static void set_focus(Window w)
 {
 	struct node *n;
+	int ret = 0;
 
 	n = get_node_from_wid(w);
 	menu.current_node->last_sel = menu.sel;
-	ui_win_activate(w);
+	ret = ui_win_activate(w);
+	if (ret < 0)
+		return;
 	geo_set_cur(ui->cur);
 	checkout_tag(n->item->tag);
 	menu.sel = n->last_sel;
@@ -2285,7 +2288,8 @@ static void run(void)
 
 				/* mouse over signal */
 				if (ch == 't') {
-					BUG_ON(!menu.sel);
+					if (!menu.sel)
+						continue;
 					del_beyond_current();
 					/* open new sub window */
 					if (!sw_close_pending && !menu_is_hidden) {

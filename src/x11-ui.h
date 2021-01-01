@@ -55,7 +55,7 @@ void ui_init_canvas(int max_width, int max_height);
 void ui_init_cairo(int canvas_width, int canvas_height, const char *font);
 void ui_win_init(int x, int y, int w, int h, int max_w, int max_h, const char *font);
 void ui_win_add(int x, int y, int w, int h, int max_w, int max_h, const char *font);
-void ui_win_activate(Window w);
+int ui_win_activate(Window w);
 int ui_has_child_window_open(Window w);
 void ui_win_del(void);
 void ui_win_del_beyond(int w);
