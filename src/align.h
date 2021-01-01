@@ -5,6 +5,7 @@
 
 enum alignment {
 	UNKNOWN,
+	ALIGNMENT_NONE,
 	TOP,
 	CENTER,
 	BOTTOM,

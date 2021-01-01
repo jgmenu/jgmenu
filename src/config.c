@@ -50,7 +50,7 @@ void config_set_defaults(void)
 	config.menu_border	   = 0;
 	config.menu_halign	   = LEFT;
 	config.menu_valign	   = BOTTOM;
-	config.menu_gradient_pos   = TOP;
+	config.menu_gradient_pos   = ALIGNMENT_NONE;
 
 	config.sub_spacing	   = 1;
 	config.sub_padding_top	   = CONFIG_AUTO;
