@@ -357,7 +357,8 @@ static void del_win(int win_index)
 		die("there is not a window to delete");
 	XMapWindow(ui->dpy, ui->w[win_index].win);
 	XDestroyWindow(ui->dpy, ui->w[win_index].win);
-	XDestroyIC(ui->w[win_index].xic);
+	if (ui->w[win_index].xic)
+		XDestroyIC(ui->w[win_index].xic);
 	XFreePixmap(ui->dpy, ui->w[win_index].canvas);
 	XFreeGC(ui->dpy, ui->w[win_index].gc);
 	cairo_destroy(ui->w[win_index].c);
@@ -626,7 +627,8 @@ void ui_cleanup(void)
 	XDestroyWindow(ui->dpy, ui->w[ui->cur].win);
 	XUngrabKeyboard(ui->dpy, CurrentTime);
 	XUngrabPointer(ui->dpy, CurrentTime);
-	XDestroyIC(ui->w[0].xic);
+	if (ui->w[0].xic)
+		XDestroyIC(ui->w[0].xic);
 	XCloseIM(ui->xim);
 
 	if (ui->w[ui->cur].canvas)

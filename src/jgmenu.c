@@ -2483,12 +2483,28 @@ out:
 
 static void init_locale(void)
 {
+	static bool have_alread_tried_lang_c;
+	char *lang = getenv("LANG");
+
 	if (!setlocale(LC_ALL, ""))
 		warn("setlocale(): locale not supported by C library; using 'C' locale");
-	if (!XSupportsLocale())
-		warn("XSupportsLocale(): error setting locale");
-	if (!XSetLocaleModifiers("@im=none"))
-		warn("XSetLocaleModifiers(): error setting locale");
+	if (!XSupportsLocale()) {
+		warn("XSupportsLocale(): error setting locale %s", lang);
+		goto fallback;
+	}
+	if (!XSetLocaleModifiers("@im=none")) {
+		warn("XSetLocaleModifiers(): error setting locale %s", lang);
+		goto fallback;
+	}
+	return;
+
+fallback:
+	if (have_alread_tried_lang_c)
+		return;
+	info("fallback to LANG=C");
+	setenv("LANG", "C", 1);
+	have_alread_tried_lang_c = true;
+	init_locale();
 }
 
 static void init_sigactions(void)
