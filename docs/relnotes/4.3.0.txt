@@ -1,0 +1,32 @@
+jgmenu v4.3.0 release notes
+===========================
+
+Updates since v4.2.1
+--------------------
+
+  * Add gradient support for menu window background. Use config options
+    menu_gradient_pos and color_menu_bg_to. Written-by: @Artideusz
+
+  * Survive locales which are not supported by X11, for example en_HK.UTF-8
+
+  * Safely handle main event loop signals when X11 struggles to keep up
+    under extreme load or on very old machines
+    
+  * obtheme: set color_title_border correctly (issue #142)
+    Reported-by: @johnraff
+
+  * obtheme: parse menu.overlap.x (issue #136). Reported-by: @johnraff
+
+  * gtktheme: set title colours to match main menu. Written-by: @johnraff
+
+  * Add persistent mode config options and --persistent command line
+    option. When enabled, the menu does not exit or hide when it normally
+    would, for example on selecting an item or pressing escape.
+    Written-by: @phedders
+
+  * Add ^quit() markup. This simply exits and is designed to work with
+    the persistent mode.  Written-by: @phedders
+
+  * Add contib/ file jgmenu-unicode-icons.sh (PR #124)
+    Written-by: @wsdfhjxc
+
