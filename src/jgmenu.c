@@ -648,7 +648,7 @@ static void draw_menu(void)
 	ui_clear_canvas();
 	if (config.menu_gradient_pos != ALIGNMENT_NONE) {
 		ui_draw_rectangle_gradient(0, 0, w, geo_get_menu_height(), config.menu_radius,
-				config.menu_border, 1, config.color_menu_bg, config.color_menu_bg_gradient, config.menu_gradient_pos);
+				config.menu_border, 1, config.color_menu_bg, config.color_menu_bg_to, config.menu_gradient_pos);
 	} else {
 		ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius,
 				config.menu_border, 1, config.color_menu_bg);

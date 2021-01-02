@@ -84,7 +84,7 @@ void config_set_defaults(void)
 	config.arrow_width	   = 15;
 
 	parse_hexstr("#000000 100", config.color_menu_bg);
-	parse_hexstr("#000000 0", config.color_menu_bg_gradient);
+	parse_hexstr("#000000 100", config.color_menu_bg_to);
 	parse_hexstr("#eeeeee 8", config.color_menu_border);
 	parse_hexstr("#000000 00", config.color_norm_bg);
 	parse_hexstr("#eeeeee 100", config.color_norm_fg);
@@ -365,8 +365,8 @@ static void process_line(char *line)
 
 	} else if (!strcmp(option, "color_menu_bg")) {
 		parse_hexstr(value, config.color_menu_bg);
-	} else if (!strcmp(option, "color_menu_bg_gradient")) {
-		parse_hexstr(value, config.color_menu_bg_gradient);
+	} else if (!strcmp(option, "color_menu_bg_to")) {
+		parse_hexstr(value, config.color_menu_bg_to);
 	} else if (!strcmp(option, "color_menu_border")) {
 		parse_hexstr(value, config.color_menu_border);
 	} else if (!strcmp(option, "color_norm_bg")) {

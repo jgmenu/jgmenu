@@ -1,6 +1,6 @@
 % JGMENU(1)
 % Johan Malm
-% 7 October, 2020
+% 2 January, 2021
 
 # NAME
 
@@ -564,6 +564,12 @@ Here follow some specific types:
 
 :   Vertical alignment of menu. See `menu_halign`.
 
+`menu_gradient_pos` = (none | top | right | bottom | left | top_left | top_right | bottom_left | bottom_right ) (default none)
+
+:   Start position of menu window gradient. The end position is at the
+    opposite side or corner. Colors color_menu_bg and color_menu_bg_to
+    specify the start (from) and finish (to).
+
 `sub_spacing` = __integer__ (default 1)
 
 :   Horizontal space between windows. A negative value results in each submenu
@@ -706,7 +712,12 @@ Here follow some specific types:
 
 `color_menu_bg` = __color__ (default #000000 100)
 
-:   Background colour of menu window
+:   Background colour of menu window. If gradients are enabled, this will
+    be the 'from' color.
+
+`color_menu_bg_to` = __color__ (default #000000 100)
+
+:   Background 'to' colour of menu window - for use with gradients
 
 `color_menu_border` = __color__ (default #eeeeee 8)
 
