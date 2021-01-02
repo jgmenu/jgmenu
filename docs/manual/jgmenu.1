@@ -24,7 +24,7 @@ jgmenu\ [--no-spawn]\ [--checkout=<\f[I]tag\f[R]>]\ [--config-file=<\f[I]file\f[
 .PD 0
 .P
 .PD
-\ \ \ \ \ \ \ [--center]
+\ \ \ \ \ \ \ [--center] [--persistent]
 .PP
 Use these commands to get started
 .TP
@@ -241,6 +241,10 @@ Useful for debugging and testing.
 .TP
 \f[B]\f[CB]--center\f[B]\f[R]
 Center align menu horizontally and vertically.
+.TP
+\f[B]\f[CB]--persistent\f[B]\f[R]
+Same as the persistent config option.
+See config option section below for details.
 .SH USER INTERFACE
 .TP
 \f[B]\f[CB]Up\f[B]\f[R], \f[B]\f[CB]Down\f[B]\f[R]
@@ -431,6 +435,7 @@ When in the hidden mode, a USR1 signal will \[lq]un-hide\[rq] the menu.
 If set to 1, the menu will not exit nor hide when the following events
 occur: clicking on menu item; clicking outside the menu; pressing
 escape.
+Use in conjunction with the \[ha]quit() markup.
 .TP
 \f[B]\f[CB]hide_on_startup\f[B]\f[R] = \f[B]boolean\f[R] (default 0)
 If set to 1, jgmenu start in \[lq]hidden\[rq] mode.

@@ -12,7 +12,7 @@ jgmenu \[\--no-spawn] \[\--checkout=<*tag*>] \[\--config-file=<*file*>]
        \[\--icon-size=<*size*>] \[\--at-pointer] \[\--hide-on-startup]  
        \[\--simple] \[\--vsimple] \[\--csv-file=<*file*>]  
        \[\--csv-cmd=<*command*>] \[\--die-when-loaded]  
-       \[\--center]
+       \[\--center] \[\--persistent]  
 
 Use these commands to get started
 
@@ -216,6 +216,11 @@ Icons will be displayed if the third field is populated, for example:
 
 :   Center align menu horizontally and vertically.
 
+`--persistent`
+
+:   Same as the persistent config option. See config option section below
+    for details.
+
 # USER INTERFACE
 
 `Up`, `Down`
@@ -401,7 +406,7 @@ Here follow some specific types:
 
 :   If set to 1, the menu will not exit nor hide when the following
     events occur: clicking on menu item; clicking outside the menu; pressing
-    escape. 
+    escape. Use in conjunction with the ^quit() markup.
 
 `hide_on_startup` = __boolean__ (default 0)
 
