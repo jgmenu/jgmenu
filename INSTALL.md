@@ -13,6 +13,8 @@ Install from repos
 
 [Repology](https://repology.org/metapackage/jgmenu/versions)
 
+[![Packaging status](https://repology.org/badge/vertical-allrepos/jgmenu.svg)](https://repology.org/project/jgmenu/versions)
+
 | Repo                                                                                              | command                 | Version                                                                                      |
 | :------------------------------------------------------------------------------------------------ | :---------------------- | :------------------------------------------------------------------------------------------- |
 | [Arch](https://www.archlinux.org/packages/community/x86_64/jgmenu/)                               | pacman -S jgmenu        | ![](https://repology.org/badge/version-only-for-repo/arch/jgmenu.svg)                        |
