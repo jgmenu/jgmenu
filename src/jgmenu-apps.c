@@ -89,12 +89,17 @@ static void print_app_to_buffer(struct app *app, struct sbuf *buf)
 	xfree(s.buf);
 }
 
+static bool should_not_display(struct app *app)
+{
+	return app->nodisplay || app->tryexec_not_in_path;
+}
+
 static void print_apps_in_other_directory(struct app *apps, struct sbuf *buf)
 {
 	struct app *app;
 
 	for (app = apps; !app->end; app += 1) {
-		if (app->nodisplay)
+		if (should_not_display(app))
 			continue;
 		if (app->has_been_mapped)
 			continue;
@@ -115,7 +120,7 @@ static void print_apps_for_one_directory(struct app *apps, struct dir *dir,
 	argv_parse(&categories);
 
 	for (app = apps; !app->end; app += 1) {
-		if (app->nodisplay)
+		if (should_not_display(app))
 			continue;
 
 		/*
@@ -194,7 +199,7 @@ static void print_menu_no_dirs(struct app *apps)
 	if (!no_prepend)
 		cat("~/.config/jgmenu/prepend.csv");
 	for (app = apps; !app->end; app += 1) {
-		if (app->nodisplay)
+		if (should_not_display(app))
 			continue;
 		print_app_to_buffer(app, &buf);
 	}

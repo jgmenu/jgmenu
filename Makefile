@@ -62,7 +62,7 @@ jgmenu-socket: jgmenu-socket.o util.o sbuf.o unix_sockets.o socket.o compat.o
 jgmenu-i18n: jgmenu-i18n.o i18n.o hashmap.o util.o sbuf.o
 jgmenu-greeneye: jgmenu-greeneye.o compat.o util.o sbuf.o
 jgmenu-apps: jgmenu-apps.o compat.o util.o sbuf.o desktop.o charset.o \
-             xdgdirs.o argv-buf.o dirs.o lang.o fmt.o i18n.o hashmap.o
+             xdgdirs.o argv-buf.o dirs.o lang.o fmt.o i18n.o hashmap.o isprog.o
 jgmenu-obtheme: jgmenu-obtheme.o util.o sbuf.o compat.o set.o
 jgmenu-config: jgmenu-config.o util.o sbuf.o compat.o set.o spawn.o
 

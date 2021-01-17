@@ -11,6 +11,8 @@ struct app {
 	char generic_name[128];
 	char generic_name_localized[128];
 	char exec[128];
+	char tryexec[128];
+	bool tryexec_not_in_path;
 	char icon[128];
 	char categories[512];
 	bool nodisplay;
