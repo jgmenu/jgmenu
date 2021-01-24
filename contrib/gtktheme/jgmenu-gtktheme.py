@@ -20,7 +20,8 @@ from gi.repository import Gtk
 
 def run(command):
     """ run a command """
-    subprocess.Popen(shlex.split(command))
+    proc = subprocess.Popen(shlex.split(command))
+    proc.wait()
 
 def fmt(s):
     """ ensure string is at least two characters long """
