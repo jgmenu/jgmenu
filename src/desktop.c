@@ -177,10 +177,17 @@ static void traverse_directory(const char *path)
 	if (!dp)
 		return;
 	while ((entry = readdir(dp))) {
-		if (!strncmp(entry->d_name, ".", 1) ||
-		    !strncmp(entry->d_name, "..", 2))
-			continue;
-		process_file(entry->d_name, path);
+		if (entry->d_type == DT_DIR) {
+			if (entry->d_name[0] != '.') {
+				char new_path[PATH_MAX];
+
+				snprintf(new_path, PATH_MAX, "%s%s/", path,
+					 entry->d_name);
+				traverse_directory(new_path);
+			}
+		} else if (entry->d_type == DT_REG || entry->d_type == DT_LNK) {
+			process_file(entry->d_name, path);
+		}
 	}
 	closedir(dp);
 }
