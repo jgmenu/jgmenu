@@ -312,36 +312,3 @@ void msleep(unsigned int duration)
 	ts.tv_nsec =  msec * 1000000;
 	nanosleep(&ts, NULL);
 }
-
-static void delchar(char *p)
-{
-	size_t len = strlen(p);
-
-	memmove(p, p + 1, len + 1);
-	*(p + len) = '\0';
-}
-
-/**
- * strip_exec_field_codes - remove %-fields and respect '\' escaped characters
- * @exec: point to exec string
- * Note: %-fields consist of % followed by a character, for example %f
- */
-void strip_exec_field_codes(char **exec)
-{
-	if (!**exec || !*exec)
-		return;
-	for (char *p = *exec; *p; p++) {
-		if (*p == '\\') {
-			delchar(p);
-			continue;
-		}
-		if (*p == '%') {
-			delchar(p);
-			if (*p == '\0')
-				break;
-			if (*p != '%')
-				delchar(p);
-		}
-	}
-	rtrim(exec);
-}

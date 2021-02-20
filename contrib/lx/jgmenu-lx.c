@@ -96,6 +96,25 @@ static void add_metadata(const char * const *categories)
 	}
 }
 
+static void strip_exec_field_codes(char **exec)
+{
+	char *p;
+
+	if (!**exec || !*exec)
+		return;
+	for (p = *exec; *p; p++) {
+		if (*p == '%') {
+			*p = ' ';
+			++p;
+			if (*p == '\0')
+				break;
+			if (*p != '%')
+				*p = ' ';
+		}
+	}
+	rtrim(exec);
+}
+
 static void process_app(MenuCacheApp *app)
 {
 	/* TODO: Check visibility flag here too */

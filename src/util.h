@@ -44,11 +44,4 @@ void remove_caret_markup_closing_bracket(char *s);
 void mkdir_p(const char *path);
 void msleep(unsigned int duration);
 
-/**
- * strip_exec_field_codes - remove field codes from .desktop file exec field
- * @exec - pointer to exec string
- * Remove all %? except %% which becomes %
- */
-void strip_exec_field_codes(char **exec);
-
 #endif /* UTIL_H */

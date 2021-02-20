@@ -93,6 +93,41 @@ static bool is_duplicate_desktop_file(char *filename)
 	return false;
 }
 
+static void delchar(char *p)
+{
+	size_t len = strlen(p);
+
+	memmove(p, p + 1, len + 1);
+	*(p + len) = '\0';
+}
+
+
+/*
+ * Remove all %? fields from .desktop Exec= field
+ * Note:
+ *  (a) %% which becomes %
+ *  (b) backslash escaped characters are resolved
+ */
+static void strip_exec_field_codes(char **exec)
+{
+	if (!**exec || !*exec)
+		return;
+	for (char *p = *exec; *p; p++) {
+		if (*p == '\\') {
+			delchar(p);
+			continue;
+		}
+		if (*p == '%') {
+			delchar(p);
+			if (*p == '\0')
+				break;
+			if (*p != '%')
+				delchar(p);
+		}
+	}
+	rtrim(exec);
+}
+
 static struct app *grow_vector_by_one_app(void)
 {
 	struct app *app;
