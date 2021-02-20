@@ -115,10 +115,19 @@ static void strip_exec_field_codes(char **exec)
 	rtrim(exec);
 }
 
+/*
+ * For some reason libmenu-cache does not escape the backslack in 'C:\'
+ * so we have to manually intervene and esacpe it.
+ */
+static void ugly_hack(struct sbuf *exec)
+{
+	sbuf_replace(exec, ":\\", ":\\\\");
+}
+
 static void process_app(MenuCacheApp *app)
 {
 	/* TODO: Check visibility flag here too */
-	char *exec;
+	struct sbuf exec;
 	static struct sbuf s;
 	static int inited;
 
@@ -138,19 +147,22 @@ static void process_app(MenuCacheApp *app)
 	sbuf_addstr(&cur->buf, ",");
 
 	/* command */
+	sbuf_init(&exec);
 	if (menu_cache_app_get_use_terminal(app))
 		sbuf_addstr(&cur->buf, "^term(");
-	exec = (char *)menu_cache_app_get_exec(MENU_CACHE_APP(app));
-	if (strchr(exec, ','))
+	sbuf_cpy(&exec, (char *)menu_cache_app_get_exec(MENU_CACHE_APP(app)));
+	if (strchr(exec.buf, ','))
 		sbuf_addstr(&cur->buf, "\"\"\"");
-	strip_exec_field_codes(&exec);
-	sbuf_addstr(&cur->buf, exec);
-	if (strchr(exec, ','))
+	ugly_hack(&exec);
+	strip_exec_field_codes(&exec.buf);
+	sbuf_addstr(&cur->buf, exec.buf);
+	if (strchr(exec.buf, ','))
 		sbuf_addstr(&cur->buf, " \"\"\"");
 	sbuf_rtrim(&cur->buf);
 	if (menu_cache_app_get_use_terminal(app))
 		sbuf_addstr(&cur->buf, ")");
 	sbuf_addstr(&cur->buf, ",");
+	xfree(exec.buf);
 
 	/* icon */
 	sbuf_addstr(&cur->buf, menu_cache_item_get_icon(MENU_CACHE_ITEM(app)));
