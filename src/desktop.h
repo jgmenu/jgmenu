@@ -12,6 +12,7 @@ struct app {
 	char generic_name_localized[128];
 	char exec[1024];
 	char tryexec[1024];
+	char working_dir[1024];
 	bool tryexec_not_in_path;
 	char icon[128];
 	char categories[1024];

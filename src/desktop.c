@@ -48,6 +48,8 @@ static void parse_line(char *line, struct app *app, int *is_desktop_entry)
 		strlcpy(app->exec, value, sizeof(app->exec));
 	} else if (!strcmp("TryExec", key)) {
 		strlcpy(app->tryexec, value, sizeof(app->tryexec));
+	} else if (!strcmp("Path", key)) {
+		strlcpy(app->working_dir, value, sizeof(app->working_dir));
 	} else if (!strcmp("Icon", key)) {
 		strlcpy(app->icon, value, sizeof(app->icon));
 	} else if (!strcmp("Categories", key)) {

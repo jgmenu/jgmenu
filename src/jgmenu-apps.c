@@ -75,10 +75,11 @@ static void print_app_to_buffer(struct app *app, struct sbuf *buf)
 
 	/* icon */
 	sbuf_addstr(buf, app->icon);
-	sbuf_addstr(buf, ",,");
+	sbuf_addstr(buf, ",");
 
 	/* working directory */
-	/* TODO */
+	sbuf_addstr(buf, app->working_dir);
+	sbuf_addstr(buf, ",");
 
 	/* metadata */
 	replace_semicolons_with_hashes(app->categories);
