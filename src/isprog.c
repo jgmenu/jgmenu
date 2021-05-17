@@ -59,6 +59,11 @@ int isprog(const char *filename)
 		++is_path_parsed;
 	}
 
+	/* handle absolute path */
+	if (filename[0] == '/')
+		return is_ixoth((char *)filename);
+
+	/* handle relative path by iterating over $PATH */
 	list_for_each_entry(tmp, &head, list) {
 		strlcpy(prog, tmp->path, sizeof(prog));
 		pos = strlen(tmp->path);
