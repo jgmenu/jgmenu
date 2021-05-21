@@ -168,13 +168,8 @@ static int add_app(FILE *fp, char *filename)
 	p = &app->exec[0];
 	strip_exec_field_codes(&p);
 
-	if (app->tryexec[0] != '\0' && !isprog(app->tryexec)) {
+	if (app->tryexec[0] != '\0' && !isprog(app->tryexec))
 		app->tryexec_not_in_path = true;
-		if (!app->nodisplay) {
-			fprintf(stderr, "jgmenu-apps: '%s' invalid TryExec\n",
-				app->filename);
-		}
-	}
 
 	return 0;
 }
