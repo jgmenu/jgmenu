@@ -2655,6 +2655,8 @@ int main(int argc, char *argv[])
 		config_read_jgmenurc(arg_config_file);
 
 	args_parse(argc, argv);
+	if (args_simple() || arg_vsimple)
+		set_simple_mode();
 	config_post_process();
 	/* config variables will not be changed after this point */
 
