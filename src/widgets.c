@@ -191,7 +191,9 @@ void widgets_set_pointer_position(int x, int y)
 	mouseover = 0;
 	pointer.x = x;
 	pointer.y = y;
-	list_for_each_entry(w, &widgets, list) {
+	list_for_each_entry_reverse(w, &widgets, list) {
+		if (!w->action || w->action[0] == '\0')
+			continue;
 		widget_area.x = w->x;
 		widget_area.y = w->y;
 		widget_area.w = w->w;
