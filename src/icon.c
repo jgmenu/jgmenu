@@ -23,7 +23,6 @@
 #include "xpm-loader.h"
 #include "cache.h"
 #include "config.h"
-#include "icon.h"
 #include "banned.h"
 
 #define DEBUG_THEMES 0
@@ -38,6 +37,8 @@ struct icon {
 static struct list_head icon_cache;
 
 static struct sbuf icon_theme;
+
+extern struct sbuf *cache_location;
 
 void icon_init(void)
 {
@@ -225,7 +226,7 @@ void icon_load(void)
 		}
 	}
 	if (nr_symlinks)
-		fprintf(stderr, "info: created %d symlinks in ~/.cache/jgmenu/icons/\n", nr_symlinks);
+		fprintf(stderr, "info: created %d symlinks in %s\n", nr_symlinks, cache_location->buf);
 	list_for_each_entry_safe(path, tmp_path, &icon_paths, list) {
 		free(path->name.buf);
 		free(path->path.buf);
