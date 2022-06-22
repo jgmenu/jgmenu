@@ -10,8 +10,8 @@
 #include "util.h"
 #include "banned.h"
 
-#define DEFAULT_CACHE_LOCATION "~/.cache/jgmenu/icons"
-struct sbuf *cache_location;
+#define DEFAULT_CACHE_LOCATION "~/.cache"
+static struct sbuf *cache_location;
 
 static struct sbuf icon_theme;
 static int icon_size;
@@ -126,10 +126,44 @@ static void cache_delete(void)
 		warn("deleting cache returned %d (cmd='%s')", ret, cmd);
 }
 
-static void cache_init(void)
+char *cache_get_dir(void)
 {
 	const char *xdg_cache_home = getenv("XDG_CACHE_HOME");
-	struct sbuf xdg_cache_location;
+	struct sbuf tmp_cl;
+
+	sbuf_init(&tmp_cl);
+	tmp_cl.buf = NULL;
+	if (access(xdg_cache_home, F_OK) == 0)
+		sbuf_addstr(&tmp_cl, xdg_cache_home);
+	else
+		sbuf_addstr(&tmp_cl, DEFAULT_CACHE_LOCATION);
+	sbuf_expand_tilde(&tmp_cl);
+	if (tmp_cl.buf != NULL)
+		return tmp_cl.buf;
+	else
+		warn("can not get cache directory");
+	free(tmp_cl.buf);
+	return NULL;
+}
+
+char *cache_icon_get_dir(void)
+{
+	struct sbuf tmp_icon_cl;
+
+	sbuf_init(&tmp_icon_cl);
+	tmp_icon_cl.buf = NULL;
+	sbuf_addstr(&tmp_icon_cl, cache_get_dir());
+	sbuf_addstr(&tmp_icon_cl, "/jgmenu/icons");
+	if (tmp_icon_cl.buf != NULL)
+		return tmp_icon_cl.buf;
+	else
+		warn("can not get icons cache directory");
+	free(tmp_icon_cl.buf);
+	return NULL;
+}
+
+static void cache_init(void)
+{
 	static int first_run = 1;
 
 	if (!first_run)
@@ -138,15 +172,7 @@ static void cache_init(void)
 		die("cache.c: icon_{theme,size} needs to be set");
 	cache_location = xmalloc(sizeof(struct sbuf));
 	sbuf_init(cache_location);
-	if (access(xdg_cache_home, F_OK) == 0) {
-		sbuf_init(&xdg_cache_location);
-		sbuf_addstr(&xdg_cache_location, xdg_cache_home);
-		sbuf_addstr(&xdg_cache_location, "/jgmenu/icons");
-		sbuf_cpy(cache_location, xdg_cache_location.buf);
-		free(xdg_cache_location.buf);
-	} else
-		sbuf_cpy(cache_location, DEFAULT_CACHE_LOCATION);
-	sbuf_expand_tilde(cache_location);
+	sbuf_cpy(cache_location, cache_icon_get_dir());
 	if (cache_check_index_theme(icon_theme.buf, icon_size) < 0) {
 		cache_delete();
 		mkdir_p(cache_location->buf);

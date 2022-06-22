@@ -38,8 +38,6 @@ static struct list_head icon_cache;
 
 static struct sbuf icon_theme;
 
-extern struct sbuf *cache_location;
-
 void icon_init(void)
 {
 	INIT_LIST_HEAD(&icon_cache);
@@ -226,7 +224,7 @@ void icon_load(void)
 		}
 	}
 	if (nr_symlinks)
-		fprintf(stderr, "info: created %d symlinks in %s\n", nr_symlinks, cache_location->buf);
+		fprintf(stderr, "info: created %d symlinks in %s\n", nr_symlinks, cache_icon_get_dir());
 	list_for_each_entry_safe(path, tmp_path, &icon_paths, list) {
 		free(path->name.buf);
 		free(path->path.buf);

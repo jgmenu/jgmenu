@@ -56,11 +56,11 @@ def process_line(line):
         setconfig("color_title_border", rgb2hex(line))
 
 def cache(themename):
-    """ save the theme-name to XDG_CACHE_HOME/jgmenu/.last-gtktheme """
-    from xdg.BaseDirectory import xdg_cache_home
-
+    """ save the theme-name to XDG_CACHE_HOME/jgmenu/.last-gtktheme or 
+        ~/.cache/jgmenu/.last-gtktheme if it doesn't exist """
     print("themename={}".format(themename))
-    directory = xdg_cache_home + "/jgmenu"
+    home = os.environ["HOME"]
+    directory = os.getenv("XDG_CACHE_HOME", home + "/.cache") + "/jgmenu"
     if not os.path.exists(directory):
         os.mkdir(directory)
     f = open(directory + "/.last-gtktheme", "w")
