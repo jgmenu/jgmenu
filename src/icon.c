@@ -268,5 +268,6 @@ void icon_cleanup(void)
 		xfree(icon);
 	}
 	icon_find_cleanup();
+	cache_dir_cleanup();
 	cache_atexit_cleanup();
 }

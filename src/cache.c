@@ -13,7 +13,7 @@
 #define DEFAULT_CACHE_LOCATION "~/.cache"
 static struct sbuf *cache_location;
 
-static struct sbuf icon_theme;
+static struct sbuf icon_theme, tmp_cl, tmp_icon_cl;
 static int icon_size;
 
 void cache_set_icon_theme(const char *theme)
@@ -110,6 +110,34 @@ static int cache_check_index_theme(const char *theme, int size)
 	return ret;
 }
 
+static char *cache_get_dir(void)
+{
+	const char *xdg_cache_home = getenv("XDG_CACHE_HOME");
+
+	sbuf_init(&tmp_cl);
+	if (access(xdg_cache_home, F_OK) == 0)
+		sbuf_addstr(&tmp_cl, xdg_cache_home);
+	else
+		sbuf_addstr(&tmp_cl, DEFAULT_CACHE_LOCATION);
+	sbuf_addstr(&tmp_cl, "/jgmenu");
+	sbuf_expand_tilde(&tmp_cl);
+	return tmp_cl.buf;
+}
+
+char *cache_icon_get_dir(void)
+{
+	sbuf_init(&tmp_icon_cl);
+	sbuf_addstr(&tmp_icon_cl, cache_get_dir());
+	sbuf_addstr(&tmp_icon_cl, "/icons");
+	return tmp_icon_cl.buf;
+}
+
+void cache_dir_cleanup(void)
+{
+	free(tmp_cl.buf);
+	free(tmp_icon_cl.buf);
+}
+
 static void cache_delete(void)
 {
 	char cmd[512];
@@ -126,42 +154,6 @@ static void cache_delete(void)
 		warn("deleting cache returned %d (cmd='%s')", ret, cmd);
 }
 
-char *cache_get_dir(void)
-{
-	const char *xdg_cache_home = getenv("XDG_CACHE_HOME");
-	struct sbuf tmp_cl;
-
-	sbuf_init(&tmp_cl);
-	tmp_cl.buf = NULL;
-	if (access(xdg_cache_home, F_OK) == 0)
-		sbuf_addstr(&tmp_cl, xdg_cache_home);
-	else
-		sbuf_addstr(&tmp_cl, DEFAULT_CACHE_LOCATION);
-	sbuf_expand_tilde(&tmp_cl);
-	if (tmp_cl.buf != NULL)
-		return tmp_cl.buf;
-	else
-		warn("can not get cache directory");
-	free(tmp_cl.buf);
-	return NULL;
-}
-
-char *cache_icon_get_dir(void)
-{
-	struct sbuf tmp_icon_cl;
-
-	sbuf_init(&tmp_icon_cl);
-	tmp_icon_cl.buf = NULL;
-	sbuf_addstr(&tmp_icon_cl, cache_get_dir());
-	sbuf_addstr(&tmp_icon_cl, "/jgmenu/icons");
-	if (tmp_icon_cl.buf != NULL)
-		return tmp_icon_cl.buf;
-	else
-		warn("can not get icons cache directory");
-	free(tmp_icon_cl.buf);
-	return NULL;
-}
-
 static void cache_init(void)
 {
 	static int first_run = 1;
@@ -173,6 +165,7 @@ static void cache_init(void)
 	cache_location = xmalloc(sizeof(struct sbuf));
 	sbuf_init(cache_location);
 	sbuf_cpy(cache_location, cache_icon_get_dir());
+	cache_dir_cleanup();
 	if (cache_check_index_theme(icon_theme.buf, icon_size) < 0) {
 		cache_delete();
 		mkdir_p(cache_location->buf);
