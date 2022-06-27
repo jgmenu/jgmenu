@@ -100,38 +100,32 @@ static cairo_surface_t *get_svg_icon(const char *filename, int size)
 	cairo_surface_t *surface;
 	cairo_t *cr;
 	RsvgHandle *svg;
-	RsvgDimensionData  dimensions;
 	GError *err = NULL;
-	double scale, ratio;
+	RsvgRectangle viewport = {
+		.x = 0,
+		.y = 0,
+		.width = size,
+		.height = size,
+	};
 
 	svg = rsvg_handle_new_from_file(filename, &err);
 	if (err) {
-		fprintf(stderr, "warning: problem loading svg %s-%s\n", filename, err->message);
+		fprintf(stderr, "warning: problem loading svg %s-%s\n",
+			filename, err->message);
 		g_error_free(err);
 		return NULL;
 	}
-	rsvg_handle_get_dimensions(svg, &dimensions);
 
-	if (dimensions.width == dimensions.height) {
-		surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-						     size, size);
-		cr = cairo_create(surface);
-		cairo_scale(cr, (double)size / dimensions.width,
-			    (double)size / dimensions.height);
-	} else if (dimensions.width > dimensions.height) {
-		ratio = (double)dimensions.width / dimensions.height;
-		scale = (double)size / dimensions.width;
-		surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, size, size / ratio);
-		cr = cairo_create(surface);
-		cairo_scale(cr, scale, scale);
-	} else {
-		ratio = (double)dimensions.width / dimensions.height;
-		scale = (double)size / dimensions.height;
-		surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, size * ratio, size);
-		cr = cairo_create(surface);
-		cairo_scale(cr, scale, scale);
+	surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, size, size);
+	cr = cairo_create(surface);
+
+	rsvg_handle_render_document(svg, cr, &viewport, &err);
+	if (err) {
+		fprintf(stderr, "warning: problem rendering svg %s-%s\n",
+			filename, err->message);
+		g_error_free(err);
+		return NULL;
 	}
-	rsvg_handle_render_cairo(svg, cr);
 	cairo_destroy(cr);
 	g_object_unref(svg);
 
