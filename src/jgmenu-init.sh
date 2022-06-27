@@ -285,8 +285,14 @@ unicode files are not XDG compliant and may give unpredicted results"
 }
 
 icon_theme_last_used_by_jgmenu () {
-	icon_theme=$(grep -i 'Inherits' ~/.cache/jgmenu/icons/index.theme)
-	icon_size=$(grep -i 'Size' ~/.cache/jgmenu/icons/index.theme)
+	if [ -d "$XDG_CACHE_HOME" ]
+	then
+		icon_theme=$(grep -i 'Inherits' $XDG_CACHE_HOME/jgmenu/icons/index.theme)
+		icon_size=$(grep -i 'Size' $XDG_CACHE_HOME/jgmenu/icons/index.theme)
+	else
+		icon_theme=$(grep -i 'Inherits' ~/.cache/jgmenu/icons/index.theme)
+		icon_size=$(grep -i 'Size' ~/.cache/jgmenu/icons/index.theme)
+	fi
 	printf 'last time, icon-theme %s-%s was used\n' "${icon_theme#Inherits=}" \
 		"${icon_size#Size=}"
 }

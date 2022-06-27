@@ -7,7 +7,9 @@ The main loop kicks off two threads to load icons,
 This allows the root-menu to be displayed quickly whilst the rest is loaded in
 the background.
 
-When jgmenu if first run, icon 'cache' is created at '~/.cache/jgmenu/icons/'.
+When jgmenu if first run, icon 'cache' is created in the path specified in the 
+XDG_CACHE_HOME environment variable. If this variable is unset, it default back 
+on '~/.cache/jgmenu/icons/'.
 The cache consists of symlinks pointing to icons which match the name, size and
 theme. For example: folder -> /usr/share/icons/Adwaita/22x22/places/folder.png
 

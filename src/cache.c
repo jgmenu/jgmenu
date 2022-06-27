@@ -10,7 +10,7 @@
 #include "util.h"
 #include "banned.h"
 
-#define CACHE_LOCATION "~/.cache/jgmenu/icons"
+#define DEFAULT_CACHE_LOCATION "~/.cache"
 static struct sbuf *cache_location;
 
 static struct sbuf icon_theme;
@@ -110,6 +110,23 @@ static int cache_check_index_theme(const char *theme, int size)
 	return ret;
 }
 
+static void cache_get_dir(void)
+{
+	const char *xdg_cache_home = getenv("XDG_CACHE_HOME");
+
+	if (xdg_cache_home && *xdg_cache_home)
+		sbuf_addstr(cache_location, xdg_cache_home);
+	else
+		sbuf_addstr(cache_location, DEFAULT_CACHE_LOCATION);
+	sbuf_addstr(cache_location, "/jgmenu/icons");
+	sbuf_expand_tilde(cache_location);
+}
+
+char *cache_icon_get_dir(void)
+{
+	return cache_location->buf;
+}
+
 static void cache_delete(void)
 {
 	char cmd[512];
@@ -136,11 +153,10 @@ static void cache_init(void)
 		die("cache.c: icon_{theme,size} needs to be set");
 	cache_location = xmalloc(sizeof(struct sbuf));
 	sbuf_init(cache_location);
-	sbuf_cpy(cache_location, CACHE_LOCATION);
-	sbuf_expand_tilde(cache_location);
+	cache_get_dir();
 	if (cache_check_index_theme(icon_theme.buf, icon_size) < 0) {
 		cache_delete();
-		mkdir_p(CACHE_LOCATION);
+		mkdir_p(cache_location->buf);
 		cache_create_index_theme(icon_theme.buf, icon_size);
 	}
 	first_run = 0;

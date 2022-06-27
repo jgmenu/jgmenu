@@ -23,7 +23,6 @@
 #include "xpm-loader.h"
 #include "cache.h"
 #include "config.h"
-#include "icon.h"
 #include "banned.h"
 
 #define DEBUG_THEMES 0
@@ -225,7 +224,7 @@ void icon_load(void)
 		}
 	}
 	if (nr_symlinks)
-		fprintf(stderr, "info: created %d symlinks in ~/.cache/jgmenu/icons/\n", nr_symlinks);
+		fprintf(stderr, "info: created %d symlinks in %s\n", nr_symlinks, cache_icon_get_dir());
 	list_for_each_entry_safe(path, tmp_path, &icon_paths, list) {
 		free(path->name.buf);
 		free(path->path.buf);

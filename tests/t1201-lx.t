@@ -62,7 +62,12 @@ test_menu () {
 	printf "%b\n" "XDG_DATA_DIRS=$XDG_DATA_DIRS"
 	export XDG_MENU_PREFIX="${1}-"
 
-	rm -rf ~/.cache/menus &&
+	if [ -d "$XDG_CACHE_HOME" ]
+	then
+		rm -rf $XDG_CACHE_HOME/menus
+	else
+		rm -rf ~/.cache/menus
+	fi
 	cp "../t1201/${1}.expect" expect &&
 	LANG=C LC_ALL=C ../../contrib/lx/jgmenu-lx >actual &&
 	cp "../t1201/${1}.expect" expect &&
