@@ -6,6 +6,7 @@
 
 #include <ftw.h>
 #include <dirent.h>
+#include <stdbool.h>
 
 #include "icon-find.h"
 #include "xdgdirs.h"
@@ -243,6 +244,22 @@ static int str_has_prefix(const char *str, const char *prefix)
 	return strncmp(prefix, str, strlen(prefix)) == 0;
 }
 
+static bool isdir(struct dirent *entry, const char *pathname)
+{
+	struct stat sb;
+
+	if (entry->d_type == DT_DIR)
+		return true;
+	else if (entry->d_type != DT_LNK)
+		return false;
+
+	/* It's a symlink, so let's deal with it */
+	if (stat(pathname, &sb) != 0) {
+		return false;
+	}
+	return S_ISDIR(sb.st_mode);
+}
+
 static void search_dir_for_files(const char *path, struct list_head *files, int depth_limit)
 {
 	struct dirent *entry;
@@ -266,7 +283,7 @@ static void search_dir_for_files(const char *path, struct list_head *files, int 
 		sbuf_cpy(&s, path);
 		sbuf_addch(&s, '/');
 		sbuf_addstr(&s, entry->d_name);
-		if (entry->d_type == DT_DIR) {
+		if (isdir(entry, s.buf)) {
 			if (entry->d_name[0] != '.')
 				search_dir_for_files(s.buf, files, depth_limit > 0 ? depth_limit - 1 : depth_limit);
 		} else if (entry->d_type == DT_REG || entry->d_type == DT_LNK) {
