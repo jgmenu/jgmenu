@@ -99,7 +99,7 @@ static void delchar(char *p)
 {
 	size_t len = strlen(p);
 
-	memmove(p, p + 1, len + 1);
+	memmove(p, p + 1, len);
 	*(p + len) = '\0';
 }
 
