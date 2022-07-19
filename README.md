@@ -3,7 +3,6 @@
 
 <p align="center"> <img
 src="https://img.shields.io/github/license/johanmalm/jgmenu.svg" /> <a
-href="https://www.codacy.com/app/johanmalm/jgmenu?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=johanmalm/jgmenu&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/a154619f17924fcd8ec2be8f338da063" /></a> <br /> <a
 href="https://repology.org/metapackage/jgmenu/versions"><img src="https://repology.org/badge/tiny-repos/jgmenu.svg" /></a> <a
 href="https://repology.org/metapackage/jgmenu/versions"><img src="https://repology.org/badge/latest-versions/jgmenu.svg"></a> </p>
 
