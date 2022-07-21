@@ -16,12 +16,14 @@ jgmenu:         CFLAGS += `pkg-config cairo pango pangocairo librsvg-2.0 --cflag
 jgmenu-ob:      CFLAGS += `xml2-config --cflags`
 jgmenu-obtheme: CFLAGS += `xml2-config --cflags`
 jgmenu-config:  CFLAGS += `pkg-config --cflags glib-2.0`
+jgmenu-apps:    CFLAGS += `pkg-config --cflags glib-2.0`
 
 jgmenu:         LIBS   += `pkg-config x11 xrandr cairo pango pangocairo librsvg-2.0 --libs`
 jgmenu:         LIBS   += -pthread -lpng
 jgmenu-ob:      LIBS   += `xml2-config --libs`
 jgmenu-obtheme: LIBS   += `xml2-config --libs`
 jgmenu-config:  LIBS   += `pkg-config --libs glib-2.0`
+jgmenu-apps:    LIBS   += `pkg-config --libs glib-2.0`
 
 LDFLAGS += $(LIBS)
 
