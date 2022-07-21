@@ -87,8 +87,6 @@ static bool is_duplicate_desktop_file(char *filename)
 	if (!filename)
 		return false;
 	for (i = 0; i < nr_apps; i++) {
-		if (!apps[i].filename)
-			continue;
 		if (!strcmp(apps[i].filename, filename))
 			return true;
 	}
