@@ -1,6 +1,6 @@
 language: c
 
-dist: xenial
+dist: jammy
 
 os: linux
 
