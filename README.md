@@ -12,9 +12,7 @@ href="NEWS.md">Release&nbsp;Notes</a>] [<a
 href="https://jgmenu.github.io/">Website</a>] [<a
 href="https://jgmenu.github.io/screenshots.html">Screenshots</a>]</h3>
 
-<img src="https://i.imgur.com/O3E84L3.png" alt="jgmenu" align="right" height="610px" width="512px">
-
-A simple, independent and contemporary-looking X11 menu, designed for scripting, ricing and tweaking.
+`jgmenu` is simple, independent and contemporary-looking X11 menu, designed for scripting, ricing and tweaking.
 
 It is hackable and has a simple code base. It does not depend on any toolkits such as GTK and Qt, but uses cairo and pango to render the menu.
 
@@ -28,6 +26,10 @@ It can display the following types of menu (or any combination of):
 -   openbox XML menu including openbox pipe-menus
 
 It has UTF-8 search support.
+
+<a href="https://www.youtube.com/watch?v=E-3CFgkfWXE">Video (13:43) showing advanced jgmenu usage on Mabox</a>
+
+<img src="https://i.imgur.com/O3E84L3.png" alt="jgmenu" height="610px" width="512px">
 
 # Versioning
 
