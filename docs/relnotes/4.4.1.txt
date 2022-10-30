@@ -1,0 +1,31 @@
+jgmenu v4.4.1 release notes
+===========================
+
+Updates since v4.4.0
+--------------------
+
+  * Chase librsvg2 API changes
+
+      - Use rsvg_handle_render_document() to render icons instead of
+        deprecated rsvg_handle_get_dimensions() and
+        rsvg_handle_render_cairo()
+        This requres librsvg2 >= 2.46
+
+      - jgmenu.svg: specify width and height to enable some applications
+        using imlib2 >= v1.8 (such as feh and tint2) to render the
+        jgmenu.svg icon correctly. This is an indirect result of the
+        librsvg2 API deprecation of rsvg_handle_get_dimensions() and
+        rsvg_handle_render_cairo()
+
+  * jgmenu-apps: correctly sort desktop entries in languages other than
+    English. Issue #166
+
+  * Handle symlinked icon directories in order to support Papirus-Dark.
+    Issue #122. With thanks to @rafern @VectorKappa @M4he
+
+  * Use cache directory ${XDG_CACHE_HOME:-$HOME/.cache} rather than just
+    defaulting to ~/.cache. Issue #175. Written-by: @tupo2
+
+  * Fix widgets cursor-motion bug caused by background @rect and @text
+    widgets blocking action widgets which should handle mouse-over.
+    Issue #167
