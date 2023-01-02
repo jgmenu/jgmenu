@@ -1869,11 +1869,12 @@ static void mouse_release(XEvent *e)
 
 	/* left-click */
 	if (ev->button == Button1) {
-		char *ret;
+		char *ret = NULL;
 
 		/* widgets */
 		widgets_set_pointer_position(mouse_coords.x, mouse_coords.y);
-		ret = widgets_get_selection_action();
+		if (widgets_mouseover() == 1)
+			ret = widgets_get_selection_action();
 		if (ret && ret[0] != '\0') {
 			action_cmd(ret, NULL);
 			return;
