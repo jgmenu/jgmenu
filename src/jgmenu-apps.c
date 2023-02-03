@@ -63,7 +63,9 @@ static void print_app_to_buffer(struct app *app, struct sbuf *buf)
 	sbuf_cpy(&s, name);
 	fmt_name(&s, name, generic_name);
 	sbuf_replace(&s, "&", "&amp;");
+	sbuf_addstr(buf, "\"\"\"");
 	sbuf_addstr(buf, s.buf);
+	sbuf_addstr(buf, "\"\"\"");
 	sbuf_addstr(buf, ",");
 
 	/* command */
