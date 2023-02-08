@@ -7,4 +7,5 @@ Icon=jgmenu
 X-XFCE-Module=jgmenu
 X-XFCE-Internal=true
 X-XFCE-Unique=false
+X-XFCE-API=2.0
 
