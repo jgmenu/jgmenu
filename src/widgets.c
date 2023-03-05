@@ -102,16 +102,18 @@ static void draw_rect(struct widget **w)
 
 static void draw_search(struct widget **w)
 {
-	char *t;
+	struct sbuf label_escaped;
 	int padding_left = 4;
 
-	if (filter_needle_length())
-		t = filter_strdup_needle();
-	else
-		t = xstrdup((*w)->content);
-	ui_insert_text(t, (*w)->x + padding_left, (*w)->y, (*w)->h, (*w)->w,
-		       (*w)->fgcol, LEFT);
-	xfree(t);
+	sbuf_init(&label_escaped);
+	sbuf_cpy(&label_escaped, filter_needle_length() ? filter_needle() :
+		 (*w)->content);
+	sbuf_replace(&label_escaped, "&", "&amp;");
+	sbuf_replace(&label_escaped, "<", "&lt;");
+	sbuf_replace(&label_escaped, ">", "&gt;");
+	ui_insert_text(label_escaped.buf, (*w)->x + padding_left, (*w)->y,
+		       (*w)->h, (*w)->w, (*w)->fgcol, LEFT);
+	free(label_escaped.buf);
 }
 
 static void draw_text(struct widget **w)

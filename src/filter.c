@@ -19,11 +19,6 @@ void filter_init(void)
 	has_been_inited = 1;
 }
 
-char *filter_strdup_needle(void)
-{
-	return xstrdup(needle.buf);
-}
-
 /**
  * filter_clear_on_keyboard_input - should we clear needle on key stroke?
  * Note this handles relationship bewteen type-to-search and ^filter()
@@ -92,6 +87,11 @@ void filter_reset(void)
 int filter_needle_length(void)
 {
 	return needle.len;
+}
+
+char *filter_needle(void)
+{
+	return needle.buf;
 }
 
 int filter_ismatch(const char *haystack)
