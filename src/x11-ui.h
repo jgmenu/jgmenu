@@ -7,7 +7,9 @@
 #include <cairo.h>
 #include <cairo-xlib.h>
 #include <pango/pangocairo.h>
+#ifdef RSVG
 #include <librsvg/rsvg.h>
+#endif
 
 #include "align.h"
 

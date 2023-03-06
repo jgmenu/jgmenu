@@ -12,7 +12,9 @@
  *	  (using the "get_surface" functions).
  */
 
+#ifdef RSVG
 #include <librsvg/rsvg.h>
+#endif
 #include <png.h>
 
 #include "icon.h"
@@ -95,6 +97,7 @@ static cairo_surface_t *get_png_icon(const char *filename)
 	return image;
 }
 
+#ifdef RSVG
 static cairo_surface_t *get_svg_icon(const char *filename, int size)
 {
 	cairo_surface_t *surface;
@@ -131,6 +134,7 @@ static cairo_surface_t *get_svg_icon(const char *filename, int size)
 
 	return surface;
 }
+#endif
 
 void icon_set_name(const char *name)
 {
@@ -153,8 +157,10 @@ cairo_surface_t *load_cairo_icon(const char *path, int icon_size)
 {
 	if (strstr(path, ".png"))
 		return get_png_icon(path);
+#ifdef RSVG
 	else if (strstr(path, ".svg"))
 		return get_svg_icon(path, icon_size);
+#endif
 	else if (strstr(path, ".xpm"))
 		return get_xpm_icon(path);
 	return NULL;

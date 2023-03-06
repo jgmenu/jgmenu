@@ -28,6 +28,11 @@ CFLAGS    += $(ASAN_FLAGS)
 LDFLAGS   += $(ASAN_FLAGS) -fuse-ld=gold
 endif
 
+ifdef RSVG
+RSVG_LIB	= librsvg-2.0
+RSVG_FLAGS	= -DRSVG=1
+endif
+
 ifndef VERBOSE
 QUIET_CC   = @echo '     CC    '$@;
 QUIET_LINK = @echo '     LINK  '$@;

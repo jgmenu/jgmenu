@@ -19,6 +19,7 @@ Produce a config.mk file to be sourced by Makefile
 --all, -a                  Include all contrib/ packages above
 --dev, -d                  Same as --all, but also with ASAN and prefix=\$HOME
 --enable-asan              Enable address sanitizer (only during development)
+--disable-svg              Disable SVG icon support
 --prefix=<dir>             Install architecture-independent files in \$prefix
                            (e.g. --prefix=\$HOME')
 --libdir=<dir>             Specify libdir (\$prefix/lib by default)
@@ -52,9 +53,12 @@ check_core_dependencies () {
 	for b in "pkg-config" "xml2-config"; do
 		check_bin "$b"
 	done
-	for l in "x11" "xrandr" "cairo" "pango" "pangocairo" "librsvg-2.0" "glib-2.0"; do
+	for l in "x11" "xrandr" "cairo" "pango" "pangocairo" "glib-2.0"; do
 		check_lib "$l"
 	done
+	if [ "$disable_svg" != "t" ]; then
+		check_lib "librsvg-2.0"
+	fi
 }
 
 add () {
@@ -65,6 +69,9 @@ add_modules () {
 	add "prefix = $prefix"
 	test -z "$libdir" || add "libdir = $libdir"
 	test -z "$libexecdir" || add "libexecdir = $libexecdir"
+	if [ "$disable_svg" != "t" ]; then
+		add "RSVG=1"
+	fi
 	if [ "$enable_asan" = "t" ]; then
 		add "ASAN=1"
 	fi
@@ -113,6 +120,8 @@ main () {
 			with_pmenu=t ;;
 		--enable-asan)
 			enable_asan=t ;;
+		--disable-svg)
+			disable_svg=t ;;
 		-a|--all)
 			with_all ;;
 		-d|--dev)
