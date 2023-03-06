@@ -1,5 +1,6 @@
 #
 # Define ASAN=1 to enable AddressSanitizer
+# Define RSVG=1 to enable SVG icon support
 #
 # Define VERBOSE=1 for a more verbose compilation
 #
@@ -12,13 +13,13 @@ VER      = $(shell ./scripts/version-gen.sh)
 -include config.mk
 include Makefile.inc
 
-jgmenu:         CFLAGS += `pkg-config cairo pango pangocairo librsvg-2.0 --cflags`
+jgmenu:         CFLAGS += `pkg-config cairo pango pangocairo $(RSVG_LIB) --cflags` $(RSVG_FLAGS)
 jgmenu-ob:      CFLAGS += `xml2-config --cflags`
 jgmenu-obtheme: CFLAGS += `xml2-config --cflags`
 jgmenu-config:  CFLAGS += `pkg-config --cflags glib-2.0`
 jgmenu-apps:    CFLAGS += `pkg-config --cflags glib-2.0`
 
-jgmenu:         LIBS   += `pkg-config x11 xrandr cairo pango pangocairo librsvg-2.0 --libs`
+jgmenu:         LIBS   += `pkg-config x11 xrandr cairo pango pangocairo $(RSVG_LIB) --libs` $(RSVG_FLAGS)
 jgmenu:         LIBS   += -pthread -lpng
 jgmenu-ob:      LIBS   += `xml2-config --libs`
 jgmenu-obtheme: LIBS   += `xml2-config --libs`

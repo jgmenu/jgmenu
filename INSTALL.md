@@ -89,7 +89,13 @@ Dependencies
 
 - jgmenu
 
-  * libx11, libxrandr, cairo, pango, librsvg, glib-2.0
+required:
+
+  * libx11, libxrandr, cairo, pango, glib-2.0
+
+optional:
+
+  * librsvg-2.0
 
 - apps
 
