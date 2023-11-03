@@ -648,12 +648,12 @@ static void draw_menu(void)
 	ui_clear_canvas();
 	if (config.menu_gradient_pos != ALIGNMENT_NONE) {
 		ui_draw_rectangle_gradient(0, 0, w, geo_get_menu_height(), config.menu_radius,
-				config.menu_border, 1, config.color_menu_bg, config.color_menu_bg_to, config.menu_gradient_pos);
+					   config.menu_border, 1, config.color_menu_bg,
+					   config.color_menu_bg_to, config.menu_gradient_pos);
 	} else {
 		ui_draw_rectangle(0, 0, w, geo_get_menu_height(), config.menu_radius,
-				config.menu_border, 1, config.color_menu_bg);
+				  config.menu_border, 1, config.color_menu_bg);
 	}
-
 
 	/* Draw menu border */
 	if (config.menu_border)
@@ -1490,7 +1490,7 @@ static void checkout_parent(void)
 
 static void clear_self_pipe(void)
 {
-	fd_set readfds;
+	fd_set readfds = { 0 };
 
 	if (!FD_ISSET(pipe_fds[0], &readfds))
 		return;
@@ -2474,10 +2474,9 @@ static void read_tint2rc(void)
 		info("using BunsenLabs tint2 session file");
 		t2conf_parse(bl.buf, geo_get_screen_width(),
 			     geo_get_screen_height());
-	} else {
-		t2conf_parse(NULL, geo_get_screen_width(),
-			     geo_get_screen_height());
+		goto out;
 	}
+	t2conf_parse(NULL, geo_get_screen_width(), geo_get_screen_height());
 out:
 	free(bl.buf);
 }
