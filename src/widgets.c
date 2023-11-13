@@ -261,7 +261,7 @@ void widgets_add(const char *s)
 	struct argv_buf argv_buf;
 	struct widget *w;
 
-	w = xmalloc(sizeof(struct widget));
+	w = xcalloc(1, sizeof(struct widget));
 	argv_init(&argv_buf);
 	argv_set_delim(&argv_buf, ',');
 	argv_strdup(&argv_buf, s);
