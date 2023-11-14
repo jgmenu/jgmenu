@@ -104,12 +104,18 @@ static cairo_surface_t *get_svg_icon(const char *filename, int size)
 	cairo_t *cr;
 	RsvgHandle *svg;
 	GError *err = NULL;
+#if LIBRSVG_CHECK_VERSION(2, 52, 0)
 	RsvgRectangle viewport = {
 		.x = 0,
 		.y = 0,
 		.width = size,
 		.height = size,
 	};
+#else
+	RsvgDimensionData  dimensions;
+	double scale, ratio;
+#endif
+
 
 	svg = rsvg_handle_new_from_file(filename, &err);
 	if (err) {
@@ -119,6 +125,7 @@ static cairo_surface_t *get_svg_icon(const char *filename, int size)
 		return NULL;
 	}
 
+#if LIBRSVG_CHECK_VERSION(2, 52, 0)
 	surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, size, size);
 	cr = cairo_create(surface);
 
@@ -129,6 +136,29 @@ static cairo_surface_t *get_svg_icon(const char *filename, int size)
 		g_error_free(err);
 		return NULL;
 	}
+#else
+	rsvg_handle_get_dimensions(svg, &dimensions);
+	if (dimensions.width == dimensions.height) {
+		surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
+						     size, size);
+		cr = cairo_create(surface);
+		cairo_scale(cr, (double)size / dimensions.width,
+			    (double)size / dimensions.height);
+	} else if (dimensions.width > dimensions.height) {
+		ratio = (double)dimensions.width / dimensions.height;
+		scale = (double)size / dimensions.width;
+		surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, size, size / ratio);
+		cr = cairo_create(surface);
+		cairo_scale(cr, scale, scale);
+	} else {
+		ratio = (double)dimensions.width / dimensions.height;
+		scale = (double)size / dimensions.height;
+		surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, size * ratio, size);
+		cr = cairo_create(surface);
+		cairo_scale(cr, scale, scale);
+	}
+	rsvg_handle_render_cairo(svg, cr);
+#endif
 	cairo_destroy(cr);
 	g_object_unref(svg);
 
