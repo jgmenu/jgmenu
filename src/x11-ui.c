@@ -226,7 +226,7 @@ void ui_get_screen_res(int *x0, int *y0, int *width, int *height, int monitor)
 
 monitor_selected:
 	if (!ci)
-		die("connection could be established to monitor");
+		die("connection cannot be established to monitor; this may be due to missing packages such as xrandr, x11-xserver-utils or mesa-utils");
 	*x0 = ci->x;
 	*y0 = ci->y;
 	*width = ci->width;
