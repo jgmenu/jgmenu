@@ -1033,6 +1033,11 @@ static void awake_menu(void)
 		ipc_align_based_on_env_vars();
 		update(1);
 	}
+
+	/* Remove previous selection on awake */
+	menu.sel = NULL;
+	draw_menu();
+
 	XMapWindow(ui->dpy, ui->w[ui->cur].win);
 	ui_map_window(geo_get_menu_width(), geo_get_menu_height());
 	XRaiseWindow(ui->dpy, ui->w[ui->cur].win);
@@ -1641,9 +1646,11 @@ static void key_event(XKeyEvent *ev)
 	if (ui_has_child_window_open(menu.current_node->wid))
 		del_beyond_current();
 
-	/* menu.sel == NULL could be caused by pointer movement */
-	if (!menu.sel)
-		menu.sel = menu.current_node->last_sel;
+	/*
+	 * We accept menu.sel == NULL here
+	 * This will be the case on initial launch, awake or if the pointer
+	 * has been moved outside the menu window
+	 */
 
 	switch (ksym) {
 	case XK_Tab:
@@ -1690,7 +1697,10 @@ static void key_event(XKeyEvent *ev)
 		}
 		if (filter_head() == &empty_item)
 			break;
-		if (menu.sel == first_selectable()) {
+
+		if (!menu.sel) {
+			menu.sel = last_selectable();
+		} else if (menu.sel == first_selectable()) {
 			/* bounce to bottom */
 			menu.last = filter_tail();
 			menu.first = fill_from_bottom(menu.last);
@@ -1740,7 +1750,7 @@ static void key_event(XKeyEvent *ev)
 		break;
 	case XK_Return:
 	case XK_KP_Enter:
-		if (menu.sel->selectable)
+		if (menu.sel && menu.sel->selectable)
 			action_cmd(menu.sel->cmd, menu.sel->working_dir);
 		break;
 	case XK_Down:
@@ -1752,7 +1762,10 @@ static void key_event(XKeyEvent *ev)
 		}
 		if (filter_head() == &empty_item)
 			break;
-		if (menu.sel == last_selectable()) {
+
+		if (!menu.sel) {
+			menu.sel = first_selectable();
+		} else if (menu.sel == last_selectable()) {
 			menu.first = filter_head();
 			menu.last = fill_from_top(menu.first);
 			menu.sel = first_selectable();
@@ -1774,10 +1787,12 @@ static void key_event(XKeyEvent *ev)
 		update(1);
 		break;
 	case XK_Right:
-		if (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
-		    !strncmp(menu.sel->cmd, "^root(", 6) ||
-		    !strncmp(menu.sel->cmd, "^pipe(", 6))
-			action_cmd(menu.sel->cmd, NULL);
+		if (menu.sel) {
+			if (!strncmp(menu.sel->cmd, "^checkout(", 10) ||
+			    !strncmp(menu.sel->cmd, "^root(", 6) ||
+			    !strncmp(menu.sel->cmd, "^pipe(", 6))
+				action_cmd(menu.sel->cmd, NULL);
+		}
 		break;
 	case XK_F5:
 		restart();
@@ -2724,6 +2739,8 @@ int main(int argc, char *argv[])
 		info("menu started in 'hidden' mode; show by `jgmenu_run`");
 	else
 		XMapRaised(ui->dpy, ui->w[ui->cur].win);
+
+	menu.sel = NULL;
 	draw_menu();
 
 	atexit(cleanup);
