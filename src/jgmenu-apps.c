@@ -4,6 +4,7 @@
  * Copyright (C) Johan Malm 2019
  */
 
+#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,10 +18,38 @@
 #include "i18n.h"
 #include "banned.h"
 
+static char *append_filename;
+static char *prepend_filename;
 static bool no_append;
 static bool no_prepend;
 static bool single_window;
 static bool no_duplicates;
+
+static const struct option long_options[] = {
+	{"append-file", required_argument, NULL, 'a'},
+	{"no-append", no_argument, NULL, 'n'},
+	{"no-prepend", no_argument, NULL, 'm'},
+	{"prepend-file", required_argument, NULL, 'p'},
+	{"help", no_argument, NULL, 'h'},
+	{0, 0, 0, 0}
+};
+
+static const char jgmenu_apps_usage[] =
+"Usage: jgmenu_run apps [options...]\n"
+"  -a, --append-file <file>   Specify menu file to append to the root menu\n"
+"                             Use $HOME/.config/jgmenu/append.csv by default\n"
+"  -h, --help                 Show help message and quit\n"
+"  -n, --no-append            Do not use an append file\n"
+"  -m, --no-prepend           Do not use a prepend file\n"
+"  -p, --prepend-file <file>  Specify menu file to prepend to the root menu\n"
+"                             Use $HOME/.config/jgmenu/prepend.csv by default\n";
+
+static void
+usage(void)
+{
+	printf("%s", jgmenu_apps_usage);
+	exit(0);
+}
 
 static void replace_semicolons_with_hashes(char *s)
 {
@@ -154,7 +183,7 @@ static void print_menu_with_dirs(struct dir *dirs, struct app *apps)
 
 	/* Draw top level menu */
 	if (!no_prepend)
-		i18n_cat("~/.config/jgmenu/prepend.csv");
+		i18n_cat(prepend_filename ? : "~/.config/jgmenu/prepend.csv");
 	for (dir = dirs; dir->name; dir += 1) {
 		if (dir->name_localized)
 			printf("%s", dir->name_localized);
@@ -168,7 +197,7 @@ static void print_menu_with_dirs(struct dir *dirs, struct app *apps)
 			       dir->icon);
 	}
 	if (!no_append)
-		i18n_cat("~/.config/jgmenu/append.csv");
+		i18n_cat(append_filename ? : "~/.config/jgmenu/append.csv");
 
 	/* Draw submenus */
 	for (dir = dirs; dir->name; dir += 1) {
@@ -200,36 +229,50 @@ static void print_menu_no_dirs(struct app *apps)
 
 	sbuf_init(&buf);
 	if (!no_prepend)
-		cat("~/.config/jgmenu/prepend.csv");
+		cat(prepend_filename ? : "~/.config/jgmenu/prepend.csv");
 	for (app = apps; !app->end; app += 1) {
 		if (should_not_display(app))
 			continue;
 		print_app_to_buffer(app, &buf);
 	}
 	if (!no_append)
-		cat("~/.config/jgmenu/append.csv");
+		cat(append_filename ? : "~/.config/jgmenu/append.csv");
 	printf("\n%s\n", buf.buf);
 	xfree(buf.buf);
 }
 
 int main(int argc, char **argv)
 {
-	int i = 1;
 	struct app *apps;
 	struct dir *dirs;
 
-	while (i < argc) {
-		if (!strncmp(argv[i], "--help", 6)) {
-			printf("usage: jgmenu_run apps [--help]\n");
-			exit(EXIT_SUCCESS);
-		} else if (!strcmp(argv[i], "--no-append")) {
-			no_append = true;
-		} else if (!strcmp(argv[i], "--no-prepend")) {
-			no_prepend = true;
-		} else {
-			die("unknown option '%s'", argv[i]);
+	int c;
+	while (1) {
+		int index = 0;
+		c = getopt_long(argc, argv, "a:nmp:h", long_options, &index);
+		if (c == -1) {
+			break;
 		}
-		i++;
+		switch (c) {
+		case 'a':
+			append_filename = optarg;
+			break;
+		case 'n':
+			no_append = true;
+			break;
+		case 'm':
+			no_prepend = true;
+			break;
+		case 'p':
+			prepend_filename = optarg;
+			break;
+		case 'h':
+		default:
+			usage();
+		}
+	}
+	if (optind < argc) {
+		usage();
 	}
 
 	if (getenv("JGMENU_NO_PEND")) {
