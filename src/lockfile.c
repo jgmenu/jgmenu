@@ -8,7 +8,20 @@
 #include "sbuf.h"
 #include "banned.h"
 
-#define LOCKFILE "~/.jgmenu-lockfile"
+//#define LOCKFILE "~/.jgmenu-lockfile"
+#define LOCKFILE get_lockfile()
+
+const char* get_lockfile() {
+        const char *xdg_runtime_dir = getenv("XDG_RUNTIME_DIR");
+        static char lockfile_path[PATH_MAX];
+        if (xdg_runtime_dir != NULL && xdg_runtime_dir[0] != '\0') {
+                snprintf(lockfile_path, sizeof(lockfile_path), "%s/jgmenu-lockfile", xdg_runtime_dir);
+                return lockfile_path;
+        } else {
+                return "~/.jgmenu-lockfile";
+        }
+}
+
 static struct sbuf lockfile;
 
 void lockfile_unlink(void)
