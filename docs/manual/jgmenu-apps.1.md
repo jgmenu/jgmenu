@@ -1,6 +1,6 @@
 % JGMENU-APPS(1)
 % Johan Malm
-% 2 March, 2020
+% 14 January, 2024
 
 # NAME
 
@@ -9,6 +9,7 @@ jgmenu-apps - generate jgmenu flavoured CSV menu data
 # SYNOPSIS
 
 `jgmenu_run apps` \[\--help] \[\--no-append] \[\--no-prepend]  
+                  \[\--append-file <*file*>] \[\--prepend-file <*file*>]
 
 # DESCRIPTION
 
@@ -98,6 +99,14 @@ Categories=Emulator;System;
 
 `--no-append`
 :   Do not output ~/.config/jgmenu/append.csv after root menu
+
+`--append-file <file>`
+:   Specify menu file to append to the root menu.
+    Use $HOME/.config/jgmenu/append.csv by default.
+
+`--prepend-file <file>`
+:   Specify menu file to prepend to the root menu.
+    Use $HOME/.config/jgmenu/prepend.csv by default.
 
 # ENVIRONMENT VARIABLES
 
