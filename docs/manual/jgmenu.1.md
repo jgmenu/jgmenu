@@ -83,6 +83,14 @@ For example:
 :   The description field is parsed as pango markup, so `<`, `>`, and `&`
     need to be escaped as `&lt;`, `&gt;`, and `&amp;` respectively.
 
+`"`
+
+:   Unlike in most CSV-based flavours, a single quote `"` is not a special delimiter.
+
+`"""`
+
+:   Use 3 quotes `"""` to begin and to end a fully quoted item.
+
 ## Markup
 
 The syntax ^foo(bar) is used to carry out action `foo` with argument `bar`. We
