@@ -646,7 +646,7 @@ Here follow some specific types:
     ^sep(foo).
 
     See the following link for pango <span> attributes:
-    [https://developer.gnome.org/pango/stable/pango-Markup.html](https://developer.gnome.org/pango/stable/pango-Markup.html)
+    [https://docs.gtk.org/Pango/pango_markup.html](https://docs.gtk.org/Pango/pango_markup.html)
 
     Keywords include (but are not limited to):
 
