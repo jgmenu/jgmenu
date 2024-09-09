@@ -249,10 +249,10 @@ int main(int argc, char **argv)
 	int c;
 	while (1) {
 		int index = 0;
+
 		c = getopt_long(argc, argv, "a:nmp:h", long_options, &index);
-		if (c == -1) {
+		if (c == -1)
 			break;
-		}
 		switch (c) {
 		case 'a':
 			append_filename = optarg;

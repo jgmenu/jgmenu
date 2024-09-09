@@ -254,9 +254,8 @@ static bool isdir(struct dirent *entry, const char *pathname)
 		return false;
 
 	/* It's a symlink, so let's deal with it */
-	if (stat(pathname, &sb) != 0) {
+	if (stat(pathname, &sb) != 0)
 		return false;
-	}
 	return S_ISDIR(sb.st_mode);
 }
 

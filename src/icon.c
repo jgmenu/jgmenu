@@ -116,7 +116,6 @@ static cairo_surface_t *get_svg_icon(const char *filename, int size)
 	double scale, ratio;
 #endif
 
-
 	svg = rsvg_handle_new_from_file(filename, &err);
 	if (err) {
 		fprintf(stderr, "warning: problem loading svg %s-%s\n",

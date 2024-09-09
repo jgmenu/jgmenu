@@ -102,7 +102,6 @@ static void delchar(char *p)
 	*(p + len) = '\0';
 }
 
-
 /*
  * Remove all %? fields from .desktop Exec= field
  * Note:

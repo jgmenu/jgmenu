@@ -198,7 +198,7 @@ char *i18n_init(const char *filename)
 		if (!s.len) {
 			if (verbosity)
 				info("i18n: no translation file in dir '%s'",
-				      filename);
+				     filename);
 			translation_file = NULL;
 			xfree(s.buf);
 			return NULL;
