@@ -2,7 +2,7 @@
 
 g_analyse_all=f
 g_cppcheck=t
-g_clangformat=t
+g_clangformat=f
 g_shellcheck=t
 g_resume_mode=f
 
