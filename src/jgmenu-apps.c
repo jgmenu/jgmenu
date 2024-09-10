@@ -245,8 +245,8 @@ int main(int argc, char **argv)
 {
 	struct app *apps;
 	struct dir *dirs;
-
 	int c;
+
 	while (1) {
 		int index = 0;
 
@@ -271,9 +271,8 @@ int main(int argc, char **argv)
 			usage();
 		}
 	}
-	if (optind < argc) {
+	if (optind < argc)
 		usage();
-	}
 
 	if (getenv("JGMENU_NO_PEND")) {
 		no_append = true;
