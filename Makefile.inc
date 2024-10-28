@@ -19,7 +19,7 @@ CFLAGS  += -g -Wall -Os -std=gnu99
 CFLAGS  += -Wextra -Wdeclaration-after-statement -Wno-format-zero-length \
 	   -Wold-style-definition -Woverflow -Wpointer-arith \
 	   -Wstrict-prototypes -Wunused -Wvla -Wunused-result
-CFLAGS  += -Wno-unused-parameter
+CFLAGS  += -Wno-unused-parameter -Wno-expansion-to-defined
 CFLAGS  += -DVERSION='"$(VER)"'
 
 ifdef ASAN
