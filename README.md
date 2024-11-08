@@ -12,7 +12,7 @@ href="NEWS.md">Release&nbsp;Notes</a>] [<a
 href="https://jgmenu.github.io/">Website</a>] [<a
 href="https://jgmenu.github.io/screenshots.html">Screenshots</a>]</h3>
 
-`jgmenu` is simple, independent and contemporary-looking X11 menu, designed for scripting, ricing and tweaking.
+`jgmenu` is simple, independent and contemporary-looking X11 menu, designed for scripting, modding and tweaking.
 
 It is hackable and has a simple code base. It does not depend on any toolkits such as GTK and Qt, but uses cairo and pango to render the menu.
 
