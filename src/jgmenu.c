@@ -337,14 +337,15 @@ static void add_if_unique(struct item *item)
 {
 	struct item *p;
 
-	if (!item->cmd)
-		return;
+	if (!item->cmd || !*item->cmd)
+		goto add;
 	list_for_each_entry(p, &menu.filter, filter) {
-		if (!p->cmd)
+		if (!p->cmd || !*p->cmd)
 			continue;
 		if (!strcmp(item->cmd, p->cmd))
 			return;
 	}
+add:
 	list_add_tail(&item->filter, &menu.filter);
 }
 
