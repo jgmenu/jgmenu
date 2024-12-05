@@ -84,11 +84,14 @@ For example:
 
 `"`
 
-:   Unlike in most CSV-based flavours, a single quote `"` is not a special delimiter.
+:   Unlike most CSV implementations, a single instance of a double quote (`"`)
+    is not considered a special character. The reason for this is to let users
+    write commands with double quotes without having to escape them.
 
 `"""`
 
-:   Use 3 quotes `"""` to begin and to end a fully quoted item.
+:   Use three quotes `"""` to begin and to end a fully quoted value. The primary
+    use case for this is when a comma is needed within a value.
 
 ## Markup
 
