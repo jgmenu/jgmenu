@@ -47,7 +47,6 @@ field separator:
   (3) icon  
   (4) working directory  
   (5) metadata  
-  (6) execute without "sh -c" wrapper  
 
 For example:
 
