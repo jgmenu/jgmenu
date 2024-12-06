@@ -83,6 +83,8 @@ void config_set_defaults(void)
 	config.arrow_string	   = xstrdup("▸");
 	config.arrow_width	   = 15;
 
+	config.search_empty_string = xstrdup("&lt;empty&gt;");
+
 	parse_hexstr("#000000 100", config.color_menu_bg);
 	parse_hexstr("#000000 100", config.color_menu_bg_to);
 	parse_hexstr("#eeeeee 8", config.color_menu_border);
@@ -116,6 +118,7 @@ void config_cleanup(void)
 	xfree(config.icon_theme);
 	xfree(config.icon_theme_fallback);
 	xfree(config.arrow_string);
+	xfree(config.search_empty_string);
 	xfree(jgmenurc_file.buf);
 	xfree(config.csv_name_format);
 }
@@ -362,6 +365,10 @@ static void process_line(char *line)
 	} else if (!strcmp(option, "arrow_width")) {
 		xatoi(&config.arrow_width, value, XATOI_NONNEG,
 		      "config.arrow_width");
+
+	} else if (!strcmp(option, "search_empty_string")) {
+		xfree(config.search_empty_string);
+		config.search_empty_string = xstrdup(value);
 
 	} else if (!strcmp(option, "color_menu_bg")) {
 		parse_hexstr(value, config.color_menu_bg);

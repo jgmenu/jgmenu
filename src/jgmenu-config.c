@@ -80,6 +80,7 @@ static struct option options[] = {
 	{ "icon_theme_fallback", "xtg" },
 	{ "arrow_string", "▸" },
 	{ "arrow_width", "15" },
+	{ "search_empty_string", "&lt;empty&gt;" },
 	{ "color_menu_bg", "#000000 100" },
 	{ "color_menu_bg_to", "#000000 100" },
 	{ "color_menu_border", "#eeeeee 8" },

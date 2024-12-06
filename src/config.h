@@ -75,6 +75,8 @@ struct config {
 	char *arrow_string;
 	int arrow_width;
 
+	char *search_empty_string;
+
 	double color_menu_bg[4];
 	double color_menu_bg_to[4];
 	double color_menu_border[4];
