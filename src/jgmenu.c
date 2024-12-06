@@ -135,7 +135,7 @@ static void del_beyond_root(void);
 
 static void init_empty_item(void)
 {
-	empty_item.name = xstrdup("&lt;empty&gt;");
+	empty_item.name = xstrdup(config.search_empty_string);
 	empty_item.cmd = xstrdup(":");
 	empty_item.iconname = NULL;
 	empty_item.working_dir = NULL;
