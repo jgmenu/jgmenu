@@ -725,6 +725,10 @@ Here follow some specific types:
 
 :   Width allowed for `arrow_string`. Set to 0 to hide arrow.
 
+`search_empty_string` = __string__ (default `<empty>`)
+
+:   String to show when no entries match a search.
+
 `color_menu_bg` = __color__ (default #000000 100)
 
 :   Background colour of menu window. If gradients are enabled, this will
