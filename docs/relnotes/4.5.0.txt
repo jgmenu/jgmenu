@@ -1,0 +1,42 @@
+jgmenu v4.5.0 release notes
+===========================
+
+Updates since v4.4.1
+--------------------
+
+  * Add config option `search_empty_string` so that the default '<empty>'
+    can be overridden. (#232)
+
+  * Ignore entries with empty commands when de-duplicating search results. This
+    makes a search for "aa" with the csv data below render two results rather
+    than one. (#227)
+
+        a,
+        aa,
+        aaa,
+        b,
+        bb,
+        bbb,
+
+  * jgmenu-apps: add config options `--prepend-file` and `--append-file` (#215)
+
+  * Do not focus any item on launch/awake to increase consistency with most
+    other menus (#209)
+
+  * Make `librsvg` dependency optional. Also support both `2.40.x` and newer.
+
+  * Escape special characters (`<`, `>` and `&`) in @search widget to render
+    correctly with pango markup. (#194)
+
+  * contrib/xfce4-panel:
+
+      * Fix xfce4-panel registration. Thanks-to: @fweimer-rh
+
+      * Add `X-XFCE-API=2.0` to .desktop file to make the plugin work with the
+        latest xfce4-panel
+
+  * jgmenu-apps: handle name and generic-name containing commas (#192)
+
+  * Fix widgets button-release bug by not executing widget action on button
+    release if pointer has moved outside widget area since pressed (#189)
+
