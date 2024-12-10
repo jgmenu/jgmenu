@@ -398,7 +398,29 @@ static void parse_xml(struct sbuf *xmlbuf)
 {
 	xmlDoc *d;
 
-	d = xmlParseMemory(xmlbuf->buf, strlen(xmlbuf->buf));
+	/*
+	 * XML_PARSE_NOENT enables substitution of entities defined by !ENTITY
+	 * as in the example below:
+	 *
+	 * <?xml version="1.0" encoding="UTF-8"?>
+	 *
+	 * <!DOCTYPE openbox_config [
+	 *   <!ENTITY image_viewer "imv">
+	 *  ]>
+	 *
+	 * <openbox_menu>
+	 *   <menu id="root-menu" label="root-menu">
+	 *     <item label="View Screenshot">
+	 *       <action name="Execute">
+	 *         <command>&image_viewer; screenshot.png</command>
+	 *       </action>
+	 *     </item>
+	 *   </menu>
+	 * </openbox_menu>
+	 */
+	int options = XML_PARSE_NOENT;
+
+	d = xmlReadMemory(xmlbuf->buf, strlen(xmlbuf->buf), NULL, NULL, options);
 	if (!d)
 		exit(1);
 	xml_tree_walk(xmlDocGetRootElement(d));
