@@ -1,53 +1,64 @@
 Name=Accessories
+Name[pt]=Acessórios
 Name[sv]=Tillbehör
 Icon=applications-accessories
 Categories=Accessibility;Core;Utility;
 
 Name=Development
+Name[pt]=Desenvolvimento
 Name[sv]=Utveckling
 Icon=applications-development
 Categories=Development;
 
 Name=Education
+Name[pt]=Educação
 Name[sv]=Utbildning
 Icon=applications-science
 Categories=Education;
 
 Name=Games
+Name[pt]=Jogos
 Name[sv]=Spel
 Icon=applications-games
 Categories=Game;
 
 Name=Graphics
+Name[pt]=Gráficos
 Name[sv]=Grafik
 Icon=applications-graphics
 Categories=Graphics;
 
 Name=Multimedia
+Name[pt]=Multimédia
 Name[sv]=Multimedia
 Icon=applications-multimedia
 Categories=Audio;Video;AudioVideo;
 
 Name=Internet
+Name[pt]=Internet
 Name[sv]=Internet
 Icon=applications-internet
 Categories=Network;
 
 Name=Office
+Name[pt]=Produtividade
 Name[sv]=Kontorsprogram
 Icon=applications-office
 Categories=Office;
 
 Name=Other
+Name[pt]=Outros
 Name[sv]=Övrigt
 Icon=applications-other
 
 Name=Settings
+Name[pt]=Definições
 Name[sv]=Inställningar
 Icon=preferences-desktop
 Categories=Settings;Screensaver;
 
 Name=System
+Name[pt]=Sistema
 Name[sv]=System
 Icon=applications-system
 Categories=Emulator;System;
