@@ -50,7 +50,7 @@ check_lib () {
 }
 
 check_core_dependencies () {
-	for b in "pkg-config" "xml2-config"; do
+	for b in "pkg-config"; do
 		check_bin "$b"
 	done
 	for l in "x11" "xrandr" "cairo" "pango" "pangocairo" "glib-2.0"; do
