@@ -102,6 +102,7 @@ extern struct config config;
 
 void config_set_defaults(void);
 void config_cleanup(void);
+void config_process_line(char *line);
 void config_read_jgmenurc(const char *filename);
 void config_post_process(void);
 
