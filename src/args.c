@@ -55,6 +55,14 @@ void args_parse(int argc, char **argv)
 			config.position_mode = POSITION_MODE_CENTER;
 		} else if (!strncmp(argv[i], "--persistent", 12)) {
 			config.persistent = 1;
+		} else if (!strncmp(argv[i], "--override=", 11)) {
+			/*
+			 * Create a copy as config_process_line modifies the
+			 * C string passed to it; and we call this more than once.
+			 */
+			char *line = xstrdup(argv[i] + 11);
+			config_process_line(line);
+			free(line);
 		}
 	}
 }

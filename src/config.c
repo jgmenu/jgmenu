@@ -123,7 +123,7 @@ void config_cleanup(void)
 	xfree(config.csv_name_format);
 }
 
-static void process_line(char *line)
+void config_process_line(char *line)
 {
 	char *option, *value;
 
@@ -438,7 +438,7 @@ static void read_file(FILE *fp)
 	char line[1024];
 
 	while (fgets(line, sizeof(line), fp))
-		process_line(line);
+		config_process_line(line);
 }
 
 static void parse_file(char *filename)

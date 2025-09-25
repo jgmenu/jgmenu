@@ -12,7 +12,7 @@ jgmenu \[\--no-spawn] \[\--checkout=<*tag*>] \[\--config-file=<*file*>]
        \[\--icon-size=<*size*>] \[\--at-pointer] \[\--hide-on-startup]  
        \[\--simple] \[\--vsimple] \[\--csv-file=<*file*>]  
        \[\--csv-cmd=<*command*>] \[\--die-when-loaded]  
-       \[\--center] \[\--persistent]  
+       \[\--center] \[\--persistent]  \[\--override=<*option*>=<*val*>]  
 
 Use these commands to get started
 
@@ -230,6 +230,10 @@ Icons will be displayed if the third field is populated, for example:
 
 :   Same as the persistent config option. See config option section below
     for details.
+
+`--override=<option>=<value>`
+
+:   Override any option from the config file. Can be used multiple times.
 
 # USER INTERFACE
 
