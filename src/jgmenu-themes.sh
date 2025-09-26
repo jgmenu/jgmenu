@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# shellcheck disable=SC2329
+
 valid_args="\
 	archlabs_1803_config \
 	bunsenlabs_hydrogen_config \
@@ -15,11 +17,6 @@ valid_args="\
 
 say () {
 	printf '%b\n' "$@"
-}
-
-die () {
-	printf 'fatal: %b\n' "$@" >&2
-	exit 1
 }
 
 usage () {

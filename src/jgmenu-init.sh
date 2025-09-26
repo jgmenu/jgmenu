@@ -234,8 +234,7 @@ check_regression () {
 }
 
 check_menu_package_installed () {
-	# shellcheck disable=SC2039
-	local menu_package_exists=
+	menu_package_exists=
 	for d in $xdg_config_dirs
 	do
 		for file in "${d}"/menus/*.menu
@@ -287,11 +286,11 @@ unicode files are not XDG compliant and may give unpredicted results"
 icon_theme_last_used_by_jgmenu () {
 	if [ -d "$XDG_CACHE_HOME" ]
 	then
-		icon_theme=$(grep -i 'Inherits' $XDG_CACHE_HOME/jgmenu/icons/index.theme)
-		icon_size=$(grep -i 'Size' $XDG_CACHE_HOME/jgmenu/icons/index.theme)
+		icon_theme=$(grep -i 'Inherits' "$XDG_CACHE_HOME/jgmenu/icons/index.theme")
+		icon_size=$(grep -i 'Size' "$XDG_CACHE_HOME/jgmenu/icons/index.theme")
 	else
-		icon_theme=$(grep -i 'Inherits' ~/.cache/jgmenu/icons/index.theme)
-		icon_size=$(grep -i 'Size' ~/.cache/jgmenu/icons/index.theme)
+		icon_theme=$(grep -i 'Inherits' "$HOME/.cache/jgmenu/icons/index.theme")
+		icon_size=$(grep -i 'Size' "$HOME/.cache/jgmenu/icons/index.theme")
 	fi
 	printf 'last time, icon-theme %s-%s was used\n' "${icon_theme#Inherits=}" \
 		"${icon_size#Size=}"
@@ -419,12 +418,9 @@ you have more than 100 backup files - consider removing a few"
 }
 
 backup_config_files () {
-	# shellcheck disable=SC2039
-	local files_to_backup="${HOME}/.config/jgmenu/jgmenurc \
+	files_to_backup="${HOME}/.config/jgmenu/jgmenurc \
 		${HOME}/.config/jgmenu/prepend.csv \
 		${HOME}/.config/jgmenu/append.csv"
-	# shellcheck disable=SC2039
-	local backup_dir
 
 	backup_dir="${HOME}/.config/jgmenu/backup/$(date +%Y%m%d%H%M%S%N)"
 	test -d "${backup_dir}" && die "duplicate backup directory"
@@ -476,8 +472,7 @@ t, theme     = create config files based on templates"
 }
 
 prompt () {
-	# shellcheck disable=SC2039
-	local cmd=
+	cmd=
 
 	printf "%b" "What now> "
 	read -r cmd

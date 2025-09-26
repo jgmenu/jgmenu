@@ -41,7 +41,10 @@ my %camelcase = ();
 my %use_type = ();
 my @use = ();
 my %ignore_type = ();
-my @ignore = ();
+my @ignore = (
+	"NAKED_SSCANF",
+	"SPLIT_STRING",
+);
 my $help = 0;
 my $configuration_file = ".checkpatch.conf";
 my $max_line_length = 80;
