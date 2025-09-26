@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  pull_request:
+    paths:
+      - 'Makefile'
+      - 'Makefile.inc'
+      - 'src/**'
+      - 'scripts/**'
+      - '.github/workflows/**'
+
+jobs:
+  codestyle:
+    name: CodeStyleCheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Code Style
+        run: |
+          ./scripts/check -a
+  build:
+    name: Build
+    needs: codestyle
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        name: [
+          Arch,
+        ]
+        include:
+          - name: Arch
+            os: ubuntu-latest
+            container: archlinux:base-devel
+            env:
+              TARGET: 'sh -xe'
+
+    env: ${{ matrix.env }}
+    runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install Arch Linux dependencies
+        if: matrix.name == 'Arch'
+        run: |
+          pacman-key --init
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm git make gcc clang \
+            cairo pango libxml2 librsvg \
+            libx11 libxrandr menu-cache python gdb
+
+      # These builds are executed on all runners
+      - name: Build with gcc
+        run: |
+          echo '
+            cd "$GITHUB_WORKSPACE"
+            export CC=gcc
+            ./configure
+            make
+          ' | $TARGET
+
+      - name: Build with clang
+        run: |
+          echo '
+            cd "$GITHUB_WORKSPACE"
+            export CC=clang
+            ./configure
+            make
+          ' | $TARGET
+
