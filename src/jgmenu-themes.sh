@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# shellcheck disable=SC2329
+# shellcheck disable=SC2329,SC2317
 
 valid_args="\
 	archlabs_1803_config \
