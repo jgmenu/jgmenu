@@ -61,6 +61,7 @@ void args_parse(int argc, char **argv)
 			 * C string passed to it; and we call this more than once.
 			 */
 			char *line = xstrdup(argv[i] + 11);
+
 			config_process_line(line);
 			free(line);
 		}
