@@ -59,6 +59,7 @@ jobs:
             export CC=gcc
             ./configure
             make
+            make test
           ' | $TARGET
 
       - name: Build with clang
@@ -68,5 +69,6 @@ jobs:
             export CC=clang
             ./configure
             make
+            make test
           ' | $TARGET
 
