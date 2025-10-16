@@ -395,27 +395,6 @@ static void set_rgba(double *rgba)
 			      rgba[3]);
 }
 
-void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h,
-				      double radius, double line_width, int fill, double *rgba)
-{
-	double deg = 0.017453292519943295; /* 2 x 3.1415927 / 360.0 */
-
-	cairo_new_sub_path(ui->w[ui->cur].c);
-	cairo_arc(ui->w[ui->cur].c, x + w - radius, y + radius, radius, -90 * deg, 0 * deg);  /* NE */
-	cairo_arc(ui->w[ui->cur].c, x + w, y + h, 0, 0 * deg, 90 * deg);			   /* SE */
-	cairo_arc(ui->w[ui->cur].c, x, y + h, 0, 90 * deg, 180 * deg);			   /* SW */
-	cairo_arc(ui->w[ui->cur].c, x + radius, y + radius, radius, 180 * deg, 270 * deg);    /* NE */
-	cairo_close_path(ui->w[ui->cur].c);
-	set_rgba(rgba);
-	if (fill) {
-		cairo_set_line_width(ui->w[ui->cur].c, 0.0);
-		cairo_fill_preserve(ui->w[ui->cur].c);
-	} else {
-		cairo_set_line_width(ui->w[ui->cur].c, line_width);
-	}
-	cairo_stroke(ui->w[ui->cur].c);
-}
-
 void ui_draw_rectangle(double x, double y, double w, double h, double radius, double line_width, int fill, double *rgba)
 {
 	x += line_width / 2;

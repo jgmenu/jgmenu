@@ -61,8 +61,6 @@ int ui_win_activate(Window w);
 int ui_has_child_window_open(Window w);
 void ui_win_del(void);
 void ui_win_del_beyond(int w);
-void ui_draw_rectangle_rounded_at_top(double x, double y, double w, double h, double radius,
-				      double line_width, int fill, double *rgba);
 void ui_draw_rectangle(double x, double y, double w, double h, double radius, double line_width,
 		       int fill, double *rgba);
 void ui_draw_rectangle_gradient(double x, double y, double w, double h, double radius, double line_width,
