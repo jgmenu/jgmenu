@@ -93,35 +93,6 @@ void spawn_sync(const char * const*command)
 	}
 }
 
-static void print_argv(gchar **argv)
-{
-	printf("spawn ");
-	for (; *argv; argv++)
-		printf("%s ", *argv);
-	printf("\n");
-}
-
-void spawn_async_no_shell(char const *cmd, char const *workdir)
-{
-	GError *err = NULL;
-	gchar **argv = NULL;
-
-	g_shell_parse_argv((gchar *)cmd, NULL, &argv, &err);
-	if (err) {
-		fprintf(stderr, "error parsing command\n");
-		g_error_free(err);
-		return;
-	}
-	print_argv(argv);
-	g_spawn_async((gchar *)workdir, argv, NULL, G_SPAWN_SEARCH_PATH, NULL,
-		      NULL, NULL, &err);
-	if (err) {
-		fprintf(stderr, "error spawning command %s\n", cmd);
-		g_error_free(err);
-	}
-	g_strfreev(argv);
-}
-
 void spawn_command_line_sync(const char *command)
 {
 	GError *error = NULL;
