@@ -1671,6 +1671,14 @@ static void key_event(XKeyEvent *ev)
 	case XK_Super_R:
 		super_key_pressed = 1;
 		break;
+	case XK_bracketleft:
+		if (!(ev->state & ControlMask))
+			goto default_case;
+		[[fallthrough]];
+	case XK_c:
+		if (!(ev->state & ControlMask))
+			goto default_case;
+		[[fallthrough]];
 	case XK_Escape:
 		if (filter_needle_length()) {
 			filter_reset();
@@ -1689,6 +1697,10 @@ static void key_event(XKeyEvent *ev)
 		menu.current_node->last_sel = menu.sel;
 		draw_menu();
 		break;
+	case XK_p:
+		if (!(ev->state & ControlMask))
+			goto default_case;
+		[[fallthrough]];
 	case XK_Up:
 		if (widgets_get_kb_grabbed()) {
 			widgets_select("XK_Up");
@@ -1754,6 +1766,10 @@ static void key_event(XKeyEvent *ev)
 		if (menu.sel && menu.sel->selectable)
 			action_cmd(menu.sel->cmd, menu.sel->working_dir);
 		break;
+	case XK_n:
+		if (!(ev->state & ControlMask))
+			goto default_case;
+		[[fallthrough]];
 	case XK_Down:
 		if (widgets_get_kb_grabbed()) {
 			widgets_select("XK_Down");
@@ -1820,7 +1836,20 @@ static void key_event(XKeyEvent *ev)
 			update(1);
 		}
 		break;
+	case XK_w:
+		if (!(ev->state & ControlMask))
+			goto default_case;
+		filter_delword();
+		update(0);
+		break;
+	case XK_u:
+		if (!(ev->state & ControlMask))
+			goto default_case;
+		filter_reset();
+		update(0);
+		break;
 	default:
+default_case:
 		if (filter_get_clear_on_keyboard_input())
 			filter_reset();
 		filter_addstr(buf, len);
