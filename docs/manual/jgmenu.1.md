@@ -237,11 +237,11 @@ Icons will be displayed if the third field is populated, for example:
 
 # USER INTERFACE
 
-`Up`, `Down`
+`Up`, `Down`, `Ctrl+p`, `Ctrl+n`
 
 :   Select previous/next item
 
-`Left`. `Right`
+`Left`, `Right`
 
 :   Move to parent/sub menu
 
@@ -273,9 +273,21 @@ Icons will be displayed if the third field is populated, for example:
 
 :   exit(0)
 
+`Escape`, `Ctrl+c`, `Ctrl+[`
+
+:   Clear filter and then hide or exit jgmenu
+
 `Backspace`
 
 :   Return to parent menu
+
+`Ctrl+w`
+
+:   Backward erase word
+
+`Ctrl+u`
+
+:   Backward erase line
 
 Type any string to invoke a search. Words separated by space will be searched
 for using `OR` logic (i.e. the match of either word is sufficient to display an

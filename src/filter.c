@@ -77,6 +77,18 @@ void filter_backspace(void)
 	filter_backspace();
 }
 
+void filter_delword(void)
+{
+	if (!has_been_inited)
+		die("filter has not been initiated");
+	if (!needle.len)
+		return;
+
+	do {
+		filter_backspace();
+	} while (!isspace(needle.buf[needle.len-1]) && needle.len);
+}
+
 void filter_reset(void)
 {
 	BUG_ON(!has_been_inited);
