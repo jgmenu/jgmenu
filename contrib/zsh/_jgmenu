@@ -1,0 +1,27 @@
+#compdef jgmenu
+
+function _jgmenu() {
+	local integer ret=1
+
+	_arguments -s \
+    	'(--no-spawn)--no-spawn[Redirect command to stdout rather than execute it]' \
+    	'(--at-pointer)--at-pointer[Launch menu at mouse pointer]' \
+    	'(--hide-on-startup)--hide-on-startup[Start menu is hidden state]' \
+    	'(--simple)--simple[Ignore tint2 settings; Run in short-lived mode (i.e. exit after mouse click or enter/escape); read menu items from stdin]' \
+    	'(--vsimple)--vsimple[Same as --simple, but also disables icons and ignores jgmenurc]' \
+    	'(--die-when-loaded)--die-when-loaded[Open menu and then exit(0).  Useful for debugging and testing]' \
+    	'(--center)--center[Center align menu horizontally and vertically]' \
+    	'(--persistent)--persistent[Same as the persistent config option.  See config option section below for details]' \
+		\
+    	'(--checkout)--checkout=[Checkout submenu on startup]' \
+    	'(--config-file)--config-file=[Read config file]:file:_files' \
+    	'(--icon-size)--icon-size=[Specify icon size (22 by default).  If set to 0, icons will not be loaded]:number' \
+    	'(--csv-file)--csv-file=[Specify menu file (in jgmenu flavoured CSV format).  If file cannot be opened, input is reverted to stdin]:file:_files' \
+    	'(--csv-cmd)--csv-cmd=[Specify command to produce menu data, for example jgmenu_run pmenu]' \
+		\
+    	'(--version)--version[Print version]' \
+    	'(--help)--help[Print help]' \
+		&& ret=0
+
+	return $ret
+}
