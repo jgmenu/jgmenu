@@ -448,7 +448,7 @@ Here follow some specific types:
     careful!). If left blank, jgmenu will read from `stdin`. Examples:
 
         csv_cmd = lx
-        csv_cmd = jgmenu_run lx --no-dirs
+        csv_cmd = JGMENU_NO_DIRS=1 jgmenu_run lx
         csv_cmd = cat ~/mymenu.csv
 
 `tint2_look` = __boolean__ (default 0)
