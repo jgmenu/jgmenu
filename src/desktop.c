@@ -172,6 +172,19 @@ static int add_app(FILE *fp, char *filename)
 	return 0;
 }
 
+static bool
+str_ends_with(const char *const string, const char *const suffix)
+{
+	size_t len_str = string ? strlen(string) : 0;
+	size_t len_sfx = suffix ? strlen(suffix) : 0;
+
+	if (len_str < len_sfx)
+		return false;
+	if (len_sfx == 0)
+		return true;
+	return strcmp(string + len_str - len_sfx, suffix) == 0;
+}
+
 static void process_file(char *filename, const char *path)
 {
 	FILE *fp;
@@ -179,7 +192,7 @@ static void process_file(char *filename, const char *path)
 	int ret = 0;
 	size_t len;
 
-	if (!strcasestr(filename, ".desktop"))
+	if (!str_ends_with(filename, ".desktop"))
 		return;
 	len = strlen(path);
 	strlcpy(fullname, path, sizeof(fullname));
