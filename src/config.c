@@ -84,6 +84,7 @@ void config_set_defaults(void)
 	config.arrow_width	   = 15;
 
 	config.search_empty_string = xstrdup("&lt;empty&gt;");
+	config.search_markup	   = NULL;
 
 	parse_hexstr("#000000 100", config.color_menu_bg);
 	parse_hexstr("#000000 100", config.color_menu_bg_to);
@@ -369,6 +370,9 @@ void config_process_line(char *line)
 	} else if (!strcmp(option, "search_empty_string")) {
 		xfree(config.search_empty_string);
 		config.search_empty_string = xstrdup(value);
+	} else if (!strcmp(option, "search_markup")) {
+		xfree(config.search_markup);
+		config.search_markup = xstrdup(value);
 
 	} else if (!strcmp(option, "color_menu_bg")) {
 		parse_hexstr(value, config.color_menu_bg);

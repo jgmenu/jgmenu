@@ -111,6 +111,14 @@ static void draw_search(struct widget **w)
 	sbuf_replace(&label_escaped, "&", "&amp;");
 	sbuf_replace(&label_escaped, "<", "&lt;");
 	sbuf_replace(&label_escaped, ">", "&gt;");
+
+	if (config.search_markup && config.search_markup[0] != '\0') {
+		sbuf_prepend(&label_escaped, ">");
+		sbuf_prepend(&label_escaped, config.search_markup);
+		sbuf_prepend(&label_escaped, "<span ");
+		sbuf_addstr(&label_escaped, "</span>");
+	}
+
 	ui_insert_text(label_escaped.buf, (*w)->x + padding_left, (*w)->y,
 		       (*w)->h, (*w)->w, (*w)->fgcol, LEFT);
 	free(label_escaped.buf);

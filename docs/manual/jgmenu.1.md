@@ -687,6 +687,10 @@ Here follow some specific types:
 
         sep_markup = font="Sans Italic 12" foreground="blue"
 
+`search_markup` = __string__ (unset by default)
+
+:   Same as `sep_markup` but applies to the `search` widget.
+
 `font` = __string__ (unset by default)
 
 :   Font description for menu items. `font` accepts a string such as

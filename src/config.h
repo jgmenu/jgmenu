@@ -76,6 +76,7 @@ struct config {
 	int arrow_width;
 
 	char *search_empty_string;
+	char *search_markup;
 
 	double color_menu_bg[4];
 	double color_menu_bg_to[4];
