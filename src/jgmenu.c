@@ -580,7 +580,7 @@ static void draw_icon(struct item *p, double alpha)
 	offsetx = cairo_image_surface_get_width(p->icon) < config.icon_size ?
 		  (config.icon_size - cairo_image_surface_get_width(p->icon)) / 2 : 0;
 
-	icon_y_coord = p->area.y + (config.item_height - config.icon_size) / 2 +
+	icon_y_coord = p->area.y + (p->area.h - config.icon_size) / 2 +
 		       offsety;
 	if (config.item_halign != RIGHT)
 		ui_insert_image(p->icon, p->area.x + config.item_padding_x +
@@ -1177,6 +1177,17 @@ static void get_unique_tag_item(char *utag)
 	snprintf(utag, UTAG_BUFSIZ, "%d,^tag(%d", i, i);
 }
 
+/**
+ * Fonction perso pour adapter la hauteur des lignes au texte
+ * en cas de description multiligne avec ('\n') dans le fichier csv
+ */
+static int item_text_height(struct item *item)
+{
+	struct point point;
+	point = ui_get_text_size(item->name, font_get());
+	return point.y > config.item_height ? point.y : config.item_height;
+}
+
 static void insert_tag_item(void)
 {
 	struct item *item = NULL;
@@ -1198,7 +1209,7 @@ static void insert_tag_item(void)
 	item->icon = NULL;
 	item->tag = item->cmd + 5;
 	item->selectable = 1;
-	item->area.h = config.item_height;
+	item->area.h = item_text_height(item);
 	list_add_tail(&item->master, &menu.master);
 }
 
@@ -1299,7 +1310,7 @@ static int read_csv_file(FILE *fp, bool ispipemenu)
 		else
 			item->tag = NULL;
 		item->selectable = 1;
-		item->area.h = config.item_height;
+		item->area.h = item_text_height(item);
 		if (!strncmp(item->name, "^sep(", 5)) {
 			item->selectable = 0;
 			if (item->name[5] == '\0')
