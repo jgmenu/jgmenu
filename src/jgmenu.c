@@ -1178,8 +1178,7 @@ static void get_unique_tag_item(char *utag)
 }
 
 /**
- * Fonction perso pour adapter la hauteur des lignes au texte
- * en cas de description multiligne avec ('\n') dans le fichier csv
+ * Support multi-line menu items with dynamic item height.
  */
 static int item_text_height(struct item *item)
 {
