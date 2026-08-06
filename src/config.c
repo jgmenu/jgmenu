@@ -175,6 +175,10 @@ void config_process_line(char *line)
 			warn("position_mode value '%s' not recognised", value);
 		}
 
+	} else if (!strcmp(option, "respect_workarea")) {
+		xatoi(&config.respect_workarea, value, XATOI_NONNEG,
+		      "config.respect_workarea");
+
 	} else if (!strcmp(option, "edge_snap_x")) {
 		xatoi(&config.edge_snap_x, value, XATOI_NONNEG,
 		      "config.edge_snap_x");
