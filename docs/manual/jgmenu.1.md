@@ -483,6 +483,12 @@ Here follow some specific types:
     :   Launch at center of screen and ignore `_NET_WORKAREA`.
         Take precedence over `menu_{v,h}align`.
 
+`respect_workarea` = __integer__ (default 1)
+
+:   Whether to respect `_NET_WORKAREA` when positioning the menu.
+    Set to 0 to ignore reserved areas such as panels while keeping
+    pointer positioning.
+
 `edge_snap_x` = __integer__ (default 30)
 
 :   Specify the distance (in pixels) from the left hand edge, within which the
