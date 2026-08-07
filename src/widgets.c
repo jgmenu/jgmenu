@@ -106,11 +106,15 @@ static void draw_search(struct widget **w)
 	int padding_left = 4;
 
 	sbuf_init(&label_escaped);
-	sbuf_cpy(&label_escaped, filter_needle_length() ? filter_needle() :
-		 (*w)->content);
-	sbuf_replace(&label_escaped, "&", "&amp;");
-	sbuf_replace(&label_escaped, "<", "&lt;");
-	sbuf_replace(&label_escaped, ">", "&gt;");
+
+	if (filter_needle_length()) {
+		sbuf_cpy(&label_escaped, filter_needle());
+		sbuf_replace(&label_escaped, "&", "&amp;");
+		sbuf_replace(&label_escaped, "<", "&lt;");
+		sbuf_replace(&label_escaped, ">", "&gt;");
+	} else {
+		sbuf_cpy(&label_escaped, (*w)->content);
+	}
 
 	if (config.search_markup && config.search_markup[0] != '\0') {
 		sbuf_prepend(&label_escaped, ">");
