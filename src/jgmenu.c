@@ -1304,6 +1304,8 @@ static int read_csv_file(FILE *fp, bool ispipemenu)
 			item->selectable = 0;
 			if (item->name[5] == '\0')
 				item->area.h = config.sep_height;
+			else
+				item->area.h = config.sep_text_height;
 		}
 		list_add_tail(&item->master, &menu.master);
 	}

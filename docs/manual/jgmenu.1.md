@@ -659,8 +659,11 @@ Here follow some specific types:
 
 `sep_height` = __integer__ (default 5)
 
-:   Height of separator without text (defined by ^sep()). Separators with text
-    use `item_height`
+:   Height of separator without text (defined by ^sep()).
+
+`sep_text_height` = __integer__ (default 25)
+
+:   Height of separator with text (defined by ^sep(text)).
 
 `sep_halign` = (left | center | right) (default left)
 

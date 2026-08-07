@@ -60,6 +60,7 @@ struct config {
 	int item_border;
 	enum alignment item_halign;
 	int sep_height;
+	int sep_text_height;
 	char *sep_markup;
 	enum alignment sep_halign;
 

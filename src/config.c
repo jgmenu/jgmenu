@@ -68,6 +68,7 @@ void config_set_defaults(void)
 	config.item_halign	   = LEFT;
 
 	config.sep_height	   = 5;
+	config.sep_text_height = 25;
 	config.sep_markup	   = NULL;
 	config.sep_halign	   = CENTER;
 
@@ -322,6 +323,9 @@ void config_process_line(char *line)
 	} else if (!strcmp(option, "sep_height")) {
 		xatoi(&config.sep_height, value, XATOI_NONNEG,
 		      "config.sep_height");
+	} else if (!strcmp(option, "sep_text_height")) {
+		xatoi(&config.sep_text_height, value, XATOI_GT_0,
+		      "config.sep_text_height");
 	} else if (!strcmp(option, "sep_markup")) {
 		xfree(config.sep_markup);
 		config.sep_markup = xstrdup(value);
