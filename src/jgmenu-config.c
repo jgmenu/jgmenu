@@ -69,6 +69,7 @@ static struct option options[] = {
 	{ "item_border", "0" },
 	{ "item_halign", "left" },
 	{ "sep_height", "5" },
+	{ "sep_text_height", "25" },
 	{ "sep_halign", "left" },
 	{ "sep_markup", "" },
 	{ "font", "" },
