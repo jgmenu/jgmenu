@@ -1231,11 +1231,11 @@ static void resolve_newline(char *s)
 
 	if (!s)
 		return;
-	p = strstr(s, "\\n");
-	if (!p)
-		return;
-	*p = ' ';
-	*(p + 1) = '\n';
+	while ((p = strstr(s, "\\n"))) {
+		*p = ' ';
+		*(p + 1) = '\n';
+		s = p + 2;
+	}
 }
 
 /**
