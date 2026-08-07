@@ -440,6 +440,10 @@ Here follow some specific types:
     jgmenu during the boot process and then sending a `killall -SIGUSR1 jgmenu`
     to show the menu.
 
+`focus_on_open` = __boolean__ (default 0)
+
+:   If set to 1, jgmenu will focus the first selectable item when opening.
+
 `csv_cmd` = __string__ (default `apps`)
 
 :   Defines the command to produce the jgmenu flavoured CSV for `jgmenu`.

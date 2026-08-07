@@ -16,6 +16,7 @@ struct config {
 	int stay_alive;
 	int persistent;
 	int hide_on_startup;
+	int focus_on_open;
 	char *csv_cmd;
 	int tint2_look;
 	enum position_mode position_mode;

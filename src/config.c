@@ -23,6 +23,7 @@ void config_set_defaults(void)
 	config.stay_alive	   = 1;
 	config.persistent          = 0;
 	config.hide_on_startup	   = 0;
+	config.focus_on_open	   = 0;
 	config.csv_cmd		   = xstrdup("apps");
 	config.tint2_look	   = 0;
 	config.position_mode	   = POSITION_MODE_FIXED;
@@ -143,6 +144,9 @@ void config_process_line(char *line)
 	} else if (!strcmp(option, "hide_on_startup")) {
 		xatoi(&config.hide_on_startup, value, XATOI_NONNEG,
 		      "config.hide_on_startup");
+	} else if (!strcmp(option, "focus_on_open")) {
+		xatoi(&config.focus_on_open, value, XATOI_NONNEG,
+		      "config.focus_on_open");
 	} else if (!strcmp(option, "csv_cmd")) {
 		xfree(config.csv_cmd);
 		config.csv_cmd = xstrdup(value);
