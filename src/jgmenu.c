@@ -1035,8 +1035,12 @@ static void awake_menu(void)
 		update(1);
 	}
 
-	/* Remove previous selection on awake */
-	menu.sel = NULL;
+	if (config.focus_on_open) {
+		menu.sel = first_selectable();
+		menu.current_node->last_sel = menu.sel;
+	} else {
+		menu.sel = NULL;
+	}
 	draw_menu();
 
 	XMapWindow(ui->dpy, ui->w[ui->cur].win);
@@ -2770,7 +2774,12 @@ int main(int argc, char *argv[])
 	else
 		XMapRaised(ui->dpy, ui->w[ui->cur].win);
 
-	menu.sel = NULL;
+	if (config.focus_on_open) {
+		menu.sel = first_selectable();
+		menu.current_node->last_sel = menu.sel;
+	} else {
+		menu.sel = NULL;
+	}
 	draw_menu();
 
 	atexit(cleanup);

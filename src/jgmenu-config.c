@@ -28,6 +28,7 @@ static struct option options[] = {
 	{ "stay_alive", "1" },
 	{ "persistent", "0" },
 	{ "hide_on_startup", "0" },
+	{ "focus_on_open", "0" },
 	{ "csv_cmd", "apps" },
 	{ "tint2_look", "0" },
 	{ "position_mode", "fixed" },
