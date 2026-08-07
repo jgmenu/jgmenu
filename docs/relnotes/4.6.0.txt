@@ -1,0 +1,21 @@
+jgmenu v4.6.0 release notes
+===========================
+
+Updates since v4.5.0
+--------------------
+
+  * Validate .desktop filename better by checking that the filename ends with
+    ".desktop" rather than just contains ".desktop" @johanmalm #251
+
+  * Add search_markup config option @cdlscpmv #258
+
+  * Add keybinds listed below @elig0n #254
+      * Ctrl+n and Ctrl+p to select next/previous item
+      * Ctrl+c and Ctrl+[ to abort
+      * Ctrl+u as an alternative to Escape
+      * Ctrl+w to delete last word
+
+  * jgmenu: add --override command-line option to override config file
+    options. @cdlscpmv #247
+
+  * jgmenu-ob: support xml !ENTITY definitions @johanmalm #236
