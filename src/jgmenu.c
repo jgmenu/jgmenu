@@ -1182,13 +1182,26 @@ static void get_unique_tag_item(char *utag)
 }
 
 /**
- * Support multi-line menu items with dynamic item height.
+ * Support multi-line menu items with dynamic item height while preserving
+ * the vertical padding of single-line items.
  */
 static int item_text_height(struct item *item)
 {
+	static int font_height = -1;
 	struct point point;
+	int padding;
+
+	if (font_height == -1)
+		font_height = ui_get_text_size("abcfghjklABC",
+					       font_get()).y;
+
 	point = ui_get_text_size(item->name, font_get());
-	return point.y > config.item_height ? point.y : config.item_height;
+
+	padding = config.item_height - font_height;
+
+	return point.y + padding > config.item_height ?
+	       point.y + padding :
+	       config.item_height;
 }
 
 static void insert_tag_item(void)
