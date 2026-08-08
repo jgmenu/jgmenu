@@ -1185,7 +1185,7 @@ static void get_unique_tag_item(char *utag)
  * Support multi-line menu items with dynamic item height while preserving
  * the vertical padding of single-line items.
  */
-static int item_text_height(struct item *item)
+static int item_height(struct item *item)
 {
 	static int font_height = -1;
 	struct point point;
@@ -1225,7 +1225,7 @@ static void insert_tag_item(void)
 	item->icon = NULL;
 	item->tag = item->cmd + 5;
 	item->selectable = 1;
-	item->area.h = item_text_height(item);
+	item->area.h = item_height(item);
 	list_add_tail(&item->master, &menu.master);
 }
 
@@ -1326,7 +1326,7 @@ static int read_csv_file(FILE *fp, bool ispipemenu)
 		else
 			item->tag = NULL;
 		item->selectable = 1;
-		item->area.h = item_text_height(item);
+		item->area.h = item_height(item);
 		if (!strncmp(item->name, "^sep(", 5)) {
 			item->selectable = 0;
 			if (item->name[5] == '\0')
