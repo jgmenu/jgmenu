@@ -86,7 +86,7 @@ void filter_delword(void)
 
 	do {
 		filter_backspace();
-	} while (!isspace(needle.buf[needle.len-1]) && needle.len);
+	} while (!isspace(needle.buf[needle.len - 1]) && needle.len);
 }
 
 void filter_reset(void)
