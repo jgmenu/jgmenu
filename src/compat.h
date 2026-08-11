@@ -7,9 +7,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#define strcasestr gitstrcasestr
-char *gitstrcasestr(const char *haystack, const char *needle);
-
 #define strlcpy gitstrlcpy
 size_t gitstrlcpy(char *, const char *, size_t);
 
