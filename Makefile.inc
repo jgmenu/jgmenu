@@ -39,3 +39,9 @@ QUIET_LINK = @echo '     LINK  '$@;
 endif
 
 MAKEFLAGS += --no-print-directory
+
+ifdef SECTIONS
+# Find unused functions
+CFLAGS    += -ffunction-sections
+LDFLAGS   += -Wl,--gc-sections -Wl,--print-gc-sections
+endif
