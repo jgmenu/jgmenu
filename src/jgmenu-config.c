@@ -32,6 +32,7 @@ static struct option options[] = {
 	{ "csv_cmd", "apps" },
 	{ "tint2_look", "0" },
 	{ "position_mode", "fixed" },
+	{ "respect_workarea", "1" },
 	{ "edge_snap_x", "30" },
 	{ "terminal_exec", "x-terminal-emulator" },
 	{ "terminal_args", "-e" },
