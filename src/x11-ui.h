@@ -67,7 +67,7 @@ void ui_draw_rectangle_gradient(double x, double y, double w, double h, double r
 				int fill, double *top_rgba, double *bot_rgba, enum alignment align);
 void ui_draw_line(double x0, double y0, double x1, double y1, double line_width, double *rgba);
 void ui_insert_text(char *s, int x, int y, int h, int w, double *rgba,
-		    enum alignment align);
+		    enum alignment align, int caret);
 struct point ui_get_text_size(const char *str, const char *fontdesc);
 int ui_is_point_in_area(struct point p, struct area a);
 void ui_map_window(unsigned int w, unsigned int h);
