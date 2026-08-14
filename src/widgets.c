@@ -123,15 +123,21 @@ static void draw_search(struct widget **w)
 		sbuf_addstr(&label_escaped, "</span>");
 	}
 
-	ui_insert_text(label_escaped.buf, (*w)->x + padding_left, (*w)->y,
-		       (*w)->h, (*w)->w, (*w)->fgcol, LEFT);
+	if (filter_needle_length()) {
+		ui_insert_text(label_escaped.buf, (*w)->x + padding_left,
+			       (*w)->y, (*w)->h, (*w)->w, (*w)->fgcol, LEFT, 1);
+	} else {
+		sbuf_prepend(&label_escaped, " ");
+		ui_insert_text(label_escaped.buf, (*w)->x + padding_left,
+			       (*w)->y, (*w)->h, (*w)->w, (*w)->fgcol, LEFT, -1);
+	}
 	free(label_escaped.buf);
 }
 
 static void draw_text(struct widget **w)
 {
 	ui_insert_text((*w)->content, (*w)->x, (*w)->y, (*w)->h, (*w)->w,
-		       (*w)->fgcol, LEFT);
+		       (*w)->fgcol, LEFT, 0);
 }
 
 static void draw_selection(struct widget **w)
