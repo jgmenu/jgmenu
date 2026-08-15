@@ -124,12 +124,14 @@ static void draw_search(struct widget **w)
 	}
 
 	if (filter_needle_length()) {
-		ui_insert_text(label_escaped.buf, (*w)->x + padding_left,
-			       (*w)->y, (*w)->h, (*w)->w, (*w)->fgcol, LEFT, 1);
+		ui_insert_text_with_caret(label_escaped.buf, (*w)->x + padding_left,
+			(*w)->y, (*w)->h, (*w)->w, (*w)->fgcol, LEFT,
+			CARET_AT_END);
 	} else {
 		sbuf_prepend(&label_escaped, " ");
-		ui_insert_text(label_escaped.buf, (*w)->x + padding_left,
-			       (*w)->y, (*w)->h, (*w)->w, (*w)->fgcol, LEFT, -1);
+		ui_insert_text_with_caret(label_escaped.buf, (*w)->x + padding_left,
+				(*w)->y, (*w)->h, (*w)->w, (*w)->fgcol, LEFT,
+				CARET_AT_START);
 	}
 	free(label_escaped.buf);
 }
@@ -137,7 +139,7 @@ static void draw_search(struct widget **w)
 static void draw_text(struct widget **w)
 {
 	ui_insert_text((*w)->content, (*w)->x, (*w)->y, (*w)->h, (*w)->w,
-		       (*w)->fgcol, LEFT, 0);
+		       (*w)->fgcol, LEFT);
 }
 
 static void draw_selection(struct widget **w)

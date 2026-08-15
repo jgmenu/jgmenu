@@ -66,8 +66,15 @@ void ui_draw_rectangle(double x, double y, double w, double h, double radius, do
 void ui_draw_rectangle_gradient(double x, double y, double w, double h, double radius, double line_width,
 				int fill, double *top_rgba, double *bot_rgba, enum alignment align);
 void ui_draw_line(double x0, double y0, double x1, double y1, double line_width, double *rgba);
+enum caret_position {
+	CARET_AT_START,
+	CARET_AT_END
+};
 void ui_insert_text(char *s, int x, int y, int h, int w, double *rgba,
-		    enum alignment align, int caret);
+		    enum alignment align);
+void ui_insert_text_with_caret(char *s, int x, int y, int h, int w,
+			double *rgba, enum alignment align,
+			enum caret_position position);
 struct point ui_get_text_size(const char *str, const char *fontdesc);
 int ui_is_point_in_area(struct point p, struct area a);
 void ui_map_window(unsigned int w, unsigned int h);
