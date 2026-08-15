@@ -533,7 +533,7 @@ void ui_draw_line(double x0, double y0, double x1, double y1, double line_width,
 }
 
 void ui_insert_text(char *s, int x, int y, int h, int w, double *rgba,
-		    enum alignment align, int caret)
+		    enum alignment align)
 {
 	PangoTabArray *tabs;
 	int height;
@@ -561,19 +561,34 @@ void ui_insert_text(char *s, int x, int y, int h, int w, double *rgba,
 	/* use (h - height) / 2 to center-align vertically */
 	cairo_move_to(ui->w[ui->cur].c, x, y + (h - height) / 2);
 	pango_cairo_show_layout(ui->w[ui->cur].c, ui->w[ui->cur].pangolayout);
-
-	if (caret) {
-		int width;
-
-		pango_layout_get_pixel_size(ui->w[ui->cur].pangolayout, &width, NULL);
-		if (caret < 0)
-			width = -2.5;
-		ui_draw_line(x + width + 2.5, y + (h - height) / 2,
-			     x + width + 2.5, y + (h + height) / 2,
-			     1.0, rgba);
-	}
-
 	pango_tab_array_free(tabs);
+}
+
+void ui_insert_text_with_caret(char *s, int x, int y, int h, int w,
+			       double *rgba, enum alignment align,
+			       enum caret_position position)
+{
+	int width;
+	int height;
+	double caret_x;
+
+	ui_insert_text(s, x, y, h, w, rgba, align);
+
+	pango_layout_get_pixel_size(ui->w[ui->cur].pangolayout, &width, &height);
+
+	/*
+	 * Use a 2.5-pixel offset to keep the 1-pixel caret sharp.
+	 * Integer offsets (e.g. 2 or 3) cause Cairo to anti-alias the
+	 * line, making the caret appear wider and darker than intended.
+	 */
+	if (position == CARET_AT_START)
+		caret_x = x + 2.5;
+	else
+		caret_x = x + width + 2.5;
+
+	ui_draw_line(caret_x, y + (h - height) / 2,
+		     caret_x, y + (h + height) / 2,
+		     1.0, rgba);
 }
 
 struct point ui_get_text_size(const char *str, const char *fontdesc)

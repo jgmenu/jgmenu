@@ -497,7 +497,7 @@ static void draw_item_sep_with_text(struct item *p)
 			  p->area.h, config.item_radius, 1.0, 0,
 			  config.color_title_border);
 	ui_insert_text(s.buf, text_x_coord, p->area.y, p->area.h, p->area.w,
-		       config.color_title_fg, config.sep_halign, 0);
+		       config.color_title_fg, config.sep_halign);
 	xfree(s.buf);
 }
 
@@ -547,11 +547,11 @@ static void draw_item_text(struct item *p)
 	if (p == menu.sel)
 		ui_insert_text(p->name, text_x_coord, p->area.y,
 			       p->area.h, width, config.color_sel_fg,
-			       config.item_halign, 0);
+			       config.item_halign);
 	else
 		ui_insert_text(p->name, text_x_coord, p->area.y,
 			       p->area.h, width, config.color_norm_fg,
-			       config.item_halign, 0);
+			       config.item_halign);
 }
 
 static void draw_submenu_arrow(struct item *p)
@@ -563,11 +563,11 @@ static void draw_submenu_arrow(struct item *p)
 		ui_insert_text(config.arrow_string, p->area.x + p->area.w -
 			       config.item_padding_x - (config.arrow_width * 0.7), p->area.y,
 			       p->area.h, p->area.w, color,
-			       config.item_halign, 0);
+			       config.item_halign);
 	else
 		ui_insert_text(config.arrow_string, p->area.x + config.item_padding_x,
 			       p->area.y, p->area.h, config.arrow_width * 0.7,
-			       color, config.item_halign, 0);
+			       color, config.item_halign);
 }
 
 static void draw_icon(struct item *p, double alpha)
