@@ -29,6 +29,16 @@ argc" "a@b@@d d@e@f-f
 
 '
 
+test_expect_success 'single quote' '
+
+test_argvbuf "strdup@a,\"b,c\",d
+parse
+print
+argc" "a@\"b@c\"@d
+4"
+
+'
+
 test_expect_success 'simple triple quote' '
 
 test_argvbuf "strdup@\"\"\"a,aa\"\"\",\"\"\"b,bb\"\"\",\"\"\"c,cc\"\"\"
