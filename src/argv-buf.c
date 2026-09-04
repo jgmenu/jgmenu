@@ -74,7 +74,7 @@ static void trim_all_fields(struct argv_buf *buf)
 
 	for (i = 0; i < buf->argc; i++) {
 		p = buf->argv[i];
-		rtrim(&p);
+		rtrim(p);
 		while (isspace(*p))
 			p++;
 		buf->argv[i] = p;

@@ -125,7 +125,7 @@ static void strip_exec_field_codes(char **exec)
 				delchar(p);
 		}
 	}
-	rtrim(exec);
+	rtrim(*exec);
 }
 
 static struct app *grow_vector_by_one_app(void)

@@ -97,23 +97,23 @@ void *xcalloc(size_t nb, size_t size)
 	return ret;
 }
 
-void rtrim(char **s)
+void rtrim(char *s)
 {
 	size_t len;
 	char *end;
 
-	len = strlen(*s);
+	len = strlen(s);
 	if (!len)
 		return;
-	end = *s + len - 1;
-	while (end >= *s && isspace(*end))
+	end = s + len - 1;
+	while (end >= s && isspace(*end))
 		end--;
 	*(end + 1) = '\0';
 }
 
 char *strstrip(char *s)
 {
-	rtrim(&s);
+	rtrim(s);
 	while (isspace(*s))
 		s++;
 	return s;
