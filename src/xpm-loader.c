@@ -129,9 +129,11 @@ static int compare_xcolor_entries(const void *a, const void *b)
 
 static int find_color(const char *name, struct xpm_color *color_ptr)
 {
-	struct xpm_color_entry *found;
+	const struct xpm_color_entry *found;
 
-	found = bsearch(name, xcolors, G_N_ELEMENTS(xcolors), sizeof(struct xpm_color_entry), compare_xcolor_entries);
+	found = bsearch(name, xcolors, G_N_ELEMENTS(xcolors),
+			sizeof(struct xpm_color_entry),
+			compare_xcolor_entries);
 	if (!found)
 		return 0;
 
