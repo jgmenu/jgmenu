@@ -108,11 +108,11 @@ static void delchar(char *p)
  *  (a) %% which becomes %
  *  (b) backslash escaped characters are resolved
  */
-static void strip_exec_field_codes(char **exec)
+static void strip_exec_field_codes(char *exec)
 {
-	if (!**exec || !*exec)
+	if (!*exec || !exec)
 		return;
-	for (char *p = *exec; *p; p++) {
+	for (char *p = exec; *p; p++) {
 		if (*p == '\\') {
 			delchar(p);
 			continue;
@@ -125,7 +125,7 @@ static void strip_exec_field_codes(char **exec)
 				delchar(p);
 		}
 	}
-	rtrim(*exec);
+	rtrim(exec);
 }
 
 static struct app *grow_vector_by_one_app(void)
@@ -164,7 +164,7 @@ static int add_app(FILE *fp, char *filename)
 	}
 	strlcpy(app->filename, filename, sizeof(app->filename));
 	p = &app->exec[0];
-	strip_exec_field_codes(&p);
+	strip_exec_field_codes(p);
 
 	if (app->tryexec[0] != '\0' && !isprog(app->tryexec))
 		app->tryexec_not_in_path = true;
