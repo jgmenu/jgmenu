@@ -68,7 +68,8 @@ void config_set_defaults(void)
 	config.item_border	   = 0;
 	config.item_halign	   = LEFT;
 
-	config.sep_height	   = 5;
+	config.sep_margin_x	   = 5;
+	config.sep_margin_y	   = 5;
 	config.sep_text_height = 25;
 	config.sep_markup	   = NULL;
 	config.sep_halign	   = CENTER;
@@ -328,9 +329,15 @@ void config_process_line(char *line)
 			config.item_halign = LEFT;
 		else if (!strcasecmp(value, "right"))
 			config.item_halign = RIGHT;
+	} else if (!strcmp(option, "sep_margin_x")) {
+		xatoi(&config.sep_margin_x, value, XATOI_NONNEG,
+		      "config.sep_margin_x");
+	} else if (!strcmp(option, "sep_margin_y")) {
+		xatoi(&config.sep_margin_y, value, XATOI_NONNEG,
+		      "config.sep_margin_y");
 	} else if (!strcmp(option, "sep_height")) {
-		xatoi(&config.sep_height, value, XATOI_NONNEG,
-		      "config.sep_height");
+		xatoi(&config.sep_margin_y, value, XATOI_NONNEG,
+		      "config.sep_margin_y");
 	} else if (!strcmp(option, "sep_text_height")) {
 		xatoi(&config.sep_text_height, value, XATOI_GT_0,
 		      "config.sep_text_height");
