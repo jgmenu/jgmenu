@@ -11,7 +11,7 @@ item_padding_x	  = 3
 item_radius	  = 0
 item_border	  = 0
 
-sep_height        = 10
+sep_margin_y      = 10
 sep_markup        = underline="single"
 sep_halign        = center
 
