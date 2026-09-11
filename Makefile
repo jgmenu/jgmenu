@@ -13,14 +13,14 @@ VER      = $(shell ./scripts/version-gen.sh)
 -include config.mk
 include Makefile.inc
 
-jgmenu:         CFLAGS += `pkg-config cairo pango pangocairo $(RSVG_LIB) --cflags` $(RSVG_FLAGS)
+jgmenu:         CFLAGS += `pkg-config libpng cairo pango pangocairo $(RSVG_LIB) --cflags` $(RSVG_FLAGS)
+jgmenu:         CFLAGS += -pthread
 jgmenu-ob:      CFLAGS += `pkg-config --cflags libxml-2.0`
 jgmenu-obtheme: CFLAGS += `pkg-config --cflags libxml-2.0`
 jgmenu-config:  CFLAGS += `pkg-config --cflags glib-2.0`
 jgmenu-apps:    CFLAGS += `pkg-config --cflags glib-2.0`
 
-jgmenu:         LIBS   += `pkg-config x11 xrandr cairo pango pangocairo $(RSVG_LIB) --libs` $(RSVG_FLAGS)
-jgmenu:         LIBS   += -pthread -lpng
+jgmenu:         LIBS   += `pkg-config x11 xrandr libpng cairo pango pangocairo $(RSVG_LIB) --libs` $(RSVG_FLAGS)
 jgmenu-ob:      LIBS   += `pkg-config --libs libxml-2.0`
 jgmenu-obtheme: LIBS   += `pkg-config --libs libxml-2.0`
 jgmenu-config:  LIBS   += `pkg-config --libs glib-2.0`
