@@ -115,7 +115,7 @@ void sbuf_ltrim(struct sbuf *s)
 	if (!s || !s->buf || !s->len)
 		return;
 	p = s->buf;
-	while (i < s->len && isspace(*p++))
+	while (i < s->len && isspace((unsigned char)*p++))
 		i++;
 	sbuf_shift_left(s, i);
 }
@@ -129,7 +129,7 @@ void sbuf_rtrim(struct sbuf *s)
 		return;
 	p = s->buf + s->len - 1;
 	while (i < s->len) {
-		if (!isspace(*p))
+		if (!isspace((unsigned char)*p))
 			break;
 		i++;
 		p--;

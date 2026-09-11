@@ -106,7 +106,7 @@ void rtrim(char *s)
 	if (!len)
 		return;
 	end = s + len - 1;
-	while (end >= s && isspace(*end))
+	while (end >= s && isspace((unsigned char)*end))
 		end--;
 	*(end + 1) = '\0';
 }
@@ -114,7 +114,7 @@ void rtrim(char *s)
 char *strstrip(char *s)
 {
 	rtrim(s);
-	while (isspace(*s))
+	while (isspace((unsigned char)*s))
 		s++;
 	return s;
 }
