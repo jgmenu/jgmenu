@@ -1,0 +1,19 @@
+jgmenu v4.7.0
+
+### Added
+
+- Support multi-line menu items @Dupond [#259]
+- Add caret (cursor) to search widget @Dupond [#268]
+- Add the following configuration options:
+  - `respect_workarea` to optionally ignore the `_NET_WORKAREA` when
+    `position_mode=pointer` @Dupond [#227] [#260]
+  - `sep_text_height` to specify the height of separators with text
+    (defined by ^sep(text)) @Dupond [#261]
+  - `focus_on_open` to focus the first selectable item when opening the
+    menu @Dupond [#263]
+
+### Fixed
+
+- Fix NetBSD build errors @johanmalm @scotthep [#269] [#272]
+- Fix `search` widget pango markup handling @Dupond [#237] [#262]
+
