@@ -675,8 +675,10 @@ Here follow some specific types:
 
 :   Vertical margin of separators without text (defined by ^sep()).
 
-    `sep_height` is retained as an alias for `sep_margin_y` for compatibility
-    with existing configuration files.
+    `sep_height` is deprecated and retained for compatibility with existing
+    configuration files. A warning is issued when it is used. If both
+    `sep_height` and `sep_margin_y` are specified, `sep_margin_y` takes
+    precedence.
 
 `sep_text_height` = __integer__ (default 25)
 
