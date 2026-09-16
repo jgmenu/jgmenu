@@ -14,6 +14,10 @@
 
 struct config config;
 static struct sbuf jgmenurc_file;
+static int sep_height;
+static int sep_margin_y;
+static int sep_height_set;
+static int sep_margin_y_set;
 
 /* clang-format off */
 void config_set_defaults(void)
@@ -68,7 +72,8 @@ void config_set_defaults(void)
 	config.item_border	   = 0;
 	config.item_halign	   = LEFT;
 
-	config.sep_height	   = 5;
+	config.sep_margin_x	   = 5;
+	config.sep_margin_y	   = 5;
 	config.sep_text_height = 25;
 	config.sep_markup	   = NULL;
 	config.sep_halign	   = CENTER;
@@ -328,9 +333,17 @@ void config_process_line(char *line)
 			config.item_halign = LEFT;
 		else if (!strcasecmp(value, "right"))
 			config.item_halign = RIGHT;
+	} else if (!strcmp(option, "sep_margin_x")) {
+		xatoi(&config.sep_margin_x, value, XATOI_NONNEG,
+		      "config.sep_margin_x");
+	} else if (!strcmp(option, "sep_margin_y")) {
+		xatoi(&sep_margin_y, value, XATOI_NONNEG,
+		      "sep_margin_y");
+		sep_margin_y_set = 1;
 	} else if (!strcmp(option, "sep_height")) {
-		xatoi(&config.sep_height, value, XATOI_NONNEG,
-		      "config.sep_height");
+		xatoi(&sep_height, value, XATOI_NONNEG,
+		      "sep_height");
+		sep_height_set = 1;
 	} else if (!strcmp(option, "sep_text_height")) {
 		xatoi(&config.sep_text_height, value, XATOI_GT_0,
 		      "config.sep_text_height");
@@ -528,6 +541,14 @@ static int smallest_of_four(int a, int b, int c, int d)
 void config_post_process(void)
 {
 	int smallest_padding;
+
+	if (sep_height_set)
+		warn("'sep_height' is deprecated; use 'sep_margin_y'");
+
+	if (sep_margin_y_set)
+		config.sep_margin_y = sep_margin_y;
+	else if (sep_height_set)
+		config.sep_margin_y = sep_height;
 
 	/*
 	 * The menu-border is drawn 'inside' the menu. Therefore, padding_* has

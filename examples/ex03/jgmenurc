@@ -14,7 +14,7 @@ item_height	= 30
 item_padding_x	= 1
 item_radius	= 10
 item_border	= 1
-sep_height	= 5
+sep_margin_y	= 5
 icon_size	= 0
 
 font		= Ubuntu 14px
