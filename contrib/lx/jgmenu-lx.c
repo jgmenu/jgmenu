@@ -96,13 +96,13 @@ static void add_metadata(const char * const *categories)
 	}
 }
 
-static void strip_exec_field_codes(char **exec)
+static void strip_exec_field_codes(char *exec)
 {
 	char *p;
 
-	if (!**exec || !*exec)
+	if (!*exec || !exec)
 		return;
-	for (p = *exec; *p; p++) {
+	for (p = exec; *p; p++) {
 		if (*p == '%') {
 			*p = ' ';
 			++p;
@@ -154,7 +154,7 @@ static void process_app(MenuCacheApp *app)
 	if (strchr(exec.buf, ','))
 		sbuf_addstr(&cur->buf, "\"\"\"");
 	ugly_hack(&exec);
-	strip_exec_field_codes(&exec.buf);
+	strip_exec_field_codes(exec.buf);
 	sbuf_addstr(&cur->buf, exec.buf);
 	if (strchr(exec.buf, ','))
 		sbuf_addstr(&cur->buf, " \"\"\"");
