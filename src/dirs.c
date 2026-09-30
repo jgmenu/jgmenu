@@ -9,6 +9,7 @@
 #include <string.h>
 #include <dirent.h>
 #include <stdbool.h>
+#include <glib.h>
 
 #include "dirs.h"
 #include "xdgdirs.h"
@@ -104,6 +105,24 @@ static void process_builtin_schema(void)
 				       schema_builtin[i].value);
 }
 
+static int compare_dir_name(const void *a, const void *b)
+{
+	const struct dir *aa = (struct dir *)a;
+	const struct dir *bb = (struct dir *)b;
+	const char *aa_name, *bb_name;
+	int ret;
+
+	BUG_ON(!aa->name || !bb->name);
+	aa_name = aa->name_localized[0] != '\0' ? aa->name_localized : aa->name;
+	bb_name = bb->name_localized[0] != '\0' ? bb->name_localized : bb->name;
+	aa_name = g_utf8_casefold(aa_name, -1);
+	bb_name = g_utf8_casefold(bb_name, -1);
+	ret = g_utf8_collate(aa_name, bb_name);
+	xfree(aa_name);
+	xfree(bb_name);
+	return ret;
+}
+
 void dirs_read_schema(struct dir **vector)
 {
 	struct list_head xdg_config_dirs;
@@ -134,5 +153,6 @@ schema_read_success:
 
 	/* NULL terminate vector *dirs */
 	add_dir();
+	qsort(dirs, nr_dirs - 1, sizeof(struct dir), compare_dir_name);
 	*vector = dirs;
 }

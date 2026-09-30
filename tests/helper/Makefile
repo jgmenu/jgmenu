@@ -31,7 +31,7 @@ test-xpm: test-xpm.c $(src)xpm-loader.c $(util)
 	$(CC) $(CFLAGS) -o $@ $^ -I$(src) $(LDFLAGS) `pkg-config cairo --cflags --libs`
 
 test-dirs: test-dirs.c $(src)dirs.c $(src)xdgdirs.c $(src)argv-buf.c $(src)compat.c $(src)lang.c $(util)
-	$(CC) $(CFLAGS) -o $@ $^ -I$(src) $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ -I$(src) $(LDFLAGS) `pkg-config glib-2.0 --cflags --libs`
 
 test-xdgdirs: test-xdgdirs.c $(src)xdgdirs.c $(src)argv-buf.c $(util)
 	$(CC) $(CFLAGS) -o $@ $^ -I$(src) $(LDFLAGS)

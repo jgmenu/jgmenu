@@ -5,6 +5,7 @@
  */
 
 #include <getopt.h>
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -246,6 +247,9 @@ int main(int argc, char **argv)
 	struct app *apps;
 	struct dir *dirs;
 	int c;
+
+	if (!setlocale(LC_ALL, ""))
+		warn("setlocale(): locale not supported by C library; using 'C' locale");
 
 	while (1) {
 		int index = 0;

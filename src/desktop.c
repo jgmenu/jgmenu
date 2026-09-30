@@ -247,7 +247,7 @@ static int compare_app_name(const void *a, const void *b)
 	bb_name = bb->name_localized[0] != '\0' ? bb->name_localized : bb->name;
 	aa_name = g_utf8_casefold(aa_name, -1);
 	bb_name = g_utf8_casefold(bb_name, -1);
-	ret = strcmp(aa_name, bb_name);
+	ret = g_utf8_collate(aa_name, bb_name);
 	xfree(aa_name);
 	xfree(bb_name);
 	return ret;
