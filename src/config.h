@@ -60,7 +60,8 @@ struct config {
 	int item_radius;
 	int item_border;
 	enum alignment item_halign;
-	int sep_height;
+	int sep_margin_x;
+	int sep_margin_y;
 	int sep_text_height;
 	char *sep_markup;
 	enum alignment sep_halign;

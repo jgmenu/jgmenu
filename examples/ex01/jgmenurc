@@ -37,7 +37,7 @@ menu_valign         = top
 #item_border         = 0
 #item_halign         = left
 
-#sep_height          = 5
+#sep_margin_y        = 5
 
 #font                =
 #font_fallback       = xtg

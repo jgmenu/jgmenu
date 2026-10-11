@@ -667,9 +667,18 @@ Here follow some specific types:
 :   Horizontal alignment of menu items. If set to `right`, the option
     `arrow_string` should be changed too.
 
-`sep_height` = __integer__ (default 5)
+`sep_margin_x` = __integer__ (default 5)
 
-:   Height of separator without text (defined by ^sep()).
+:   Horizontal margin of separators without text (defined by ^sep()).
+
+`sep_margin_y` = __integer__ (default 5)
+
+:   Vertical margin of separators without text (defined by ^sep()).
+
+    `sep_height` is deprecated and retained for compatibility with existing
+    configuration files. A warning is issued when it is used. If both
+    `sep_height` and `sep_margin_y` are specified, `sep_margin_y` takes
+    precedence.
 
 `sep_text_height` = __integer__ (default 25)
 
