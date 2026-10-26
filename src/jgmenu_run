@@ -5,6 +5,7 @@
 
 export PATH="$JGMENU_EXEC_DIR:$PATH"
 JGMENU_LOCKFILE=~/.jgmenu-lockfile
+[ ! -z "${XDG_RUNTIME_DIR}" ] && JGMENU_LOCKFILE="${XDG_RUNTIME_DIR}/jgmenu-lockfile"
 
 die () {
 	printf "fatal: %s\n" "$1"
