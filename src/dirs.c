@@ -105,6 +105,11 @@ static void process_builtin_schema(void)
 				       schema_builtin[i].value);
 }
 
+static bool not_empty(const char *s)
+{
+	return s && *s;
+}
+
 static int compare_dir_name(const void *a, const void *b)
 {
 	const struct dir *aa = (struct dir *)a;
@@ -113,8 +118,8 @@ static int compare_dir_name(const void *a, const void *b)
 	int ret;
 
 	BUG_ON(!aa->name || !bb->name);
-	aa_name = aa->name_localized[0] != '\0' ? aa->name_localized : aa->name;
-	bb_name = bb->name_localized[0] != '\0' ? bb->name_localized : bb->name;
+	aa_name = not_empty(aa->name_localized) ? aa->name_localized : aa->name;
+	bb_name = not_empty(bb->name_localized) ? bb->name_localized : bb->name;
 	aa_name = g_utf8_casefold(aa_name, -1);
 	bb_name = g_utf8_casefold(bb_name, -1);
 	ret = g_utf8_collate(aa_name, bb_name);
