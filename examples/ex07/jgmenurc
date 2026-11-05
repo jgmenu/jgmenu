@@ -39,7 +39,7 @@ menu_border         = 1
 item_border         = 1
 #item_halign         = left
 
-#sep_height          = 5
+#sep_margin_y        = 5
 
 font                = Sans 9
 #font_fallback       = xtg

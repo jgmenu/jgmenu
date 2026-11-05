@@ -466,7 +466,8 @@ static void draw_item_sep_without_text(struct item *p)
 	double y;
 
 	y = round(p->area.y + p->area.h / 2) + 0.5;
-	ui_draw_line(p->area.x + 5, y, p->area.x + p->area.w - 5, y,
+	ui_draw_line(p->area.x + config.sep_margin_x, y,
+		     p->area.x + p->area.w - config.sep_margin_x, y,
 		     1.0, config.color_sep_fg);
 }
 
@@ -1330,7 +1331,7 @@ static int read_csv_file(FILE *fp, bool ispipemenu)
 		if (!strncmp(item->name, "^sep(", 5)) {
 			item->selectable = 0;
 			if (item->name[5] == '\0')
-				item->area.h = config.sep_height;
+				item->area.h = config.sep_margin_y;
 			else
 				item->area.h = config.sep_text_height;
 		}
