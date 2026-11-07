@@ -8,13 +8,7 @@
 
 | Date       | Release Notes                     |
 |------------|-----------------------------------|
+| 2026-10-07 | [v4.7.1](docs/relnotes/4.7.1.txt) |
 | 2026-09-15 | [v4.7.0](docs/relnotes/4.7.0.txt) |
 | 2026-08-07 | [v4.6.0](docs/relnotes/4.6.0.txt) |
-| 2024-12-06 | [v4.5.0](docs/relnotes/4.5.0.txt) |
-| 2022-10-30 | [v4.4.1](docs/relnotes/4.4.1.txt) |
-| 2021-09-16 | [v4.4.0](docs/relnotes/4.4.0.txt) |
-| 2021-01-02 | [v4.3.0](docs/relnotes/4.3.0.txt) |
-| 2020-05-19 | [v4.2.1](docs/relnotes/4.2.1.txt) |
-| 2020-05-06 | [v4.2.0](docs/relnotes/4.2.0.txt) |
-| 2020-03-02 | [v4.1.0](docs/relnotes/4.1.0.txt) |
 

@@ -1,0 +1,8 @@
+jgmenu v4.7.1
+
+### Fixed
+
+- jgmenu-apps: use locale aware sorting for applications and categories
+  @City-busz [#275] [#278]
+- contrib/jgmenu-lx: fix build error relating to recent refactoring
+  @johanmalm [#273]
